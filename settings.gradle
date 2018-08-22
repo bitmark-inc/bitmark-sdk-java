@@ -1,0 +1,6 @@
+rootProject.name = 'javasdk'
+include 'configuration'
+include 'cryptography'
+include 'apiservice'
+include 'api-service'
+
