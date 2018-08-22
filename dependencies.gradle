@@ -1,0 +1,52 @@
+ext.deps = [:]
+def versions = [:]
+versions.okhttp = "3.9.1"
+versions.junit = "4.12"
+versions.mockito = "2.21.0"
+versions.jnr_ffi = "2.1.8"
+versions.bouncycastle = "1.60"
+versions.junit_jupiter = "5.2.0"
+versions.junit_platform = "1.2.0"
+versions.junit_vintage = "5.2.0"
+
+def okhttp = [:]
+okhttp.okhttp3 = "com.squareup.okhttp3:okhttp:$versions.okhttp"
+okhttp.okhttp3_mockserver = "com.squareup.okhttp3:mockwebserver:$versions.okhttp"
+okhttp.logging = "com.squareup.okhttp3:logging-interceptor:$versions.okhttp"
+
+def junit_jupiter = [:]
+junit_jupiter.api = "org.junit.jupiter:junit-jupiter-api:$versions.junit_jupiter"
+junit_jupiter.params = "org.junit.jupiter:junit-jupiter-params:$versions.junit_jupiter"
+junit_jupiter.engine = "org.junit.jupiter:junit-jupiter-engine:$versions.junit_jupiter"
+
+def junit_platform = [:]
+junit_platform.launcher = "org.junit.platform:junit-platform-launcher:$versions.junit_platform"
+junit_platform.commons = "org.junit.platform:junit-platform-commons:$versions.junit_platform"
+
+def junit_vintage = [:]
+junit_vintage.engine = "org.junit.vintage:junit-vintage-engine:$versions.junit_vintage"
+
+def junit = "junit:junit:$versions.junit"
+def mockito = "org.mockito:mockito-core:$versions.mockito"
+def jnr_ffi = "com.github.jnr:jnr-ffi:$versions.jnr_ffi"
+def bouncycastle = "org.bouncycastle:bcprov-jdk15on:$versions.bouncycastle"
+
+def dependencies = [:]
+dependencies.okhttp = okhttp
+dependencies.junit = junit
+dependencies.mockito = mockito
+dependencies.jnr_ffi = jnr_ffi
+dependencies.bouncycastle = bouncycastle
+dependencies.junit_jupiter = junit_jupiter
+dependencies.junit_platform = junit_platform
+dependencies.junit_vintage = junit_vintage
+ext.deps = dependencies
+
+
+static def addRepos(RepositoryHandler handler) {
+    handler.maven { url = 'http://repo1.maven.org/maven2/' }
+    handler.jcenter()
+    handler.google()
+}
+
+ext.addRepos = this.&addRepos

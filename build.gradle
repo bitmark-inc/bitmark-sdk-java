@@ -1,18 +1,27 @@
-plugins {
-    id 'java'
+buildscript {
+    apply plugin: 'java-library'
+    apply from: 'dependencies.gradle'
+    addRepos(repositories)
 }
 
-group 'com.bitmark.sdk'
-version '1.0'
-
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-repositories {
-    mavenCentral()
+allprojects {
+    addRepos(repositories)
+}
+
+test {
+    useJUnitPlatform()
 }
 
 dependencies {
     implementation project(':configuration')
     implementation project(':api-service')
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    testImplementation deps.junit_jupiter.api
+    testImplementation deps.junit_jupiter.params
+    testImplementation deps.mockito
+
+    testRuntime deps.junit_jupiter.engine
 }
