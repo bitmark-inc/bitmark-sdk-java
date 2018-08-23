@@ -1,4 +1,4 @@
-package utils;
+package crypto.key;
 
 /**
  * @author Hieu Pham
@@ -7,9 +7,11 @@ package utils;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback {
+public interface Key {
 
-    void onSuccess();
+    byte[] toBytes();
 
-    void onError(Throwable throwable);
+    boolean isValid();
+
+    int size();
 }

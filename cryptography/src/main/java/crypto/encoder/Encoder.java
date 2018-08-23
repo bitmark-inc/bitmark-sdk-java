@@ -1,4 +1,4 @@
-package utils;
+package crypto.encoder;
 
 /**
  * @author Hieu Pham
@@ -7,9 +7,10 @@ package utils;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback {
+public interface Encoder {
 
-    void onSuccess();
+    byte[] decode(String data);
 
-    void onError(Throwable throwable);
+    String encode(byte[] data);
+
 }

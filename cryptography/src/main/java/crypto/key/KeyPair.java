@@ -1,4 +1,4 @@
-package utils;
+package crypto.key;
 
 /**
  * @author Hieu Pham
@@ -7,9 +7,12 @@ package utils;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback {
+public interface KeyPair {
 
-    void onSuccess();
+    PublicKey publicKey();
 
-    void onError(Throwable throwable);
+    PrivateKey privateKey();
+
+    boolean isValid();
+
 }

@@ -7,9 +7,9 @@ package utils;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback {
+public interface Callback2<T1, T2> {
 
-    void onSuccess();
+    void onSuccess(T1 t1, T2 t2);
 
     void onError(Throwable throwable);
 }
