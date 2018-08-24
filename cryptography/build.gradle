@@ -4,6 +4,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+
+    implementation deps.jnr_ffi
+    implementation deps.bouncycastle
+
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.mockito

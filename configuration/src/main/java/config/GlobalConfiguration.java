@@ -11,30 +11,56 @@ public class GlobalConfiguration {
 
     private Builder builder;
 
+    private static volatile GlobalConfiguration INSTANCE;
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    private static GlobalConfiguration getInstance(Builder builder) {
+        if (INSTANCE == null) {
+            synchronized (GlobalConfiguration.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new GlobalConfiguration(builder);
+                }
+            }
+        } else
+            throw new UnsupportedOperationException("GlobalConfiguration must be initialize once");
+        return INSTANCE;
+    }
+
     private GlobalConfiguration(Builder builder) {
         this.builder = builder;
     }
 
-    public Network getNetwork() {
-        return builder.network;
+    public static Network network() {
+        validate();
+        return INSTANCE.builder.network;
     }
 
-    public String getApiToken() {
-        return builder.apiToken;
+    public static String apiToken() {
+        validate();
+        return INSTANCE.builder.apiToken;
     }
 
-    public int getConnectionTimeout() {
-        return builder.connectionTimeout;
+    public static int connectionTimeout() {
+        validate();
+        return INSTANCE.builder.connectionTimeout;
+    }
+
+    private static void validate() {
+        if (INSTANCE == null) throw new UnsupportedOperationException("You must init " +
+                "Configuration before");
     }
 
 
-    public static final class Builder {
+    private static final class Builder {
 
         private Network network = Network.TEST_NET;
 
         private String apiToken;
 
-        private int connectionTimeout = 30;
+        private int connectionTimeout = 30; // 30 seconds
 
         public Builder withNetwork(Network network) {
             this.network = network;
@@ -53,7 +79,7 @@ public class GlobalConfiguration {
 
         public GlobalConfiguration build() {
             validate();
-            return new GlobalConfiguration(this);
+            return GlobalConfiguration.getInstance(this);
         }
 
         private void validate() {

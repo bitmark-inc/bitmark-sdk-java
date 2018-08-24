@@ -1,7 +1,5 @@
 package features;
 
-import config.GlobalConfiguration;
-
 /**
  * @author Hieu Pham
  * @since 8/23/18
@@ -15,7 +13,7 @@ public class SdkInterface {
 
     private Bitmark bitmark;
 
-    public SdkInterface(GlobalConfiguration configuration) {
+    public SdkInterface() {
 
     }
 

@@ -1,4 +1,4 @@
-package utils;
+package utils.callback;
 
 /**
  * @author Hieu Pham
@@ -7,9 +7,9 @@ package utils;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback1<T> {
+public interface Callback2<T1, T2> {
 
-    void onSuccess(T data);
+    void onSuccess(T1 t1, T2 t2);
 
     void onError(Throwable throwable);
 }

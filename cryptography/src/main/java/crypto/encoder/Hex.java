@@ -1,5 +1,7 @@
 package crypto.encoder;
 
+import static utils.Validator.*;
+
 /**
  * @author Hieu Pham
  * @since 8/23/18
@@ -19,7 +21,8 @@ public class Hex implements Encoder {
 
     @Override
     public byte[] decode(String value) {
-        char[] data = value != null ? value.toCharArray() : new char[0];
+        checkValidHex(value);
+        final char[] data = value.toCharArray();
         final int len = data.length;
 
         if ((len & 0x01) != 0) {
@@ -42,6 +45,8 @@ public class Hex implements Encoder {
 
     @Override
     public String encode(byte[] data) {
+        checkNonNull(data);
+        checkValid(() -> data.length > 0);
         final int len = data.length;
         final char[] out = new char[len << 1];
         // two characters form the hex value.

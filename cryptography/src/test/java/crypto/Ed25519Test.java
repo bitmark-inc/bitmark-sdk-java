@@ -1,0 +1,195 @@
+package crypto;
+
+import crypto.key.KeyPair;
+import error.ValidateException;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Arrays;
+
+import static crypto.encoder.Hex.HEX;
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * @author Hieu Pham
+ * @since 8/24/18
+ * Email: hieupham@bitmark.com
+ * Copyright © 2018 Bitmark. All rights reserved.
+ */
+
+public class Ed25519Test extends BaseCryptoTest {
+
+    @DisplayName("Verify that Ed25519.generateKeyPair() works well without unexpected exception with a happy condition")
+    @Test
+    public void testGenerateKeyPair_NoError_ValidKeyPairIsReturn() {
+        KeyPair pair = Ed25519.generateKeyPair();
+        assertEquals(pair.privateKey().size(), Ed25519.PRIVATE_KEY_LENGTH);
+        assertEquals(pair.publicKey().size(), Ed25519.PUBLIC_KEY_LENGTH);
+    }
+
+    @DisplayName("Verify that Ed25519.generateKeyPairFromSeed(byte[]) works well with happy condition")
+    @ParameterizedTest
+    @ValueSource(strings = {"F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475CFCF31F6CA31",
+            "D9B7A41748DB4DA24F7DADC0D0A8C87E6CD1C2C754239E5009FF06FE163D6E34",
+            "731EA25F9B40FE5FF88C8A35061ECC35E8F9958098C97E9EB523CDA97485277B"})
+    public void testGenerateKeyPairFromSeed_ValidSeed_ValidKeyPairIsReturn(String seedHex) {
+        KeyPair pair = Ed25519.generateKeyPairFromSeed(HEX.decode(seedHex));
+        assertEquals(pair.privateKey().size(), Ed25519.PRIVATE_KEY_LENGTH);
+        assertEquals(pair.publicKey().size(), Ed25519.PUBLIC_KEY_LENGTH);
+    }
+
+    @DisplayName("Verify that Ed25519.generateKeyPairFromSeed(byte[]) throws an exception when the seed is invalid")
+    @ParameterizedTest
+    @ValueSource(strings = {"F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475CFCF31F6CA",
+            "D9B7A41748DB4DA24F7DADC0D0A8C87E6C",
+            "731EA25F"})
+    public void testGenerateKeyPairFromSeed_InvalidSeedLength_ErrorIsThrow(String seedHex) {
+        assertThrows(ValidateException.InvalidLength.class, () -> Ed25519.generateKeyPairFromSeed(HEX.decode(seedHex)));
+    }
+
+    @DisplayName("Verify that Ed25519.getKeyPair(byte[]) works well with happy condition")
+    @ParameterizedTest
+    @CsvSource({"C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E, F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475CFCF31F6CA31C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E",
+            "D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8C07DC5A082908EB8D0E94FC, D9B7A41748DB4DA24F7DADC0D0A8C87E6CD1C2C754239E5009FF06FE163D6E34D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8C07DC5A082908EB8D0E94FC",
+            "FF79E97C179D48E82C64C1C820F907EAD2113209AEFF9A0B78A4F0C09357907B, 731EA25F9B40FE5FF88C8A35061ECC35E8F9958098C97E9EB523CDA97485277BFF79E97C179D48E82C64C1C820F907EAD2113209AEFF9A0B78A4F0C09357907B"})
+    public void testGetKeyPairFromPrivateKey_ValidPrivateKey_ValidKeyPairIsReturn(String publicKeyHex, String privateKeyHex) {
+        final byte[] privateKey = HEX.decode(privateKeyHex);
+        final byte[] publicKey = HEX.decode(publicKeyHex);
+        KeyPair pair = Ed25519.getKeyPair(privateKey);
+        assertTrue(Arrays.equals(publicKey, pair.publicKey().toBytes()));
+    }
+
+    @DisplayName("Verify that Ed25519.getKeyPair(byte[]) throws an exception when the private key is invalid")
+    @ParameterizedTest
+    @ValueSource(strings = {"C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E",
+            "D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8C07DC5A082908EB8D0E94FC",
+            "FF79E97C179D48E82C64C1C820F907EAD2113209AEFF9A0B78A4F0C09357907B"})
+    public void testGetKeyPairFromPrivateKey_InvalidPrivateKey_ErrorIsThrow(String privateKeyHex) {
+        assertThrows(ValidateException.InvalidLength.class, () -> Ed25519.getKeyPair(HEX.decode(privateKeyHex)));
+    }
+
+    @DisplayName("Verify that Ed25519.getSeed(byte[]) works well with the happy condition")
+    @ParameterizedTest
+    @CsvSource({"F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475CFCF31F6CA31C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E, F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475CFCF31F6CA31",
+            "D9B7A41748DB4DA24F7DADC0D0A8C87E6CD1C2C754239E5009FF06FE163D6E34D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8C07DC5A082908EB8D0E94FC, D9B7A41748DB4DA24F7DADC0D0A8C87E6CD1C2C754239E5009FF06FE163D6E34",
+            "731EA25F9B40FE5FF88C8A35061ECC35E8F9958098C97E9EB523CDA97485277BFF79E97C179D48E82C64C1C820F907EAD2113209AEFF9A0B78A4F0C09357907B, 731EA25F9B40FE5FF88C8A35061ECC35E8F9958098C97E9EB523CDA97485277B"})
+    public void testGetSeedFromPrivateKey_ValidPrivateKey_ValidSeedIsReturn(String privateKeyHex, String seedHex) {
+        final byte[] privateKey = HEX.decode(privateKeyHex);
+        final byte[] seed = HEX.decode(seedHex);
+        final byte[] expectedSeed = Ed25519.getSeed(privateKey);
+        assertTrue(Arrays.equals(expectedSeed, seed));
+    }
+
+    @DisplayName("Verify that Ed25519.getSeed(byte[]) throws an exception when the private key is invalid")
+    @ParameterizedTest
+    @ValueSource(strings = {"F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475", "D9B7A41748DB4DA24F7DAD", "731EA25F9B"})
+    public void testGetSeedFromPrivateKey_InvalidPrivateKey_ErrorIsThrow(String privateKeyHex) {
+        assertThrows(ValidateException.InvalidLength.class, () -> Ed25519.getSeed(HEX.decode(privateKeyHex)));
+    }
+
+    @DisplayName("Verify that Ed25519.getSeed(String) works well with the happy condition")
+    @ParameterizedTest
+    @CsvSource({"F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475CFCF31F6CA31C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E, F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475CFCF31F6CA31",
+            "D9B7A41748DB4DA24F7DADC0D0A8C87E6CD1C2C754239E5009FF06FE163D6E34D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8C07DC5A082908EB8D0E94FC, D9B7A41748DB4DA24F7DADC0D0A8C87E6CD1C2C754239E5009FF06FE163D6E34",
+            "731EA25F9B40FE5FF88C8A35061ECC35E8F9958098C97E9EB523CDA97485277BFF79E97C179D48E82C64C1C820F907EAD2113209AEFF9A0B78A4F0C09357907B, 731EA25F9B40FE5FF88C8A35061ECC35E8F9958098C97E9EB523CDA97485277B"})
+    public void testGetSeedFromHexPrivateKey_ValidHexPrivateKey_ValidSeedIsReturn(String hexPrivateKey, String hexSeed) {
+        String expectedSeed = Ed25519.getSeed(hexPrivateKey);
+        assertTrue(hexSeed.equalsIgnoreCase(expectedSeed));
+    }
+
+    @DisplayName("Verify that Ed25519.getSeed(String) throws an exception when the hex private key is invalid")
+    @ParameterizedTest
+    @ValueSource(strings = {"F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475", "D9B7A41748DB4DA24F7DAD", "731EA25F9B"})
+    public void testGetSeedFromHexPrivateKey_InvalidHexPrivateKey_ErrorIsThrow(String privateKeyHex) {
+        assertThrows(ValidateException.InvalidLength.class, () -> Ed25519.getSeed(privateKeyHex));
+    }
+
+    @DisplayName("Verify that Ed25519.sign(byte[], byte[]) works well with happy condition")
+    @ParameterizedTest
+    @CsvSource({"4269746D61726B53444B, F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475CFCF31F6CA31C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E, 51C7CF9E80EE62418189A6A323E4A994BCEB1108C7E9CE61D74D3179128AA8DE3681E00F3F17F23DE34E0C97882103D20F27CF641863D1C903A3A4A5BD9FED05",
+            "4A61766153444B, D9B7A41748DB4DA24F7DADC0D0A8C87E6CD1C2C754239E5009FF06FE163D6E34D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8C07DC5A082908EB8D0E94FC, C0FF03170ACFC2437FE2A5C6950FBD7F037DA5E34E5396276815503DA34B8F2CB0CCE5AF8BAA3C928BDF4A475AC5E31E61FED7553F14580D9ACBE5529A5D6007",
+            "4269746D61726B496E546865467574757265, 731EA25F9B40FE5FF88C8A35061ECC35E8F9958098C97E9EB523CDA97485277BFF79E97C179D48E82C64C1C820F907EAD2113209AEFF9A0B78A4F0C09357907B, 3819CA546280ED55A26675FE7469CAAA15388DBE5656C49CD21C74A749739123730ED23618C15934BBF32367DF1410B4538FFBDEDDB47E75D377FD47EF1D1905"})
+    public void testSignMessageByByteArrayPrivateKey_ValidByteArrayPrivateKey_ValidSignatureIsReturn(String hexMessage, String hexPrivateKey, String hexSignature) {
+        final byte[] message = HEX.decode(hexMessage);
+        final byte[] privateKey = HEX.decode(hexPrivateKey);
+        final byte[] signature = Ed25519.sign(message, privateKey);
+        assertTrue(hexSignature.equalsIgnoreCase(HEX.encode(signature)));
+    }
+
+    @DisplayName("Verify that Ed25519.sign(byte[], byte[]) throws an exception when the private key is invalid")
+    @ParameterizedTest
+    @CsvSource({"4269746D61726B53444B, F2B15C72F00965A7E6827F80749657A3FE655980C1F03F2ECB47ABC1234251234BCFDACBCAFEFEAEFCBFEADCDFEBCBCDEAF56734523643456235436436BC2353634CDEF23234A234ABBBBA235235124235",
+            "4A61766153444B, D9B7A41748DB4DA24F7DAD",
+            "4269746D61726B496E546865467574757265, 745A"})
+    public void testSignMessageByByteArrayPrivateKey_InvalidByteArrayPrivateKey_ErrorIsThrow(String hexMessage, String hexPrivateKey) {
+        final byte[] message = HEX.decode(hexMessage);
+        final byte[] privateKey = HEX.decode(hexPrivateKey);
+        assertThrows(ValidateException.InvalidLength.class, () -> Ed25519.sign(message, privateKey));
+    }
+
+    @DisplayName("Verify that Ed25519.sign(String, String) works well with happy condition")
+    @ParameterizedTest
+    @CsvSource({"4269746D61726B53444B, F2B15C7200965A7E6827F80749657A3FE655980C1F03F2ECB475CFCF31F6CA31C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E, 51C7CF9E80EE62418189A6A323E4A994BCEB1108C7E9CE61D74D3179128AA8DE3681E00F3F17F23DE34E0C97882103D20F27CF641863D1C903A3A4A5BD9FED05",
+            "4A61766153444B, D9B7A41748DB4DA24F7DADC0D0A8C87E6CD1C2C754239E5009FF06FE163D6E34D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8C07DC5A082908EB8D0E94FC, C0FF03170ACFC2437FE2A5C6950FBD7F037DA5E34E5396276815503DA34B8F2CB0CCE5AF8BAA3C928BDF4A475AC5E31E61FED7553F14580D9ACBE5529A5D6007",
+            "4269746D61726B496E546865467574757265, 731EA25F9B40FE5FF88C8A35061ECC35E8F9958098C97E9EB523CDA97485277BFF79E97C179D48E82C64C1C820F907EAD2113209AEFF9A0B78A4F0C09357907B, 3819CA546280ED55A26675FE7469CAAA15388DBE5656C49CD21C74A749739123730ED23618C15934BBF32367DF1410B4538FFBDEDDB47E75D377FD47EF1D1905"})
+    public void testSignMessageByHexPrivateKey_ValidHexPrivateKey_ValidSignatureIsReturn(String message, String privateKey, String signature) {
+        final String expectedSignature = Ed25519.sign(message, privateKey);
+        assertTrue(expectedSignature.equalsIgnoreCase(signature));
+    }
+
+    @DisplayName("Verify that Ed25519.sign(String, String) throws an exception when the hex private key is invalid")
+    @ParameterizedTest
+    @CsvSource({"4269746D61726B53444B, F2B15C72F00965A7E6827F80749657A3FE655980C1F03F2ECB47ABC1234251234BCFDACBCAFEFEAEFCBFEADCDFEBCBCDEAF56734523643456235436436BC2353634CDEF23234A234ABBBBA235235124235",
+            "4A61766153444B, D9B7A41748DB4DA24F7DAD",
+            "4269746D61726B496E546865467574757265, 745A"})
+    public void testSignMessageByHexPrivateKey_InvalidHexPrivateKey_ErrorIsThrow(String message, String privateKey) {
+        assertThrows(ValidateException.InvalidLength.class, () -> Ed25519.sign(message, privateKey));
+    }
+
+    @DisplayName("Verify that Ed25519.verify(byte[], byte[], byte[]) works well with happy condition")
+    @ParameterizedTest
+    @CsvSource({"4269746D61726B53444B, C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E, 51C7CF9E80EE62418189A6A323E4A994BCEB1108C7E9CE61D74D3179128AA8DE3681E00F3F17F23DE34E0C97882103D20F27CF641863D1C903A3A4A5BD9FED05",
+            "4A61766153444B, D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8C07DC5A082908EB8D0E94FC, C0FF03170ACFC2437FE2A5C6950FBD7F037DA5E34E5396276815503DA34B8F2CB0CCE5AF8BAA3C928BDF4A475AC5E31E61FED7553F14580D9ACBE5529A5D6007",
+            "4269746D61726B496E546865467574757265, FF79E97C179D48E82C64C1C820F907EAD2113209AEFF9A0B78A4F0C09357907B, 3819CA546280ED55A26675FE7469CAAA15388DBE5656C49CD21C74A749739123730ED23618C15934BBF32367DF1410B4538FFBDEDDB47E75D377FD47EF1D1905"})
+    public void testVerifySignatureByByteArrayPublicKey_ValidByteArrayPublicKey_ValidResultIsReturn(String hexMessage, String hexPublicKey, String hexSignature) {
+        final byte[] message = HEX.decode(hexMessage);
+        final byte[] publicKey = HEX.decode(hexPublicKey);
+        final byte[] signature = HEX.decode(hexSignature);
+        assertTrue(Ed25519.verify(signature, message, publicKey));
+    }
+
+    @DisplayName("Verify that Ed25519.verify(byte[], byte[], byte[]) throws exception when one of the params is invalid")
+    @ParameterizedTest
+    @CsvSource({"4269746D61726B53444B, C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E, 51C7CF9E3E4A994BCEB108C7E9CE61D74D3179128AA8DE3681E00F3F17F23DE34E0C97882103D20F27CF641863D1C903A3A4A5BD9FED05",
+            "4A61766153444B, D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8CEB8D0E94FC, C0FF03170ACFC2437FE2A5C6950FBD7F037DA5E34E5396276815503DA34B8F2CB0CCE5AF8BAA3C928BDF4A475AC5E31E61FED7553F14580D9ACBE5529A5D6007",
+            "4269746D61726B496E546865467574757265, FF79E97C179D48E82C64C1A4F0C09357907B, 3819CA546280ED55A26675FE7469CAAA3618C15934BBF32367DF1410B4538FFBDEDDB47E75D377FD47EF1D1905"})
+    public void testVerifySignatureByByteArrayPublicKey_InvalidPublicKey_ErrorIsThrow(String hexMessage, String hexPublicKey, String hexSignature) {
+        final byte[] message = HEX.decode(hexMessage);
+        final byte[] publicKey = HEX.decode(hexPublicKey);
+        final byte[] signature = HEX.decode(hexSignature);
+        assertThrows(ValidateException.InvalidLength.class, () -> Ed25519.verify(signature, message, publicKey));
+    }
+
+    @DisplayName("Verify that Ed25519.verify(String, String, String) works well with happy condition")
+    @ParameterizedTest
+    @CsvSource({"4269746D61726B53444B, C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E, 51C7CF9E80EE62418189A6A323E4A994BCEB1108C7E9CE61D74D3179128AA8DE3681E00F3F17F23DE34E0C97882103D20F27CF641863D1C903A3A4A5BD9FED05",
+            "4A61766153444B, D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8C07DC5A082908EB8D0E94FC, C0FF03170ACFC2437FE2A5C6950FBD7F037DA5E34E5396276815503DA34B8F2CB0CCE5AF8BAA3C928BDF4A475AC5E31E61FED7553F14580D9ACBE5529A5D6007",
+            "4269746D61726B496E546865467574757265, FF79E97C179D48E82C64C1C820F907EAD2113209AEFF9A0B78A4F0C09357907B, 3819CA546280ED55A26675FE7469CAAA15388DBE5656C49CD21C74A749739123730ED23618C15934BBF32367DF1410B4538FFBDEDDB47E75D377FD47EF1D1905"})
+    public void testVerifySignatureByHexPublicKey_ValidHexPublicKey_ValidResultIsReturn(String message, String publicKey, String signature) {
+        assertTrue(Ed25519.verify(signature, message, publicKey));
+    }
+
+    @DisplayName("Verify that Ed25519.verify(String, String, String) throws an exception when one of the params is invalid")
+    @ParameterizedTest
+    @CsvSource({"4269746D61726B53444B, C65246785FF374C03DE0171019DF4AC977174BF8DB6F89A944246132A967F49E, 51C7CF9E3E4A994BCEB108C7E9CE61D74D3179128AA8DE3681E00F3F17F23DE34E0C97882103D20F27CF641863D1C903A3A4A5BD9FED05",
+            "4A61766153444B, D3DF923EEAE7825550D1DE4F1CC2D21724C6F77E8CEB8D0E94FC, C0FF03170ACFC2437FE2A5C6950FBD7F037DA5E34E5396276815503DA34B8F2CB0CCE5AF8BAA3C928BDF4A475AC5E31E61FED7553F14580D9ACBE5529A5D6007",
+            "4269746D61726B496E546865467574757265, FF79E97C179D48E82C64C1A4F0C09357907B, 3819CA546280ED55A26675FE7469CAAA3618C15934BBF32367DF1410B4538FFBDEDDB47E75D377FD47EF1D1905"})
+    public void testVerifySignatureByHexPublicKey_InvalidHexPublicKey_ErrorIsThrow(String message, String publicKey, String signature) {
+        assertThrows(ValidateException.InvalidLength.class, () -> Ed25519.verify(signature, message, publicKey));
+    }
+
+
+}

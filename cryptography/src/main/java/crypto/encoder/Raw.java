@@ -3,6 +3,8 @@ package crypto.encoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import static utils.Validator.checkValid;
+
 /**
  * @author Hieu Pham
  * @since 8/23/18
@@ -21,11 +23,13 @@ public class Raw implements Encoder {
 
     @Override
     public byte[] decode(final String data) {
-        return data != null ? data.getBytes(CHARSET) : null;
+        checkValid(() -> data != null && !data.isEmpty());
+        return data.getBytes(CHARSET);
     }
 
     @Override
     public String encode(byte[] data) {
-        return data != null ? new String(data, CHARSET) : null;
+        checkValid(() -> data != null && data.length > 0);
+        return new String(data, CHARSET);
     }
 }

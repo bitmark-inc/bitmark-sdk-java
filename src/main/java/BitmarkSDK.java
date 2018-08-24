@@ -1,4 +1,3 @@
-import config.GlobalConfiguration;
 import features.Asset;
 import features.Bitmark;
 import features.SdkInterface;
@@ -12,33 +11,36 @@ import features.SdkInterface;
 
 public class BitmarkSDK {
 
-    private GlobalConfiguration configuration;
-
-    private SdkInterface sdkInterface;
+    private SdkInterface sdkInterface = new SdkInterface();
 
     private static volatile BitmarkSDK INSTANCE;
 
-    private BitmarkSDK(GlobalConfiguration configuration) {
-        this.configuration = configuration;
-        sdkInterface = new SdkInterface(configuration);
+    private BitmarkSDK() {
     }
 
-    public static void init(GlobalConfiguration configuration) {
+    public static void init() {
         if (INSTANCE == null) {
             synchronized (BitmarkSDK.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new BitmarkSDK(configuration);
+                    INSTANCE = new BitmarkSDK();
                 } else throw new UnsupportedOperationException("Sdk must be initialized once");
             }
         } else throw new UnsupportedOperationException("Sdk must be initialized once");
     }
 
-    public Asset asset() {
-        return sdkInterface.getAsset();
+    public static Asset asset() {
+        validate();
+        return INSTANCE.sdkInterface.getAsset();
     }
 
-    public Bitmark bitmark() {
-        return sdkInterface.getBitmark();
+    public static Bitmark bitmark() {
+        validate();
+        return INSTANCE.sdkInterface.getBitmark();
+    }
+
+    private static void validate() {
+        if (INSTANCE == null) throw new UnsupportedOperationException("You must call BitmarkSDK" +
+                ".init() first");
     }
 
 }

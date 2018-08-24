@@ -1,50 +1,35 @@
 package crypto;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.bouncycastle.jcajce.provider.digest.SHA3;
 
 import static crypto.encoder.Hex.HEX;
 import static utils.Validator.*;
 
 /**
  * @author Hieu Pham
- * @since 8/13/18
+ * @since 8/16/18
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class Sha256 implements Comparable<Sha256> {
+public class Sha3256 implements Comparable<Sha3256> {
 
     public static final int HASH_LENGTH = 32;
 
     private final byte[] bytes;
 
-    private Sha256(byte[] bytes) {
+    private Sha3256(byte[] bytes) {
         this.bytes = bytes;
     }
 
-    public static Sha256 from(byte[] bytes) {
+    public static Sha3256 from(byte[] bytes) {
         checkValidLength(bytes, HASH_LENGTH);
-        return new Sha256(bytes);
+        return new Sha3256(bytes);
     }
 
-    public static Sha256 from(String hexHash) {
+    public static Sha3256 from(String hexHash) {
         checkValidHex(hexHash);
         return from(HEX.decode(hexHash));
-    }
-
-    public static MessageDigest newDigest() {
-        try {
-            return MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static byte[] hash(String hexInput) {
-        checkValidHex(hexInput);
-        final byte[] rawBytes = HEX.decode(hexInput);
-        return hash(rawBytes, 0, rawBytes.length);
     }
 
     public static byte[] hash(byte[] input) {
@@ -53,14 +38,15 @@ public class Sha256 implements Comparable<Sha256> {
 
     public static byte[] hash(byte[] input, int offset, int length) {
         checkValid(() -> offset >= 0 && length > 0);
-        MessageDigest digest = newDigest();
+        SHA3.DigestSHA3 digest = new SHA3.Digest256();
         digest.update(input, offset, length);
         return digest.digest();
     }
 
-    public static byte[] hashTwice(String hexString) {
-        checkValidHex(hexString);
-        return hashTwice(HEX.decode(hexString));
+    public static byte[] hash(String hexInput) {
+        checkValidHex(hexInput);
+        final byte[] input = HEX.decode(hexInput);
+        return hash(input);
     }
 
     public static byte[] hashTwice(byte[] input) {
@@ -69,14 +55,15 @@ public class Sha256 implements Comparable<Sha256> {
 
     public static byte[] hashTwice(byte[] input, int offset, int length) {
         checkValid(() -> offset >= 0 && length > 0);
-        MessageDigest digest = newDigest();
+        SHA3.DigestSHA3 digest = new SHA3.Digest256();
         digest.update(input, offset, length);
         return digest.digest(digest.digest());
     }
 
-    @Override
-    public String toString() {
-        return HEX.encode(bytes);
+    public static byte[] hashTwice(String hexInput) {
+        checkValidHex(hexInput);
+        final byte[] input = HEX.decode(hexInput);
+        return hashTwice(input);
     }
 
     public byte[] getBytes() {
@@ -84,7 +71,12 @@ public class Sha256 implements Comparable<Sha256> {
     }
 
     @Override
-    public int compareTo(Sha256 other) {
+    public String toString() {
+        return HEX.encode(bytes);
+    }
+
+    @Override
+    public int compareTo(Sha3256 other) {
         for (int i = HASH_LENGTH - 1; i >= 0; i--) {
             final int thisByte = this.bytes[i] & 0xFF;
             final int otherByte = other.bytes[i] & 0xFF;

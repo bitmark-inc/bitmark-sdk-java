@@ -8,5 +8,16 @@ package config;
  */
 
 public enum Network {
-    LIVE_NET, TEST_NET
+
+    LIVE_NET(0x00), TEST_NET(0x01);
+
+    private int value;
+
+    Network(int value) {
+        this.value = value;
+    }
+
+    public int value() {
+        return value;
+    }
 }
