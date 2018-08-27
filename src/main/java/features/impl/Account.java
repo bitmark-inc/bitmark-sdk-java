@@ -6,7 +6,7 @@ import config.Network;
 import crypto.Ed25519;
 import crypto.SecretBox;
 import crypto.Sha3256;
-import crypto.VarInt;
+import crypto.encoder.VarInt;
 import crypto.key.KeyPair;
 import crypto.key.PublicKey;
 import org.bouncycastle.util.Arrays;
@@ -95,7 +95,7 @@ public class Account {
         keyVariantValue |= KeyPart.PUBLIC_KEY.value();
         keyVariantValue |= (network.value() << 1);
 
-        final byte[] keyVariantVarInt = VarInt.writeSignedVarInt(keyVariantValue);
+        final byte[] keyVariantVarInt = VarInt.writeUnsignedVarInt(keyVariantValue);
         final byte[] publicKeyBytes = key.toBytes();
         final byte[] preChecksum = Arrays.concatenate(keyVariantVarInt, publicKeyBytes);
         final byte[] checksum = Arrays.copyOfRange(Sha3256.hash(preChecksum), 0, 4);

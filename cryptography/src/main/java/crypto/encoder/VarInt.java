@@ -1,4 +1,4 @@
-package crypto;
+package crypto.encoder;
 
 import java.io.DataInput;
 import java.io.DataOutput;
