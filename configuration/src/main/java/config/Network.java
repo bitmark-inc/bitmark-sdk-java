@@ -20,4 +20,19 @@ public enum Network {
     public int value() {
         return value;
     }
+
+    public static Network valueOf(int value) {
+        switch (value) {
+            case 0x00:
+                return LIVE_NET;
+            case 0x01:
+                return TEST_NET;
+            default:
+                throw new IllegalArgumentException("Invalid network");
+        }
+    }
+
+    public static boolean isValid(int value) {
+        return value == LIVE_NET.value || value == TEST_NET.value;
+    }
 }

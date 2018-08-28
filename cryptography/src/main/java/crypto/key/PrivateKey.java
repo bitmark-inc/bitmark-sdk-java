@@ -1,6 +1,8 @@
 package crypto.key;
 
 
+import error.ValidateException;
+
 import static crypto.encoder.Hex.HEX;
 import static utils.Validator.checkValid;
 import static utils.Validator.checkValidHex;
@@ -20,7 +22,7 @@ public class PrivateKey implements Key {
         return new PrivateKey(key);
     }
 
-    public static PrivateKey from(String hexKey) {
+    public static PrivateKey from(String hexKey) throws ValidateException.InvalidHex {
         checkValidHex(hexKey);
         return new PrivateKey(hexKey);
     }

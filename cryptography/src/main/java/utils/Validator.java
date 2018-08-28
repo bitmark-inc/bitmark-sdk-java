@@ -35,12 +35,28 @@ public class Validator {
     }
 
     public static void checkValid(Specification specification) {
-        if (!specification.isSatisfied()) throw new ValidateException("Specification is not match");
+        checkValid(specification, "Specification is not match");
+    }
+
+    public static void checkValid(Specification specification, String message) {
+        if (!specification.isSatisfied()) throw new ValidateException(message);
+    }
+
+    public static void checkValid(Specification specification, ValidateException exception) {
+        if (!specification.isSatisfied()) throw exception;
     }
 
     public static <T> void checkValid(T data, Specification1<T> specification) {
-        if (!specification.isSatisfied(data))
-            throw new ValidateException("Specification is not match");
+        checkValid(data, specification, "Specification is not match");
+    }
+
+    public static <T> void checkValid(T data, Specification1<T> specification, String message) {
+        if (!specification.isSatisfied(data)) throw new ValidateException(message);
+    }
+
+    public static <T> void checkValid(T data, Specification1<T> specification,
+                                      ValidateException exception) {
+        if (!specification.isSatisfied(data)) throw exception;
     }
 
     public interface Specification1<T> {

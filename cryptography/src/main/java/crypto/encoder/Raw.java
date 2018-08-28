@@ -1,5 +1,7 @@
 package crypto.encoder;
 
+import error.ValidateException;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -22,13 +24,13 @@ public class Raw implements Encoder {
     }
 
     @Override
-    public byte[] decode(final String data) {
+    public byte[] decode(final String data) throws ValidateException {
         checkValid(() -> data != null && !data.isEmpty());
         return data.getBytes(CHARSET);
     }
 
     @Override
-    public String encode(byte[] data) {
+    public String encode(byte[] data) throws ValidateException {
         checkValid(() -> data != null && data.length > 0);
         return new String(data, CHARSET);
     }

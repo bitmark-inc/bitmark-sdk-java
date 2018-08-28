@@ -28,7 +28,7 @@ public class SecretBox {
         System.arraycopy(msg, 0, m, m.length - MESSAGE_LENGTH, msg.length);
 
         sodium().crypto_secretbox(c, m, m.length, nonce, key);
-        return Arrays.copyOfRange(c, MESSAGE_LENGTH, c.length - 1);
+        return Arrays.copyOfRange(c, MESSAGE_LENGTH, c.length);
     }
 
 }

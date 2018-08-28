@@ -1,22 +1,31 @@
 package features.impl;
 
 import config.GlobalConfiguration;
-import config.KeyPart;
 import config.Network;
+import config.SdkConfig;
 import crypto.Ed25519;
 import crypto.SecretBox;
 import crypto.Sha3256;
 import crypto.encoder.VarInt;
 import crypto.key.KeyPair;
 import crypto.key.PublicKey;
-import org.bouncycastle.util.Arrays;
+import error.ValidateException;
+import utils.AccountNumberData;
+import utils.ArrayUtil;
 import utils.RecoveryPhrase;
 import utils.Seed;
-import utils.callback.Callback2;
+import utils.error.InvalidAddressException;
+import utils.error.InvalidNetworkException;
 
+import java.util.Arrays;
+
+import static config.SdkConfig.CHECKSUM_LENGTH;
+import static config.SdkConfig.KEY_TYPE;
+import static config.SdkConfig.KeyPart.PUBLIC_KEY;
 import static crypto.Random.random;
 import static crypto.encoder.Base58.BASE_58;
 import static crypto.encoder.Hex.HEX;
+import static utils.ArrayUtil.*;
 
 /**
  * @author Hieu Pham
@@ -37,23 +46,14 @@ public class Account {
 
     private KeyPair key;
 
-    public static Account fromSeed(String seed) {
-        validate();
-        throw new UnsupportedOperationException();
-    }
-
-    public static Account fromSeed(Seed seed) {
-        validate();
-        throw new UnsupportedOperationException();
+    public static Account fromSeed(Seed seed) throws ValidateException.InvalidLength {
+        final byte[] seedBytes = seed.getSeed();
+        final KeyPair key = Ed25519.generateKeyPairFromSeed(seedBytes);
+        final String accountNumber = generateAccountNumber(key.publicKey(), seed.getNetwork());
+        return new Account(key, accountNumber);
     }
 
     public static Account fromRecoveryPhrase(RecoveryPhrase recoveryPhrase) {
-        validate();
-        throw new UnsupportedOperationException();
-    }
-
-    public static Account fromRecoveryPhrase(String... mnemonicWords) {
-        validate();
         throw new UnsupportedOperationException();
     }
 
@@ -62,24 +62,63 @@ public class Account {
         accountNumber = generateAccountNumber(key.publicKey());
     }
 
+    private Account(KeyPair key, String accountNumber) {
+        this.key = key;
+        this.accountNumber = accountNumber;
+    }
+
     public RecoveryPhrase getRecoveryPhrase() {
         throw new UnsupportedOperationException();
     }
 
-    public byte[] getSeed() {
-        throw new UnsupportedOperationException();
+    public Seed getSeed() {
+        final byte[] seed = Ed25519.getSeed(key.privateKey().toBytes());
+        final AccountNumberData data = parseAccountNumber(accountNumber);
+        return new Seed(seed, data.getNetwork(), SdkConfig.Seed.VERSION);
     }
 
     public static boolean isValidAccountNumber(String accountNumber) {
-        throw new UnsupportedOperationException();
+        try {
+            parseAccountNumber(accountNumber);
+            return true;
+        } catch (ValidateException ex) {
+            return false;
+        }
     }
 
-    public static void parseAccountNumber(String accountNumber,
-                                          Callback2<Network, PublicKey> callback) {
-        throw new UnsupportedOperationException();
-    }
+    public static AccountNumberData parseAccountNumber(String accountNumber) {
+        final byte[] addressBytes = BASE_58.decode(accountNumber);
+        int keyVariant = VarInt.readUnsignedVarInt(addressBytes);
+        final int keyVariantLength = toByteArray(keyVariant).length;
 
-    private static void validate() {
+        // Verify address length
+        int addressLength = keyVariantLength + Ed25519.PUBLIC_KEY_LENGTH + CHECKSUM_LENGTH;
+        if (addressLength != addressBytes.length) throw new InvalidAddressException("Address " +
+                "length is invalid. The expected is " + addressLength + " but actual is " + addressBytes.length);
+
+        // Verify checksum
+        final byte[] checksumData = slice(addressBytes, 0,
+                keyVariantLength + Ed25519.PUBLIC_KEY_LENGTH);
+        final byte[] checksum = slice(Sha3256.hash(checksumData), 0, CHECKSUM_LENGTH);
+        final byte[] checksumFromAddress = slice(addressBytes,
+                addressLength - CHECKSUM_LENGTH, addressLength);
+        if (!ArrayUtil.equals(checksumFromAddress, checksum)) throw new InvalidAddressException(
+                "Invalid checksum. The expected is " + Arrays.toString(checksum) + " but actual " +
+                        "is " + Arrays.toString(checksumFromAddress));
+
+        // Check for whether it's an address
+        if ((keyVariant & 0x01) != SdkConfig.KeyPart.PUBLIC_KEY.value())
+            throw new InvalidAddressException();
+
+        // Verify network value
+        int networkValue = (keyVariant >> 1) & 0x01;
+        if (!Network.isValid(networkValue)) throw new InvalidNetworkException(networkValue);
+        final Network network = Network.valueOf(networkValue);
+
+        final byte[] publicKey = slice(addressBytes, keyVariantLength,
+                addressLength - CHECKSUM_LENGTH);
+
+        return AccountNumberData.from(PublicKey.from(publicKey), network);
     }
 
     private KeyPair generateKey() {
@@ -88,18 +127,20 @@ public class Account {
         return Ed25519.generateKeyPairFromSeed(seed);
     }
 
-    private String generateAccountNumber(PublicKey key) {
-        final Network network = GlobalConfiguration.network();
-        final int keyType = Ed25519.TYPE;
-        int keyVariantValue = keyType << 4;
-        keyVariantValue |= KeyPart.PUBLIC_KEY.value();
+    private static String generateAccountNumber(PublicKey key) {
+        return generateAccountNumber(key, GlobalConfiguration.network());
+    }
+
+    private static String generateAccountNumber(PublicKey key, Network network) {
+        int keyVariantValue = KEY_TYPE << 4;
+        keyVariantValue |= PUBLIC_KEY.value();
         keyVariantValue |= (network.value() << 1);
 
         final byte[] keyVariantVarInt = VarInt.writeUnsignedVarInt(keyVariantValue);
         final byte[] publicKeyBytes = key.toBytes();
-        final byte[] preChecksum = Arrays.concatenate(keyVariantVarInt, publicKeyBytes);
-        final byte[] checksum = Arrays.copyOfRange(Sha3256.hash(preChecksum), 0, 4);
-        final byte[] address = Arrays.concatenate(keyVariantVarInt, publicKeyBytes, checksum);
+        final byte[] preChecksum = concat(keyVariantVarInt, publicKeyBytes);
+        final byte[] checksum = slice(Sha3256.hash(preChecksum), 0, CHECKSUM_LENGTH);
+        final byte[] address = concat(keyVariantVarInt, publicKeyBytes, checksum);
         return BASE_58.encode(address);
     }
 

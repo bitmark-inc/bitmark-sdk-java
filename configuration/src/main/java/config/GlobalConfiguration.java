@@ -54,7 +54,7 @@ public class GlobalConfiguration {
     }
 
 
-    private static final class Builder {
+    public static final class Builder {
 
         private Network network = Network.TEST_NET;
 

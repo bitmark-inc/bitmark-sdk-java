@@ -1,5 +1,7 @@
 package crypto.encoder;
 
+import error.ValidateException;
+
 import static utils.Validator.*;
 
 /**
@@ -20,7 +22,7 @@ public class Hex implements Encoder {
     }
 
     @Override
-    public byte[] decode(String value) {
+    public byte[] decode(String value) throws ValidateException {
         checkValidHex(value);
         final char[] data = value.toCharArray();
         final int len = data.length;
@@ -44,7 +46,7 @@ public class Hex implements Encoder {
     }
 
     @Override
-    public String encode(byte[] data) {
+    public String encode(byte[] data) throws ValidateException {
         checkNonNull(data);
         checkValid(() -> data.length > 0);
         final int len = data.length;

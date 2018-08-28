@@ -1,6 +1,7 @@
 package utils;
 
 import crypto.Sha256;
+import error.ValidateException;
 import org.bouncycastle.crypto.digests.SHA512Digest;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
@@ -9,11 +10,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.security.SecureRandom;
-import java.util.Arrays;
 
+import static crypto.Random.secureRandom;
 import static crypto.encoder.Raw.RAW;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static utils.ArrayUtil.slice;
+import static utils.Validator.checkValid;
 
 /**
  * @author Hieu Pham
@@ -52,7 +54,8 @@ public class RecoveryPhrase {
         this(generateMnemonic());
     }
 
-    public RecoveryPhrase(String mnemonicWords) {
+    public RecoveryPhrase(String mnemonicWords) throws ValidateException {
+        checkValid(() -> mnemonicWords != null && mnemonicWords.length() == MNEMONIC_WORD_LENGTH);
         this.mnemonicWords = mnemonicWords;
     }
 
@@ -74,8 +77,7 @@ public class RecoveryPhrase {
 
     public static String generateMnemonic() {
         // Random entropy
-        final byte[] entropy = new byte[32];
-        new SecureRandom().nextBytes(entropy);
+        final byte[] entropy = secureRandom(32);
         final int entropyLength = entropy.length * 8;
         final int checksumLength = entropyLength / 32;
 
@@ -95,7 +97,7 @@ public class RecoveryPhrase {
         int iterations = (entropyLength + checksumLength) / 11;
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < iterations; i++) {
-            boolean[] examinedBits = Arrays.copyOfRange(bits, i * 11, i * 11 + 11);
+            boolean[] examinedBits = slice(bits, i * 11, i * 11 + 11);
             int index = toInt(examinedBits);
             builder.append(WORDS[index]);
             if (i < iterations - 1) builder.append(" ");

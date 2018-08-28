@@ -1,5 +1,7 @@
 package crypto.key;
 
+import error.ValidateException;
+
 import static crypto.encoder.Hex.HEX;
 import static utils.Validator.checkValid;
 import static utils.Validator.checkValidHex;
@@ -19,7 +21,7 @@ public class PublicKey implements Key {
         return new PublicKey(key);
     }
 
-    public static PublicKey from(String hexKey) {
+    public static PublicKey from(String hexKey) throws ValidateException.InvalidHex {
         checkValidHex(hexKey);
         return new PublicKey(hexKey);
     }

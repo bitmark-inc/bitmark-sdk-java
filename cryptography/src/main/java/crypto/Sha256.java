@@ -1,5 +1,7 @@
 package crypto;
 
+import error.ValidateException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -23,12 +25,12 @@ public class Sha256 implements Comparable<Sha256> {
         this.bytes = bytes;
     }
 
-    public static Sha256 from(byte[] bytes) {
+    public static Sha256 from(byte[] bytes) throws ValidateException {
         checkValidLength(bytes, HASH_LENGTH);
         return new Sha256(bytes);
     }
 
-    public static Sha256 from(String hexHash) {
+    public static Sha256 from(String hexHash) throws ValidateException {
         checkValidHex(hexHash);
         return from(HEX.decode(hexHash));
     }
@@ -41,7 +43,7 @@ public class Sha256 implements Comparable<Sha256> {
         }
     }
 
-    public static byte[] hash(String hexInput) {
+    public static byte[] hash(String hexInput) throws ValidateException {
         checkValidHex(hexInput);
         final byte[] rawBytes = HEX.decode(hexInput);
         return hash(rawBytes, 0, rawBytes.length);
@@ -51,23 +53,23 @@ public class Sha256 implements Comparable<Sha256> {
         return hash(input, 0, input.length);
     }
 
-    public static byte[] hash(byte[] input, int offset, int length) {
+    public static byte[] hash(byte[] input, int offset, int length) throws ValidateException {
         checkValid(() -> offset >= 0 && length > 0);
         MessageDigest digest = newDigest();
         digest.update(input, offset, length);
         return digest.digest();
     }
 
-    public static byte[] hashTwice(String hexString) {
+    public static byte[] hashTwice(String hexString) throws ValidateException {
         checkValidHex(hexString);
         return hashTwice(HEX.decode(hexString));
     }
 
-    public static byte[] hashTwice(byte[] input) {
+    public static byte[] hashTwice(byte[] input) throws ValidateException {
         return hashTwice(input, 0, input.length);
     }
 
-    public static byte[] hashTwice(byte[] input, int offset, int length) {
+    public static byte[] hashTwice(byte[] input, int offset, int length) throws ValidateException {
         checkValid(() -> offset >= 0 && length > 0);
         MessageDigest digest = newDigest();
         digest.update(input, offset, length);
