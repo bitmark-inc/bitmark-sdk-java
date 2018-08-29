@@ -28,6 +28,45 @@ public class ArrayUtil {
         return minimize(ByteBuffer.allocate(Integer.SIZE / 8).putInt(value).array());
     }
 
+    public static byte[] toByteArray(int[] value) {
+        final int length = value.length;
+        final byte[] result = new byte[length];
+        for (int i = 0; i < length; i++) {
+            result[i] = (byte) value[i];
+        }
+        return result;
+    }
+
+    public static boolean[] concat(boolean[] a, boolean[] b) {
+        if (a != null && b != null) {
+            boolean[] rv = new boolean[a.length + b.length];
+
+            System.arraycopy(a, 0, rv, 0, a.length);
+            System.arraycopy(b, 0, rv, a.length, b.length);
+
+            return rv;
+        } else if (b != null) {
+            return clone(b);
+        } else {
+            return clone(a);
+        }
+    }
+
+    public static int[] concat(int[] a, int[] b) {
+        if (a != null && b != null) {
+            int[] rv = new int[a.length + b.length];
+
+            System.arraycopy(a, 0, rv, 0, a.length);
+            System.arraycopy(b, 0, rv, a.length, b.length);
+
+            return rv;
+        } else if (b != null) {
+            return clone(b);
+        } else {
+            return clone(a);
+        }
+    }
+
     public static byte[] concat(byte[] a, byte[] b) {
         if (a != null && b != null) {
             byte[] rv = new byte[a.length + b.length];
@@ -86,11 +125,33 @@ public class ArrayUtil {
         return Arrays.equals(a, b);
     }
 
+    public static int[] clone(int[] data) {
+        if (data == null) {
+            return null;
+        }
+        int[] copy = new int[data.length];
+
+        System.arraycopy(data, 0, copy, 0, data.length);
+
+        return copy;
+    }
+
     public static byte[] clone(byte[] data) {
         if (data == null) {
             return null;
         }
         byte[] copy = new byte[data.length];
+
+        System.arraycopy(data, 0, copy, 0, data.length);
+
+        return copy;
+    }
+
+    public static boolean[] clone(boolean[] data) {
+        if (data == null) {
+            return null;
+        }
+        boolean[] copy = new boolean[data.length];
 
         System.arraycopy(data, 0, copy, 0, data.length);
 
@@ -112,5 +173,35 @@ public class ArrayUtil {
             else break;
         }
         return slice(data, i, data.length);
+    }
+
+    public static boolean contains(String[] source, String examined) {
+        for (String item : source) {
+            if (item.equals(examined)) return true;
+        }
+        return false;
+    }
+
+    public static boolean contains(String[] source, String[] examined) {
+        for (String item : examined) {
+            if (!contains(source, item)) return false;
+        }
+        return true;
+    }
+
+    public static int indexOf(String[] source, String examined) {
+        for (int i = 0; i < source.length; i++) {
+            if (source[i].equals(examined)) return i;
+        }
+        return -1;
+    }
+
+    public static int[] toUInt(byte[] data) {
+        final int length = data.length;
+        final int[] result = new int[length];
+        for (int i = 0; i < length; i++) {
+            result[i] = data[i] & 0xFF;
+        }
+        return result;
     }
 }

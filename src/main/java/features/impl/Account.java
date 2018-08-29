@@ -53,8 +53,10 @@ public class Account {
         return new Account(key, accountNumber);
     }
 
-    public static Account fromRecoveryPhrase(RecoveryPhrase recoveryPhrase) {
-        throw new UnsupportedOperationException();
+    public static Account fromRecoveryPhrase(String... recoveryPhrase) {
+        final RecoveryPhrase phrase = RecoveryPhrase.fromMnemonicWords(recoveryPhrase);
+        final Seed seed = phrase.recoverSeed();
+        return fromSeed(seed);
     }
 
     public Account() {
@@ -68,7 +70,7 @@ public class Account {
     }
 
     public RecoveryPhrase getRecoveryPhrase() {
-        throw new UnsupportedOperationException();
+        return RecoveryPhrase.fromSeed(getSeed());
     }
 
     public Seed getSeed() {

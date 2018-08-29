@@ -1,20 +1,19 @@
 package utils;
 
-import crypto.Sha256;
+import config.GlobalConfiguration;
+import config.Network;
+import config.SdkConfig;
 import error.ValidateException;
-import org.bouncycastle.crypto.digests.SHA512Digest;
-import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
-import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static crypto.Random.secureRandom;
-import static crypto.encoder.Raw.RAW;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static utils.ArrayUtil.slice;
+import static utils.ArrayUtil.*;
 import static utils.Validator.checkValid;
 
 /**
@@ -28,13 +27,13 @@ public class RecoveryPhrase {
 
     private static final int MNEMONIC_WORD_LENGTH = 24;
 
-    private static final int SEED_LENGTH = 512;
+    private static final int ENTROPY_LENGTH = 33;
 
-    private static final int SEED_ITERATIONS = 2048;
-
-    private final String mnemonicWords;
+    private final String[] mnemonicWords;
 
     private static final String[] WORDS = new String[2048];
+
+    private static final int[] MASKS = new int[]{0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023};
 
     static {
         try {
@@ -50,80 +49,85 @@ public class RecoveryPhrase {
         }
     }
 
-    public RecoveryPhrase() {
-        this(generateMnemonic());
+    public static RecoveryPhrase fromSeed(Seed seed) throws ValidateException {
+        checkValid(() -> seed != null && seed.getSeed().length == SdkConfig.Seed.LENGTH, "Invalid" +
+                " Seed");
+        final Network network = seed.getNetwork();
+        final byte[] seedData = seed.getSeed();
+        return new RecoveryPhrase(generateMnemonic(getEntropy(network, seedData)));
     }
 
-    public RecoveryPhrase(String mnemonicWords) throws ValidateException {
-        checkValid(() -> mnemonicWords != null && mnemonicWords.length() == MNEMONIC_WORD_LENGTH);
+    public static RecoveryPhrase fromMnemonicWords(String... mnemonicWords) throws ValidateException {
+        return new RecoveryPhrase(mnemonicWords);
+    }
+
+    public RecoveryPhrase() throws ValidateException {
+        final byte[] randomBytes = secureRandom(ENTROPY_LENGTH - 1);
+        final byte[] entropy = getEntropy(GlobalConfiguration.network(), randomBytes);
+        this.mnemonicWords = generateMnemonic(entropy);
+    }
+
+    private RecoveryPhrase(String... mnemonicWords) throws ValidateException {
+        validate(mnemonicWords);
         this.mnemonicWords = mnemonicWords;
     }
 
-    public String getMnemonicWords() {
+    public String[] getMnemonicWords() {
         return mnemonicWords;
     }
 
-    public byte[] toSeed(String passphrase) {
-        return toSeed(mnemonicWords, passphrase);
+    public Seed recoverSeed() {
+        return recoverSeed(mnemonicWords);
     }
 
-    public static byte[] toSeed(String mnemonic, String passphrase) {
-        passphrase = passphrase == null ? "" : passphrase;
-        String salt = String.format("mnemonic%s", passphrase);
-        PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA512Digest());
-        gen.init(RAW.decode(mnemonic), salt.getBytes(UTF_8), SEED_ITERATIONS);
-        return ((KeyParameter) gen.generateDerivedParameters(SEED_LENGTH)).getKey();
-    }
+    public static Seed recoverSeed(String[] mnemonicWord) {
+        validate(mnemonicWord);
+        int[] data = new int[]{};
+        int remainder = 0;
+        int bits = 0;
 
-    public static String generateMnemonic() {
-        // Random entropy
-        final byte[] entropy = secureRandom(32);
-        final int entropyLength = entropy.length * 8;
-        final int checksumLength = entropyLength / 32;
-
-        // Calculate checksum
-        final byte mask = (byte) (0xFF << 8 - checksumLength);
-        final byte[] bytes = Sha256.hash(entropy);
-        final byte checksum = (byte) (bytes[0] & mask);
-
-        // Convert to bit array
-        final int length = checksumLength + entropyLength;
-        final boolean[] bits = new boolean[length];
-        final boolean[] entropyBits = toBits(entropy);
-        final boolean[] checksumBits = toBits(new byte[]{checksum});
-        System.arraycopy(entropyBits, 0, bits, 0, entropyBits.length);
-        System.arraycopy(checksumBits, 0, bits, entropyBits.length, checksumLength);
-
-        int iterations = (entropyLength + checksumLength) / 11;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < iterations; i++) {
-            boolean[] examinedBits = slice(bits, i * 11, i * 11 + 11);
-            int index = toInt(examinedBits);
-            builder.append(WORDS[index]);
-            if (i < iterations - 1) builder.append(" ");
+        for (int i = 0; i < MNEMONIC_WORD_LENGTH; i++) {
+            final String word = mnemonicWord[i];
+            final int index = indexOf(WORDS, word);
+            remainder = (remainder << 11) + index;
+            for (bits += 11; bits >= 8; bits -= 8) {
+                final int a = 0xFF & (remainder >> (bits - 8));
+                data = concat(data, new int[]{a});
+            }
+            remainder &= MASKS[bits];
         }
-        return builder.toString();
+        final byte[] entropy = toByteArray(data);
+        checkValid(() -> entropy.length == ENTROPY_LENGTH, "Invalid mnemonic words");
+        final Network network = Network.valueOf(entropy[0]);
+        final byte[] seed = slice(entropy, 1, ENTROPY_LENGTH);
+        return new Seed(seed, network);
     }
 
-    private static boolean[] toBits(byte[] value) {
-        final int length = value.length * 8;
-        final boolean[] bits = new boolean[length];
-        for (int i = 0; i < value.length; i++) {
-            for (int j = 0; j < 8; j++) {
-                bits[8 * i + j] = ((value[i] >>> (7 - j)) & 1) > 0;
+    public static String[] generateMnemonic(byte[] entropy) throws ValidateException {
+        checkValid(() -> entropy != null && entropy.length == ENTROPY_LENGTH, "Invalid entropy " +
+                "length. The valid length must be " + ENTROPY_LENGTH);
+        final List<String> mnemonicWords = new ArrayList<>(MNEMONIC_WORD_LENGTH);
+        final int[] unsignedEntropy = toUInt(entropy);
+        int accumulator = 0;
+        int bits = 0;
+        for (int i = 0; i < ENTROPY_LENGTH; i++) {
+            accumulator = (accumulator << 8) + unsignedEntropy[i];
+            bits += 8;
+            if (bits >= 11) {
+                bits -= 11;
+                int index = accumulator >> bits;
+                accumulator &= MASKS[bits];
+                mnemonicWords.add(WORDS[index]);
             }
         }
-        return bits;
+        return mnemonicWords.toArray(new String[MNEMONIC_WORD_LENGTH]);
     }
 
-    private static int toInt(boolean[] bits) {
-        int value = 0;
-        for (int i = 0; i < bits.length; i++) {
-            boolean isSet = bits[i];
-            if (isSet) {
-                value += 1 << bits.length - i - 1;
-            }
-        }
-        return value;
+    private static void validate(String... mnemonicWords) {
+        checkValid(() -> mnemonicWords != null && mnemonicWords.length == MNEMONIC_WORD_LENGTH && contains(WORDS, mnemonicWords));
+    }
+
+    private static byte[] getEntropy(Network network, byte[] seed) {
+        return concat(toByteArray(network.value()), seed);
     }
 }

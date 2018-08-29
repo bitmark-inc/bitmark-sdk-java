@@ -4,6 +4,7 @@ import config.GlobalConfiguration;
 import config.Network;
 import crypto.Sha3256;
 import crypto.encoder.VarInt;
+import error.ValidateException;
 import utils.error.InvalidChecksumException;
 import utils.error.InvalidNetworkException;
 import utils.error.InvalidSeedException;
@@ -33,7 +34,7 @@ public class Seed {
 
     private int version;
 
-    public static Seed fromEncodedSeed(String encodedSeed) {
+    public static Seed fromEncodedSeed(String encodedSeed) throws ValidateException {
         final byte[] seedBytes = BASE_58.decode(encodedSeed);
         checkValidLength(seedBytes, ENCODED_LENGTH);
 
@@ -73,12 +74,15 @@ public class Seed {
     }
 
     public Seed(byte[] seed) {
-        this.seed = seed;
-        this.network = GlobalConfiguration.network();
-        this.version = VERSION;
+        this(seed, GlobalConfiguration.network());
+    }
+
+    public Seed(byte[] seed, Network network) {
+        this(seed, network, VERSION);
     }
 
     public Seed(byte[] seed, Network network, int version) {
+        checkValid(() -> seed != null && network != null && version > 0);
         this.seed = seed;
         this.network = network;
         this.version = version;

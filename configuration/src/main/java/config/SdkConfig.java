@@ -1,5 +1,7 @@
 package config;
 
+import crypto.Ed25519;
+
 import static crypto.encoder.Hex.HEX;
 
 /**
@@ -19,7 +21,7 @@ public class SdkConfig {
 
         public static final int ENCODED_LENGTH = 48;
 
-        public static final int LENGTH = 32;
+        public static final int LENGTH = Ed25519.SEED_LENGTH;
 
         public static final int VERSION = 0x01;
 
