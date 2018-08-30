@@ -5,5 +5,12 @@
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class ApiService {
+public class ApiService implements BitmarkApi {
+
+    private final HttpClient httpClient;
+
+    public ApiService(String apiToken) {
+        httpClient = new HttpClientImpl(apiToken);
+    }
+
 }

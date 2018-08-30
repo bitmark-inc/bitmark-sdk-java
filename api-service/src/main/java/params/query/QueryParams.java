@@ -7,15 +7,7 @@ package params.query;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class QueryParams {
+public interface QueryParams {
 
-    private QueryBuilder builder;
-
-    QueryParams(QueryBuilder builder) {
-        this.builder = builder;
-    }
-
-    String toUrlQuery() {
-        throw new UnsupportedOperationException("Unsupport right now");
-    }
+    String toUrlQuery();
 }
