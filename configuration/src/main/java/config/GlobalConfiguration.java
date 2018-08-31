@@ -1,5 +1,7 @@
 package config;
 
+import static utils.Validator.checkNonNull;
+
 /**
  * @author Hieu Pham
  * @since 8/23/18
@@ -17,7 +19,13 @@ public class GlobalConfiguration {
         return new Builder();
     }
 
-    private static GlobalConfiguration getInstance(Builder builder) {
+    public static void createInstance(String apiToken) {
+        createInstance(new Builder(apiToken));
+    }
+
+    public static void createInstance(Builder builder) {
+        checkNonNull(builder);
+        builder.validate();
         if (INSTANCE == null) {
             synchronized (GlobalConfiguration.class) {
                 if (INSTANCE == null) {
@@ -26,7 +34,10 @@ public class GlobalConfiguration {
             }
         } else
             throw new UnsupportedOperationException("GlobalConfiguration must be initialize once");
-        return INSTANCE;
+    }
+
+    public static boolean isInitialized() {
+        return INSTANCE != null;
     }
 
     private GlobalConfiguration(Builder builder) {
@@ -62,6 +73,14 @@ public class GlobalConfiguration {
 
         private int connectionTimeout = 30; // 30 seconds
 
+        Builder() {
+        }
+
+        Builder(String apiToken) {
+            this.apiToken = apiToken;
+            validate();
+        }
+
         public Builder withNetwork(Network network) {
             this.network = network;
             return this;
@@ -77,9 +96,8 @@ public class GlobalConfiguration {
             return this;
         }
 
-        public GlobalConfiguration build() {
-            validate();
-            return GlobalConfiguration.getInstance(this);
+        public void build() {
+            GlobalConfiguration.createInstance(this);
         }
 
         private void validate() {

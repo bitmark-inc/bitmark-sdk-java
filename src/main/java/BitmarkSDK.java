@@ -1,6 +1,4 @@
-import features.Asset;
-import features.Bitmark;
-import features.SdkInterface;
+import config.GlobalConfiguration;
 
 /**
  * @author Hieu Pham
@@ -11,36 +9,18 @@ import features.SdkInterface;
 
 public class BitmarkSDK {
 
-    private SdkInterface sdkInterface = new SdkInterface();
-
-    private static volatile BitmarkSDK INSTANCE;
-
-    private BitmarkSDK() {
+    public static void init(String apiToken) {
+        init(GlobalConfiguration.builder().withApiToken(apiToken));
     }
 
-    public static void init() {
-        if (INSTANCE == null) {
-            synchronized (BitmarkSDK.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new BitmarkSDK();
-                } else throw new UnsupportedOperationException("Sdk must be initialized once");
-            }
-        } else throw new UnsupportedOperationException("Sdk must be initialized once");
-    }
-
-    public static Asset asset() {
+    public static void init(GlobalConfiguration.Builder builder) {
         validate();
-        return INSTANCE.sdkInterface.getAsset();
-    }
-
-    public static Bitmark bitmark() {
-        validate();
-        return INSTANCE.sdkInterface.getBitmark();
+        GlobalConfiguration.createInstance(builder);
     }
 
     private static void validate() {
-        if (INSTANCE == null) throw new UnsupportedOperationException("You must call BitmarkSDK" +
-                ".init() first");
+        if (GlobalConfiguration.isInitialized()) throw new UnsupportedOperationException("You " +
+                "must call BitmarkSDK.init() once");
     }
 
 }

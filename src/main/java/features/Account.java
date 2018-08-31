@@ -1,4 +1,4 @@
-package features.impl;
+package features;
 
 import config.GlobalConfiguration;
 import config.Network;

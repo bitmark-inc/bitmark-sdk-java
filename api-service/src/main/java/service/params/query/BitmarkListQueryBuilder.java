@@ -1,4 +1,4 @@
-package params.query;
+package service.params.query;
 
 /**
  * @author Hieu Pham
@@ -7,5 +7,5 @@ package params.query;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface QueryBuilder {
+public class BitmarkListQueryBuilder implements QueryBuilder {
 }

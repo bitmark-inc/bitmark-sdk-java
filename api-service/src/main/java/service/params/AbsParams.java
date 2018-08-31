@@ -1,4 +1,6 @@
-package params;
+package service.params;
+
+import crypto.key.KeyPair;
 
 /**
  * @author Hieu Pham
@@ -12,7 +14,7 @@ public abstract class AbsParams implements Params {
     protected byte[] signature;
 
     @Override
-    public void sign(byte[] privateKey) {
+    public void sign(KeyPair key) {
         throw new UnsupportedOperationException("Unsupport right now");
     }
 }

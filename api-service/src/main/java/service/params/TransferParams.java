@@ -1,19 +1,19 @@
-package params;
+package service.params;
 
 /**
  * @author Hieu Pham
- * @since 8/30/18
+ * @since 8/29/18
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class OfferParams extends AbsParams {
+public class TransferParams extends AbsParams {
 
     private String receiverAccountNumber;
 
     private String prevTxId;
 
-    public OfferParams(String receiverAccountNumber) {
+    public TransferParams(String receiverAccountNumber) {
         this.receiverAccountNumber = receiverAccountNumber;
     }
 

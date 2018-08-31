@@ -1,6 +1,8 @@
+package service;
+
 import okhttp3.Response;
-import params.Params;
-import params.query.QueryParams;
+import service.params.Params;
+import service.params.query.QueryParams;
 import utils.callback.Callback1;
 
 /**

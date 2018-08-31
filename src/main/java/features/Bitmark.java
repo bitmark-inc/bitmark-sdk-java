@@ -7,5 +7,5 @@ package features;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Bitmark {
+public class Bitmark {
 }

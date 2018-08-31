@@ -30,7 +30,7 @@ public class SdkConfig {
         public static final int NETWORK_LENGTH = 1;
     }
 
-    public static final class ApiService {
+    public static final class ApiServer {
 
         public static final String LIVE_NET_ENDPOINT = "https://api.bitmark.com";
 

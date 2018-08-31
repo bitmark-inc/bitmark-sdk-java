@@ -7,6 +7,6 @@ package features;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Asset {
+public class Asset {
 
 }

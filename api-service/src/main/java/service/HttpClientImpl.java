@@ -1,16 +1,18 @@
+package service;
+
 import config.GlobalConfiguration;
 import config.Network;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
-import params.Params;
-import params.query.QueryParams;
+import service.params.Params;
+import service.params.query.QueryParams;
 import utils.callback.Callback1;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import static config.SdkConfig.ApiService.LIVE_NET_ENDPOINT;
-import static config.SdkConfig.ApiService.TEST_NET_ENDPOINT;
+import static config.SdkConfig.ApiServer.LIVE_NET_ENDPOINT;
+import static config.SdkConfig.ApiServer.TEST_NET_ENDPOINT;
 
 /**
  * @author Hieu Pham

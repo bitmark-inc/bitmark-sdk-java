@@ -1,4 +1,4 @@
-package params.query;
+package service.params.query;
 
 /**
  * @author Hieu Pham
