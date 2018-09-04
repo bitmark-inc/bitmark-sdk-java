@@ -48,30 +48,30 @@ public class HttpClientImpl implements HttpClient {
         return builder.build();
     }
 
-    private String getRequestUrl(String url) {
+    private String getRequestUrl(String path) {
         return (GlobalConfiguration.network() == Network.TEST_NET ? TEST_NET_ENDPOINT :
-                LIVE_NET_ENDPOINT) + url;
+                LIVE_NET_ENDPOINT) + path;
     }
 
-    private String getRequestUrl(String url, QueryParams params) {
-        return getRequestUrl(url) + "?" + params.toUrlQuery();
-    }
-
-    @Override
-    public void get(String url, Callback1<Response> callback) {
-        get(url, null, callback);
+    private String getRequestUrl(String path, QueryParams params) {
+        return getRequestUrl(path) + "?" + params.toUrlQuery();
     }
 
     @Override
-    public void get(String url, QueryParams params, Callback1<Response> callback) {
-        String requestUrl = params == null ? getRequestUrl(url) : getRequestUrl(url, params);
+    public void get(String path, Callback1<Response> callback) {
+        get(path, null, callback);
+    }
+
+    @Override
+    public void get(String path, QueryParams params, Callback1<Response> callback) {
+        String requestUrl = params == null ? getRequestUrl(path) : getRequestUrl(path, params);
         Request request = new Request.Builder().url(requestUrl).get().build();
         client.newCall(request).enqueue(wrapCallback(callback));
     }
 
     @Override
-    public void post(String url, Params params, Callback1<Response> callback) {
-        String requestUrl = getRequestUrl(url);
+    public void post(String path, Params params, Callback1<Response> callback) {
+        String requestUrl = getRequestUrl(path);
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .post(RequestBody.create(JSON, params.toJson()))
@@ -80,8 +80,8 @@ public class HttpClientImpl implements HttpClient {
     }
 
     @Override
-    public void patch(String url, Params params, Callback1<Response> callback) {
-        String requestUrl = getRequestUrl(url);
+    public void patch(String path, Params params, Callback1<Response> callback) {
+        String requestUrl = getRequestUrl(path);
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .patch(RequestBody.create(JSON, params.toJson()))
@@ -90,13 +90,13 @@ public class HttpClientImpl implements HttpClient {
     }
 
     @Override
-    public void delete(String url, Callback1<Response> callback) {
-        delete(url, null, callback);
+    public void delete(String path, Callback1<Response> callback) {
+        delete(path, null, callback);
     }
 
     @Override
-    public void delete(String url, Params params, Callback1<Response> callback) {
-        String requestUrl = getRequestUrl(url);
+    public void delete(String path, Params params, Callback1<Response> callback) {
+        String requestUrl = getRequestUrl(path);
         Request.Builder builder = new Request.Builder()
                 .url(requestUrl);
         Request request = params == null ? builder.delete().build() :

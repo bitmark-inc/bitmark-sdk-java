@@ -14,15 +14,15 @@ import utils.callback.Callback1;
 
 public interface HttpClient {
 
-    void get(String url, Callback1<Response> callback);
+    void get(String path, Callback1<Response> callback);
 
-    void get(String url, QueryParams params, Callback1<Response> callback);
+    void get(String path, QueryParams params, Callback1<Response> callback);
 
-    void post(String url, Params params, Callback1<Response> callback);
+    void post(String path, Params params, Callback1<Response> callback);
 
-    void patch(String url, Params params, Callback1<Response> callback);
+    void patch(String path, Params params, Callback1<Response> callback);
 
-    void delete(String url, Callback1<Response> callback);
+    void delete(String path, Callback1<Response> callback);
 
-    void delete(String url, Params params, Callback1<Response> callback);
+    void delete(String path, Params params, Callback1<Response> callback);
 }
