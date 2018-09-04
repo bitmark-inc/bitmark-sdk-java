@@ -25,7 +25,7 @@ import static utils.Validator.checkValid;
 
 public class RecoveryPhrase {
 
-    private static final int MNEMONIC_WORD_LENGTH = 24;
+    public static final int MNEMONIC_WORD_LENGTH = 24;
 
     private static final int ENTROPY_LENGTH = 33;
 
@@ -124,7 +124,7 @@ public class RecoveryPhrase {
     }
 
     private static void validate(String... mnemonicWords) {
-        checkValid(() -> mnemonicWords != null && mnemonicWords.length == MNEMONIC_WORD_LENGTH && contains(WORDS, mnemonicWords));
+        checkValid(() -> mnemonicWords != null && mnemonicWords.length == MNEMONIC_WORD_LENGTH && contains(WORDS, mnemonicWords) && !isDuplicate(mnemonicWords));
     }
 
     private static byte[] getEntropy(Network network, byte[] seed) {

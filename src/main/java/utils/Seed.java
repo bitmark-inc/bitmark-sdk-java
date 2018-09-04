@@ -2,6 +2,7 @@ package utils;
 
 import config.GlobalConfiguration;
 import config.Network;
+import config.SdkConfig;
 import crypto.Sha3256;
 import crypto.encoder.VarInt;
 import error.ValidateException;
@@ -44,7 +45,9 @@ public class Seed {
                 length - CHECKSUM_LENGTH, length);
 
         // Bytes not contains checksum
-        final SequenceIterateByteArray data = new SequenceIterateByteArray(Arrays.copyOfRange(seedBytes, 0, length - CHECKSUM_LENGTH));
+        final SequenceIterateByteArray data =
+                new SequenceIterateByteArray(Arrays.copyOfRange(seedBytes, 0,
+                        length - CHECKSUM_LENGTH));
 
         // Verify checksum
         final byte[] dataHashed = Sha3256.hash(data.getBytes());
@@ -82,7 +85,7 @@ public class Seed {
     }
 
     public Seed(byte[] seed, Network network, int version) {
-        checkValid(() -> seed != null && network != null && version > 0);
+        checkValid(() -> seed != null && seed.length == SdkConfig.Seed.LENGTH && network != null && version > 0);
         this.seed = seed;
         this.network = network;
         this.version = version;

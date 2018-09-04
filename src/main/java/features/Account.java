@@ -4,7 +4,6 @@ import config.GlobalConfiguration;
 import config.Network;
 import config.SdkConfig;
 import crypto.Ed25519;
-import crypto.SecretBox;
 import crypto.Sha3256;
 import crypto.encoder.VarInt;
 import crypto.key.KeyPair;
@@ -23,6 +22,7 @@ import static config.SdkConfig.CHECKSUM_LENGTH;
 import static config.SdkConfig.KEY_TYPE;
 import static config.SdkConfig.KeyPart.PUBLIC_KEY;
 import static crypto.Random.random;
+import static crypto.SecretBox.generateSecretBox;
 import static crypto.encoder.Base58.BASE_58;
 import static crypto.encoder.Hex.HEX;
 import static utils.ArrayUtil.*;
@@ -38,35 +38,44 @@ public class Account {
 
     private static final byte[] KEY_INDEX = HEX.decode("000000000000000000000000000003E7"); // 999
 
-    private static final int ENTROPY_LENGTH = 32;
+    private static final int CORE_LENGTH = 32;
 
     private static final int NONCE_LENGTH = 24;
 
     private String accountNumber;
 
-    private KeyPair key;
+    private byte[] core;
 
     public static Account fromSeed(Seed seed) throws ValidateException.InvalidLength {
-        final byte[] seedBytes = seed.getSeed();
-        final KeyPair key = Ed25519.generateKeyPairFromSeed(seedBytes);
+        final byte[] core = seed.getSeed();
+        final KeyPair key = generateKeyPair(core);
         final String accountNumber = generateAccountNumber(key.publicKey(), seed.getNetwork());
-        return new Account(key, accountNumber);
+        return new Account(core, accountNumber);
     }
 
-    public static Account fromRecoveryPhrase(String... recoveryPhrase) {
+    public static Account fromRecoveryPhrase(String... recoveryPhrase) throws ValidateException {
         final RecoveryPhrase phrase = RecoveryPhrase.fromMnemonicWords(recoveryPhrase);
         final Seed seed = phrase.recoverSeed();
         return fromSeed(seed);
     }
 
     public Account() {
-        key = generateKey();
+        core = random(CORE_LENGTH);
+        final KeyPair key = generateKeyPair(core);
         accountNumber = generateAccountNumber(key.publicKey());
     }
 
-    private Account(KeyPair key, String accountNumber) {
-        this.key = key;
+    private Account(byte[] core, String accountNumber) {
+        this.core = core;
         this.accountNumber = accountNumber;
+    }
+
+    public KeyPair getKey() {
+        return generateKeyPair(core);
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
     public RecoveryPhrase getRecoveryPhrase() {
@@ -74,9 +83,8 @@ public class Account {
     }
 
     public Seed getSeed() {
-        final byte[] seed = Ed25519.getSeed(key.privateKey().toBytes());
         final AccountNumberData data = parseAccountNumber(accountNumber);
-        return new Seed(seed, data.getNetwork(), SdkConfig.Seed.VERSION);
+        return new Seed(core, data.getNetwork(), SdkConfig.Seed.VERSION);
     }
 
     public static boolean isValidAccountNumber(String accountNumber) {
@@ -123,9 +131,8 @@ public class Account {
         return AccountNumberData.from(PublicKey.from(publicKey), network);
     }
 
-    private KeyPair generateKey() {
-        final byte[] entropy = random(ENTROPY_LENGTH);
-        final byte[] seed = SecretBox.generateSecretBox(KEY_INDEX, new byte[NONCE_LENGTH], entropy);
+    private static KeyPair generateKeyPair(byte[] core) {
+        final byte[] seed = generateSecretBox(KEY_INDEX, new byte[NONCE_LENGTH], core);
         return Ed25519.generateKeyPairFromSeed(seed);
     }
 

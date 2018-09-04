@@ -3,7 +3,6 @@ package crypto;
 import java.util.Arrays;
 
 import static crypto.libsodium.LibSodium.sodium;
-import static utils.Validator.checkValidLength;
 
 /**
  * @author Hieu Pham
@@ -14,21 +13,18 @@ import static utils.Validator.checkValidLength;
 
 public class SecretBox {
 
-    private static final int MESSAGE_LENGTH = 16;
-
     private SecretBox() {
     }
 
     public static byte[] generateSecretBox(byte[] msg, byte[] nonce, byte[] key) {
-        checkValidLength(msg, MESSAGE_LENGTH);
 
-        final byte[] m = new byte[key.length + MESSAGE_LENGTH];
+        final int msgLength = msg.length;
+        final byte[] m = new byte[key.length + msgLength];
         final byte[] c = new byte[m.length];
 
-        System.arraycopy(msg, 0, m, m.length - MESSAGE_LENGTH, msg.length);
+        System.arraycopy(msg, 0, m, m.length - msgLength, msgLength);
 
         sodium().crypto_secretbox(c, m, m.length, nonce, key);
-        return Arrays.copyOfRange(c, MESSAGE_LENGTH, c.length);
+        return Arrays.copyOfRange(c, msgLength, c.length);
     }
-
 }

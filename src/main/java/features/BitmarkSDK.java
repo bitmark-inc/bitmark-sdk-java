@@ -1,3 +1,7 @@
+package features;
+
+import annotation.MainThread;
+import annotation.VisibleForTesting;
 import config.GlobalConfiguration;
 
 /**
@@ -9,13 +13,20 @@ import config.GlobalConfiguration;
 
 public class BitmarkSDK {
 
+    @MainThread
     public static void init(String apiToken) {
         init(GlobalConfiguration.builder().withApiToken(apiToken));
     }
 
+    @MainThread
     public static void init(GlobalConfiguration.Builder builder) {
         validate();
         GlobalConfiguration.createInstance(builder);
+    }
+
+    @VisibleForTesting
+    public static void destroy() {
+        GlobalConfiguration.destroy();
     }
 
     private static void validate() {

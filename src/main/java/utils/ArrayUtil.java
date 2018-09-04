@@ -1,8 +1,11 @@
 package utils;
 
+import java.math.BigInteger;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Hieu Pham
@@ -17,15 +20,12 @@ public class ArrayUtil {
     }
 
     public static int toPrimitiveInteger(byte[] value) {
-        try {
-            return ByteBuffer.wrap(value).getInt();
-        } catch (BufferUnderflowException exception) {
-            return -1;
-        }
+        return new BigInteger(value).intValue();
     }
 
     public static byte[] toByteArray(int value) throws BufferUnderflowException {
-        return minimize(ByteBuffer.allocate(Integer.SIZE / 8).putInt(value).array());
+        return value == 0 ? new byte[]{0} :
+                minimize(ByteBuffer.allocate(Integer.SIZE / 8).putInt(value).array());
     }
 
     public static byte[] toByteArray(int[] value) {
@@ -203,5 +203,14 @@ public class ArrayUtil {
             result[i] = data[i] & 0xFF;
         }
         return result;
+    }
+
+    public static boolean isDuplicate(String[] input) {
+        final List<String> nonDupArray = new ArrayList<>();
+        for (String item : input) {
+            if (nonDupArray.contains(item)) return true;
+            else nonDupArray.add(item);
+        }
+        return false;
     }
 }

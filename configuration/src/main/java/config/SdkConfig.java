@@ -19,7 +19,7 @@ public class SdkConfig {
 
     public static final class Seed {
 
-        public static final int ENCODED_LENGTH = 48;
+        public static final int ENCODED_LENGTH = 40;
 
         public static final int LENGTH = Ed25519.SEED_LENGTH;
 
