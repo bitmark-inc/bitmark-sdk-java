@@ -4,6 +4,7 @@ import config.GlobalConfiguration;
 import config.Network;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
+import service.middleware.BitmarkApiInterceptor;
 import service.params.Params;
 import service.params.query.QueryParams;
 import utils.callback.Callback1;
@@ -58,19 +59,19 @@ public class HttpClientImpl implements HttpClient {
     }
 
     @Override
-    public void get(String path, Callback1<Response> callback) {
-        get(path, null, callback);
+    public void getAsync(String path, Callback1<Response> callback) {
+        getAsync(path, null, callback);
     }
 
     @Override
-    public void get(String path, QueryParams params, Callback1<Response> callback) {
+    public void getAsync(String path, QueryParams params, Callback1<Response> callback) {
         String requestUrl = params == null ? getRequestUrl(path) : getRequestUrl(path, params);
         Request request = new Request.Builder().url(requestUrl).get().build();
         client.newCall(request).enqueue(wrapCallback(callback));
     }
 
     @Override
-    public void post(String path, Params params, Callback1<Response> callback) {
+    public void postAsync(String path, Params params, Callback1<Response> callback) {
         String requestUrl = getRequestUrl(path);
         Request request = new Request.Builder()
                 .url(requestUrl)
@@ -80,7 +81,7 @@ public class HttpClientImpl implements HttpClient {
     }
 
     @Override
-    public void patch(String path, Params params, Callback1<Response> callback) {
+    public void patchAsync(String path, Params params, Callback1<Response> callback) {
         String requestUrl = getRequestUrl(path);
         Request request = new Request.Builder()
                 .url(requestUrl)
@@ -90,12 +91,12 @@ public class HttpClientImpl implements HttpClient {
     }
 
     @Override
-    public void delete(String path, Callback1<Response> callback) {
-        delete(path, null, callback);
+    public void deleteAsync(String path, Callback1<Response> callback) {
+        deleteAsync(path, null, callback);
     }
 
     @Override
-    public void delete(String path, Params params, Callback1<Response> callback) {
+    public void deleteAsync(String path, Params params, Callback1<Response> callback) {
         String requestUrl = getRequestUrl(path);
         Request.Builder builder = new Request.Builder()
                 .url(requestUrl);

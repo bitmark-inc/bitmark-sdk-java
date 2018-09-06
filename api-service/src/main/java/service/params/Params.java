@@ -1,7 +1,5 @@
 package service.params;
 
-import crypto.key.KeyPair;
-
 /**
  * @author Hieu Pham
  * @since 8/29/18
@@ -10,8 +8,6 @@ import crypto.key.KeyPair;
  */
 
 public interface Params {
-
-    void sign(KeyPair key);
 
     String toJson();
 }

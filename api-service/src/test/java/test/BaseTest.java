@@ -1,4 +1,4 @@
-package features;
+package test;
 
 import config.GlobalConfiguration;
 import config.Network;
@@ -7,20 +7,20 @@ import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Hieu Pham
- * @since 8/31/18
+ * @since 9/5/18
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public abstract class BaseFeatureTest {
+public class BaseTest {
 
     @BeforeEach
     public void beforeEach() {
-        BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("DummyApiToken").withNetwork(Network.TEST_NET));
+        GlobalConfiguration.createInstance(GlobalConfiguration.builder().withNetwork(Network.TEST_NET).withApiToken("DummyApiToken"));
     }
 
     @AfterEach
     public void afterEach() {
-        BitmarkSDK.destroy();
+        GlobalConfiguration.destroy();
     }
 }

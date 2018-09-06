@@ -16,15 +16,28 @@ public class Random {
     private Random() {
     }
 
-    public static byte[] random(int size) {
+    public static byte[] randomBytes(int size) {
         final byte[] bytes = new byte[size];
         sodium().randombytes(bytes, size);
         return bytes;
     }
 
-    public static byte[] secureRandom(int size) {
+    public static byte[] secureRandomBytes(int size) {
         final byte[] bytes = new byte[size];
         new SecureRandom().nextBytes(bytes);
         return bytes;
+    }
+
+    public static int secureRandomInt() {
+        return new SecureRandom().nextInt();
+    }
+
+    public static int[] secureRandomInts(int size) {
+        final int[] ints = new int[size];
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < size; i++) {
+            ints[i] = random.nextInt();
+        }
+        return ints;
     }
 }

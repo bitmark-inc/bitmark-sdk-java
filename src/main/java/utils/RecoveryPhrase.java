@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static crypto.Random.secureRandom;
+import static crypto.Random.secureRandomBytes;
 import static utils.ArrayUtil.*;
 import static utils.Validator.checkValid;
 
@@ -62,7 +62,7 @@ public class RecoveryPhrase {
     }
 
     public RecoveryPhrase() throws ValidateException {
-        final byte[] randomBytes = secureRandom(ENTROPY_LENGTH - 1);
+        final byte[] randomBytes = secureRandomBytes(ENTROPY_LENGTH - 1);
         final byte[] entropy = getEntropy(GlobalConfiguration.network(), randomBytes);
         this.mnemonicWords = generateMnemonic(entropy);
     }

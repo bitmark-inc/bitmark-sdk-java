@@ -1,11 +1,13 @@
-package utils.callback;
+package utils;
 
 /**
  * @author Hieu Pham
- * @since 9/4/18
+ * @since 9/5/18
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback {
+public interface Validation {
+
+    boolean isValid();
 }

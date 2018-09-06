@@ -1,6 +1,13 @@
 package service;
 
 import config.GlobalConfiguration;
+import config.SdkConfig;
+import service.params.IssuanceParams;
+import utils.callback.Callback1;
+
+import java.util.List;
+
+import static service.middleware.Converter.toTxIds;
 
 /**
  * @author Hieu Pham
@@ -9,11 +16,9 @@ import config.GlobalConfiguration;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class ApiService implements BitmarkApi {
+public class ApiService extends AbsApiService implements BitmarkApi {
 
     private static ApiService INSTANCE;
-
-    private final HttpClient httpClient;
 
     public static ApiService getInstance() {
         if (INSTANCE == null) {
@@ -27,7 +32,12 @@ public class ApiService implements BitmarkApi {
     }
 
     private ApiService(String apiToken) {
-        httpClient = new HttpClientImpl(apiToken);
+        super(apiToken);
     }
 
+    @Override
+    public void issue(IssuanceParams params, Callback1<List<String>> callback) {
+        final String path = String.format("/%s/issue", SdkConfig.ApiServer.VERSION);
+        postAsync(path, params, toTxIds(callback));
+    }
 }

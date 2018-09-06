@@ -1,4 +1,4 @@
-package service;
+package service.middleware;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -17,7 +17,7 @@ public class BitmarkApiInterceptor implements Interceptor {
 
     private String apiToken;
 
-    BitmarkApiInterceptor(String apiToken) {
+    public BitmarkApiInterceptor(String apiToken) {
         this.apiToken = apiToken;
     }
 

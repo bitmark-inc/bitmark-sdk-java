@@ -7,7 +7,12 @@ package service.params;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class TransferResponseParams extends AbsParams {
+public class TransferResponseParams extends AbsSingleParams {
+
+    @Override
+    byte[] pack() {
+        return new byte[0];
+    }
 
     public enum Response {
         ACCEPT("accept"), REJECT("reject"), CANCEL("cancel");

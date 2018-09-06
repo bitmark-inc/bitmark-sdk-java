@@ -7,7 +7,7 @@ package service.params;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class TransferParams extends AbsParams {
+public class TransferParams extends AbsSingleParams {
 
     private String receiverAccountNumber;
 
@@ -24,5 +24,10 @@ public class TransferParams extends AbsParams {
     @Override
     public String toJson() {
         throw new UnsupportedOperationException("Unsupport right now");
+    }
+
+    @Override
+    byte[] pack() {
+        return new byte[0];
     }
 }

@@ -1,5 +1,6 @@
 package service.params;
 
+import crypto.Ed25519;
 import crypto.key.KeyPair;
 
 /**
@@ -9,12 +10,14 @@ import crypto.key.KeyPair;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public abstract class AbsParams implements Params {
+public abstract class AbsSingleParams implements SingleParams {
 
     protected byte[] signature;
 
     @Override
-    public void sign(KeyPair key) {
-        throw new UnsupportedOperationException("Unsupport right now");
+    public byte[] sign(KeyPair key) {
+        return signature = Ed25519.sign(pack(), key.privateKey().toBytes());
     }
+
+    abstract byte[] pack();
 }

@@ -21,11 +21,12 @@ import java.util.Arrays;
 import static config.SdkConfig.CHECKSUM_LENGTH;
 import static config.SdkConfig.KEY_TYPE;
 import static config.SdkConfig.KeyPart.PUBLIC_KEY;
-import static crypto.Random.random;
+import static crypto.Random.randomBytes;
 import static crypto.SecretBox.generateSecretBox;
 import static crypto.encoder.Base58.BASE_58;
 import static crypto.encoder.Hex.HEX;
 import static utils.ArrayUtil.*;
+import static utils.Validator.checkValid;
 
 /**
  * @author Hieu Pham
@@ -47,6 +48,8 @@ public class Account {
     private byte[] core;
 
     public static Account fromSeed(Seed seed) throws ValidateException.InvalidLength {
+        checkValid(() -> seed.getNetwork() == GlobalConfiguration.network(), "Incorrect network " +
+                "from Seed");
         final byte[] core = seed.getSeed();
         final KeyPair key = generateKeyPair(core);
         final String accountNumber = generateAccountNumber(key.publicKey(), seed.getNetwork());
@@ -60,7 +63,7 @@ public class Account {
     }
 
     public Account() {
-        core = random(CORE_LENGTH);
+        core = randomBytes(CORE_LENGTH);
         final KeyPair key = generateKeyPair(core);
         accountNumber = generateAccountNumber(key.publicKey());
     }

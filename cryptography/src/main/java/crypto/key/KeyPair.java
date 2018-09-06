@@ -1,5 +1,7 @@
 package crypto.key;
 
+import utils.Validation;
+
 /**
  * @author Hieu Pham
  * @since 8/23/18
@@ -7,12 +9,10 @@ package crypto.key;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface KeyPair {
+public interface KeyPair extends Validation {
 
     PublicKey publicKey();
 
     PrivateKey privateKey();
-
-    boolean isValid();
 
 }

@@ -7,9 +7,9 @@ package utils.callback;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback2<T1, T2> extends Callback {
+public interface Callback0 extends Callback {
 
-    void onSuccess(T1 t1, T2 t2);
+    void onSuccess();
 
     void onError(Throwable throwable);
 }

@@ -7,7 +7,7 @@ package utils.callback;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback1<T> {
+public interface Callback1<T> extends Callback {
 
     void onSuccess(T data);
 

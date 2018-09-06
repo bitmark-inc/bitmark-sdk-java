@@ -30,11 +30,25 @@ public class SdkConfig {
         public static final int NETWORK_LENGTH = 1;
     }
 
+    public static final class Issue {
+
+        public static final int TAG = 0x03;
+
+        public static final int ASSET_ID_LENGTH = 64;
+    }
+
+    public static final class Asset {
+
+        public static final int MAX_FINGER_PRINT = 1024;
+    }
+
     public static final class ApiServer {
 
         public static final String LIVE_NET_ENDPOINT = "https://api.bitmark.com";
 
         public static final String TEST_NET_ENDPOINT = "https://api.test.bitmark.com";
+
+        public static final String VERSION = "v3";
 
     }
 

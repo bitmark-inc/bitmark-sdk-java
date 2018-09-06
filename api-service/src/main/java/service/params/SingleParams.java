@@ -1,4 +1,6 @@
-package utils.callback;
+package service.params;
+
+import crypto.key.KeyPair;
 
 /**
  * @author Hieu Pham
@@ -7,5 +9,7 @@ package utils.callback;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback {
+public interface SingleParams extends Params {
+
+    byte[] sign(KeyPair key);
 }

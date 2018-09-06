@@ -43,9 +43,9 @@ public class AccountTest extends BaseFeatureTest {
     @CsvSource({"5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD, " +
             "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva, " +
             "58760A01EDF5ED4F95BFE977D77A27627CD57A25DF5DEA885972212C2B1C0E2F",
-                       "5XEECqWqA47qWg86DR5HJ29HhbVqwigHUAhgiBMqFSBycbiwnbY639s, " +
-                               "bDnC8nCaupb1AQtNjBoLVrGmobdALpBewkyYRG7kk2euMG93Bf, " +
-                               "9AAF14F906E2BE86B32EAE1B206335E73646E51F8BF29B6BC580B1D5A0BE67B1"})
+                       "5XEECsXPYA9wDVXMtRMAVrtaWx7WSc5tG2hqj6b8iiz9rARjg2BgA9w, " +
+                               "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX, " +
+                               "807F4D123C944E0C3ECC95D9BDE89916CED6341A8C8CEDEB8CAAFEF8F35654E7"})
     public void testNewAccountFromSeed_ValidSeed_ValidAccountIsCreated(String encodedSeed,
                                                                        String accountNumber,
                                                                        String publicKey) {
@@ -53,6 +53,13 @@ public class AccountTest extends BaseFeatureTest {
         final Account account = Account.fromSeed(seed);
         assertEquals(account.getAccountNumber(), accountNumber);
         assertEquals(HEX.encode(account.getKey().publicKey().toBytes()), publicKey);
+    }
+
+    @DisplayName("Verify function Account.fromSeed(Seed) throws exception with invalid Seed")
+    @ParameterizedTest
+    @MethodSource("createInvalidSeed")
+    public void testNewAccountFromSeed_InvalidSeed_ErrorIsThrow(Seed seed) {
+        assertThrows(ValidateException.class, () -> Account.fromSeed(seed));
     }
 
     @DisplayName("Verify function Account.fromRecoveryPhrase(String...) works well with valid " +
@@ -82,10 +89,10 @@ public class AccountTest extends BaseFeatureTest {
     @ParameterizedTest
     @CsvSource({"accident syrup inquiry you clutch liquid fame upset joke glow best " +
             "school repeat birth library combine access camera organ trial crazy jeans lizard " +
-            "science, 5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD", "ability panel " +
-            "leave spike mixture token voice certain today market grief crater cruise smart " +
-            "camera palm wheat rib swamp labor bid rifle piano glass, " +
-            "5XEECqWqA47qWg86DR5HJ29HhbVqwigHUAhgiBMqFSBycbiwnbY639s"})
+            "science, 5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD", "abuse tooth riot" +
+            " whale dance dawn armor patch tube sugar edit clean guilt person lake height tilt " +
+            "wall prosper episode produce spy artist account, " +
+            "5XEECsXPYA9wDVXMtRMAVrtaWx7WSc5tG2hqj6b8iiz9rARjg2BgA9w"})
     public void testGetSeedFromExistedAccount_ValidAccount_CorrectSeedIsReturn(String recoveryPhrase, String expectedSeed) {
         final Account account = Account.fromRecoveryPhrase(recoveryPhrase.split(" "));
         final String encodedSeed = account.getSeed().getEncodedSeed();
@@ -97,11 +104,9 @@ public class AccountTest extends BaseFeatureTest {
     @CsvSource({"5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD, accident syrup inquiry " +
             "you clutch liquid fame upset joke glow best school repeat birth library " +
             "combine access camera organ trial crazy jeans lizard science",
-                       "5XEECqWqA47qWg86DR5HJ29HhbVqwigHUAhgiBMqFSBycbiwnbY639s, ability panel " +
-                               "leave " +
-                               "spike mixture token voice certain today market grief crater " +
-                               "cruise smart " +
-                               "camera palm wheat rib swamp labor bid rifle piano glass"})
+                       "5XEECsXPYA9wDVXMtRMAVrtaWx7WSc5tG2hqj6b8iiz9rARjg2BgA9w, abuse tooth riot" +
+                               " whale dance dawn armor patch tube sugar edit clean guilt person " +
+                               "lake height tilt wall prosper episode produce spy artist account"})
     public void testGetRecoveryPhrase_NoCondition_CorrectRecoveryPhraseIsReturn(String encodedSeed, String expectedRecoveryPhrase) {
         final Seed seed = Seed.fromEncodedSeed(encodedSeed);
         final Account account = Account.fromSeed(seed);
@@ -143,11 +148,11 @@ public class AccountTest extends BaseFeatureTest {
                         "crazy jeans lizard science",
                 "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "58760A01EDF5ED4F95BFE977D77A27627CD57A25DF5DEA885972212C2B1C0E2F"),
-                Arguments.of("ability panel leave spike mixture token voice certain today market " +
-                                "grief crater cruise smart camera palm wheat rib swamp labor bid " +
-                                "rifle piano glass",
-                        "bDnC8nCaupb1AQtNjBoLVrGmobdALpBewkyYRG7kk2euMG93Bf",
-                        "9AAF14F906E2BE86B32EAE1B206335E73646E51F8BF29B6BC580B1D5A0BE67B1"));
+                Arguments.of("abuse tooth riot whale dance dawn armor patch tube sugar edit clean" +
+                                " guilt person lake height tilt wall prosper episode produce spy " +
+                                "artist account",
+                        "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
+                        "807F4D123C944E0C3ECC95D9BDE89916CED6341A8C8CEDEB8CAAFEF8F35654E7"));
     }
 
     private static Stream<Arguments> createAccountNumberPublicKeyNetwork() {
@@ -157,6 +162,14 @@ public class AccountTest extends BaseFeatureTest {
                 Arguments.of("bDnC8nCaupb1AQtNjBoLVrGmobdALpBewkyYRG7kk2euMG93Bf",
                         "9AAF14F906E2BE86B32EAE1B206335E73646E51F8BF29B6BC580B1D5A0BE67B1",
                         Network.LIVE_NET));
+    }
+
+    private static Stream<Seed> createInvalidSeed() {
+        return Stream.of(new Seed(HEX.decode(
+                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"),
+                Network.LIVE_NET), new Seed(HEX.decode(
+                "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"),
+                Network.LIVE_NET));
     }
 
 }

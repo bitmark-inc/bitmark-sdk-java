@@ -1,11 +1,11 @@
-package utils.callback;
+package test;
 
 /**
  * @author Hieu Pham
- * @since 9/4/18
+ * @since 9/5/18
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callback {
+public class ApiServiceTest extends BaseTest {
 }

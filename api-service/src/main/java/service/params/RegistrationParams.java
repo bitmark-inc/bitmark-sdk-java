@@ -1,6 +1,6 @@
 package service.params;
 
-import utils.callback.Callback;
+import utils.callback.Callback0;
 
 import java.io.File;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class RegistrationParams extends AbsParams {
+public class RegistrationParams extends AbsSingleParams {
 
     private String name;
 
@@ -25,7 +25,7 @@ public class RegistrationParams extends AbsParams {
         this.metadata = metadata;
     }
 
-    public void generateFingerprint(File file, Callback callback) {
+    public void generateFingerprint(File file, Callback0 callback) {
         throw new UnsupportedOperationException("Unsupport right now");
     }
 
@@ -34,4 +34,8 @@ public class RegistrationParams extends AbsParams {
         throw new UnsupportedOperationException("Unsupport right now");
     }
 
+    @Override
+    byte[] pack() {
+        return new byte[0];
+    }
 }
