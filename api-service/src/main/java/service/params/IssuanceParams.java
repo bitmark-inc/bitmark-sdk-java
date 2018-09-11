@@ -61,12 +61,12 @@ public class IssuanceParams extends AbsMultipleParams {
     @Override
     public String toJson() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("[");
+        builder.append("{\"issues\":[");
         for (int i = 0, size = size(); i < size; i++) {
             builder.append(buildSingleJson(i));
-            if (i == size - 1) builder.append("]");
-            else builder.append(",");
+            if (i < size - 1) builder.append(",");
         }
+        builder.append("]}");
         return builder.toString();
     }
 
@@ -87,6 +87,6 @@ public class IssuanceParams extends AbsMultipleParams {
 
     private String buildSingleJson(int index) {
         return "{\"owner\":\"" + owner.getAddress() + "\",\"signature\":\"" + HEX.encode(signatures.get(index)) + "\"," +
-                "\"asset\":\"" + assetId + "\",\"nonce\":" + nonces[index] + "}";
+                "\"assetId\":\"" + assetId + "\",\"nonce\":" + nonces[index] + "}";
     }
 }
