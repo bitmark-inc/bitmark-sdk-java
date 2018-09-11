@@ -25,7 +25,7 @@ public class BitmarkApiInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         request = request.newBuilder()
-                .addHeader("api-token", apiToken) // TODO modify later
+                .addHeader("API-TOKEN", apiToken)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
                 .addHeader("Cache-Control", "no-cache")
