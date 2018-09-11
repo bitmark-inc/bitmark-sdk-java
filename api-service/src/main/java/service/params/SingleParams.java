@@ -1,6 +1,7 @@
 package service.params;
 
 import crypto.key.KeyPair;
+import error.ValidateException;
 
 /**
  * @author Hieu Pham
@@ -11,5 +12,5 @@ import crypto.key.KeyPair;
 
 public interface SingleParams extends Params {
 
-    byte[] sign(KeyPair key);
+    byte[] sign(KeyPair key) throws ValidateException;
 }

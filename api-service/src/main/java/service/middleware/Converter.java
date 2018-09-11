@@ -1,6 +1,7 @@
 package service.middleware;
 
 import okhttp3.Response;
+import service.response.RegistrationResponse;
 import utils.callback.Callback1;
 
 import java.io.IOException;
@@ -28,6 +29,29 @@ public class Converter {
                         result.add(item.replaceAll("[{}\"]", "").replace("txId:", "").trim());
                     }
                     callback.onSuccess(result);
+                } catch (IOException e) {
+                    callback.onError(e);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
+    public static Callback1<Response> toRegistrationResponse(Callback1<RegistrationResponse> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response response) {
+                try {
+                    String raw = response.body().string();
+                    String[] content =
+                            raw.replaceAll("[\\[\\]{}\"]", "").replaceAll("(id:|duplicate:| )",
+                                    "").trim().split(",");
+                    callback.onSuccess(new RegistrationResponse(content[0],
+                            Boolean.valueOf(content[1])));
                 } catch (IOException e) {
                     callback.onError(e);
                 }

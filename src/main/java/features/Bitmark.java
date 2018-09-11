@@ -16,7 +16,7 @@ import java.util.List;
 public class Bitmark {
 
     public static void issue(IssuanceParams params, Callback1<List<String>> callback){
-        ApiService.getInstance().issue(params, callback);
+        ApiService.getInstance().issueBitmark(params, callback);
     }
 
 }

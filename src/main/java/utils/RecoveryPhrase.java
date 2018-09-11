@@ -61,7 +61,7 @@ public class RecoveryPhrase {
         return new RecoveryPhrase(mnemonicWords);
     }
 
-    public RecoveryPhrase() throws ValidateException {
+    public RecoveryPhrase() {
         final byte[] randomBytes = secureRandomBytes(ENTROPY_LENGTH - 1);
         final byte[] entropy = getEntropy(GlobalConfiguration.network(), randomBytes);
         this.mnemonicWords = generateMnemonic(entropy);

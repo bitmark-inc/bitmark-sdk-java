@@ -76,15 +76,15 @@ public class Seed {
         return new Seed(seed, Network.valueOf(network), ArrayUtil.toPrimitiveInteger(version));
     }
 
-    public Seed(byte[] seed) {
+    public Seed(byte[] seed) throws ValidateException {
         this(seed, GlobalConfiguration.network());
     }
 
-    public Seed(byte[] seed, Network network) {
+    public Seed(byte[] seed, Network network) throws ValidateException {
         this(seed, network, VERSION);
     }
 
-    public Seed(byte[] seed, Network network, int version) {
+    public Seed(byte[] seed, Network network, int version) throws ValidateException {
         checkValid(() -> seed != null && seed.length == SdkConfig.Seed.LENGTH && network != null && version > 0);
         this.seed = seed;
         this.network = network;

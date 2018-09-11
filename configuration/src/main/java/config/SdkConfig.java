@@ -39,7 +39,11 @@ public class SdkConfig {
 
     public static final class Asset {
 
+        public static final int TAG = 0x02;
+
         public static final int MAX_FINGER_PRINT = 1024;
+
+        public static final String PREFIX_FINGERPRINT = "01";
     }
 
     public static final class ApiServer {

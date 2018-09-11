@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import service.middleware.Converter;
+import service.response.RegistrationResponse;
 import test.BaseTest;
 import utils.callback.Callback1;
 
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static util.FileUtils.loadResponse;
 
@@ -28,7 +30,8 @@ public class ConverterTest extends BaseTest {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    @DisplayName("Verify function Converter.toTxIds(Callback) works well with happy condition")
+    @DisplayName("Verify function Converter.toTxIds(Callback1<List<String>>) works well with " +
+                         "happy condition")
     @ParameterizedTest
     @MethodSource("createSuccessResponseTxIds")
     public void testConvertTxIds_ValidResponse_CorrectTxIdsIsReturn(Response response,
@@ -47,6 +50,27 @@ public class ConverterTest extends BaseTest {
         });
         callback.onSuccess(response);
     }
+
+    @DisplayName("Verify function Converter.toRegistrationResponse" +
+                         "(Callback1<RegistrationResponse>) works well with happy condition")
+    @ParameterizedTest
+    @MethodSource("createSuccessResponseRegistrationResponse")
+    public void testConvertRegistrationResponse_ValidResponse_CorrectRegistrationResponseIsReturn(Response response, RegistrationResponse expectedResponse) {
+        Callback1<Response> callback =
+                Converter.toRegistrationResponse(new Callback1<RegistrationResponse>() {
+                    @Override
+                    public void onSuccess(RegistrationResponse response) {
+                        assertEquals(expectedResponse, response);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+                });
+        callback.onSuccess(response);
+    }
+
 
     private static Stream<Arguments> createSuccessResponseTxIds() throws IOException {
         final String[] txIds1 = new String[]{
@@ -69,5 +93,20 @@ public class ConverterTest extends BaseTest {
                 "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
                 loadResponse("/txids/txids2.json"))).message("dummy").build();
         return Stream.of(Arguments.of(response1, txIds1), Arguments.of(response2, txIds2));
+    }
+
+    private static Stream<Arguments> createSuccessResponseRegistrationResponse() throws IOException {
+        final RegistrationResponse registrationResponse1 = new RegistrationResponse(
+                "d20f8bc16350a4f53fb5b685d4e7cedf6e07ab9be9533effb2008ea8434a7685646e042fbdf8a9df46085c19648fb9ce99095c5fa16df25d56721d233646d38b", false);
+        final RegistrationResponse registrationResponse2 = new RegistrationResponse(
+                "d20f8bc16350a4f53fb5b685d4e7cedf6e07ab9be9533effb2008ea8434a7685646e042fbdf8a9df46085c19648fb9ce99095c5fa16df25d56721d233646d38b", true);
+        final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/registration/registration1.json"))).message("dummy").build();
+        final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/registration/registration2.json"))).message("dummy").build();
+        return Stream.of(Arguments.of(response1, registrationResponse1), Arguments.of(response2,
+                registrationResponse2));
     }
 }

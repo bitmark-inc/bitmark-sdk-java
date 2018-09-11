@@ -47,7 +47,7 @@ public class Account {
 
     private byte[] core;
 
-    public static Account fromSeed(Seed seed) throws ValidateException.InvalidLength {
+    public static Account fromSeed(Seed seed) throws ValidateException {
         checkValid(() -> seed.getNetwork() == GlobalConfiguration.network(), "Incorrect network " +
                 "from Seed");
         final byte[] core = seed.getSeed();

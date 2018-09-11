@@ -35,4 +35,8 @@ public class FileUtils {
     public static String loadRequest(String name) throws IOException {
         return load(new File(FileUtils.class.getResource("/request" + name).getFile()));
     }
+
+    public static File getResourceFile(String name) {
+        return new File(FileUtils.class.getResource("/" + name).getFile());
+    }
 }

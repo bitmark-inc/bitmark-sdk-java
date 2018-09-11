@@ -1,0 +1,11 @@
+{
+  "assets": [
+    {
+      "fingerprint": "018a4487f170f242a244079db8412bb5174d04dd5b971d71ca24c78ab88db5e4bcaf39f899a120345e5c89be90ff70dde31638eeb91fb122c5085138735740b36a",
+      "name": "name",
+      "metadata": "author\u0000test",
+      "registrant": "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+      "signature": "844ef8946a676bf17ba2b642c8b6a52275435c8ba227c5b6e7ccbd0041dea255ba908697a4241a923ca114fe8c5bef130e9d098eb73e68e104c909d733197001"
+    }
+  ]
+}

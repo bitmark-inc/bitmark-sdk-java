@@ -7,6 +7,8 @@ import crypto.key.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.Validator.checkValid;
+
 /**
  * @author Hieu Pham
  * @since 9/4/18
@@ -20,6 +22,7 @@ public abstract class AbsMultipleParams implements MultipleParams {
 
     @Override
     public List<byte[]> sign(KeyPair key) {
+        checkValid(() -> key != null && key.isValid(), "Invalid key pair");
         signatures = new ArrayList<>(size());
         for (int i = 0; i < size(); i++) {
             signatures.add(Ed25519.sign(pack(i), key.privateKey().toBytes()));

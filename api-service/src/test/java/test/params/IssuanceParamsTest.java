@@ -1,7 +1,6 @@
 package test.params;
 
 import crypto.key.KeyPair;
-import crypto.key.PublicKey;
 import crypto.key.StandardKeyPair;
 import error.ValidateException;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static config.Network.TEST_NET;
 import static crypto.encoder.Hex.HEX;
 import static org.junit.jupiter.api.Assertions.*;
 import static util.FileUtils.loadRequest;
@@ -43,7 +41,8 @@ public class IssuanceParamsTest extends BaseTest {
     private static final KeyPair KEY = StandardKeyPair.from(HEX.decode(PUBLIC_KEY),
             HEX.decode(PRIVATE_KEY));
 
-    private static final Address ADDRESS = new Address(PublicKey.from(PUBLIC_KEY), TEST_NET);
+    private static final Address ADDRESS = Address.fromAccountNumber(
+            "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva");
 
     private static final String ASSET_ID =
             "F5AD8D9B58E122D2D229F86EAA5D276496A5A3DA19D53C887A23F81955A3D07266B50A896D332ABC1D1845850311E50570CB56EE507B89EC18BC91EDC34C1059";
@@ -109,8 +108,8 @@ public class IssuanceParamsTest extends BaseTest {
                          "happy condition")
     @ParameterizedTest
     @MethodSource("createValidAssetIdNonceSignature")
-    public void testSignature_OneNonce_ValidSignatureIsReturn(String assetId, int[] nonce,
-                                                              byte[] signature) {
+    public void testSignOneNonce_NoCondition_ValidSignatureIsReturn(String assetId, int[] nonce,
+                                                                    byte[] signature) {
         final IssuanceParams params = new IssuanceParams(assetId, ADDRESS, nonce);
         params.sign(KEY);
         assertEquals(params.getSignatures().size(), 1);
@@ -121,8 +120,8 @@ public class IssuanceParamsTest extends BaseTest {
                          " happy condition")
     @ParameterizedTest
     @MethodSource("createValidAssetIdNonceSignatures")
-    public void testSignature_MultipleNonce_ValidSignatureIsReturn(String assetId, int[] nonce,
-                                                                   List<byte[]> expectedSignature) {
+    public void testSignMultipleNonc_NoCondition_ValidSignatureIsReturn(String assetId, int[] nonce,
+                                                                        List<byte[]> expectedSignature) {
         final IssuanceParams params = new IssuanceParams(assetId, ADDRESS, nonce);
         params.sign(KEY);
         final List<byte[]> signatures = params.getSignatures();
