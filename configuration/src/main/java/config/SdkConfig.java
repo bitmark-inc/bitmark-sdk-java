@@ -1,6 +1,7 @@
 package config;
 
 import crypto.Ed25519;
+import crypto.Sha3256;
 
 import static crypto.encoder.Hex.HEX;
 
@@ -44,6 +45,15 @@ public class SdkConfig {
         public static final int MAX_FINGER_PRINT = 1024;
 
         public static final String PREFIX_FINGERPRINT = "01";
+    }
+
+    public static final class Transfer {
+
+        public static final int LINK_LENGTH = Sha3256.HASH_LENGTH;
+
+        public static final int TRANSFER_TAG = 0x04;
+
+        public static final int OFFER_TAG = 0x05;
     }
 
     public static final class ApiServer {

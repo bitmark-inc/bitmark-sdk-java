@@ -60,6 +60,7 @@ public class IssuanceParams extends AbsMultipleParams {
 
     @Override
     public String toJson() {
+        checkSigned();
         final StringBuilder builder = new StringBuilder();
         builder.append("{\"issues\":[");
         for (int i = 0, size = size(); i < size; i++) {

@@ -7,31 +7,40 @@ import utils.Address;
 import utils.ArrayUtil;
 import utils.BinaryPacking;
 
+import java.util.Map;
+
 import static config.SdkConfig.Transfer.LINK_LENGTH;
 import static crypto.encoder.Hex.HEX;
 import static utils.Validator.checkValid;
 
 /**
  * @author Hieu Pham
- * @since 8/29/18
+ * @since 8/30/18
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class TransferParams extends AbsSingleParams {
+public class TransferOfferParams extends AbsSingleParams {
 
-    private Address owner;
+    private Address offeredOwner;
 
     private String link;
 
-    public TransferParams(Address owner) {
-        checkValid(() -> owner != null && owner.isValid(), "Invalid owner address");
-        this.owner = owner;
+    private Map<String, String> extraInfo;
+
+    public TransferOfferParams(Address offeredOwner) {
+        checkValid(() -> offeredOwner != null && offeredOwner.isValid(), "Invalid offer owner " +
+                "address");
+        this.offeredOwner = offeredOwner;
     }
 
-    public TransferParams(Address owner, String link) {
-        this(owner);
+    public TransferOfferParams(Address offeredOwner, String link) {
+        this(offeredOwner);
         setLink(link);
+    }
+
+    public void setExtraInfo(Map<String, String> extraInfo) {
+        this.extraInfo = extraInfo;
     }
 
     public void setLink(String link) {
@@ -42,8 +51,8 @@ public class TransferParams extends AbsSingleParams {
     @Override
     public String toJson() {
         checkSigned();
-        return "{\"transfer\":{\"link\":\"" + link + "\",\"owner\":\"" + owner.getAddress() +
-                "\",\"signature\":\"" + HEX.encode(signature) + "\"}}";
+        return "{\"offer\":{\"extra_info\":{" + getExtraInfoJson() + "},\"record\":{\"link\":\"" + link
+                + "\",\"owner\":\"" + offeredOwner.getAddress() + "\",\"signature\":\"" + HEX.encode(signature) + "\"}}}";
     }
 
     @Override
@@ -54,14 +63,18 @@ public class TransferParams extends AbsSingleParams {
 
     @Override
     byte[] pack() {
-        byte[] data = VarInt.writeUnsignedVarInt(SdkConfig.Transfer.TRANSFER_TAG);
+        byte[] data = VarInt.writeUnsignedVarInt(SdkConfig.Transfer.OFFER_TAG);
         data = BinaryPacking.concat(HEX.decode(link), data);
         data = ArrayUtil.concat(data, new byte[]{0x00});
-        data = BinaryPacking.concat(owner.pack(), data);
+        data = BinaryPacking.concat(offeredOwner.pack(), data);
         return data;
     }
 
     private void checkValidLink(String link) {
         checkValid(() -> link != null && HEX.decode(link).length == LINK_LENGTH, "Invalid link");
+    }
+
+    private String getExtraInfoJson() {
+        return "";
     }
 }

@@ -1,16 +1,17 @@
-package utils;
+package test.utils;
 
 import config.Network;
 import config.SdkConfig;
 import error.ValidateException;
-import features.BitmarkSDK;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import test.BaseTest;
+import utils.ArrayUtil;
+import utils.Seed;
 
 import java.util.stream.Stream;
 
@@ -26,24 +27,14 @@ import static org.junit.jupiter.api.Assertions.*;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class SeedTest {
-
-    @BeforeEach
-    public void beforeEach() {
-        BitmarkSDK.init("DummyToken");
-    }
-
-    @AfterEach
-    public void afterEach() {
-        BitmarkSDK.destroy();
-    }
+public class SeedTest extends BaseTest {
 
     @DisplayName("Verify function new Seed(byte[]) works well with happy condition")
     @ParameterizedTest
     @MethodSource("createValidByteArray")
     public void testConstructSeedFromByteArray_ValidSeedBytes_NewSeedInstanceIsReturn(byte[] seedBytes) {
         final Seed seed = new Seed(seedBytes);
-        assertTrue(ArrayUtil.equals(seedBytes, seed.getSeed()));
+        Assertions.assertTrue(ArrayUtil.equals(seedBytes, seed.getSeed()));
         assertEquals(seed.getVersion(), SdkConfig.Seed.VERSION);
         assertEquals(seed.getNetwork(), TEST_NET);
     }

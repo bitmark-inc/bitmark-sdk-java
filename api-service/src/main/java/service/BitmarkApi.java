@@ -1,7 +1,6 @@
 package service;
 
-import service.params.IssuanceParams;
-import service.params.RegistrationParams;
+import service.params.*;
 import service.response.RegistrationResponse;
 import utils.callback.Callback1;
 
@@ -19,5 +18,11 @@ public interface BitmarkApi {
     void issueBitmark(IssuanceParams params, Callback1<List<String>> callback);
 
     void registerAsset(RegistrationParams params, Callback1<RegistrationResponse> callback);
+
+    void transferBitmark(TransferParams params, Callback1<String> callback);
+
+    void offerBitmark(TransferOfferParams params, Callback1<String> callback);
+
+    void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback);
 
 }

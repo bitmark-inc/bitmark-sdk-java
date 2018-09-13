@@ -30,4 +30,13 @@ public abstract class AbsSingleParams implements SingleParams {
     public String getSignature() {
         return HEX.encode(signature);
     }
+
+    @Override
+    public boolean isSigned() {
+        return signature != null;
+    }
+
+    protected void checkSigned() {
+        if (!isSigned()) throw new UnsupportedOperationException("Params need to be signed before");
+    }
 }

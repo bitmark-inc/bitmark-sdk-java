@@ -120,8 +120,9 @@ public class IssuanceParamsTest extends BaseTest {
                          " happy condition")
     @ParameterizedTest
     @MethodSource("createValidAssetIdNonceSignatures")
-    public void testSignMultipleNonc_NoCondition_ValidSignatureIsReturn(String assetId, int[] nonce,
-                                                                        List<byte[]> expectedSignature) {
+    public void testSignMultipleNonce_NoCondition_ValidSignatureIsReturn(String assetId,
+                                                                         int[] nonce,
+                                                                         List<byte[]> expectedSignature) {
         final IssuanceParams params = new IssuanceParams(assetId, ADDRESS, nonce);
         params.sign(KEY);
         final List<byte[]> signatures = params.getSignatures();
@@ -134,9 +135,17 @@ public class IssuanceParamsTest extends BaseTest {
     @DisplayName("Verify function IssuanceParams.toJson() works well with happy condition")
     @ParameterizedTest
     @MethodSource("createValidIssuanceParamsJson")
-    public void testToJson_NoCondition_ValidJsonIsReturn(IssuanceParams params,
-                                                         String expectedJson) {
+    public void testToJson_ParamsIsSigned_ValidJsonIsReturn(IssuanceParams params,
+                                                            String expectedJson) {
         assertEquals(expectedJson, params.toJson());
+    }
+
+    @DisplayName("Verify function IssuanceParams.toJson() throw error when the IssuanceParams is " +
+                         "not signed")
+    @ParameterizedTest
+    @MethodSource("createNotSignedIssuanceParams")
+    public void testToJson_ParamsIsNotSigned_ErrorIsThrow(IssuanceParams params) {
+        assertThrows(UnsupportedOperationException.class, params::toJson);
     }
 
     private static Stream<String> createInvalidAssetId() {
@@ -207,11 +216,18 @@ public class IssuanceParamsTest extends BaseTest {
         params1.sign(KEY);
         params2.sign(KEY);
         params3.sign(KEY);
-        final String json1 = loadRequest("/issue/single_issue1.json").replace(" ", "");
-        final String json2 = loadRequest("/issue/single_issue2.json").replaceAll(" ", "");
-        final String json3 = loadRequest("/issue/multiple_issue1.json").replaceAll(" ", "");
+        final String json1 = loadRequest("/issue/single_issue1.json");
+        final String json2 = loadRequest("/issue/single_issue2.json");
+        final String json3 = loadRequest("/issue/multiple_issue1.json");
         return Stream.of(Arguments.of(params1, json1), Arguments.of(params2, json2),
                 Arguments.of(params3, json3));
+    }
+
+    private static Stream<IssuanceParams> createNotSignedIssuanceParams() {
+        final IssuanceParams params1 = new IssuanceParams(ASSET_ID, ADDRESS, new int[]{1});
+        final IssuanceParams params2 = new IssuanceParams(ASSET_ID, ADDRESS, new int[]{3});
+        final IssuanceParams params3 = new IssuanceParams(ASSET_ID, ADDRESS, new int[]{1, 3});
+        return Stream.of(params1, params2, params3);
     }
 
 }

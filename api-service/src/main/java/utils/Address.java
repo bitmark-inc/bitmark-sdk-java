@@ -1,5 +1,6 @@
 package utils;
 
+import config.GlobalConfiguration;
 import config.Network;
 import config.SdkConfig;
 import crypto.Ed25519;
@@ -56,8 +57,9 @@ public class Address implements Validation {
 
         // Verify network value
         int networkValue = (keyVariant >> 1) & 0x01;
-        if (!Network.isValid(networkValue)) throw new InvalidNetworkException(networkValue);
         final Network network = Network.valueOf(networkValue);
+        if (!Network.isValid(networkValue) || GlobalConfiguration.network() != network)
+            throw new InvalidNetworkException(networkValue);
 
         final byte[] publicKey = slice(addressBytes, keyVariantLength,
                 addressLength - CHECKSUM_LENGTH);
@@ -65,7 +67,11 @@ public class Address implements Validation {
 
     }
 
+    private Address() {
+    }
+
     private Address(PublicKey key, Network network) {
+        this();
         this.key = key;
         this.network = network;
     }

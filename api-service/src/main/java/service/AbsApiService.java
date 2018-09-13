@@ -1,5 +1,6 @@
 package service;
 
+import okhttp3.Headers;
 import okhttp3.Response;
 import service.params.Params;
 import service.params.query.QueryParams;
@@ -45,12 +46,22 @@ public abstract class AbsApiService {
     }
 
     protected void postAsync(String path, Params params, Callback1<Response> callback) {
-        client.postAsync(path, params, callback);
+        postAsync(path, null, params, callback);
+    }
+
+    protected void postAsync(String path, Headers headers, Params params,
+                             Callback1<Response> callback) {
+        client.postAsync(path, headers, params, callback);
         subscribe(callback);
     }
 
     protected void patchAsync(String path, Params params, Callback1<Response> callback) {
-        client.patchAsync(path, params, callback);
+        patchAsync(path, null, params, callback);
+    }
+
+    protected void patchAsync(String path, Headers headers, Params params,
+                              Callback1<Response> callback) {
+        client.patchAsync(path, headers, params, callback);
         subscribe(callback);
     }
 

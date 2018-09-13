@@ -113,6 +113,14 @@ public class RegistrationParamsTest extends BaseTest {
         assertTrue(json.equalsIgnoreCase(params.toJson()));
     }
 
+    @DisplayName("Verify function RegistrationParams.toJson() throw error when the " +
+                         "RegistrationParams is not signed")
+    @ParameterizedTest
+    @MethodSource("createNotSignedRegistrationParams")
+    public void testToJson_ParamsIsNotSigned_ErrorIsThrow(RegistrationParams params) {
+        assertThrows(UnsupportedOperationException.class, params::toJson);
+    }
+
     private static Stream<Arguments> createValidNameMetadataAddress() {
         return Stream.of(Arguments.of("Asset1", new HashMap<String, String>() {{
             put("name", "name");
@@ -149,8 +157,8 @@ public class RegistrationParamsTest extends BaseTest {
     }
 
     private static Stream<Arguments> createValidParamsJson() throws IOException {
-        final String json1 = loadRequest("/registration/registration1.json").replace(" ", "");
-        final String json2 = loadRequest("/registration/registration2.json").replace(" ", "");
+        final String json1 = loadRequest("/registration/registration1.json");
+        final String json2 = loadRequest("/registration/registration2.json");
         final RegistrationParams params1 = new RegistrationParams("name", new HashMap<String,
                 String>() {{
             put("author", "test");
@@ -181,5 +189,19 @@ public class RegistrationParamsTest extends BaseTest {
                 "28e283ad53978b6cf76f1fbc6ebfabd5eed1730cc50c45084f23c9c04ec8afed431b63279da72c0d6e5defd0fe112cee757cb0a55432c783a02a4c225cad7403"),
                 Arguments.of(params2,
                         "844ef8946a676bf17ba2b642c8b6a52275435c8ba227c5b6e7ccbd0041dea255ba908697a4241a923ca114fe8c5bef130e9d098eb73e68e104c909d733197001"));
+    }
+
+    private static Stream<RegistrationParams> createNotSignedRegistrationParams() {
+        final RegistrationParams params1 = new RegistrationParams("name", new HashMap<String,
+                String>() {{
+            put("author", "test");
+        }}, ADDRESS);
+        final RegistrationParams params2 = new RegistrationParams("name", new HashMap<String,
+                String>() {{
+            put("author", "test");
+        }}, ADDRESS);
+        params1.generateFingerprint(getResourceFile("asset1.txt"));
+        params2.generateFingerprint(getResourceFile("asset2.txt"));
+        return Stream.of(params1, params2);
     }
 }

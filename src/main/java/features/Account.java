@@ -125,8 +125,9 @@ public class Account {
 
         // Verify network value
         int networkValue = (keyVariant >> 1) & 0x01;
-        if (!Network.isValid(networkValue)) throw new InvalidNetworkException(networkValue);
         final Network network = Network.valueOf(networkValue);
+        if (!Network.isValid(networkValue) || GlobalConfiguration.network() != network)
+            throw new InvalidNetworkException(networkValue);
 
         final byte[] publicKey = slice(addressBytes, keyVariantLength,
                 addressLength - CHECKSUM_LENGTH);

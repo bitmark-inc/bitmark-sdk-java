@@ -29,11 +29,13 @@ public class FileUtils {
     }
 
     public static String loadResponse(String name) throws IOException {
-        return load(new File(FileUtils.class.getResource("/response" + name).getFile()));
+        return load(new File(FileUtils.class.getResource("/response" + name).getFile())).replace(
+                " ", "");
     }
 
     public static String loadRequest(String name) throws IOException {
-        return load(new File(FileUtils.class.getResource("/request" + name).getFile()));
+        return load(new File(FileUtils.class.getResource("/request" + name).getFile())).replace(
+                " ", "");
     }
 
     public static File getResourceFile(String name) {

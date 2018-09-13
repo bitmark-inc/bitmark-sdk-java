@@ -1,16 +1,18 @@
-package utils;
+package test.utils;
 
 import config.Network;
 import error.ValidateException;
-import features.BitmarkSDK;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import test.BaseTest;
+import utils.ArrayUtil;
+import utils.RecoveryPhrase;
+import utils.Seed;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -28,17 +30,7 @@ import static utils.ArrayUtil.*;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class RecoveryPhraseTest {
-
-    @BeforeEach
-    public void beforeEach() {
-        BitmarkSDK.init("DummyToken");
-    }
-
-    @AfterEach
-    public void afterEach() {
-        BitmarkSDK.destroy();
-    }
+public class RecoveryPhraseTest extends BaseTest {
 
     @DisplayName("Verify function new RecoveryPhrase() works well with happy condition")
     @Test
@@ -91,7 +83,7 @@ public class RecoveryPhraseTest {
     public void testRecoverSeed_ValidMnemonicWords_ValidInstanceIsReturn(String[] mnemonicWords,
                                                                          Seed expectedSeed) {
         final Seed seed = RecoveryPhrase.recoverSeed(mnemonicWords);
-        assertTrue(ArrayUtil.equals(expectedSeed.getSeed(), seed.getSeed()));
+        Assertions.assertTrue(ArrayUtil.equals(expectedSeed.getSeed(), seed.getSeed()));
         assertEquals(expectedSeed.getNetwork(), seed.getNetwork());
         assertEquals(expectedSeed.getVersion(), seed.getVersion());
     }

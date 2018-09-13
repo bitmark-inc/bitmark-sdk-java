@@ -33,7 +33,7 @@ public class ConverterTest extends BaseTest {
     @DisplayName("Verify function Converter.toTxIds(Callback1<List<String>>) works well with " +
                          "happy condition")
     @ParameterizedTest
-    @MethodSource("createSuccessResponseTxIds")
+    @MethodSource("createSuccessResponseIssue")
     public void testConvertTxIds_ValidResponse_CorrectTxIdsIsReturn(Response response,
                                                                     String[] expectedTxIds) {
         Callback1<Response> callback = Converter.toTxIds(new Callback1<List<String>>() {
@@ -71,8 +71,45 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
+    @DisplayName("Verify function Converter.toTxId(Callback1<String> works well)")
+    @ParameterizedTest
+    @MethodSource("createSuccessResponseTxId")
+    public void testConvertTxId_ValidResponse_CorrectTxIdIsReturn(Response response,
+                                                                  String expectedTxId) {
+        Callback1<Response> callback = Converter.toTxId(new Callback1<String>() {
+            @Override
+            public void onSuccess(String txId) {
+                assertEquals(expectedTxId, txId);
+            }
 
-    private static Stream<Arguments> createSuccessResponseTxIds() throws IOException {
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
+        callback.onSuccess(response);
+    }
+
+    @DisplayName("Verify function Converter.toOfferId(Callback1<String> works well)")
+    @ParameterizedTest
+    @MethodSource("createSuccessResponseOfferId")
+    public void testConvertOfferId_ValidResponse_CorrectTxIdIsReturn(Response response,
+                                                                     String expectedOfferId) {
+        Callback1<Response> callback = Converter.toTxId(new Callback1<String>() {
+            @Override
+            public void onSuccess(String offerId) {
+                assertEquals(expectedOfferId, offerId);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
+        callback.onSuccess(response);
+    }
+
+    private static Stream<Arguments> createSuccessResponseIssue() throws IOException {
         final String[] txIds1 = new String[]{
                 "e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f",
                 "995f2d5f3bcb6cab43d4a758efe39016d5012f07098eaf63179a60dedba85a25",
@@ -86,12 +123,12 @@ public class ConverterTest extends BaseTest {
                 "0107f4dbc256591c540722fd2f558e43dd7f197faa88ace608ab82438aa650c0"};
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
                 "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
-                loadResponse("/txids/txids1.json"))).message("dummy").build();
+                loadResponse("/issue/multiple_issue.json"))).message("dummy").build();
         final String[] txIds2 = new String[]{
                 "e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f"};
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
                 "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
-                loadResponse("/txids/txids2.json"))).message("dummy").build();
+                loadResponse("/issue/single_issue.json"))).message("dummy").build();
         return Stream.of(Arguments.of(response1, txIds1), Arguments.of(response2, txIds2));
     }
 
@@ -108,5 +145,31 @@ public class ConverterTest extends BaseTest {
                 loadResponse("/registration/registration2.json"))).message("dummy").build();
         return Stream.of(Arguments.of(response1, registrationResponse1), Arguments.of(response2,
                 registrationResponse2));
+    }
+
+    private static Stream<Arguments> createSuccessResponseTxId() throws IOException {
+        final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/transfer/transfer1.json"))).message("dummy").build();
+        final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/transfer/transfer2.json"))).message("dummy").build();
+        return Stream.of(Arguments.of(response1,
+                "9696d29472c1a54d01444d6135746ceffef2d6430cfb4c363ca0cb136240bf39"),
+                Arguments.of(response2,
+                        "5f138ce10c0b62805c6cf28d41ef87b82e594b4bb5b285de0425b65a065e535e"));
+    }
+
+    private static Stream<Arguments> createSuccessResponseOfferId() throws IOException {
+        final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/transfer/transfer_offer1.json"))).message("dummy").build();
+        final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/transfer/transfer_offer2.json"))).message("dummy").build();
+        return Stream.of(Arguments.of(response1,
+                "58582819-09f6-4948-a03d-fde9256e0354"),
+                Arguments.of(response2,
+                        "e91fd018-2bdf-4a99-9f9e-7e88261a7a24"));
     }
 }

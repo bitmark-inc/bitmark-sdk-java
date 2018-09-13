@@ -2,15 +2,14 @@ package service;
 
 import config.GlobalConfiguration;
 import config.SdkConfig;
-import service.params.IssuanceParams;
-import service.params.RegistrationParams;
+import okhttp3.Headers;
+import service.params.*;
 import service.response.RegistrationResponse;
 import utils.callback.Callback1;
 
 import java.util.List;
 
-import static service.middleware.Converter.toRegistrationResponse;
-import static service.middleware.Converter.toTxIds;
+import static service.middleware.Converter.*;
 
 /**
  * @author Hieu Pham
@@ -48,5 +47,24 @@ public class ApiService extends AbsApiService implements BitmarkApi {
     public void registerAsset(RegistrationParams params, Callback1<RegistrationResponse> callback) {
         final String path = String.format("/%s/registerAsset", SdkConfig.ApiServer.VERSION);
         postAsync(path, params, toRegistrationResponse(callback));
+    }
+
+    @Override
+    public void transferBitmark(TransferParams params, Callback1<String> callback) {
+        final String path = String.format("/%s/transfer", SdkConfig.ApiServer.VERSION);
+        postAsync(path, params, toTxId(callback));
+    }
+
+    @Override
+    public void offerBitmark(TransferOfferParams params, Callback1<String> callback) {
+        final String path = String.format("/%s/transfer", SdkConfig.ApiServer.VERSION);
+        postAsync(path, params, toOfferId(callback));
+    }
+
+    @Override
+    public void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback) {
+        final String path = String.format("/%s/transfer", SdkConfig.ApiServer.VERSION);
+        Headers headers = Headers.of(params.buildHeaders());
+        patchAsync(path, headers, params, toTxId(callback));
     }
 }

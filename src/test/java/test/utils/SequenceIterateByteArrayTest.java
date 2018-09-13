@@ -1,4 +1,4 @@
-package utils;
+package test.utils;
 
 import error.ValidateException;
 import org.junit.jupiter.api.DisplayName;
@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import test.BaseTest;
+import utils.SequenceIterateByteArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,10 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class SequenceIterateByteArrayTest {
+public class SequenceIterateByteArrayTest extends BaseTest {
 
     @DisplayName("Verify construct new instance of SequenceIterateByteArray with a null byte " +
-            "array, error is throw")
+                         "array, error is throw")
     @Test
     public void testConstructInstance_NullByteArray_ErrorIsThrow() {
         assertThrows(ValidateException.NullValueError.class,
@@ -33,7 +35,7 @@ public class SequenceIterateByteArrayTest {
     }
 
     @DisplayName("Verify construct new instance of SequenceIterateByteArray with non null byte " +
-            "array, new instance is created")
+                         "array, new instance is created")
     @ParameterizedTest
     @MethodSource("createNonNullByteArrays")
     public void testConstructInstance_NonNullByteArray_CorrectInstanceCreated(byte[] input) {
@@ -55,7 +57,7 @@ public class SequenceIterateByteArrayTest {
     }
 
     @DisplayName("Verify function SequenceIterateByteArray.next(int) throws exception with " +
-            "invalid length")
+                         "invalid length")
     @ParameterizedTest
     @MethodSource("createByteArrayLength")
     public void testNextByteArray_InvalidLength_ErrorIsThrow(byte[] bytes, int length) {

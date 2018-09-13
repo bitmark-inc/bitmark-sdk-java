@@ -58,6 +58,7 @@ public class RegistrationParams extends AbsSingleParams {
 
     @Override
     public String toJson() {
+        checkSigned();
         return "{\"assets\":[{\"fingerprint\":\"" + fingerprint + "\",\"name\":\"" + name + "\"," +
                 "\"metadata\":\"" + getPackedMetadata(metadata) + "\",\"registrant\":\"" + registrant.getAddress() + "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
     }

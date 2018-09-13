@@ -1,8 +1,9 @@
-package features;
+package test.features;
 
 import config.Network;
 import crypto.Ed25519;
 import error.ValidateException;
+import features.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import test.BaseTest;
 import utils.AccountNumberData;
 import utils.Seed;
 
@@ -26,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class AccountTest extends BaseFeatureTest {
+public class AccountTest extends BaseTest {
 
     @DisplayName("Verify function new Account() works well")
     @Test
@@ -158,10 +160,7 @@ public class AccountTest extends BaseFeatureTest {
     private static Stream<Arguments> createAccountNumberPublicKeyNetwork() {
         return Stream.of(Arguments.of("ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "58760A01EDF5ED4F95BFE977D77A27627CD57A25DF5DEA885972212C2B1C0E2F",
-                Network.TEST_NET),
-                Arguments.of("bDnC8nCaupb1AQtNjBoLVrGmobdALpBewkyYRG7kk2euMG93Bf",
-                        "9AAF14F906E2BE86B32EAE1B206335E73646E51F8BF29B6BC580B1D5A0BE67B1",
-                        Network.LIVE_NET));
+                Network.TEST_NET));
     }
 
     private static Stream<Seed> createInvalidSeed() {

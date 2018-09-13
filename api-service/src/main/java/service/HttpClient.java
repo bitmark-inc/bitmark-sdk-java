@@ -1,5 +1,6 @@
 package service;
 
+import okhttp3.Headers;
 import okhttp3.Response;
 import service.params.Params;
 import service.params.query.QueryParams;
@@ -20,7 +21,11 @@ public interface HttpClient {
 
     void postAsync(String path, Params params, Callback1<Response> callback);
 
+    void postAsync(String path, Headers headers, Params params, Callback1<Response> callback);
+
     void patchAsync(String path, Params params, Callback1<Response> callback);
+
+    void patchAsync(String path, Headers headers, Params params, Callback1<Response> callback);
 
     void deleteAsync(String path, Callback1<Response> callback);
 

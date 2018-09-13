@@ -72,22 +72,34 @@ public class HttpClientImpl implements HttpClient {
 
     @Override
     public void postAsync(String path, Params params, Callback1<Response> callback) {
+        postAsync(path, null, params, callback);
+    }
+
+    @Override
+    public void postAsync(String path, Headers headers, Params params,
+                          Callback1<Response> callback) {
         String requestUrl = getRequestUrl(path);
-        Request request = new Request.Builder()
+        Request.Builder builder = new Request.Builder()
                 .url(requestUrl)
-                .post(RequestBody.create(JSON, params.toJson()))
-                .build();
-        client.newCall(request).enqueue(wrapCallback(callback));
+                .post(RequestBody.create(JSON, params.toJson()));
+        if (headers != null) builder.headers(headers);
+        client.newCall(builder.build()).enqueue(wrapCallback(callback));
     }
 
     @Override
     public void patchAsync(String path, Params params, Callback1<Response> callback) {
+        patchAsync(path, null, params, callback);
+    }
+
+    @Override
+    public void patchAsync(String path, Headers headers, Params params,
+                           Callback1<Response> callback) {
         String requestUrl = getRequestUrl(path);
-        Request request = new Request.Builder()
-                .url(requestUrl)
-                .patch(RequestBody.create(JSON, params.toJson()))
-                .build();
-        client.newCall(request).enqueue(wrapCallback(callback));
+        Request.Builder builder =
+                new Request.Builder().url(requestUrl).patch(RequestBody.create(JSON,
+                        params.toJson()));
+        if (headers != null) builder.headers(headers);
+        client.newCall(builder.build()).enqueue(wrapCallback(callback));
     }
 
     @Override

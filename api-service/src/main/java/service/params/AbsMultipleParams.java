@@ -38,4 +38,13 @@ public abstract class AbsMultipleParams implements MultipleParams {
     public List<byte[]> getSignatures() {
         return signatures;
     }
+
+    @Override
+    public boolean isSigned() {
+        return signatures != null && !signatures.isEmpty();
+    }
+
+    protected void checkSigned() {
+        if (!isSigned()) throw new UnsupportedOperationException("Params need to be signed before");
+    }
 }

@@ -10,3 +10,4 @@ local.properties
 /captures
 *.log
 out
+build
