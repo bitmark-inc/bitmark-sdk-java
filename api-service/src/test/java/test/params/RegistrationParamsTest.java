@@ -108,9 +108,7 @@ public class RegistrationParamsTest extends BaseTest {
     @MethodSource("createValidParamsJson")
     public void testToJson_NoCondition_CorrectJsonIsReturn(RegistrationParams params,
                                                            String expectedJson) {
-        final String json =
-                expectedJson.replace("\\" + "u" + "0000", String.valueOf('\u0000'));
-        assertTrue(json.equalsIgnoreCase(params.toJson()));
+        assertTrue(expectedJson.equalsIgnoreCase(params.toJson()));
     }
 
     @DisplayName("Verify function RegistrationParams.toJson() throw error when the " +

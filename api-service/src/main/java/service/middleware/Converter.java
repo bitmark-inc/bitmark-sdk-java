@@ -6,6 +6,7 @@ import utils.callback.Callback1;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,18 +18,15 @@ import java.util.List;
 
 public class Converter {
 
-    public static Callback1<Response> toTxIds(Callback1<List<String>> callback) {
+    public static Callback1<Response> toBitmarkIds(Callback1<List<String>> callback) {
         return new Callback1<Response>() {
             @Override
             public void onSuccess(Response response) {
                 try {
                     String raw = response.body().string();
-                    List<String> result = new ArrayList<>();
-                    String[] txIds = raw.replaceAll("[\\[\\]]", "").split(",");
-                    for (String item : txIds) {
-                        result.add(item.replaceAll("[{}\"]", "").split(":")[1].trim());
-                    }
-                    callback.onSuccess(result);
+                    String[] txIds =
+                            raw.replaceAll("(\\[|\\]|\\{|\\}|\"|bitmarks|:|id)", "").split(",");
+                    callback.onSuccess(new ArrayList<>(Arrays.asList(txIds)));
                 } catch (IOException e) {
                     callback.onError(e);
                 }
@@ -48,8 +46,7 @@ public class Converter {
                 try {
                     String raw = response.body().string();
                     String[] content =
-                            raw.replaceAll("[\\[\\]{}\"]", "").replaceAll("(id:|duplicate:| )",
-                                    "").trim().split(",");
+                            raw.replaceAll("(\\[|\\]|\\{|\\}|\"|assets|:|id|duplicate)", "").split(",");
                     callback.onSuccess(new RegistrationResponse(content[0],
                             Boolean.valueOf(content[1])));
                 } catch (IOException e) {

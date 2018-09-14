@@ -9,10 +9,7 @@ import crypto.encoder.VarInt;
 import crypto.key.KeyPair;
 import crypto.key.PublicKey;
 import error.ValidateException;
-import utils.AccountNumberData;
-import utils.ArrayUtil;
-import utils.RecoveryPhrase;
-import utils.Seed;
+import utils.*;
 import utils.error.InvalidAddressException;
 import utils.error.InvalidNetworkException;
 
@@ -88,6 +85,10 @@ public class Account {
     public Seed getSeed() {
         final AccountNumberData data = parseAccountNumber(accountNumber);
         return new Seed(core, data.getNetwork(), SdkConfig.Seed.VERSION);
+    }
+
+    public Address toAddress() {
+        return Address.fromAccountNumber(accountNumber);
     }
 
     public static boolean isValidAccountNumber(String accountNumber) {

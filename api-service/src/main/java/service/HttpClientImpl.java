@@ -8,6 +8,8 @@ import service.middleware.BitmarkApiInterceptor;
 import service.params.Params;
 import service.params.query.QueryParams;
 import utils.callback.Callback1;
+import utils.error.HttpException;
+import utils.error.NetworkException;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -121,12 +123,14 @@ public class HttpClientImpl implements HttpClient {
         return new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                callback.onError(e);
+                callback.onError(new NetworkException(e.getMessage()));
             }
 
             @Override
-            public void onResponse(Call call, Response response) {
-                callback.onSuccess(response);
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful())
+                    callback.onSuccess(response);
+                else callback.onError(new HttpException(response.code(), response.body().string()));
             }
         };
     }

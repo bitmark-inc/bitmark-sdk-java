@@ -60,7 +60,8 @@ public class RegistrationParams extends AbsSingleParams {
     public String toJson() {
         checkSigned();
         return "{\"assets\":[{\"fingerprint\":\"" + fingerprint + "\",\"name\":\"" + name + "\"," +
-                "\"metadata\":\"" + getPackedMetadata(metadata) + "\",\"registrant\":\"" + registrant.getAddress() + "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
+                "\"metadata\":\"" + getJsonMetadata(metadata) + "\",\"registrant\":\"" + registrant.getAddress() +
+                "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
     }
 
     @Override
@@ -85,7 +86,19 @@ public class RegistrationParams extends AbsSingleParams {
         for (Map.Entry<String, String> entry : metadata.entrySet()) {
             iteration++;
             builder.append(entry.getKey()).append('\u0000').append(entry.getValue());
-            if (iteration < metadata.size() - 1) builder.append('\u0000');
+            if (iteration < metadata.size()) builder.append('\u0000');
+
+        }
+        return builder.toString();
+    }
+
+    private String getJsonMetadata(Map<String, String> metadata) {
+        StringBuilder builder = new StringBuilder();
+        int iteration = 0;
+        for (Map.Entry<String, String> entry : metadata.entrySet()) {
+            iteration++;
+            builder.append(entry.getKey()).append("\\").append("u0000").append(entry.getValue());
+            if (iteration < metadata.size()) builder.append("\\").append("u0000");
 
         }
         return builder.toString();

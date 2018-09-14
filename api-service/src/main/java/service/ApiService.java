@@ -40,12 +40,12 @@ public class ApiService extends AbsApiService implements BitmarkApi {
     @Override
     public void issueBitmark(IssuanceParams params, Callback1<List<String>> callback) {
         final String path = String.format("/%s/issue", SdkConfig.ApiServer.VERSION);
-        postAsync(path, params, toTxIds(callback));
+        postAsync(path, params, toBitmarkIds(callback));
     }
 
     @Override
     public void registerAsset(RegistrationParams params, Callback1<RegistrationResponse> callback) {
-        final String path = String.format("/%s/registerAsset", SdkConfig.ApiServer.VERSION);
+        final String path = String.format("/%s/register-asset", SdkConfig.ApiServer.VERSION);
         postAsync(path, params, toRegistrationResponse(callback));
     }
 

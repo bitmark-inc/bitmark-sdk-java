@@ -36,7 +36,7 @@ public class ConverterTest extends BaseTest {
     @MethodSource("createSuccessResponseIssue")
     public void testConvertTxIds_ValidResponse_CorrectTxIdsIsReturn(Response response,
                                                                     String[] expectedTxIds) {
-        Callback1<Response> callback = Converter.toTxIds(new Callback1<List<String>>() {
+        Callback1<Response> callback = Converter.toBitmarkIds(new Callback1<List<String>>() {
             @Override
             public void onSuccess(List<String> data) {
                 assertTrue(Arrays.equals(expectedTxIds,

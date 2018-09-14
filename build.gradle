@@ -24,6 +24,8 @@ dependencies {
 
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
+    testImplementation deps.junit_platform.suite_api
+    testImplementation deps.junit_platform.runner
     testImplementation deps.mockito
 
     testRuntime deps.junit_jupiter.engine
