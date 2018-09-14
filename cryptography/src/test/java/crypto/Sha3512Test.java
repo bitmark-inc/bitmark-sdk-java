@@ -23,9 +23,9 @@ public class Sha3512Test extends BaseCryptoTest {
 
     @DisplayName("Verify the function Sha3512.hash(byte[]) works correctly with happy condition")
     @ParameterizedTest
-    @CsvSource({"BitmarkSDK, F5AD8D9B58E122D2D229F86EAA5D276496A5A3DA19D53C887A23F81955A3D07266B50A896D332ABC1D1845850311E50570CB56EE507B89EC18BC91EDC34C1059",
-                       "JavaSDK, 613AB997FB2172FD4D12FB2B82157E3CD081E2D95ADEFE96C6BE9151667E67ED72FA0CAEDD109805B6F07C3EFE428F03B836AD36EC51165F35ADB4572530E2BF",
-                       "BitmarkInTheFuture, C5C834EFB58A5106DD601676BF606DA91B752CABABFBE223122F71BE5B2963DC57D593F5F45B61F1ABE2FCF80277FD4075EE561813BC69C0343B4C4E68516237"})
+    @CsvSource({"BitmarkSDK, f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059",
+                       "JavaSDK, 613ab997fb2172fd4d12fb2b82157e3cd081e2d95adefe96c6be9151667e67ed72fa0caedd109805b6f07c3efe428f03b836ad36ec51165f35adb4572530e2bf",
+                       "BitmarkInTheFuture, c5c834efb58a5106dd601676bf606da91b752cababfbe223122f71be5b2963dc57d593f5f45b61f1abe2fcf80277fd4075ee561813bc69c0343b4c4e68516237"})
     public void testHashByteArrayOnce_NoError_ReturnCorrectHash(String inputString, String hexExpectedResult) {
         byte[] input = RAW.decode(inputString);
         byte[] expectedResult = HEX.decode(hexExpectedResult);
@@ -35,9 +35,9 @@ public class Sha3512Test extends BaseCryptoTest {
 
     @DisplayName("Verify the function Sha3512.hash(String) works correctly with happy condition ")
     @ParameterizedTest
-    @CsvSource({"4269746D61726B53444B, F5AD8D9B58E122D2D229F86EAA5D276496A5A3DA19D53C887A23F81955A3D07266B50A896D332ABC1D1845850311E50570CB56EE507B89EC18BC91EDC34C1059",
-                       "4A61766153444B, 613AB997FB2172FD4D12FB2B82157E3CD081E2D95ADEFE96C6BE9151667E67ED72FA0CAEDD109805B6F07C3EFE428F03B836AD36EC51165F35ADB4572530E2BF",
-                       "4269746D61726B496E546865467574757265, C5C834EFB58A5106DD601676BF606DA91B752CABABFBE223122F71BE5B2963DC57D593F5F45B61F1ABE2FCF80277FD4075EE561813BC69C0343B4C4E68516237"})
+    @CsvSource({"4269746d61726b53444b, f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059",
+                       "4a61766153444b, 613ab997fb2172fd4d12fb2b82157e3cd081e2d95adefe96c6be9151667e67ed72fa0caedd109805b6f07c3efe428f03b836ad36ec51165f35adb4572530e2bf",
+                       "4269746d61726b496e546865467574757265, c5c834efb58a5106dd601676bf606da91b752cababfbe223122f71be5b2963dc57d593f5f45b61f1abe2fcf80277fd4075ee561813bc69c0343b4c4e68516237"})
     public void testHashHexStringOnce_NoError_ReturnCorrectHash(String input, String hexExpectedResult) {
         byte[] expectedResult = HEX.decode(hexExpectedResult);
         byte[] output = Sha3512.hash(input);
@@ -48,7 +48,7 @@ public class Sha3512Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3512.hash(String) throws an Exception with invalid hex " +
                          "input")
     @ParameterizedTest
-    @ValueSource(strings = {"4269746D61726B53444BHJKA", "NDRGGH64756DFASDVC", "@#$%sdfvsdf@#@#"})
+    @ValueSource(strings = {"4269746d61726b53444bhjka", "ndrggh64756dfasdvc", "@#$%sdfvsdf@#@#"})
     public void testHashHexStringOnce_InvalidHex_ErrorIsThrow(String hexInput) {
         assertThrows(ValidateException.InvalidHex.class, () -> Sha3512.hash(hexInput),
                 ValidateException.InvalidHex.ORIGIN_MESSAGE);
@@ -57,9 +57,9 @@ public class Sha3512Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3512.hash(byte[], int, int) works well with happy " +
                          "condition")
     @ParameterizedTest
-    @CsvSource({"BitmarkSDK, 85A33DA78D99A4394FF1F73FC561401F87E369606FA15ADE52C4FFF332E868B690B950056FCB1EEBB8AB94F1E853F34D8C5B9D7DF10E9A3090393E465032CFEC, S",
-                       "JavaSDK, DCA5F7CF9A28BB000CF7B199F85968E1B4ABC79BBF7339CDDBD3AEC004D59950E368F1E89250A22D00660FEE59596DBAD4CBE9AC6B3187B4B9C62EB42B3CA563, a",
-                       "BitmarkInTheFuture, 4B5D228224E081078BB263CC64E3A6D8D8DBF2C621015901714CCAB8BDC6BD1A73ACC436694B60383DBE911F9796B5BC7B8F84CBC77F3F01DFB8DAB7AC5B73F9, I"})
+    @CsvSource({"BitmarkSDK, 85a33da78d99a4394ff1f73fc561401f87e369606fa15ade52c4fff332e868b690b950056fcb1eebb8ab94f1e853f34d8c5b9d7df10e9a3090393e465032cfec, S",
+                       "JavaSDK, dca5f7cf9a28bb000cf7b199f85968e1b4abc79bbf7339cddbd3aec004d59950e368f1e89250a22d00660fee59596dbad4cbe9ac6b3187b4b9c62eb42b3ca563, a",
+                       "BitmarkInTheFuture, 4b5d228224e081078bb263cc64e3a6d8d8dbf2c621015901714ccab8bdc6bd1a73acc436694b60383dbe911f9796b5bc7b8f84cbc77f3f01dfb8dab7ac5b73f9, I"})
     public void testHashByteArrayOnceCustomOffsetAndLength_NoError_ReturnCorrectHash(String inputStr, String expectedHex, char startChar) {
         byte[] input = RAW.decode(inputStr);
         int length = RAW.decode(inputStr.substring(inputStr.indexOf(startChar))).length;
@@ -81,9 +81,9 @@ public class Sha3512Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3512.hashTwice(byte[]) works correctly with happy " +
                          "condition")
     @ParameterizedTest
-    @CsvSource({"BitmarkSDK, 5126292A6CCA69105CC803D94082C22465D4AF77E90F40D9A9D2B1CBC2D7412FAE521CA0D4EADA60906D517FB1DC144D685F193B11AB7A7CEA02E47E5A6E0F47",
-                       "JavaSDK, 255D590F5474D573A9FE54C6802F2DF6A2994F1FA8E2E87B5C20B007C2AA68D9C91A41ACE0BA28DF458B363E268A0FBE75A5DFD8C1B40A3C6CE198CEE4F1D3F0",
-                       "BitmarkInTheFuture, DD227B0A4BD4C9F320620ADAFA167C4AD8DF1AD39BDCE201C59126C7418BBA540921E644F7536887C3AC868DEC12AD4AAEF54766EA013C60002A7E55BA7262D6"})
+    @CsvSource({"BitmarkSDK, 5126292a6cca69105cc803d94082c22465d4af77e90f40d9a9d2b1cbc2d7412fae521ca0d4eada60906d517fb1dc144d685f193b11ab7a7cea02e47e5a6e0f47",
+                       "JavaSDK, 255d590f5474d573a9fe54c6802f2df6a2994f1fa8e2e87b5c20b007c2aa68d9c91a41ace0ba28df458b363e268a0fbe75a5dfd8c1b40a3c6ce198cee4f1d3f0",
+                       "BitmarkInTheFuture, dd227b0a4bd4c9f320620adafa167c4ad8df1ad39bdce201c59126c7418bba540921e644f7536887c3ac868dec12ad4aaef54766ea013c60002a7e55ba7262d6"})
     public void testHashByteArrayTwice_NoError_ReturnCorrectHash(String inputString, String hexExpectedResult) {
         byte[] input = RAW.decode(inputString);
         byte[] expectedResult = HEX.decode(hexExpectedResult);
@@ -94,9 +94,9 @@ public class Sha3512Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3512.hashTwice(String) works correctly with happy " +
                          "condition")
     @ParameterizedTest
-    @CsvSource({"4269746D61726B53444B, 5126292A6CCA69105CC803D94082C22465D4AF77E90F40D9A9D2B1CBC2D7412FAE521CA0D4EADA60906D517FB1DC144D685F193B11AB7A7CEA02E47E5A6E0F47",
-                       "4A61766153444B, 255D590F5474D573A9FE54C6802F2DF6A2994F1FA8E2E87B5C20B007C2AA68D9C91A41ACE0BA28DF458B363E268A0FBE75A5DFD8C1B40A3C6CE198CEE4F1D3F0",
-                       "4269746D61726B496E546865467574757265, DD227B0A4BD4C9F320620ADAFA167C4AD8DF1AD39BDCE201C59126C7418BBA540921E644F7536887C3AC868DEC12AD4AAEF54766EA013C60002A7E55BA7262D6"})
+    @CsvSource({"4269746d61726b53444b, 5126292a6cca69105cc803d94082c22465d4af77e90f40d9a9d2b1cbc2d7412fae521ca0d4eada60906d517fb1dc144d685f193b11ab7a7cea02e47e5a6e0f47",
+                       "4a61766153444b, 255d590f5474d573a9fe54c6802f2df6a2994f1fa8e2e87b5c20b007c2aa68d9c91a41ace0ba28df458b363e268a0fbe75a5dfd8c1b40a3c6ce198cee4f1d3f0",
+                       "4269746d61726b496e546865467574757265, dd227b0a4bd4c9f320620adafa167c4ad8df1ad39bdce201c59126c7418bba540921e644f7536887c3ac868dec12ad4aaef54766ea013c60002a7e55ba7262d6"})
     public void testHashHexStringTwice_NoError_ReturnCorrectHash(String hexInput, String hexExpectedResult) {
         byte[] expectedResult = HEX.decode(hexExpectedResult);
         byte[] output = Sha3512.hashTwice(hexInput);
@@ -105,7 +105,7 @@ public class Sha3512Test extends BaseCryptoTest {
 
     @DisplayName("Verify the function Sha3512.hashTwice(String) throws Exception with invalid Hex")
     @ParameterizedTest
-    @ValueSource(strings = {"ABCVDF345236GRH", "!@#$#$%$%^$%", "VAFEBS#@GSDG$%"})
+    @ValueSource(strings = {"abcvdf345236grh", "!@#$#$%$%^$%", "vafebs#@gsdg$%"})
     public void testHashHexStringTwice_InvalidHex_ErrorIsThrow(String hexInput) {
         assertThrows(ValidateException.InvalidHex.class, () -> Sha3512.hashTwice(hexInput),
                 ValidateException.InvalidHex.ORIGIN_MESSAGE);
@@ -114,9 +114,9 @@ public class Sha3512Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3512.hashTwice(byte[], int, int) works well with happy " +
                          "condition")
     @ParameterizedTest
-    @CsvSource({"BitmarkSDK, 32B91D3D93F73EC0587250870495D6A3D8226DDD279E9EFD59694DF15E28158B8262A2B91FAA73EC4A2A2356A529BF9A6E49936FA0D24D568951F33313238700, S",
-                       "JavaSDK, F3D9AFA44C912B0BC5F75FD498ED47886964BC6080DC299C01B1CD557F4E6126230AB933539A42F5B8796BFAD0456E0548BD104A6BAD29A0224868BB0336330F, a",
-                       "BitmarkInTheFuture, 7A4D1DDBCF6D72E8CA1063D9BA1F32EA1B208C2D55D26629802860C3C4E57EC0A72781D4C1D11F4F7AA1AC2F3BC9E3FD5201B966BE58F484F416FC51831C61DB, I"})
+    @CsvSource({"BitmarkSDK, 32b91d3d93f73ec0587250870495d6a3d8226ddd279e9efd59694df15e28158b8262a2b91faa73ec4a2a2356a529bf9a6e49936fa0d24d568951f33313238700, S",
+                       "JavaSDK, f3d9afa44c912b0bc5f75fd498ed47886964bc6080dc299c01b1cd557f4e6126230ab933539a42f5b8796bfad0456e0548bd104a6bad29a0224868bb0336330f, a",
+                       "BitmarkInTheFuture, 7a4d1ddbcf6d72e8ca1063d9ba1f32ea1b208c2d55d26629802860c3c4e57ec0a72781d4c1d11f4f7aa1ac2f3bc9e3fd5201b966be58f484f416fc51831c61db, I"})
     public void testHashByteArrayTwiceCustomOffsetAndLength_NoError_ReturnCorrectHash(String inputStr, String expectedHex, char startChar) {
         byte[] input = RAW.decode(inputStr);
         int length = RAW.decode(inputStr.substring(inputStr.indexOf(startChar))).length;
@@ -137,9 +137,9 @@ public class Sha3512Test extends BaseCryptoTest {
 
     @DisplayName("Verify the Sha3512.compareTo(Sha3512) works well with equal hashes")
     @ParameterizedTest
-    @CsvSource({"32B91D3D93F73EC0587250870495D6A3D8226DDD279E9EFD59694DF15E28158B8262A2B91FAA73EC4A2A2356A529BF9A6E49936FA0D24D568951F33313238700, 32B91D3D93F73EC0587250870495D6A3D8226DDD279E9EFD59694DF15E28158B8262A2B91FAA73EC4A2A2356A529BF9A6E49936FA0D24D568951F33313238700",
-                       "F3D9AFA44C912B0BC5F75FD498ED47886964BC6080DC299C01B1CD557F4E6126230AB933539A42F5B8796BFAD0456E0548BD104A6BAD29A0224868BB0336330F, F3D9AFA44C912B0BC5F75FD498ED47886964BC6080DC299C01B1CD557F4E6126230AB933539A42F5B8796BFAD0456E0548BD104A6BAD29A0224868BB0336330F",
-                       "7A4D1DDBCF6D72E8CA1063D9BA1F32EA1B208C2D55D26629802860C3C4E57EC0A72781D4C1D11F4F7AA1AC2F3BC9E3FD5201B966BE58F484F416FC51831C61DB, 7A4D1DDBCF6D72E8CA1063D9BA1F32EA1B208C2D55D26629802860C3C4E57EC0A72781D4C1D11F4F7AA1AC2F3BC9E3FD5201B966BE58F484F416FC51831C61DB"})
+    @CsvSource({"32b91d3d93f73ec0587250870495d6a3d8226ddd279e9efd59694df15e28158b8262a2b91faa73ec4a2a2356a529bf9a6e49936fa0d24d568951f33313238700, 32b91d3d93f73ec0587250870495d6a3d8226ddd279e9efd59694df15e28158b8262a2b91faa73ec4a2a2356a529bf9a6e49936fa0d24d568951f33313238700",
+                       "f3d9afa44c912b0bc5f75fd498ed47886964bc6080dc299c01b1cd557f4e6126230ab933539a42f5b8796bfad0456e0548bd104a6bad29a0224868bb0336330f, f3d9afa44c912b0bc5f75fd498ed47886964bc6080dc299c01b1cd557f4e6126230ab933539a42f5b8796bfad0456e0548bd104a6bad29a0224868bb0336330f",
+                       "7a4d1ddbcf6d72e8ca1063d9ba1f32ea1b208c2d55d26629802860c3c4e57ec0a72781d4c1d11f4f7aa1ac2f3bc9e3fd5201b966be58f484f416fc51831c61db, 7a4d1ddbcf6d72e8ca1063d9ba1f32ea1b208c2d55d26629802860c3c4e57ec0a72781d4c1d11f4f7aa1ac2f3bc9e3fd5201b966be58f484f416fc51831c61db"})
     public void testCompareEqualHashes_NoError_ReturnExactResult(String firstHex, String secondHex) {
         Sha3512 first = Sha3512.from(firstHex);
         Sha3512 second = Sha3512.from(secondHex);
@@ -148,9 +148,9 @@ public class Sha3512Test extends BaseCryptoTest {
 
     @DisplayName("Verify the Sha3512.compareTo(Sha3512) works well with not equal hashes")
     @ParameterizedTest
-    @CsvSource({"32B91D3D93F73EC0587250870495D6A3D8226DDD279E9EFD59694DF15E28158B8262A2B91FAA73EC4A2A2356A529BF9A6E49936FA0D24D568951F33313238700, 31B91D3D93F73EC0587250870495D6A3D8226DDD279E9EFD59694DF15E28158B8262A2B91FAA73EC4A2A2356A529BF9A6E49936FA0D24D568951F33313238700",
-                       "F3D9AFA44C912B0BC5F75FD498ED47886964BC6080DC299C01B1CD557F4E6126230AB933539A42F5B8796BFAD0456E0548BD104A6BAD29A0224868BB0336330F, F3D9AFA44C912B0BC5F75FD498ED47886964BC6080DC299C01B1CA557F4E6126230AB933539A42F5B8796BFAD0456E0548BD104A6BAD29A0224868BB0336330F",
-                       "7A4D1DDBCF6D72E8CA1063D9BA1F32EA1B208C2D55D26629802860C3C4E57EC0A72781D4C1D11F4F7AA1AC2F3BC9E3FD5201B966BE58F484F416FC51831C61DB, 7A4D1DDBCF6D72E8CA1063D9BA1F32EA1B208C2D55D26629802860C3C4E57EC0172781D4C1D11F4F7AA1AC2F3BC9E3FD5201B966BE58F484F416FC51831C61DB"})
+    @CsvSource({"32b91d3d93f73ec0587250870495d6a3d8226ddd279e9efd59694df15e28158b8262a2b91faa73ec4a2a2356a529bf9a6e49936fa0d24d568951f33313238700, 31b91d3d93f73ec0587250870495d6a3d8226ddd279e9efd59694df15e28158b8262a2b91faa73ec4a2a2356a529bf9a6e49936fa0d24d568951f33313238700",
+                       "f3d9afa44c912b0bc5f75fd498ed47886964bc6080dc299c01b1cd557f4e6126230ab933539a42f5b8796bfad0456e0548bd104a6bad29a0224868bb0336330f, f3d9afa44c912b0bc5f75fd498ed47886964bc6080dc299c01b1ca557f4e6126230ab933539a42f5b8796bfad0456e0548bd104a6bad29a0224868bb0336330f",
+                       "7a4d1ddbcf6d72e8ca1063d9ba1f32ea1b208c2d55d26629802860c3c4e57ec0a72781d4c1d11f4f7aa1ac2f3bc9e3fd5201b966be58f484f416fc51831c61db, 7a4d1ddbcf6d72e8ca1063d9ba1f32ea1b208c2d55d26629802860c3c4e57ec0172781d4c1d11f4f7aa1ac2f3bc9e3fd5201b966be58f484f416fc51831c61db"})
     public void testCompareNotEqualHashes_NoError_ReturnExactResult(String firstHex, String secondHex) {
         Sha3512 first = Sha3512.from(firstHex);
         Sha3512 second = Sha3512.from(secondHex);
@@ -160,7 +160,7 @@ public class Sha3512Test extends BaseCryptoTest {
     @DisplayName("Verify that constructing a new instance Sha3512 with invalid length hex hash " +
                          "should throws an Exception")
     @ParameterizedTest
-    @ValueSource(strings = {"AB", "ABC2434534", "ABCDEF123445672324"})
+    @ValueSource(strings = {"ab", "abc2434534", "abcdef123445672324"})
     public void testConstructInstanceFromHexString_InvalidHashLength_ErrorIsThrow(String hexHash) {
         assertThrows(ValidateException.InvalidLength.class, () -> Sha3512.from(hexHash));
     }
@@ -168,7 +168,7 @@ public class Sha3512Test extends BaseCryptoTest {
     @DisplayName("Verify that constructing a new instance Sha3512 with invalid length byte array " +
                          "should throws an Exception")
     @ParameterizedTest
-    @ValueSource(strings = {"AB", "ABC2434534", "ABCDEF123445672324"})
+    @ValueSource(strings = {"ab", "abc2434534", "abcdef123445672324"})
     public void testConstructInstanceFromByteArray_InvalidHashLength_ErrorIsThrow(String hexHash) {
         assertThrows(ValidateException.InvalidLength.class,
                 () -> Sha3512.from(HEX.decode(hexHash)));
@@ -177,9 +177,9 @@ public class Sha3512Test extends BaseCryptoTest {
     @DisplayName("Verify that constructing a new instance Sha3512 from hex hash successfully in " +
                          "happy condition")
     @ParameterizedTest
-    @ValueSource(strings = {"1AE34783A48E95B70AF442D2BD89E91CDBE4FB8A469B7002561A38AF7F27A1F8",
-            "2C599996CF7A436E62D7A3992008F70712643FA2F1BDDDBF1CED940FE5E6942A",
-            "ACC2BFA9CD7C5EA4F704EB35E46A6814148D00EBA10675118792E0D2858AF2DD"})
+    @ValueSource(strings = {"1ae34783a48e95b70af442d2bd89e91cdbe4fb8a469b7002561a38af7f27a1f8",
+            "2c599996cf7a436e62d7a3992008f70712643fa2f1bdddbf1ced940fe5e6942a",
+            "acc2bfa9cd7c5ea4f704eb35e46a6814148d00eba10675118792e0d2858af2dd"})
     public void testConstructInstanceFromByteArray_ValidHash_ErrorIsNotThrow(String hexHash) {
         assertDoesNotThrow(() -> Sha3512.hash(hexHash));
     }

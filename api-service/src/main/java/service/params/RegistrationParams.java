@@ -68,7 +68,7 @@ public class RegistrationParams extends AbsSingleParams {
     byte[] pack() {
         byte[] data = VarInt.writeUnsignedVarInt(SdkConfig.Asset.TAG);
         data = concat(name, data);
-        data = concat(fingerprint.toLowerCase(), data);
+        data = concat(fingerprint, data);
         data = concat(getPackedMetadata(metadata), data);
         data = concat(registrant.pack(), data);
         return data;

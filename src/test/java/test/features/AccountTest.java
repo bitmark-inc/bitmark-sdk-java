@@ -44,10 +44,10 @@ public class AccountTest extends BaseTest {
     @ParameterizedTest
     @CsvSource({"5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD, " +
             "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva, " +
-            "58760A01EDF5ED4F95BFE977D77A27627CD57A25DF5DEA885972212C2B1C0E2F",
+            "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f",
                        "5XEECsXPYA9wDVXMtRMAVrtaWx7WSc5tG2hqj6b8iiz9rARjg2BgA9w, " +
                                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX, " +
-                               "807F4D123C944E0C3ECC95D9BDE89916CED6341A8C8CEDEB8CAAFEF8F35654E7"})
+                               "807f4d123c944e0c3ecc95d9bde89916ced6341a8c8cedeb8caafef8f35654e7"})
     public void testNewAccountFromSeed_ValidSeed_ValidAccountIsCreated(String encodedSeed,
                                                                        String accountNumber,
                                                                        String publicKey) {
@@ -139,7 +139,7 @@ public class AccountTest extends BaseTest {
                          "account number is invalid")
     @ParameterizedTest
     @ValueSource(strings = {"ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54N",
-            "58760A01EDF5ED4F95BFE977D77A27627CD57A25DF5DEA885972212C2B1C0E2F", ""})
+            "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f", ""})
     public void testParseAccountNumber_InvalidAccountNumber_ErrorIsThrow(String accountNumber) {
         assertThrows(ValidateException.class, () -> Account.parseAccountNumber(accountNumber));
     }
@@ -149,25 +149,25 @@ public class AccountTest extends BaseTest {
                         "glow best school repeat birth library combine access camera organ trial " +
                         "crazy jeans lizard science",
                 "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
-                "58760A01EDF5ED4F95BFE977D77A27627CD57A25DF5DEA885972212C2B1C0E2F"),
+                "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f"),
                 Arguments.of("abuse tooth riot whale dance dawn armor patch tube sugar edit clean" +
                                 " guilt person lake height tilt wall prosper episode produce spy " +
                                 "artist account",
                         "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
-                        "807F4D123C944E0C3ECC95D9BDE89916CED6341A8C8CEDEB8CAAFEF8F35654E7"));
+                        "807f4d123c944e0c3ecc95d9bde89916ced6341a8c8cedeb8caafef8f35654e7"));
     }
 
     private static Stream<Arguments> createAccountNumberPublicKeyNetwork() {
         return Stream.of(Arguments.of("ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
-                "58760A01EDF5ED4F95BFE977D77A27627CD57A25DF5DEA885972212C2B1C0E2F",
+                "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f",
                 Network.TEST_NET));
     }
 
     private static Stream<Seed> createInvalidSeed() {
         return Stream.of(new Seed(HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"),
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"),
                 Network.LIVE_NET), new Seed(HEX.decode(
-                "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"),
+                "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
                 Network.LIVE_NET));
     }
 

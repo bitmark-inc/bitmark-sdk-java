@@ -32,10 +32,10 @@ import static util.FileUtils.loadRequest;
 public class TransferResponseParamsTest extends BaseTest {
 
     private static final String PRIVATE_KEY =
-            "02732AC92FD70EA402393F28163C3B45F5DA6F9D61DCF1254E0F2CEC805FE737807F4D123C944E0C3ECC95D9BDE89916CED6341A8C8CEDEB8CAAFEF8F35654E7";
+            "02732ac92fd70ea402393f28163c3b45f5da6f9d61dcf1254e0f2cec805fe737807f4d123c944e0c3ecc95d9bde89916ced6341a8c8cedeb8caafef8f35654e7";
 
     private static final String PUBLIC_KEY =
-            "807F4D123C944E0C3ECC95D9BDE89916CED6341A8C8CEDEB8CAAFEF8F35654E7";
+            "807f4d123c944e0c3ecc95d9bde89916ced6341a8c8cedeb8caafef8f35654e7";
 
     private static final KeyPair KEY = StandardKeyPair.from(HEX.decode(PUBLIC_KEY),
             HEX.decode(PRIVATE_KEY));

@@ -122,7 +122,7 @@ public class RecoveryPhraseTest extends BaseTest {
 
     private static Stream<Arguments> createValidByteArrayNetWorkMnemonicWords() {
         return Stream.of(Arguments.of(HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"), TEST_NET, (
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"), TEST_NET, (
                         "accident " +
                                 "syrup inquiry you clutch liquid fame upset joke glow best school" +
                                 " repeat " +
@@ -130,7 +130,7 @@ public class RecoveryPhraseTest extends BaseTest {
                                 "library combine access camera organ trial crazy jeans lizard " +
                                 "science").split(" ")),
                 Arguments.of(HEX.decode(
-                        "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"),
+                        "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
                         LIVE_NET,
                         ("ability panel leave spike mixture token voice certain today market " +
                                 "grief" +
@@ -142,19 +142,19 @@ public class RecoveryPhraseTest extends BaseTest {
         return Stream.of(Arguments.of(("accident syrup inquiry you clutch liquid fame upset joke " +
                 "glow best school repeat birth library combine access camera organ trial crazy " +
                 "jeans lizard science").split(" "), new Seed(HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"),
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"),
                 TEST_NET)), Arguments.of(("ability panel leave spike mixture token voice certain " +
                 "today market grief crater cruise smart camera palm wheat rib swamp labor bid " +
                 "rifle piano glass").split(" "), new Seed(HEX.decode(
-                "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"),
+                "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
                 LIVE_NET)));
     }
 
     private static Stream<Arguments> createValidByteArrayMnemonicWords() {
         final byte[] entropy1 = concat(toByteArray(TEST_NET.value()), HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"));
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"));
         final byte[] entropy2 = concat(toByteArray(LIVE_NET.value()), HEX.decode(
-                "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"));
+                "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"));
         return Stream.of(Arguments.of(entropy1, ("accident " +
                 "syrup inquiry you clutch liquid fame upset joke " +
                 "glow best school repeat birth library combine access camera organ trial crazy " +
@@ -166,8 +166,8 @@ public class RecoveryPhraseTest extends BaseTest {
 
     private static Stream<byte[]> createInvalidEntropy() {
         return Stream.of(HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F32CEF60B607"), HEX.decode(
-                "33F1FBE8E8E5C7FD592DE3534B99082CFAF9F71F6CBE216173690317"), null,
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f32cef60b607"), HEX.decode(
+                "33f1fbe8e8e5c7fd592de3534b99082cfaf9f71f6cbe216173690317"), null,
                 new byte[]{});
     }
 

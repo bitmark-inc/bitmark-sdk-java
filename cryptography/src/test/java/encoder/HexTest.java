@@ -52,7 +52,7 @@ public class HexTest extends BaseEncoderTest {
     @DisplayName("Verify function Hex.decode(String) throws exception when the hex string is " +
             "odd")
     @ParameterizedTest
-    @ValueSource(strings = {"ABC3345ABEFFC", "97361A58AED147A2AB6345678", "A"})
+    @ValueSource(strings = {"abc3345abeffc", "97361a58aed147a2ab6345678", "a"})
     public void testDecode_HexIsOdd_ErrorIsThrow(String hex) {
         assertThrows(RuntimeException.class, () -> HEX.decode(hex));
     }
@@ -67,9 +67,9 @@ public class HexTest extends BaseEncoderTest {
 
     private static Stream<Arguments> createBytesHex() {
         return Stream.of(Arguments.of(new byte[]{15, 13, 38, 47, 51, 0, 73, 80},
-                "0F0D262F33004950"),
-                Arguments.of(new byte[]{13, 33, 50, 7, 120}, "0D21320778"),
-                Arguments.of(new byte[]{2, 4, 6, 8, 10}, "020406080A"));
+                "0f0d262f33004950"),
+                Arguments.of(new byte[]{13, 33, 50, 7, 120}, "0d21320778"),
+                Arguments.of(new byte[]{2, 4, 6, 8, 10}, "020406080a"));
     }
 
     private static Stream<byte[]> createInvalidBytes() {
@@ -77,9 +77,9 @@ public class HexTest extends BaseEncoderTest {
     }
 
     private static Stream<Arguments> createHexBytes() {
-        return Stream.of(Arguments.of("0F0D262F33004950", new byte[]{15, 13, 38, 47, 51, 0, 73, 80}),
-                Arguments.of("0D21320778", new byte[]{13, 33, 50, 7, 120}),
-                Arguments.of("020406080A", new byte[]{2, 4, 6, 8, 10}));
+        return Stream.of(Arguments.of("0f0d262f33004950", new byte[]{15, 13, 38, 47, 51, 0, 73, 80}),
+                Arguments.of("0d21320778", new byte[]{13, 33, 50, 7, 120}),
+                Arguments.of("020406080a", new byte[]{2, 4, 6, 8, 10}));
     }
 
 }

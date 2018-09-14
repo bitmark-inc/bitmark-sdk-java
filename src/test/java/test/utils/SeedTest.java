@@ -102,8 +102,8 @@ public class SeedTest extends BaseTest {
 
     private static Stream<byte[]> createValidByteArray() {
         return Stream.of(HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"), HEX.decode(
-                "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"));
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"), HEX.decode(
+                "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"));
     }
 
     private static Stream<byte[]> createInvalidByteArray() {
@@ -112,43 +112,43 @@ public class SeedTest extends BaseTest {
 
     private static Stream<Arguments> createValidByteArrayNetwork() {
         return Stream.of(Arguments.of(HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"), TEST_NET),
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"), TEST_NET),
                 Arguments.of(HEX.decode(
-                        "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"),
+                        "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
                         LIVE_NET));
     }
 
     private static Stream<Arguments> createByteArrayInvalidNetwork() {
         return Stream.of(Arguments.of(HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"), null),
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"), null),
                 Arguments.of(HEX.decode(
-                        "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"),
+                        "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
                         null));
     }
 
     private static Stream<Arguments> createValidByteArrayNetworkVersion() {
         return Stream.of(Arguments.of(HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"), TEST_NET, 1),
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"), TEST_NET, 1),
                 Arguments.of(HEX.decode(
-                        "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"),
+                        "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
                         LIVE_NET, 3));
     }
 
     private static Stream<Arguments> createValidByteArrayNetworkInvalidVersion() {
         return Stream.of(Arguments.of(HEX.decode(
-                "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"), TEST_NET, -1),
+                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"), TEST_NET, -1),
                 Arguments.of(HEX.decode(
-                        "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"),
+                        "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
                         LIVE_NET, 0));
     }
 
     private static Stream<Arguments> createValidEncodedSeedByteArrayNetworkVersion() {
         return Stream.of(Arguments.of("5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD",
                 HEX.decode(
-                        "7B95D37F92C904949F79784C7855606B6A2D60416F01441671F4132CEF60B607"),
+                        "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"),
                 TEST_NET, 1),
                 Arguments.of("5XEECqWqA47qWg86DR5HJ29HhbVqwigHUAhgiBMqFSBycbiwnbY639s", HEX.decode(
-                        "33F1FBE8E8E5C7FD592DE351059A19434B99082CFAF9F71F6CBE216173690317"),
+                        "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
                         LIVE_NET, 1));
     }
 

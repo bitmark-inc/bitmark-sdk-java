@@ -29,10 +29,10 @@ import static util.FileUtils.loadRequest;
 public class TransferOfferParamsTest extends BaseTest {
 
     private static final String PRIVATE_KEY =
-            "0246A917D422E596168185CEA9943459C09751532C52FE4DDC27B06E2893EF2258760A01EDF5ED4F95BFE977D77A27627CD57A25DF5DEA885972212C2B1C0E2F";
+            "0246a917d422e596168185cea9943459c09751532c52fe4ddc27b06e2893ef2258760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f";
 
     private static final String PUBLIC_KEY =
-            "58760A01EDF5ED4F95BFE977D77A27627CD57A25DF5DEA885972212C2B1C0E2F";
+            "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f";
 
     private static final KeyPair KEY = StandardKeyPair.from(HEX.decode(PUBLIC_KEY),
             HEX.decode(PRIVATE_KEY));

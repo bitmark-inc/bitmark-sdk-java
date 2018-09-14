@@ -23,9 +23,9 @@ public class Sha3256Test extends BaseCryptoTest {
 
     @DisplayName("Verify the function Sha3256.hash(byte[]) works correctly with happy condition")
     @ParameterizedTest
-    @CsvSource({"BitmarkSDK, 148D5EFDCE00D2DC0CAA14DA6FC0BF3C9456DCBD2C680D86DD57BE112B7EDCCE",
-            "JavaSDK, EC2A665796A2D8BE8F4DA565F57FE528C1D689764D8C56F8B31266ACEF15C404",
-            "BitmarkInTheFuture, 11D77428B1EC48EEAC27B5263E66838665E357631CF97BAD5EB7EA07840D1AAF"})
+    @CsvSource({"BitmarkSDK, 148d5efdce00d2dc0caa14da6fc0bf3c9456dcbd2c680d86dd57be112b7edcce",
+            "JavaSDK, ec2a665796a2d8be8f4da565f57fe528c1d689764d8c56f8b31266acef15c404",
+            "BitmarkInTheFuture, 11d77428b1ec48eeac27b5263e66838665e357631cf97bad5eb7ea07840d1aaf"})
     public void testHashByteArrayOnce_NoError_ReturnCorrectHash(String inputString, String hexExpectedResult) {
         byte[] input = RAW.decode(inputString);
         byte[] expectedResult = HEX.decode(hexExpectedResult);
@@ -35,9 +35,9 @@ public class Sha3256Test extends BaseCryptoTest {
 
     @DisplayName("Verify the function Sha3256.hash(String) works correctly with happy condition ")
     @ParameterizedTest
-    @CsvSource({"4269746D61726B53444B, 148D5EFDCE00D2DC0CAA14DA6FC0BF3C9456DCBD2C680D86DD57BE112B7EDCCE",
-            "4A61766153444B, EC2A665796A2D8BE8F4DA565F57FE528C1D689764D8C56F8B31266ACEF15C404",
-            "4269746D61726B496E546865467574757265, 11D77428B1EC48EEAC27B5263E66838665E357631CF97BAD5EB7EA07840D1AAF"})
+    @CsvSource({"4269746d61726b53444b, 148d5efdce00d2dc0caa14da6fc0bf3c9456dcbd2c680d86dd57be112b7edcce",
+            "4a61766153444b, ec2a665796a2d8be8f4da565f57fe528c1d689764d8c56f8b31266acef15c404",
+            "4269746d61726b496e546865467574757265, 11d77428b1ec48eeac27b5263e66838665e357631cf97bad5eb7ea07840d1aaf"})
     public void testHashHexStringOnce_NoError_ReturnCorrectHash(String input, String hexExpectedResult) {
         byte[] expectedResult = HEX.decode(hexExpectedResult);
         byte[] output = Sha3256.hash(input);
@@ -48,7 +48,7 @@ public class Sha3256Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3256.hash(String) throws an Exception with invalid hex " +
             "input")
     @ParameterizedTest
-    @ValueSource(strings = {"4269746D61726B53444BHJKA", "NDRGGH64756DFASDVC", "@#$%sdfvsdf@#@#"})
+    @ValueSource(strings = {"4269746d61726b53444bhjka", "ndrggh64756dfasdvc", "@#$%sdfvsdf@#@#"})
     public void testHashHexStringOnce_InvalidHex_ErrorIsThrow(String hexInput) {
         assertThrows(ValidateException.InvalidHex.class, () -> Sha3256.hash(hexInput),
                 ValidateException.InvalidHex.ORIGIN_MESSAGE);
@@ -57,9 +57,9 @@ public class Sha3256Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3256.hash(byte[], int, int) works well with happy " +
             "condition")
     @ParameterizedTest
-    @CsvSource({"BitmarkSDK, 844AA9B0A09C37829B2BCAD976DAEC427A0C4A29C2DDF9CB959E9A3F8F14F9E0, S",
-            "JavaSDK, DD11A00AEF092F4AD50319B613809B182712EBDD8E0549885C418B44A186565F, a",
-            "BitmarkInTheFuture, 0245C3724E0B0DE137B30CFD8CE18750963123A4C685F32928D22FEB371ACC25, I"})
+    @CsvSource({"BitmarkSDK, 844aa9b0a09c37829b2bcad976daec427a0c4a29c2ddf9cb959e9a3f8f14f9e0, S",
+            "JavaSDK, dd11a00aef092f4ad50319b613809b182712ebdd8e0549885c418b44a186565f, a",
+            "BitmarkInTheFuture, 0245c3724e0b0de137b30cfd8ce18750963123a4c685f32928d22feb371acc25, I"})
     public void testHashByteArrayOnceCustomOffsetAndLength_NoError_ReturnCorrectHash(String inputStr, String expectedHex, char startChar) {
         byte[] input = RAW.decode(inputStr);
         int length = RAW.decode(inputStr.substring(inputStr.indexOf(startChar))).length;
@@ -81,9 +81,9 @@ public class Sha3256Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3256.hashTwice(byte[]) works correctly with happy " +
             "condition")
     @ParameterizedTest
-    @CsvSource({"BitmarkSDK, 334F57730E81985FF6B46CFB17A9C94B9C444F9B391AED7F4E190DC4FCDE2492",
-            "JavaSDK, EA53A602C61DA880F9D49D9F508CB34D52001B3C72542D61C80779006F2865CB",
-            "BitmarkInTheFuture, 84228E5C37CCE0CD4B4B985B3E7B43D0727CA0F3894FD9D8111B20F6D7EFDADA"})
+    @CsvSource({"BitmarkSDK, 334f57730e81985ff6b46cfb17a9c94b9c444f9b391aed7f4e190dc4fcde2492",
+            "JavaSDK, ea53a602c61da880f9d49d9f508cb34d52001b3c72542d61c80779006f2865cb",
+            "BitmarkInTheFuture, 84228e5c37cce0cd4b4b985b3e7b43d0727ca0f3894fd9d8111b20f6d7efdada"})
     public void testHashByteArrayTwice_NoError_ReturnCorrectHash(String inputString, String hexExpectedResult) {
         byte[] input = RAW.decode(inputString);
         byte[] expectedResult = HEX.decode(hexExpectedResult);
@@ -94,9 +94,9 @@ public class Sha3256Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3256.hashTwice(String) works correctly with happy " +
             "condition")
     @ParameterizedTest
-    @CsvSource({"4269746D61726B53444B, 334F57730E81985FF6B46CFB17A9C94B9C444F9B391AED7F4E190DC4FCDE2492",
-            "4A61766153444B, EA53A602C61DA880F9D49D9F508CB34D52001B3C72542D61C80779006F2865CB",
-            "4269746D61726B496E546865467574757265, 84228E5C37CCE0CD4B4B985B3E7B43D0727CA0F3894FD9D8111B20F6D7EFDADA"})
+    @CsvSource({"4269746d61726b53444b, 334f57730e81985ff6b46cfb17a9c94b9c444f9b391aed7f4e190dc4fcde2492",
+            "4a61766153444b, ea53a602c61da880f9d49d9f508cb34d52001b3c72542d61c80779006f2865cb",
+            "4269746d61726b496e546865467574757265, 84228e5c37cce0cd4b4b985b3e7b43d0727ca0f3894fd9d8111b20f6d7efdada"})
     public void testHashHexStringTwice_NoError_ReturnCorrectHash(String hexInput, String hexExpectedResult) {
         byte[] expectedResult = HEX.decode(hexExpectedResult);
         byte[] output = Sha3256.hashTwice(hexInput);
@@ -114,9 +114,9 @@ public class Sha3256Test extends BaseCryptoTest {
     @DisplayName("Verify the function Sha3256.hashTwice(byte[], int, int) works well with happy " +
             "condition")
     @ParameterizedTest
-    @CsvSource({"BitmarkSDK, 417980E19C8D52D18A5EB8A6CE7D1F98719793E9D323F7B178EFE90AB5509268, S",
-            "JavaSDK, C3BD2FC78A886DD6519DDA25756C132AEC82C3D43480D58E0B3302A27A83D252, a",
-            "BitmarkInTheFuture, BD4E0B4B5A4E68B6F0861520F84E423970DF4B6FD98E0F4137372DD5CB770F48, I"})
+    @CsvSource({"BitmarkSDK, 417980e19c8d52d18a5eb8a6ce7d1f98719793e9d323f7b178efe90ab5509268, S",
+            "JavaSDK, c3bd2fc78a886dd6519dda25756c132aec82c3d43480d58e0b3302a27a83d252, a",
+            "BitmarkInTheFuture, bd4e0b4b5a4e68b6f0861520f84e423970df4b6fd98e0f4137372dd5cb770f48, I"})
     public void testHashByteArrayTwiceCustomOffsetAndLength_NoError_ReturnCorrectHash(String inputStr, String expectedHex, char startChar) {
         byte[] input = RAW.decode(inputStr);
         int length = RAW.decode(inputStr.substring(inputStr.indexOf(startChar))).length;
@@ -137,9 +137,9 @@ public class Sha3256Test extends BaseCryptoTest {
 
     @DisplayName("Verify the Sha3256.compareTo(Sha3256) works well with equal hashes")
     @ParameterizedTest
-    @CsvSource({"1AE34783A48E95B70AF442D2BD89E91CDBE4FB8A469B7002561A38AF7F27A1F8, 1AE34783A48E95B70AF442D2BD89E91CDBE4FB8A469B7002561A38AF7F27A1F8",
-            "2C599996CF7A436E62D7A3992008F70712643FA2F1BDDDBF1CED940FE5E6942A, 2C599996CF7A436E62D7A3992008F70712643FA2F1BDDDBF1CED940FE5E6942A",
-            "ACC2BFA9CD7C5EA4F704EB35E46A6814148D00EBA10675118792E0D2858AF2DD, ACC2BFA9CD7C5EA4F704EB35E46A6814148D00EBA10675118792E0D2858AF2DD"})
+    @CsvSource({"1ae34783a48e95b70af442d2bd89e91cdbe4fb8a469b7002561a38af7f27a1f8, 1ae34783a48e95b70af442d2bd89e91cdbe4fb8a469b7002561a38af7f27a1f8",
+            "2c599996cf7a436e62d7a3992008f70712643fa2f1bdddbf1ced940fe5e6942a, 2c599996cf7a436e62d7a3992008f70712643fa2f1bdddbf1ced940fe5e6942a",
+            "acc2bfa9cd7c5ea4f704eb35e46a6814148d00eba10675118792e0d2858af2dd, acc2bfa9cd7c5ea4f704eb35e46a6814148d00eba10675118792e0d2858af2dd"})
     public void testCompareEqualHashes_NoError_ReturnExactResult(String firstHex, String secondHex) {
         Sha3256 first = Sha3256.from(firstHex);
         Sha3256 second = Sha3256.from(secondHex);
@@ -148,9 +148,9 @@ public class Sha3256Test extends BaseCryptoTest {
 
     @DisplayName("Verify the Sha3256.compareTo(Sha3256) works well with not equal hashes")
     @ParameterizedTest
-    @CsvSource({"1AE34783A48E95B70AF442D2BD89E91CDBE4FB8A469B7002561A38AF7F27A1F8, 1AD34783A48E95B70AF442D2BD89E91CDBE4FB8A469B7002561A38AF7F27A1F8",
-            "2C599996CF7A436E62D7A3992008F70712643FA2F1BDDDBF1CED940FE5E6942A, 2C589996CF7A436E62D7A3992008F70712643FA2F1BDDDBF1CED940FE5E6942A",
-            "ACC2BFA9CD7C5EA4F704EB35E46A6814148D00EBA10675118792E0D2858AF2DD, ACC1AFA9CD7C5EA4F704EB35E46A6814148D00EBA10675118792E0D2858AF2DD"})
+    @CsvSource({"1ae34783a48e95b70af442d2bd89e91cdbe4fb8a469b7002561a38af7f27a1f8, 1ad34783a48e95b70af442d2bd89e91cdbe4fb8a469b7002561a38af7f27a1f8",
+            "2c599996cf7a436e62d7a3992008f70712643fa2f1bdddbf1ced940fe5e6942a, 2c589996cf7a436e62d7a3992008f70712643fa2f1bdddbf1ced940fe5e6942a",
+            "acc2bfa9cd7c5ea4f704eb35e46a6814148d00eba10675118792e0d2858af2dd, acc1afa9cd7c5ea4f704eb35e46a6814148d00eba10675118792e0d2858af2dd"})
     public void testCompareNotEqualHashes_NoError_ReturnExactResult(String firstHex, String secondHex) {
         Sha3256 first = Sha3256.from(firstHex);
         Sha3256 second = Sha3256.from(secondHex);
@@ -160,7 +160,7 @@ public class Sha3256Test extends BaseCryptoTest {
     @DisplayName("Verify that constructing a new instance Sha3256 with invalid length hex hash " +
             "should throws an Exception")
     @ParameterizedTest
-    @ValueSource(strings = {"AB", "ABC2434534", "ABCDEF123445672324"})
+    @ValueSource(strings = {"ab", "abc2434534", "abcdef123445672324"})
     public void testConstructInstanceFromHexString_InvalidHashLength_ErrorIsThrow(String hexHash) {
         assertThrows(ValidateException.InvalidLength.class, () -> Sha3256.from(hexHash));
     }
@@ -168,7 +168,7 @@ public class Sha3256Test extends BaseCryptoTest {
     @DisplayName("Verify that constructing a new instance Sha3256 with invalid length byte array " +
             "should throws an Exception")
     @ParameterizedTest
-    @ValueSource(strings = {"AB", "ABC2434534", "ABCDEF123445672324"})
+    @ValueSource(strings = {"ab", "abc2434534", "abcdef123445672324"})
     public void testConstructInstanceFromByteArray_InvalidHashLength_ErrorIsThrow(String hexHash) {
         assertThrows(ValidateException.InvalidLength.class,
                 () -> Sha3256.from(HEX.decode(hexHash)));
@@ -177,9 +177,9 @@ public class Sha3256Test extends BaseCryptoTest {
     @DisplayName("Verify that constructing a new instance Sha3256 from hex hash successfully in " +
             "happy condition")
     @ParameterizedTest
-    @ValueSource(strings = {"1AE34783A48E95B70AF442D2BD89E91CDBE4FB8A469B7002561A38AF7F27A1F8",
-            "2C599996CF7A436E62D7A3992008F70712643FA2F1BDDDBF1CED940FE5E6942A",
-            "ACC2BFA9CD7C5EA4F704EB35E46A6814148D00EBA10675118792E0D2858AF2DD"})
+    @ValueSource(strings = {"1ae34783a48e95b70af442d2bd89e91cdbe4fb8a469b7002561a38af7f27a1f8",
+            "2c599996cf7a436e62d7a3992008f70712643fa2f1bdddbf1ced940fe5e6942a",
+            "acc2bfa9cd7c5ea4f704eb35e46a6814148d00eba10675118792e0d2858af2dd"})
     public void testConstructInstanceFromByteArray_ValidHash_ErrorIsNotThrow(String hexHash) {
         assertDoesNotThrow(() -> Sha3256.hash(hexHash));
     }
