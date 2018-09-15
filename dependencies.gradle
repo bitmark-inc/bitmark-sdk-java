@@ -8,6 +8,7 @@ versions.bouncycastle = "1.60"
 versions.junit_jupiter = "5.2.0"
 versions.junit_platform = "1.2.0"
 versions.junit_vintage = "5.2.0"
+versions.gson = "2.8.5"
 
 def okhttp = [:]
 okhttp.okhttp3 = "com.squareup.okhttp3:okhttp:$versions.okhttp"
@@ -32,6 +33,7 @@ def junit = "junit:junit:$versions.junit"
 def mockito = "org.mockito:mockito-core:$versions.mockito"
 def jnr_ffi = "com.github.jnr:jnr-ffi:$versions.jnr_ffi"
 def bouncycastle = "org.bouncycastle:bcprov-jdk15on:$versions.bouncycastle"
+def gson = "com.google.code.gson:gson:$versions.gson"
 
 def dependencies = [:]
 dependencies.okhttp = okhttp
@@ -42,6 +44,7 @@ dependencies.bouncycastle = bouncycastle
 dependencies.junit_jupiter = junit_jupiter
 dependencies.junit_platform = junit_platform
 dependencies.junit_vintage = junit_vintage
+dependencies.gson = gson
 ext.deps = dependencies
 
 

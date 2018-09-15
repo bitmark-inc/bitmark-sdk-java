@@ -1,5 +1,9 @@
 package service.response;
 
+import annotation.VisibleForTesting;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -9,36 +13,65 @@ import java.util.Objects;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class RegistrationResponse {
+public class RegistrationResponse implements Response {
 
-    private String id;
+    private List<Asset> assets;
 
-    private boolean isDuplicate;
-
-    public RegistrationResponse(String id, boolean isDuplicate) {
-        this.id = id;
-        this.isDuplicate = isDuplicate;
+    @VisibleForTesting
+    public RegistrationResponse(List<Asset> assets) {
+        this.assets = assets;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public boolean isDuplicate() {
-        return isDuplicate;
+    public List<Asset> getAssets() {
+        return assets;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RegistrationResponse that = (RegistrationResponse) o;
-        return isDuplicate == that.isDuplicate &&
-                Objects.equals(id, that.id);
+        RegistrationResponse response = (RegistrationResponse) o;
+        return Objects.equals(assets, response.assets);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, isDuplicate);
+        return Objects.hash(assets);
+    }
+
+    public static final class Asset {
+
+        String id;
+
+        @SerializedName("duplicate")
+        boolean isDuplicate;
+
+        @VisibleForTesting
+        public Asset(String id, boolean isDuplicate) {
+            this.id = id;
+            this.isDuplicate = isDuplicate;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public boolean isDuplicate() {
+            return isDuplicate;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Asset asset = (Asset) o;
+            return isDuplicate == asset.isDuplicate &&
+                    Objects.equals(id, asset.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, isDuplicate);
+        }
     }
 }

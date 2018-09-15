@@ -4,10 +4,9 @@ import config.GlobalConfiguration;
 import config.SdkConfig;
 import okhttp3.Headers;
 import service.params.*;
+import service.response.IssueResponse;
 import service.response.RegistrationResponse;
 import utils.callback.Callback1;
-
-import java.util.List;
 
 import static service.middleware.Converter.*;
 
@@ -38,9 +37,9 @@ public class ApiService extends AbsApiService implements BitmarkApi {
     }
 
     @Override
-    public void issueBitmark(IssuanceParams params, Callback1<List<String>> callback) {
+    public void issueBitmark(IssuanceParams params, Callback1<IssueResponse> callback) {
         final String path = String.format("/%s/issue", SdkConfig.ApiServer.VERSION);
-        postAsync(path, params, toBitmarkIds(callback));
+        postAsync(path, params, toIssueResponse(callback));
     }
 
     @Override

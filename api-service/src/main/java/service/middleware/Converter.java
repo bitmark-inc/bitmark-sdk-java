@@ -1,13 +1,17 @@
 package service.middleware;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
+import service.response.IssueResponse;
 import service.response.RegistrationResponse;
 import utils.callback.Callback1;
+import utils.error.UnexpectedException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author Hieu Pham
@@ -18,17 +22,18 @@ import java.util.List;
 
 public class Converter {
 
-    public static Callback1<Response> toBitmarkIds(Callback1<List<String>> callback) {
+    private static final Gson GSON = new GsonBuilder().create();
+
+    public static Callback1<Response> toIssueResponse(Callback1<IssueResponse> callback) {
         return new Callback1<Response>() {
             @Override
-            public void onSuccess(Response response) {
+            public void onSuccess(Response res) {
                 try {
-                    String raw = response.body().string();
-                    String[] txIds =
-                            raw.replaceAll("(\\[|\\]|\\{|\\}|\"|bitmarks|:|id)", "").split(",");
-                    callback.onSuccess(new ArrayList<>(Arrays.asList(txIds)));
-                } catch (IOException e) {
-                    callback.onError(e);
+                    String raw = res.body().string();
+                    IssueResponse response = GSON.fromJson(raw, IssueResponse.class);
+                    callback.onSuccess(response);
+                } catch (IOException | JsonSyntaxException e) {
+                    callback.onError(new UnexpectedException(e));
                 }
             }
 
@@ -42,15 +47,13 @@ public class Converter {
     public static Callback1<Response> toRegistrationResponse(Callback1<RegistrationResponse> callback) {
         return new Callback1<Response>() {
             @Override
-            public void onSuccess(Response response) {
+            public void onSuccess(Response res) {
                 try {
-                    String raw = response.body().string();
-                    String[] content =
-                            raw.replaceAll("(\\[|\\]|\\{|\\}|\"|assets|:|id|duplicate)", "").split(",");
-                    callback.onSuccess(new RegistrationResponse(content[0],
-                            Boolean.valueOf(content[1])));
-                } catch (IOException e) {
-                    callback.onError(e);
+                    String raw = res.body().string();
+                    RegistrationResponse response = GSON.fromJson(raw, RegistrationResponse.class);
+                    callback.onSuccess(response);
+                } catch (IOException | JsonSyntaxException e) {
+                    callback.onError(new UnexpectedException(e));
                 }
             }
 
@@ -67,10 +70,12 @@ public class Converter {
             public void onSuccess(Response response) {
                 try {
                     String raw = response.body().string();
-                    String[] content = raw.replaceAll("[{}\"]", "").split(":");
-                    callback.onSuccess(content[1]);
-                } catch (IOException e) {
-                    callback.onError(e);
+                    Map<String, String> json = GSON.fromJson(raw, new TypeToken<Map<String,
+                            String>>() {
+                    }.getType());
+                    callback.onSuccess(json.get("txid"));
+                } catch (IOException | JsonSyntaxException e) {
+                    callback.onError(new UnexpectedException(e));
                 }
 
             }
@@ -88,10 +93,12 @@ public class Converter {
             public void onSuccess(Response response) {
                 try {
                     String raw = response.body().string();
-                    String[] content = raw.replaceAll("[{}\"]", "").split(":");
-                    callback.onSuccess(content[1]);
-                } catch (IOException e) {
-                    callback.onError(e);
+                    Map<String, String> json = GSON.fromJson(raw, new TypeToken<Map<String,
+                            String>>() {
+                    }.getType());
+                    callback.onSuccess(json.get("offer_id"));
+                } catch (IOException | JsonSyntaxException e) {
+                    callback.onError(new UnexpectedException(e));
                 }
             }
 

@@ -97,8 +97,8 @@ public class RegistrationParams extends AbsSingleParams {
         int iteration = 0;
         for (Map.Entry<String, String> entry : metadata.entrySet()) {
             iteration++;
-            builder.append(entry.getKey()).append("\\").append("u0000").append(entry.getValue());
-            if (iteration < metadata.size()) builder.append("\\").append("u0000");
+            builder.append(entry.getKey()).append("\\u0000").append(entry.getValue());
+            if (iteration < metadata.size()) builder.append("\\u0000");
 
         }
         return builder.toString();

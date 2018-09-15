@@ -9,6 +9,10 @@ package utils.error;
 
 public class UnexpectedException extends RuntimeException {
 
+    public UnexpectedException(Throwable throwable) {
+        super(throwable.getMessage());
+    }
+
     public UnexpectedException(String message) {
         super(message);
     }

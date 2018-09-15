@@ -1,10 +1,9 @@
 package service;
 
 import service.params.*;
+import service.response.IssueResponse;
 import service.response.RegistrationResponse;
 import utils.callback.Callback1;
-
-import java.util.List;
 
 /**
  * @author Hieu Pham
@@ -15,7 +14,7 @@ import java.util.List;
 
 public interface BitmarkApi {
 
-    void issueBitmark(IssuanceParams params, Callback1<List<String>> callback);
+    void issueBitmark(IssuanceParams params, Callback1<IssueResponse> callback);
 
     void registerAsset(RegistrationParams params, Callback1<RegistrationResponse> callback);
 

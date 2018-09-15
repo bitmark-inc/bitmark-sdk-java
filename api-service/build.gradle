@@ -8,6 +8,7 @@ dependencies {
     implementation project(':configuration')
     implementation deps.okhttp.okhttp3
     implementation deps.okhttp.logging
+    implementation deps.gson
 
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
