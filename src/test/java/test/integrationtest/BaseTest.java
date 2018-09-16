@@ -3,6 +3,8 @@ package test.integrationtest;
 import config.GlobalConfiguration;
 import config.Network;
 import features.BitmarkSDK;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * @author Hieu Pham
@@ -13,7 +15,14 @@ import features.BitmarkSDK;
 
 public abstract class BaseTest {
 
-    static {
+    @BeforeAll
+    public static void beforeAll() {
         BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg").withNetwork(Network.TEST_NET));
+
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        BitmarkSDK.destroy();
     }
 }

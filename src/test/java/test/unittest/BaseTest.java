@@ -3,6 +3,8 @@ package test.unittest;
 import config.GlobalConfiguration;
 import config.Network;
 import features.BitmarkSDK;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * @author Hieu Pham
@@ -13,8 +15,15 @@ import features.BitmarkSDK;
 
 public abstract class BaseTest {
 
-    static {
-        BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("DummyApiToken").withNetwork(Network.TEST_NET));
+    @BeforeAll
+    public static void beforeAll() {
+        BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("dummy-token").withNetwork(Network.TEST_NET));
+
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        BitmarkSDK.destroy();
     }
 
 }

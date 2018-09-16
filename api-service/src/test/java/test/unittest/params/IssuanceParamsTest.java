@@ -161,7 +161,7 @@ public class IssuanceParamsTest extends BaseTest {
 
     private static Stream<int[]> createInvalidNonce() {
         return Stream.of(new int[]{}, new int[]{1, 1, 1, 2, 3, 4, 5, 5}, new int[]{1, 2, 3, 4, 5,
-                6, 7, 3}, null);
+                6, 7, 3}, new int[]{-2, 1, 3, 4, -5, 0}, null);
     }
 
     private static Stream<Arguments> createValidAssetIdNonceSignatures() {

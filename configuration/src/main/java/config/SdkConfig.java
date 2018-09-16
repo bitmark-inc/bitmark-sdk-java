@@ -49,6 +49,8 @@ public class SdkConfig {
 
     public static final class Transfer {
 
+        public static final int TRANSACTION_ID_LENGTH = Sha3256.HASH_LENGTH;
+
         public static final int LINK_LENGTH = Sha3256.HASH_LENGTH;
 
         public static final int TRANSFER_TAG = 0x04;

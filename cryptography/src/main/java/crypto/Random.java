@@ -29,14 +29,14 @@ public class Random {
     }
 
     public static int secureRandomInt() {
-        return new SecureRandom().nextInt();
+        return new SecureRandom().nextInt() & Integer.MAX_VALUE;
     }
 
     public static int[] secureRandomInts(int size) {
         final int[] ints = new int[size];
         SecureRandom random = new SecureRandom();
         for (int i = 0; i < size; i++) {
-            ints[i] = random.nextInt();
+            ints[i] = random.nextInt() & Integer.MAX_VALUE;
         }
         return ints;
     }

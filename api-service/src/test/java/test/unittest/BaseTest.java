@@ -2,6 +2,8 @@ package test.unittest;
 
 import config.GlobalConfiguration;
 import config.Network;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * @author Hieu Pham
@@ -12,7 +14,14 @@ import config.Network;
 
 public class BaseTest {
 
-    static {
+    @BeforeAll
+    public static void beforeAll() {
         GlobalConfiguration.createInstance(GlobalConfiguration.builder().withNetwork(Network.TEST_NET).withApiToken("DummyApiToken"));
+
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        GlobalConfiguration.destroy();
     }
 }

@@ -222,4 +222,11 @@ public class ArrayUtil {
         }
         return false;
     }
+
+    public static boolean isPositive(int[] input) {
+        for (int item : input) {
+            if (item < 0) return false;
+        }
+        return true;
+    }
 }

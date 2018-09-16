@@ -60,7 +60,7 @@ public class TemporaryFolderExtension implements AfterEachCallback, ParameterRes
     }
 
     private String getFileName() {
-        return String.valueOf(System.currentTimeMillis()) + ".txt";
+        return "JavaSDK_Test_" + String.valueOf(System.currentTimeMillis()) + ".txt";
     }
 
     private ExtensionContext.Store getLocalStore(ExtensionContext context) {

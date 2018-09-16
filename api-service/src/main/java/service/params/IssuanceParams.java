@@ -12,6 +12,7 @@ import static crypto.Random.secureRandomInt;
 import static crypto.Random.secureRandomInts;
 import static crypto.encoder.Hex.HEX;
 import static utils.ArrayUtil.isDuplicate;
+import static utils.ArrayUtil.isPositive;
 import static utils.Validator.checkValid;
 import static utils.Validator.checkValidHex;
 
@@ -41,7 +42,7 @@ public class IssuanceParams extends AbsMultipleParams {
 
     public IssuanceParams(String assetId, Address owner, int[] nonces) throws ValidateException {
         this(assetId, owner);
-        checkValid(() -> nonces != null && nonces.length > 0 && !isDuplicate(nonces));
+        checkValid(() -> nonces != null && nonces.length > 0 && !isDuplicate(nonces) && isPositive(nonces));
         this.nonces = nonces;
     }
 
@@ -49,7 +50,7 @@ public class IssuanceParams extends AbsMultipleParams {
         this(assetId, owner);
         checkValid(() -> quantity > 0);
         int[] examinedNonce = secureRandomInts(quantity);
-        checkValid(() -> !isDuplicate(examinedNonce));
+        checkValid(() -> !isDuplicate(examinedNonce) && isPositive(examinedNonce));
         nonces = examinedNonce;
     }
 
@@ -88,6 +89,6 @@ public class IssuanceParams extends AbsMultipleParams {
 
     private String buildSingleJson(int index) {
         return "{\"owner\":\"" + owner.getAddress() + "\",\"signature\":\"" + HEX.encode(signatures.get(index)) + "\"," +
-                "\"assetId\":\"" + assetId + "\",\"nonce\":" + nonces[index] + "}";
+                "\"asset_id\":\"" + assetId + "\",\"nonce\":" + nonces[index] + "}";
     }
 }
