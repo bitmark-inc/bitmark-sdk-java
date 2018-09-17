@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
+import service.response.GetBitmarkResponse;
+import service.response.GetBitmarksResponse;
 import service.response.IssueResponse;
 import service.response.RegistrationResponse;
 import utils.callback.Callback1;
@@ -87,6 +89,28 @@ public class Converter {
         };
     }
 
+    public static Callback1<Response> toStatus(Callback1<String> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response response) {
+                try {
+                    String raw = response.body().string();
+                    Map<String, String> json = GSON.fromJson(raw, new TypeToken<Map<String,
+                            String>>() {
+                    }.getType());
+                    callback.onSuccess(json.get("status"));
+                } catch (IOException | JsonSyntaxException e) {
+                    callback.onError(new UnexpectedException(e));
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
     public static Callback1<Response> toOfferId(Callback1<String> callback) {
         return new Callback1<Response>() {
             @Override
@@ -100,6 +124,46 @@ public class Converter {
                 } catch (IOException | JsonSyntaxException e) {
                     callback.onError(new UnexpectedException(e));
                 }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
+    public static Callback1<Response> toGetBitmarkResponse(Callback1<GetBitmarkResponse> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response res) {
+                try {
+                    String raw = res.body().string();
+                    callback.onSuccess(GSON.fromJson(raw, GetBitmarkResponse.class));
+                } catch (IOException e) {
+                    callback.onError(new UnexpectedException(e));
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
+    public static Callback1<Response> toGetBitmarksResponse(Callback1<GetBitmarksResponse> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response res) {
+                try {
+                    String raw = res.body().string();
+                    callback.onSuccess(GSON.fromJson(raw, GetBitmarksResponse.class));
+                } catch (IOException e) {
+                    callback.onError(new UnexpectedException(e));
+                }
+
             }
 
             @Override

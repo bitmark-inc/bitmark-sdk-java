@@ -1,0 +1,36 @@
+{
+  "bitmarks": [
+    {
+      "asset_id": "dbca8f9d3f6d7a55f5ffa6f22abbccceafe599c2b0af99ccae8dbe8620c02c4facfc5748863d4236005d2fb66b1a078c694d8038fb5aaae0e08486c2c9512710",
+      "block_number": 9028,
+      "confirmed_at": "2018-09-16T05:47:24.000000Z",
+      "created_at": "2018-09-16T05:47:24.000000Z",
+      "head": "head",
+      "head_id": "12d11a294088bc15aa05965098dd965afb21c87d4df317bd8acb2a7b5127ecd2",
+      "id": "12d11a294088bc15aa05965098dd965afb21c87d4df317bd8acb2a7b5127ecd2",
+      "issued_at": "2018-09-16T05:47:24.000000Z",
+      "issuer": "fVuED2jekRdEAoKKMw9xZvvtuLi1iyhgXkmLD1w7LLm7m2Pk4p",
+      "offset": 744455,
+      "owner": "fVuED2jekRdEAoKKMw9xZvvtuLi1iyhgXkmLD1w7LLm7m2Pk4p",
+      "status": "settled"
+    }
+  ],
+  "assets": [
+    {
+      "block_number": 9028,
+      "block_offset": 1,
+      "created_at": "2018-09-16T05:47:24.000000Z",
+      "expires_at": null,
+      "fingerprint": "01ea9198b08291a94b95db2c959c173db5c7cc48149c4cc455476e5ec925f630b0478c40b207eeb4b99825d412bfe19799a36c983c69bfdb715b6680ce1a562acd",
+      "id": "dbca8f9d3f6d7a55f5ffa6f22abbccceafe599c2b0af99ccae8dbe8620c02c4facfc5748863d4236005d2fb66b1a078c694d8038fb5aaae0e08486c2c9512710",
+      "metadata": {
+        "Saved Time": "2018-09-16T05:46:22.686Z",
+        "Source": "HealthKit"
+      },
+      "name": "HK61158509",
+      "offset": 9944,
+      "registrant": "fVuED2jekRdEAoKKMw9xZvvtuLi1iyhgXkmLD1w7LLm7m2Pk4p",
+      "status": "confirmed"
+    }
+  ]
+}

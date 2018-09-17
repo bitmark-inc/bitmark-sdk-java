@@ -1,0 +1,32 @@
+{
+  "bitmark": {
+    "asset_id": "7ffe70ce4383e81b26f7a5fd8c6532c8a50525696272677120f10f44f16e377edd75e1507acd6572978697bcada43d30fb496caef86a3c77fc1808b8de2cbda3",
+    "block_number": 9022,
+    "confirmed_at": "2018-09-16T03:23:32.000000Z",
+    "created_at": "2018-09-16T03:23:32.000000Z",
+    "head": "head",
+    "head_id": "ad0c27e5200160ac107e471754643bd60511d5dd44e7862018cd7ec4d9688fac",
+    "id": "ad0c27e5200160ac107e471754643bd60511d5dd44e7862018cd7ec4d9688fac",
+    "issued_at": "2018-09-16T03:23:32.000000Z",
+    "issuer": "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+    "offset": 744377,
+    "owner": "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+    "status": "settled"
+  },
+  "asset": {
+    "block_number": 9022,
+    "block_offset": 1,
+    "created_at": "2018-09-16T03:23:32.000000Z",
+    "expires_at": null,
+    "fingerprint": "013727524647e0d9c4132af6fe6a57ca77e815280dde494d75b140050e322554ad92e27d8ebdc0e39ff4a3fa6d105419c6455c66256faecb816e7b1e1b2804beea",
+    "id": "7ffe70ce4383e81b26f7a5fd8c6532c8a50525696272677120f10f44f16e377edd75e1507acd6572978697bcada43d30fb496caef86a3c77fc1808b8de2cbda3",
+    "metadata": {
+      "description": "Temporary File create from java sdk test",
+      "name": "JavaSDK_Test_1537068149724.txt"
+    },
+    "name": "JavaSDK_Test_1537068149724.txt",
+    "offset": 9918,
+    "registrant": "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+    "status": "confirmed"
+  }
+}

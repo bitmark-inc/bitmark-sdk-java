@@ -1,6 +1,8 @@
 package test.utils;
 
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Hieu Pham
@@ -29,13 +31,23 @@ public class FileUtils {
     }
 
     public static String loadResponse(String name) throws IOException {
-        return load(new File(FileUtils.class.getResource("/response" + name).getFile())).replace(
-                " ", "");
+        String json = load(new File(FileUtils.class.getResource("/response" + name).getFile()));
+        Matcher matcher = Pattern.compile("[^\\s\"]+|\"[^\"]*\"").matcher(json);
+        StringBuilder builder = new StringBuilder();
+        while (matcher.find()) {
+            builder.append(matcher.group(0));
+        }
+        return builder.toString();
     }
 
     public static String loadRequest(String name) throws IOException {
-        return load(new File(FileUtils.class.getResource("/request" + name).getFile())).replace(
-                " ", "");
+        String json = load(new File(FileUtils.class.getResource("/request" + name).getFile()));
+        Matcher matcher = Pattern.compile("[^\\s\"]+|\"[^\"]*\"").matcher(json);
+        StringBuilder builder = new StringBuilder();
+        while (matcher.find()) {
+            builder.append(matcher.group(0));
+        }
+        return builder.toString();
     }
 
     public static File getResourceFile(String name) {

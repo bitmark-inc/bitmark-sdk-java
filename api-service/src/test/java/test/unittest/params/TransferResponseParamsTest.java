@@ -9,8 +9,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import service.params.TransferResponseParams;
 import test.unittest.BaseTest;
-import utils.Address;
-import utils.record.TransferOffer;
+import utils.record.OfferRecord;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,22 +39,23 @@ public class TransferResponseParamsTest extends BaseTest {
     private static final KeyPair KEY = StandardKeyPair.from(HEX.decode(PUBLIC_KEY),
             HEX.decode(PRIVATE_KEY));
 
-    @DisplayName("Verify function new TransferResponseParams(TransferOffer, Response) " +
+    @DisplayName("Verify function new TransferResponseParams(OfferRecord, Response) " +
                          "works well with valid params")
     @ParameterizedTest
-    @MethodSource("createValidTransferOfferResponse")
+    @MethodSource("createValidOfferResponse")
     public void testConstructTransferResponseParams_ValidParams_CorrectInstanceIsReturn(
-            TransferOffer transferOffer, TransferResponseParams.Response response) {
-        assertDoesNotThrow(() -> new TransferResponseParams(transferOffer, response));
+            OfferRecord offer, TransferResponseParams.Response response) {
+        assertDoesNotThrow(() -> new TransferResponseParams(offer, response));
     }
 
-    @DisplayName("Verify function new TransferResponseParams(TransferOffer, Response) " +
+    @DisplayName("Verify function new TransferResponseParams(OfferRecord, Response) " +
                          "throws exception with invalid params")
     @ParameterizedTest
-    @MethodSource("createInvalidTransferOfferResponse")
-    public void testConstructTransferResponseParams_InvalidParams_ErrorIsThrow(TransferOffer transferOffer, TransferResponseParams.Response response) {
+    @MethodSource("createInvalidOfferResponse")
+    public void testConstructTransferResponseParams_InvalidParams_ErrorIsThrow(OfferRecord offer,
+                                                                               TransferResponseParams.Response response) {
 
-        assertThrows(ValidateException.class, () -> new TransferResponseParams(transferOffer,
+        assertThrows(ValidateException.class, () -> new TransferResponseParams(offer,
                 response));
     }
 
@@ -108,51 +108,50 @@ public class TransferResponseParamsTest extends BaseTest {
     }
 
     @DisplayName("Verify function TransferResponseParams.buildHeaders() throws exception if the " +
-                         "TransferResponseParams is not signed")
+                         "TransferResponseParams is missing signing key")
     @ParameterizedTest
-    @MethodSource("createUnsignedNonAcceptParams")
-    public void testBuildRequestHeader_ParamsIsNotSigned_ErrorIsThrow(TransferResponseParams params) {
-        assertThrows(UnsupportedOperationException.class, params::buildHeaders);
+    @MethodSource("createMissingSigningKeyParams")
+    public void testBuildRequestHeader_MissingSigningKey_ErrorIsThrow(TransferResponseParams params) {
+        assertThrows(ValidateException.class, params::buildHeaders);
     }
 
-    private static Stream<Arguments> createValidTransferOfferResponse() {
-        final TransferOffer transferOffer1 = new TransferOffer("c9b9911a4-4237-419b-9862" +
-                "-00957d7c4618", Address.fromAccountNumber(
-                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva"),
+    private static Stream<Arguments> createValidOfferResponse() {
+        final OfferRecord offer1 = new OfferRecord("c9b9911a4-4237-419b-9862" +
+                "-00957d7c4618",
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
                 "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
-        final TransferOffer transferOffer2 = new TransferOffer("39de1800-ecec-4dea-8425" +
-                "-d2a87e468ace", Address.fromAccountNumber(
-                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva"),
+        final OfferRecord offer2 = new OfferRecord("39de1800-ecec-4dea-8425" +
+                "-d2a87e468ace",
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        return Stream.of(Arguments.of(transferOffer1, ACCEPT), Arguments.of(transferOffer2,
+        return Stream.of(Arguments.of(offer1, ACCEPT), Arguments.of(offer2,
                 CANCEL));
     }
 
-    private static Stream<Arguments> createInvalidTransferOfferResponse() {
-        final TransferOffer transferOffer = new TransferOffer("39de1800-ecec-4dea-8425" +
-                "-d2a87e468ace", Address.fromAccountNumber(
-                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva"),
+    private static Stream<Arguments> createInvalidOfferResponse() {
+        final OfferRecord offer = new OfferRecord("39de1800-ecec-4dea-8425" +
+                "-d2a87e468ace",
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        return Stream.of(Arguments.of(null, null), Arguments.of(transferOffer, null),
+        return Stream.of(Arguments.of(null, null), Arguments.of(offer, null),
                 Arguments.of(null, ACCEPT));
     }
 
     private static Stream<Arguments> createSignedAcceptParamsJson() throws IOException {
-        final TransferOffer transferOffer1 = new TransferOffer("9b9911a4-4237-419b-9862" +
-                "-00957d7c4618", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer1 = new OfferRecord("9b9911a4-4237-419b-9862" +
+                "-00957d7c4618", "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
                 "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
-        final TransferOffer transferOffer2 = new TransferOffer("196b12ee-770d-48b3-8402" +
-                "-32c72810c297", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer2 = new OfferRecord("196b12ee-770d-48b3-8402" +
+                "-32c72810c297",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(transferOffer1, ACCEPT);
-        final TransferResponseParams params2 = new TransferResponseParams(transferOffer2, ACCEPT);
+        final TransferResponseParams params1 = new TransferResponseParams(offer1, ACCEPT);
+        final TransferResponseParams params2 = new TransferResponseParams(offer2, ACCEPT);
         params1.sign(KEY);
         params2.sign(KEY);
         final String json1 = loadRequest("/transfer/transfer_response1.json");
@@ -161,87 +160,79 @@ public class TransferResponseParamsTest extends BaseTest {
     }
 
     private static Stream<TransferResponseParams> createUnsignedAcceptParams() {
-        final TransferOffer transferOffer1 = new TransferOffer("9b9911a4-4237-419b-9862" +
-                "-00957d7c4618", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer1 = new OfferRecord("9b9911a4-4237-419b-9862" +
+                "-00957d7c4618",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
                 "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
-        final TransferOffer transferOffer2 = new TransferOffer("196b12ee-770d-48b3-8402" +
-                "-32c72810c297", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer2 = new OfferRecord("196b12ee-770d-48b3-8402" +
+                "-32c72810c297",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(transferOffer1, ACCEPT);
-        final TransferResponseParams params2 = new TransferResponseParams(transferOffer2, ACCEPT);
+        final TransferResponseParams params1 = new TransferResponseParams(offer1, ACCEPT);
+        final TransferResponseParams params2 = new TransferResponseParams(offer2, ACCEPT);
         return Stream.of(params1, params2);
     }
 
     private static Stream<Arguments> createUnsignedNotAcceptParamsJson() throws IOException {
-        final TransferOffer transferOffer1 = new TransferOffer("9b9911a4-4237-419b-9862" +
-                "-00957d7c4618", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer1 = new OfferRecord("9b9911a4-4237-419b-9862" +
+                "-00957d7c4618",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
                 "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
-        final TransferOffer transferOffer2 = new TransferOffer("196b12ee-770d-48b3-8402" +
-                "-32c72810c297", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer2 = new OfferRecord("196b12ee-770d-48b3-8402" +
+                "-32c72810c297",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(transferOffer1, CANCEL);
-        final TransferResponseParams params2 = new TransferResponseParams(transferOffer2, REJECT);
+        final TransferResponseParams params1 = new TransferResponseParams(offer1, CANCEL);
+        final TransferResponseParams params2 = new TransferResponseParams(offer2, REJECT);
         final String json1 = loadRequest("/transfer/transfer_response3.json");
         final String json2 = loadRequest("/transfer/transfer_response4.json");
         return Stream.of(Arguments.of(params1, json1), Arguments.of(params2, json2));
     }
 
     private static Stream<Arguments> createAcceptParamsSignature() {
-        final TransferOffer transferOffer1 = new TransferOffer("9b9911a4-4237-419b-9862" +
-                "-00957d7c4618", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer1 = new OfferRecord("9b9911a4-4237-419b-9862" +
+                "-00957d7c4618",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
                 "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
-        final TransferOffer transferOffer2 = new TransferOffer("196b12ee-770d-48b3-8402" +
-                "-32c72810c297", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer2 = new OfferRecord("196b12ee-770d-48b3-8402" +
+                "-32c72810c297",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(transferOffer1, ACCEPT);
-        final TransferResponseParams params2 = new TransferResponseParams(transferOffer2, ACCEPT);
+        final TransferResponseParams params1 = new TransferResponseParams(offer1, ACCEPT);
+        final TransferResponseParams params2 = new TransferResponseParams(offer2, ACCEPT);
         return Stream.of(Arguments.of(params1,
                 "fc107b1f0922ba645b0c728a9071cd2591e95ddb4197834145c5e0a685b9e72510e81c7ca8f4ea50ffa8aa2ef6f55001d3f6685599ece4d00ffe5a336ed29505"),
                 Arguments.of(params2,
                         "7b4ca691ca494c4fe71142231fd839658d8aa2962496e2d416703e1da43e8e2b8a1df68761545be2f44d2375bfd2f0844169f64693488dff1056e95a82600105"));
     }
 
-    private static Stream<TransferResponseParams> createUnsignedNonAcceptParams() {
-        final TransferOffer transferOffer1 = new TransferOffer("9b9911a4-4237-419b-9862" +
-                "-00957d7c4618", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
-                "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
-                "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
-        final TransferOffer transferOffer2 = new TransferOffer("196b12ee-770d-48b3-8402" +
-                "-32c72810c297", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
-                "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
-                "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(transferOffer1, CANCEL);
-        final TransferResponseParams params2 = new TransferResponseParams(transferOffer2, REJECT);
-        return Stream.of(params1, params2);
-    }
-
     private static Stream<Arguments> createValidParamsHeader() {
-        final TransferOffer transferOffer1 = new TransferOffer("9b9911a4-4237-419b-9862" +
-                "-00957d7c4618", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer1 = new OfferRecord("9b9911a4-4237-419b-9862" +
+                "-00957d7c4618",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
                 "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
-        final TransferOffer transferOffer2 = new TransferOffer("196b12ee-770d-48b3-8402" +
-                "-32c72810c297", Address.fromAccountNumber(
-                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"),
+        final OfferRecord offer2 = new OfferRecord("196b12ee-770d-48b3-8402" +
+                "-32c72810c297",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(transferOffer1, ACCEPT);
-        final TransferResponseParams params2 = new TransferResponseParams(transferOffer2, ACCEPT);
+        final OfferRecord offer3 = new OfferRecord("39de1800-ecec-4dea-8425-d2a87e468ace",
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+                "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
+                "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
+        final TransferResponseParams params1 = new TransferResponseParams(offer1, ACCEPT);
+        final TransferResponseParams params2 = new TransferResponseParams(offer2, ACCEPT);
+        final TransferResponseParams params3 = new TransferResponseParams(offer3, CANCEL);
+        params3.setSigningKey(StandardKeyPair.from(HEX.decode(
+                "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f"), HEX.decode(
+                "0246a917d422e596168185cea9943459c09751532c52fe4ddc27b06e2893ef2258760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f")));
         params1.sign(KEY);
         params2.sign(KEY);
         final Map<String, String> header1 = new HashMap<String, String>() {{
@@ -257,8 +248,46 @@ public class TransferResponseParamsTest extends BaseTest {
             put("signature",
                     "6417788791887e313c7397455a6711436a7ac08a0530c522169acdd82973653b6a55f1f370c23885a26cd8b86721304ad8e657b06e4a5356a82796be228cf50c");
         }};
+        final Map<String, String> header3 = new HashMap<String, String>() {{
+            put("requester", "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva");
+            put("timestamp", String.valueOf(1536742584049L));
+            put("signature",
+                    "317e75e03a7ce727a7833d682558a7a2cc4ef4df00ff50d3b95861c0bafba396135ad7a94bf4818ebc0d029e7c1e8adad127d28c8d127d5ef4733b7713d1440c");
+        }};
         return Stream.of(Arguments.of(params1, 1536742580935L, header1), Arguments.of(params2,
-                1536742638942L, header2));
+                1536742638942L, header2), Arguments.of(params3, 1536742584049L, header3));
+    }
+
+    private static Stream<TransferResponseParams> createUnsignedNonAcceptParams() {
+        final OfferRecord offer1 = new OfferRecord("9b9911a4-4237-419b-9862" +
+                "-00957d7c4618",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
+                "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
+                "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
+        final OfferRecord offer2 = new OfferRecord("196b12ee-770d-48b3-8402" +
+                "-32c72810c297",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
+                "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
+                "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
+        final TransferResponseParams params1 = new TransferResponseParams(offer1, CANCEL);
+        final TransferResponseParams params2 = new TransferResponseParams(offer2, REJECT);
+        return Stream.of(params1, params2);
+    }
+
+    private static Stream<TransferResponseParams> createMissingSigningKeyParams() {
+        final OfferRecord offer1 = new OfferRecord("9b9911a4-4237-419b-9862" +
+                "-00957d7c4618",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
+                "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
+                "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
+        final OfferRecord offer2 = new OfferRecord("196b12ee-770d-48b3-8402" +
+                "-32c72810c297",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
+                "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
+                "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
+        final TransferResponseParams params1 = new TransferResponseParams(offer1, CANCEL);
+        final TransferResponseParams params2 = new TransferResponseParams(offer2, REJECT);
+        return Stream.of(params1, params2);
     }
 
 }

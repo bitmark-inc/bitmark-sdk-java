@@ -30,7 +30,7 @@ public class HttpClientImpl implements HttpClient {
 
     private OkHttpClient client;
 
-    public HttpClientImpl(String apiToken) {
+    HttpClientImpl(String apiToken) {
         client = buildClient(apiToken);
     }
 

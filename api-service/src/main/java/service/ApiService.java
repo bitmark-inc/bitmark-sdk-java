@@ -4,6 +4,9 @@ import config.GlobalConfiguration;
 import config.SdkConfig;
 import okhttp3.Headers;
 import service.params.*;
+import service.params.query.QueryParams;
+import service.response.GetBitmarkResponse;
+import service.response.GetBitmarksResponse;
 import service.response.IssueResponse;
 import service.response.RegistrationResponse;
 import utils.callback.Callback1;
@@ -64,6 +67,22 @@ public class ApiService extends AbsApiService implements BitmarkApi {
     public void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback) {
         final String path = String.format("/%s/transfer", SdkConfig.ApiServer.VERSION);
         Headers headers = Headers.of(params.buildHeaders());
-        patchAsync(path, headers, params, toTxId(callback));
+        if (params.isAccept()) patchAsync(path, headers, params, toTxId(callback));
+        else patchAsync(path, headers, params, toStatus(callback));
+    }
+
+    @Override
+    public void get(String bitmarkId, boolean includeAsset,
+                    Callback1<GetBitmarkResponse> callback) {
+        final String path = String.format("/%s/bitmarks/%s?asset=%b", SdkConfig.ApiServer.VERSION
+                , bitmarkId, includeAsset);
+        getAsync(path, toGetBitmarkResponse(callback));
+
+    }
+
+    @Override
+    public void list(QueryParams params, Callback1<GetBitmarksResponse> callback) {
+        final String path = String.format("/%s/bitmarks", SdkConfig.ApiServer.VERSION);
+        getAsync(path, params, toGetBitmarksResponse(callback));
     }
 }

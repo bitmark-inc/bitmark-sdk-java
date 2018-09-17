@@ -8,4 +8,8 @@ package service.params.query;
  */
 
 public interface QueryBuilder {
+
+    QueryParams build();
+
+    String toUrlQuery();
 }

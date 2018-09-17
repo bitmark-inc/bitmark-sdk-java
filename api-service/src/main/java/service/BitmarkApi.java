@@ -1,6 +1,9 @@
 package service;
 
 import service.params.*;
+import service.params.query.QueryParams;
+import service.response.GetBitmarkResponse;
+import service.response.GetBitmarksResponse;
 import service.response.IssueResponse;
 import service.response.RegistrationResponse;
 import utils.callback.Callback1;
@@ -23,5 +26,9 @@ public interface BitmarkApi {
     void offerBitmark(TransferOfferParams params, Callback1<String> callback);
 
     void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback);
+
+    void get(String bitmarkId, boolean includeAsset, Callback1<GetBitmarkResponse> callback);
+
+    void list(QueryParams params, Callback1<GetBitmarksResponse> callback);
 
 }

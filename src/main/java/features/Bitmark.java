@@ -5,6 +5,9 @@ import service.params.IssuanceParams;
 import service.params.TransferOfferParams;
 import service.params.TransferParams;
 import service.params.TransferResponseParams;
+import service.params.query.BitmarkQueryBuilder;
+import service.response.GetBitmarkResponse;
+import service.response.GetBitmarksResponse;
 import service.response.IssueResponse;
 import utils.callback.Callback1;
 
@@ -31,6 +34,19 @@ public class Bitmark {
 
     public static void respond(TransferResponseParams params, Callback1<String> callback) {
         ApiService.getInstance().respondBitmarkOffer(params, callback);
+    }
+
+    public static void get(String bitmarkId, boolean includeAsset,
+                           Callback1<GetBitmarkResponse> callback) {
+        ApiService.getInstance().get(bitmarkId, includeAsset, callback);
+    }
+
+    public static void get(String bitmarkId, Callback1<GetBitmarkResponse> callback) {
+        get(bitmarkId, false, callback);
+    }
+
+    public static void list(BitmarkQueryBuilder builder, Callback1<GetBitmarksResponse> callback) {
+        ApiService.getInstance().list(builder.build(), callback);
     }
 
 }

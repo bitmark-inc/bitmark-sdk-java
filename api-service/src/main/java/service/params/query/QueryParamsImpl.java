@@ -17,6 +17,6 @@ public class QueryParamsImpl implements QueryParams {
 
     @Override
     public String toUrlQuery() {
-        throw new UnsupportedOperationException("Unsupport right now");
+        return builder.toUrlQuery();
     }
 }

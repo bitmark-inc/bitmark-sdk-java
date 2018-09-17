@@ -1,0 +1,16 @@
+{
+  "bitmark": {
+    "asset_id": "7ffe70ce4383e81b26f7a5fd8c6532c8a50525696272677120f10f44f16e377edd75e1507acd6572978697bcada43d30fb496caef86a3c77fc1808b8de2cbda3",
+    "block_number": 9022,
+    "confirmed_at": "2018-09-16T03:23:32.000000Z",
+    "created_at": "2018-09-16T03:23:32.000000Z",
+    "head": "head",
+    "head_id": "ad0c27e5200160ac107e471754643bd60511d5dd44e7862018cd7ec4d9688fac",
+    "id": "ad0c27e5200160ac107e471754643bd60511d5dd44e7862018cd7ec4d9688fac",
+    "issued_at": "2018-09-16T03:23:32.000000Z",
+    "issuer": "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+    "offset": 744377,
+    "owner": "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+    "status": "settled"
+  }
+}

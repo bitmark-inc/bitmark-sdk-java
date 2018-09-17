@@ -5,9 +5,10 @@ import config.SdkConfig;
 import crypto.Ed25519;
 import crypto.encoder.VarInt;
 import crypto.key.KeyPair;
+import utils.Address;
 import utils.ArrayUtil;
 import utils.BinaryPacking;
-import utils.record.TransferOffer;
+import utils.record.OfferRecord;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -41,41 +42,45 @@ public class TransferResponseParams extends AbsSingleParams {
         }
     }
 
-    private TransferOffer transferOffer;
+    private OfferRecord offer;
 
     private Response response;
 
-    private KeyPair offeredOwnerKey;
+    private KeyPair key;
 
-    public TransferResponseParams(TransferOffer transferOffer, Response response) {
-        checkNonNull(transferOffer);
+    public TransferResponseParams(OfferRecord offer, Response response) {
+        checkNonNull(offer);
         checkNonNull(response);
-        this.transferOffer = transferOffer;
+        this.offer = offer;
         this.response = response;
     }
 
     @Override
     byte[] pack() {
         byte[] data = VarInt.writeUnsignedVarInt(SdkConfig.Transfer.OFFER_TAG);
-        data = BinaryPacking.concat(HEX.decode(transferOffer.getLink()), data);
+        data = BinaryPacking.concat(HEX.decode(offer.getLink()), data);
         data = ArrayUtil.concat(data, new byte[]{0x00});
-        data = BinaryPacking.concat(transferOffer.getOfferedOwner().pack(), data);
-        data = BinaryPacking.concat(transferOffer.getSignature(), data);
+        data = BinaryPacking.concat(Address.fromAccountNumber(offer.getOwner()).pack(), data);
+        data = BinaryPacking.concat(HEX.decode(offer.getSignature()), data);
         return data;
     }
 
     @Override
     public byte[] sign(KeyPair key) {
-        checkValid(this::isAccept, "Only accept need to be signed");
-        this.offeredOwnerKey = key;
+        checkValid(this::isAccept, "Only accept response params need to be signed");
+        setSigningKey(key);
         return super.sign(key);
+    }
+
+    public void setSigningKey(KeyPair key) {
+        this.key = key;
     }
 
     @Override
     public String toJson() {
         if (isAccept()) checkSigned();
         return "{\"action\":\"" + response.value + (isAccept() ? "\",\"countersignature\":\""
-                + HEX.encode(signature) : "") + "\",\"id\":\"" + transferOffer.getOfferId() + "\"}";
+                + HEX.encode(signature) : "") + "\",\"id\":\"" + offer.getId() + "\"}";
     }
 
     public Map<String, String> buildHeaders() {
@@ -84,20 +89,20 @@ public class TransferResponseParams extends AbsSingleParams {
 
     @VisibleForTesting
     public Map<String, String> buildHeaders(long time) {
-        checkSigned();
+        checkValid(() -> key != null && key.isValid(), "Invalid or missing key for signing");
         Map<String, String> headers = new HashMap<>();
-        String requester = transferOffer.getOfferedOwner().getAddress();
-        String message = String.format("updateOffer|%s|%s|%s", transferOffer.getOfferId(),
+        String requester = offer.getOwner();
+        String message = String.format("updateOffer|%s|%s|%s", offer.getId(),
                 requester, String.valueOf(time));
         byte[] signature = Ed25519.sign(RAW.decode(message),
-                offeredOwnerKey.privateKey().toBytes());
+                key.privateKey().toBytes());
         headers.put("requester", requester);
         headers.put("timestamp", String.valueOf(time));
         headers.put("signature", HEX.encode(signature));
         return headers;
     }
 
-    private boolean isAccept() {
+    public boolean isAccept() {
         return response == Response.ACCEPT;
     }
 }

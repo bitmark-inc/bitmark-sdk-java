@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * @author Hieu Pham
@@ -229,4 +230,21 @@ public class ArrayUtil {
         }
         return true;
     }
+
+    public static Integer[] toIntegerArray(int[] input) {
+        return Arrays.stream(input).boxed().toArray(Integer[]::new);
+    }
+
+    public static Long[] toLongArray(long[] input) {
+        return Arrays.stream(input).boxed().toArray(Long[]::new);
+    }
+
+    public static Double[] toDoubleArray(double[] input) {
+        return Arrays.stream(input).boxed().toArray(Double[]::new);
+    }
+
+    public static Float[] toFloatArray(float[] input) {
+        return IntStream.range(0, input.length).mapToDouble(i -> input[i]).boxed().toArray(Float[]::new);
+    }
+
 }
