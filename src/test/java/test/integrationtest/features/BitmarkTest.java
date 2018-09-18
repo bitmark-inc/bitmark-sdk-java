@@ -315,7 +315,7 @@ public class BitmarkTest extends BaseFeatureTest {
 
     @DisplayName("Verify function Bitmark.get(String, boolean, Callback1<>) works well")
     @Test
-    public void testQueryBitmarkById_IncludeAsset_CorrectResponseIsReturn() {
+    public void testQueryBitmarkByIdWithAsset_ExistedBitmarkId_CorrectResponseIsReturn() {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
@@ -335,7 +335,7 @@ public class BitmarkTest extends BaseFeatureTest {
 
     @DisplayName("Verify function Bitmark.get(String, Callback1<>) works well")
     @Test
-    public void testQueryBitmarkById_NotIncludeAsset_CorrectResponseIsReturn() {
+    public void testQueryBitmarkByIdWithoutAsset_ExistedBitmarkId_CorrectResponseIsReturn() {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);

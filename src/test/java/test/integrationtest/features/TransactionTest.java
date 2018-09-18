@@ -8,6 +8,7 @@ import service.response.GetTransactionResponse;
 import service.response.GetTransactionsResponse;
 import test.utils.Callable;
 import utils.error.HttpException;
+import utils.record.AssetRecord;
 import utils.record.TransactionRecord;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class TransactionTest extends BaseFeatureTest {
     @DisplayName("Verify function Transaction.get(String, Callback1<>) works well with existed " +
                          "transaction id")
     @Test
-    public void testQueryTransaction_ExistedTxId_CorrectResponseIsReturn() {
+    public void testQueryTransactionWithoutAsset_ExistedTxId_CorrectResponseIsReturn() {
         // Get existed tx
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().owner(ACCOUNT1.getAccountNumber()).limit(1);
@@ -47,6 +48,32 @@ public class TransactionTest extends BaseFeatureTest {
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         assertNotNull(transaction);
         assertEquals(txId, transaction.getId());
+    }
+
+    @DisplayName("Verify function Transaction.get(String, boolean, Callback1<>) works well with " +
+                         "existed transaction id")
+    @Test
+    public void testQueryTransactionWithAsset_ExistedTxId_CorrectResponseIsReturn() {
+        // Get existed tx
+        TransactionQueryBuilder builder =
+                new TransactionQueryBuilder().owner(ACCOUNT1.getAccountNumber()).limit(1);
+        GetTransactionsResponse getTransactionsResponse =
+                await(callback -> Transaction.list(builder,
+                        callback));
+        List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
+        assertNotNull(transactions, "This guy does not have any transaction");
+        assertFalse(transactions.isEmpty(), "This guy does not have any transaction");
+        String txId = transactions.get(0).getId();
+
+        // Get tx by id
+        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
+                true, callback));
+        TransactionRecord transaction = getTransactionResponse.getTransaction();
+        AssetRecord asset = getTransactionResponse.getAsset();
+        assertNotNull(transaction);
+        assertNotNull(asset);
+        assertEquals(txId, transaction.getId());
+        assertEquals(transaction.getAssetId(), asset.getId());
     }
 
     @DisplayName("Verify function Transaction.get(String, Callback1<>) works well with not " +

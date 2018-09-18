@@ -99,8 +99,10 @@ public class ApiService extends AbsApiService implements BitmarkApi {
     }
 
     @Override
-    public void getTransaction(String txId, Callback1<GetTransactionResponse> callback) {
-        final String path = String.format("/%s/txs/%s", SdkConfig.ApiServer.VERSION, txId);
+    public void getTransaction(String txId, boolean includeAsset,
+                               Callback1<GetTransactionResponse> callback) {
+        final String path = String.format("/%s/txs/%s?asset=%b", SdkConfig.ApiServer.VERSION,
+                txId, includeAsset);
         getAsync(path, toGetTransactionResponse(callback));
     }
 

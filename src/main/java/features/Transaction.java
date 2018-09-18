@@ -15,7 +15,12 @@ import utils.callback.Callback1;
 public class Transaction {
 
     public static void get(String txId, Callback1<GetTransactionResponse> callback) {
-        ApiService.getInstance().getTransaction(txId, callback);
+        get(txId, false, callback);
+    }
+
+    public static void get(String txId, boolean loadAsset,
+                           Callback1<GetTransactionResponse> callback) {
+        ApiService.getInstance().getTransaction(txId, loadAsset, callback);
     }
 
     public static void list(TransactionQueryBuilder builder,

@@ -35,7 +35,8 @@ public interface BitmarkApi {
 
     void listAssets(QueryParams params, Callback1<List<AssetRecord>> callback);
 
-    void getTransaction(String txId, Callback1<GetTransactionResponse> callback);
+    void getTransaction(String txId, boolean includeAsset,
+                        Callback1<GetTransactionResponse> callback);
 
     void listTransactions(QueryParams params, Callback1<GetTransactionsResponse> callback);
 
