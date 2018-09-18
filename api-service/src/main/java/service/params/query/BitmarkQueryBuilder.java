@@ -35,7 +35,7 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
     private String referencedAssetId;
 
     @SerializedName("asset")
-    private boolean isLoadAsset;
+    private boolean loadAsset;
 
     private int limit = 100;
 
@@ -81,7 +81,7 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
     }
 
     public BitmarkQueryBuilder loadAsset(boolean loadAsset) {
-        isLoadAsset = loadAsset;
+        this.loadAsset = loadAsset;
         return this;
     }
 

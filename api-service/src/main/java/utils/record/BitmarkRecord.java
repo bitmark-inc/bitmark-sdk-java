@@ -28,14 +28,6 @@ public class BitmarkRecord implements Record {
         SETTLED
     }
 
-    public enum Head {
-        @SerializedName("head")
-        HEAD,
-
-        @SerializedName("moved")
-        MOVED
-    }
-
     @SerializedName("asset_id")
     private String assetId;
 

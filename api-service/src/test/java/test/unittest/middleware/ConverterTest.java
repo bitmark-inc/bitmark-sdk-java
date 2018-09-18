@@ -1,29 +1,30 @@
 package test.unittest.middleware;
 
 import okhttp3.*;
+import okhttp3.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import service.middleware.Converter;
-import service.response.GetBitmarkResponse;
-import service.response.GetBitmarksResponse;
-import service.response.IssueResponse;
-import service.response.RegistrationResponse;
+import service.response.*;
 import test.unittest.BaseTest;
 import utils.callback.Callback1;
 import utils.record.AssetRecord;
 import utils.record.BitmarkRecord;
+import utils.record.TransactionRecord;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static test.utils.FileUtils.loadResponse;
-import static utils.record.BitmarkRecord.Head.HEAD;
+import static utils.record.Head.HEAD;
+import static utils.record.TransactionRecord.Status.CONFIRMED;
 
 /**
  * @author Hieu Pham
@@ -164,6 +165,84 @@ public class ConverterTest extends BaseTest {
                 Converter.toGetBitmarksResponse(new Callback1<GetBitmarksResponse>() {
                     @Override
                     public void onSuccess(GetBitmarksResponse res) {
+                        assertEquals(expectedResponse, res);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+                });
+        callback.onSuccess(response);
+    }
+
+    @DisplayName("Verify function Converter.toAssetRecord(Callback1<AssetRecord>) works well")
+    @ParameterizedTest
+    @MethodSource("createValidResponseAssetRecord")
+    public void testConvertAssetRecord_ValidResponse_CorrectAssetRecordIsReturn(Response response
+            , AssetRecord expectedAsset) {
+        Callback1<Response> callback = Converter.toAssetRecord(new Callback1<AssetRecord>() {
+            @Override
+            public void onSuccess(AssetRecord asset) {
+                assertEquals(expectedAsset, asset);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
+        callback.onSuccess(response);
+    }
+
+    @DisplayName("Verify function Converter.toAssetRecords(Callback1<List<AssetRecord>>) works " +
+                         "well")
+    @ParameterizedTest
+    @MethodSource("createValidResponseAssetRecords")
+    public void testConvertAssetRecords_ValidResponse_CorrectAssetRecordIsReturn(Response response, List<AssetRecord> expectedAssets) {
+        Callback1<Response> callback = Converter.toAssetRecords(new Callback1<List<AssetRecord>>() {
+            @Override
+            public void onSuccess(List<AssetRecord> assets) {
+                assertEquals(expectedAssets, assets);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
+        callback.onSuccess(response);
+    }
+
+    @DisplayName("Verify function Converter.toGetTransactionResponse" +
+                         "(Callback1<GetTransactionResponse>) works well")
+    @ParameterizedTest
+    @MethodSource("createValidResponseGetTransactionResponse")
+    public void testConvertGetTransactionResponse_ValidResponse_CorrectGetTransactionResponseIsReturn(Response response, GetTransactionResponse expectedResponse) {
+        Callback1<Response> callback =
+                Converter.toGetTransactionResponse(new Callback1<GetTransactionResponse>() {
+                    @Override
+                    public void onSuccess(GetTransactionResponse res) {
+                        assertEquals(expectedResponse, res);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+                });
+        callback.onSuccess(response);
+    }
+
+    @DisplayName("Verify function Converter.toGetTransactionsResponse" +
+                         "(Callback1<GetTransactionsResponse>) works well")
+    @ParameterizedTest
+    @MethodSource("createValidResponseGetTransactionsResponse")
+    public void testConvertGetTransactionsResponse_ValidResponse_CorrectGetTransactionsResponseIsReturn(Response response, GetTransactionsResponse expectedResponse) {
+        Callback1<Response> callback =
+                Converter.toGetTransactionsResponse(new Callback1<GetTransactionsResponse>() {
+                    @Override
+                    public void onSuccess(GetTransactionsResponse res) {
                         assertEquals(expectedResponse, res);
                     }
 
@@ -342,5 +421,135 @@ public class ConverterTest extends BaseTest {
                 }}, null);
         return Stream.of(Arguments.of(response1, expectedResponse1), Arguments.of(response2,
                 expectedResponse2));
+    }
+
+    private static Stream<Arguments> createValidResponseAssetRecord() throws IOException {
+        final AssetRecord asset1 = new AssetRecord(9028, 1, "2018-09-16T05:47:24.000000Z", null,
+                "01ea9198b08291a94b95db2c959c173db5c7cc48149c4cc455476e5ec925f630b0478c40b207eeb4b99825d412bfe19799a36c983c69bfdb715b6680ce1a562acd",
+                "dbca8f9d3f6d7a55f5ffa6f22abbccceafe599c2b0af99ccae8dbe8620c02c4facfc5748863d4236005d2fb66b1a078c694d8038fb5aaae0e08486c2c9512710", new HashMap<String, String>() {{
+            put("Saved Time", "2018-09-16T05:46:22.686Z");
+            put("Source", "HealthKit");
+        }}, "HK61158509", 9944,
+                "fVuED2jekRdEAoKKMw9xZvvtuLi1iyhgXkmLD1w7LLm7m2Pk4p", AssetRecord.Status.CONFIRMED);
+        final AssetRecord asset2 = new AssetRecord(9027, 4, "2018-09-16T04:08:04.000000Z", null,
+                "011b1860a4cf9c0142248773c84f24f8db6e2b54b6c1803700fce2818dcd001f7a6b0134fe3cb7d7bf0310c749fd0bf977b9f5060c0c34c1d7a755c6f159ab5b1b",
+                "9ef1590645df106ce428ec9cfdb48cfae29e95ee543a42bc3dcf95969ff9d8285dd07a558abf540838c151a7b34dd8c443430c766e8b1c934bdffa23cc06aa04", new HashMap<String, String>() {{
+            put("name", "JavaSDK_Test_1537070880489.txt");
+            put("description", "Temporary File create from java sdk test");
+        }}, "JavaSDK_Test_1537070880489.txt", 9942,
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva", AssetRecord.Status.CONFIRMED);
+        final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/query/asset/asset1.json"))).message("dummy").build();
+        final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/query/asset/asset2.json"))).message("dummy").build();
+        return Stream.of(Arguments.of(response1, asset1), Arguments.of(response2, asset2));
+    }
+
+    private static Stream<Arguments> createValidResponseAssetRecords() throws IOException {
+        final AssetRecord asset1 = new AssetRecord(9028, 1, "2018-09-16T05:47:24.000000Z", null,
+                "01ea9198b08291a94b95db2c959c173db5c7cc48149c4cc455476e5ec925f630b0478c40b207eeb4b99825d412bfe19799a36c983c69bfdb715b6680ce1a562acd",
+                "dbca8f9d3f6d7a55f5ffa6f22abbccceafe599c2b0af99ccae8dbe8620c02c4facfc5748863d4236005d2fb66b1a078c694d8038fb5aaae0e08486c2c9512710", new HashMap<String, String>() {{
+            put("Saved Time", "2018-09-16T05:46:22.686Z");
+            put("Source", "HealthKit");
+        }}, "HK61158509", 9944,
+                "fVuED2jekRdEAoKKMw9xZvvtuLi1iyhgXkmLD1w7LLm7m2Pk4p", AssetRecord.Status.CONFIRMED);
+        final AssetRecord asset2 = new AssetRecord(9027, 4, "2018-09-16T04:08:04.000000Z", null,
+                "011b1860a4cf9c0142248773c84f24f8db6e2b54b6c1803700fce2818dcd001f7a6b0134fe3cb7d7bf0310c749fd0bf977b9f5060c0c34c1d7a755c6f159ab5b1b",
+                "9ef1590645df106ce428ec9cfdb48cfae29e95ee543a42bc3dcf95969ff9d8285dd07a558abf540838c151a7b34dd8c443430c766e8b1c934bdffa23cc06aa04", new HashMap<String, String>() {{
+            put("name", "JavaSDK_Test_1537070880489.txt");
+            put("description", "Temporary File create from java sdk test");
+        }}, "JavaSDK_Test_1537070880489.txt", 9942,
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva", AssetRecord.Status.CONFIRMED);
+        final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/query/asset/assets1.json"))).message("dummy").build();
+        final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/query/asset/assets2.json"))).message("dummy").build();
+        return Stream.of(Arguments.of(response1, new ArrayList<AssetRecord>() {{
+            add(asset1);
+            add(asset2);
+        }}), Arguments.of(response2, new ArrayList<AssetRecord>() {{
+            add(asset1);
+        }}));
+    }
+
+    private static Stream<Arguments> createValidResponseGetTransactionResponse() throws IOException {
+        final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/query/transaction/transaction1.json"))).message("dummy").build();
+        final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/query/transaction/transaction2.json"))).message("dummy").build();
+        final TransactionRecord txRecord1 = new TransactionRecord(
+                "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a",
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+                "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
+                HEAD, CONFIRMED, 9093, 8, 744968, null, "", null,
+                "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a");
+        final TransactionRecord txRecord2 = new TransactionRecord(
+                "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e",
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+                "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
+                HEAD, CONFIRMED, 9093, 7, 744967, null, "", null,
+                "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e");
+        final AssetRecord assetRecord = new AssetRecord(9093, 1, "2018-09-18T08:09:20.000000Z",
+                null,
+                "01beef7f85a4bae3bc8e46930a38f7f96812b67d43d2e2796e8cfa3cecea6d32d699f48d96366c51fa2aef7a0e0e9271c189dea51e3bc250dc1e4a53763baf80b3",
+                "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607", new HashMap<String, String>() {{
+            put("name", "JavaSDK_Test_1537258135324.txt");
+            put("description", "Temporary File create from java sdk test");
+        }}, "JavaSDK_Test_1537258135324.txt", 10086,
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva", AssetRecord.Status.CONFIRMED);
+        final GetTransactionResponse getTransactionResponse1 =
+                new GetTransactionResponse(txRecord1, null);
+        final GetTransactionResponse getTransactionResponse2 =
+                new GetTransactionResponse(txRecord2, assetRecord);
+        return Stream.of(Arguments.of(response1, getTransactionResponse1), Arguments.of(response2
+                , getTransactionResponse2));
+    }
+
+    private static Stream<Arguments> createValidResponseGetTransactionsResponse() throws IOException {
+        final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/query/transaction/transactions1.json"))).message("dummy").build();
+        final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
+                "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
+                loadResponse("/query/transaction/transactions2.json"))).message("dummy").build();
+        final TransactionRecord txRecord1 = new TransactionRecord(
+                "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a",
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+                "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
+                HEAD, CONFIRMED, 9093, 8, 744968, null, "", null,
+                "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a");
+        final TransactionRecord txRecord2 = new TransactionRecord(
+                "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e",
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+                "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
+                HEAD, CONFIRMED, 9093, 7, 744967, null, "", null,
+                "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e");
+        final AssetRecord assetRecord = new AssetRecord(9093, 1, "2018-09-18T08:09:20.000000Z",
+                null,
+                "01beef7f85a4bae3bc8e46930a38f7f96812b67d43d2e2796e8cfa3cecea6d32d699f48d96366c51fa2aef7a0e0e9271c189dea51e3bc250dc1e4a53763baf80b3",
+                "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607", new HashMap<String, String>() {{
+            put("name", "JavaSDK_Test_1537258135324.txt");
+            put("description", "Temporary File create from java sdk test");
+        }}, "JavaSDK_Test_1537258135324.txt", 10086,
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva", AssetRecord.Status.CONFIRMED);
+        final GetTransactionsResponse getTransactionsResponse1 =
+                new GetTransactionsResponse(new ArrayList<TransactionRecord>() {{
+                    add(txRecord1);
+                    add(txRecord2);
+                }}, null);
+        final GetTransactionsResponse getTransactionsResponse2 =
+                new GetTransactionsResponse(new ArrayList<TransactionRecord>() {{
+                    add(txRecord1);
+                }}, new ArrayList<AssetRecord>() {{
+                    add(assetRecord);
+                }});
+        return Stream.of(Arguments.of(response1, getTransactionsResponse1), Arguments.of(response2
+                , getTransactionsResponse2));
     }
 }

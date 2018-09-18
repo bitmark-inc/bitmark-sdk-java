@@ -1,0 +1,16 @@
+{
+  "tx": {
+    "id": "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a",
+    "owner": "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+    "asset_id": "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
+    "head": "head",
+    "status": "confirmed",
+    "block_number": 9093,
+    "block_offset": 8,
+    "offset": 744968,
+    "expires_at": null,
+    "pay_id": "",
+    "previous_id": null,
+    "bitmark_id": "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a"
+  }
+}

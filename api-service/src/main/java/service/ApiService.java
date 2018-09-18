@@ -5,11 +5,11 @@ import config.SdkConfig;
 import okhttp3.Headers;
 import service.params.*;
 import service.params.query.QueryParams;
-import service.response.GetBitmarkResponse;
-import service.response.GetBitmarksResponse;
-import service.response.IssueResponse;
-import service.response.RegistrationResponse;
+import service.response.*;
 import utils.callback.Callback1;
+import utils.record.AssetRecord;
+
+import java.util.List;
 
 import static service.middleware.Converter.*;
 
@@ -84,5 +84,29 @@ public class ApiService extends AbsApiService implements BitmarkApi {
     public void listBitmarks(QueryParams params, Callback1<GetBitmarksResponse> callback) {
         final String path = String.format("/%s/bitmarks", SdkConfig.ApiServer.VERSION);
         getAsync(path, params, toGetBitmarksResponse(callback));
+    }
+
+    @Override
+    public void getAsset(String assetId, Callback1<AssetRecord> callback) {
+        final String path = String.format("/%s/assets/%s", SdkConfig.ApiServer.VERSION, assetId);
+        getAsync(path, toAssetRecord(callback));
+    }
+
+    @Override
+    public void listAssets(QueryParams params, Callback1<List<AssetRecord>> callback) {
+        final String path = String.format("/%s/assets", SdkConfig.ApiServer.VERSION);
+        getAsync(path, params, toAssetRecords(callback));
+    }
+
+    @Override
+    public void getTransaction(String txId, Callback1<GetTransactionResponse> callback) {
+        final String path = String.format("/%s/txs/%s", SdkConfig.ApiServer.VERSION, txId);
+        getAsync(path, toGetTransactionResponse(callback));
+    }
+
+    @Override
+    public void listTransactions(QueryParams params, Callback1<GetTransactionsResponse> callback) {
+        final String path = String.format("/%s/txs", SdkConfig.ApiServer.VERSION);
+        getAsync(path, params, toGetTransactionsResponse(callback));
     }
 }

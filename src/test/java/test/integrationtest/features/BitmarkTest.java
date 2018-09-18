@@ -31,8 +31,8 @@ import static crypto.encoder.Hex.HEX;
 import static java.net.HttpURLConnection.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static test.utils.CommonUtils.await;
-import static utils.record.BitmarkRecord.Head.MOVED;
 import static utils.record.BitmarkRecord.Status.SETTLED;
+import static utils.record.Head.MOVED;
 
 /**
  * @author Hieu Pham
@@ -331,7 +331,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertNotNull(asset);
         assertEquals(id, bitmark.getId());
         assertEquals(bitmark.getAssetId(), asset.getId());
-        assertEquals(bitmark.getBlockNumber(), asset.getBlockNumber());
     }
 
     @DisplayName("Verify function Bitmark.get(String, Callback1<>) works well")
@@ -357,15 +356,20 @@ public class BitmarkTest extends BaseFeatureTest {
                          "bitmark id works well")
     @Test
     public void testQueryBitmarksByIds_ValidBitmarkIds_CorrectResponseIsReturn() {
-        final String[] bitmarkIds = new String[]{
-                "cd8ded69310acabc803c79fbc12c42e8650d14b5ce9473f173e25221d585b881",
-                "a91dcef49a76248364243d67baadece0e02778222568b06e29276b1cd4d1182c",
-                "18fbc7030400f97d3e89c54ed5d5a186c89c757aa633f9c2f5e06e5ef6fe90cd"};
-        BitmarkQueryBuilder builder =
+        // Get owned bitmarks
+        int limit = 3;
+        BitmarkQueryBuilder builder1 =
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(limit);
+        GetBitmarksResponse bitmarksResponse1 = await(callback -> Bitmark.list(builder1, callback));
+        assertFalse(bitmarksResponse1.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+        String[] bitmarkIds =
+                bitmarksResponse1.getBitmarks().stream().map(BitmarkRecord::getId).toArray(String[]::new);
+
+        BitmarkQueryBuilder builder2 =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).bitmarkIds(bitmarkIds);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
-        List<BitmarkRecord> bitmarks = bitmarksResponse.getBitmarks();
-        List<AssetRecord> assets = bitmarksResponse.getAssets();
+        GetBitmarksResponse bitmarksResponse2 = await(callback -> Bitmark.list(builder2, callback));
+        List<BitmarkRecord> bitmarks = bitmarksResponse2.getBitmarks();
+        List<AssetRecord> assets = bitmarksResponse2.getAssets();
         assertFalse(bitmarks.isEmpty());
         assertEquals(bitmarkIds.length, bitmarks.size());
         assertNull(assets);

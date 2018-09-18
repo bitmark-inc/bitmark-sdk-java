@@ -1,33 +1,35 @@
 package service.response;
 
 import annotation.VisibleForTesting;
+import com.google.gson.annotations.SerializedName;
 import utils.record.AssetRecord;
-import utils.record.BitmarkRecord;
+import utils.record.TransactionRecord;
 
 import java.util.List;
 import java.util.Objects;
 
 /**
  * @author Hieu Pham
- * @since 9/16/18
+ * @since 9/18/18
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class GetBitmarksResponse implements Response {
+public class GetTransactionsResponse implements Response {
 
-    private List<BitmarkRecord> bitmarks;
+    @SerializedName("txs")
+    private List<TransactionRecord> transactions;
 
     private List<AssetRecord> assets;
 
     @VisibleForTesting
-    public GetBitmarksResponse(List<BitmarkRecord> bitmarks, List<AssetRecord> assets) {
-        this.bitmarks = bitmarks;
+    public GetTransactionsResponse(List<TransactionRecord> transactions, List<AssetRecord> assets) {
+        this.transactions = transactions;
         this.assets = assets;
     }
 
-    public List<BitmarkRecord> getBitmarks() {
-        return bitmarks;
+    public List<TransactionRecord> getTransactions() {
+        return transactions;
     }
 
     public List<AssetRecord> getAssets() {
@@ -38,13 +40,13 @@ public class GetBitmarksResponse implements Response {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GetBitmarksResponse that = (GetBitmarksResponse) o;
-        return Objects.equals(bitmarks, that.bitmarks) &&
+        GetTransactionsResponse that = (GetTransactionsResponse) o;
+        return Objects.equals(transactions, that.transactions) &&
                 Objects.equals(assets, that.assets);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bitmarks, assets);
+        return Objects.hash(transactions, assets);
     }
 }

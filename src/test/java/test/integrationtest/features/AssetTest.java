@@ -5,12 +5,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import service.params.RegistrationParams;
+import service.params.query.AssetQueryBuilder;
 import service.response.RegistrationResponse;
 import test.utils.Callable;
 import test.utils.extensions.TemporaryFolderExtension;
 import test.utils.extensions.annotations.TemporaryFile;
 import utils.Address;
 import utils.error.HttpException;
+import utils.record.AssetRecord;
 
 import java.io.File;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.CompletionException;
 
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
 import static test.utils.CommonUtils.await;
 
@@ -68,4 +71,44 @@ public class AssetTest extends BaseFeatureTest {
         assertEquals(HTTP_FORBIDDEN, exception.getStatusCode());
         assertEquals(2009, exception.getErrorCode());
     }
+
+
+    @DisplayName("Verify function Asset.get(String, Callback1<>) works well with existed asset id")
+    @Test
+    public void testQueryAssetById_ExistedAssetId_CorrectResponseIsReturn() {
+        // Query existed assets
+        AssetQueryBuilder builder =
+                new AssetQueryBuilder().registrant(ACCOUNT1.getAccountNumber()).limit(1);
+        List<AssetRecord> assets = await(callback -> Asset.list(builder, callback));
+        assertFalse(assets.isEmpty(), "This guy has not registered any assets");
+
+        // Get asset by id
+        String id = assets.get(0).getId();
+        AssetRecord asset = await(callback -> Asset.get(id, callback));
+        assertNotNull(asset);
+        assertEquals(id, asset.getId());
+    }
+
+    @DisplayName("Verify function Asset.get(String, Callback1<>) works well with not existed " +
+                         "asset id")
+    @Test
+    public void testQueryAssetById_NotExistedAssetId_ErrorIsThrow() {
+        String id =
+                "12345678901234567890123456789012345678901234567890123456789012341234567890123456789012345678901234567890123456789012345678901234";
+        HttpException exception = (HttpException) assertThrows(CompletionException.class,
+                () -> await((Callable<AssetRecord>) callback -> Asset.get(id, callback))).getCause();
+        assertEquals(HTTP_NOT_FOUND, exception.getStatusCode());
+    }
+
+    @DisplayName("Verify function Asset.list(AssetQueryBuilder, Callback1<>) works well")
+    @Test
+    public void testQueryAssets_NoCondition_CorrectResponseIsReturn() {
+        int limit = 3;
+        String registrant = "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva";
+        AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registrant(registrant);
+        List<AssetRecord> assets = await(callback -> Asset.list(builder, callback));
+        assertEquals(limit, assets.size());
+        assets.forEach(asset -> assertEquals(registrant, asset.getRegistrant()));
+    }
+
 }

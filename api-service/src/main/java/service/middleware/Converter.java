@@ -2,17 +2,14 @@ package service.middleware;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
-import service.response.GetBitmarkResponse;
-import service.response.GetBitmarksResponse;
-import service.response.IssueResponse;
-import service.response.RegistrationResponse;
+import service.response.*;
 import utils.callback.Callback1;
 import utils.error.UnexpectedException;
+import utils.record.AssetRecord;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +31,7 @@ public class Converter {
                     String raw = res.body().string();
                     IssueResponse response = GSON.fromJson(raw, IssueResponse.class);
                     callback.onSuccess(response);
-                } catch (IOException | JsonSyntaxException e) {
+                } catch (Exception e) {
                     callback.onError(new UnexpectedException(e));
                 }
             }
@@ -54,7 +51,7 @@ public class Converter {
                     String raw = res.body().string();
                     RegistrationResponse response = GSON.fromJson(raw, RegistrationResponse.class);
                     callback.onSuccess(response);
-                } catch (IOException | JsonSyntaxException e) {
+                } catch (Exception e) {
                     callback.onError(new UnexpectedException(e));
                 }
             }
@@ -76,7 +73,7 @@ public class Converter {
                             String>>() {
                     }.getType());
                     callback.onSuccess(json.get("txid"));
-                } catch (IOException | JsonSyntaxException e) {
+                } catch (Exception e) {
                     callback.onError(new UnexpectedException(e));
                 }
 
@@ -99,7 +96,7 @@ public class Converter {
                             String>>() {
                     }.getType());
                     callback.onSuccess(json.get("status"));
-                } catch (IOException | JsonSyntaxException e) {
+                } catch (Exception e) {
                     callback.onError(new UnexpectedException(e));
                 }
             }
@@ -121,7 +118,7 @@ public class Converter {
                             String>>() {
                     }.getType());
                     callback.onSuccess(json.get("offer_id"));
-                } catch (IOException | JsonSyntaxException e) {
+                } catch (Exception e) {
                     callback.onError(new UnexpectedException(e));
                 }
             }
@@ -140,7 +137,7 @@ public class Converter {
                 try {
                     String raw = res.body().string();
                     callback.onSuccess(GSON.fromJson(raw, GetBitmarkResponse.class));
-                } catch (IOException e) {
+                } catch (Exception e) {
                     callback.onError(new UnexpectedException(e));
                 }
 
@@ -160,10 +157,104 @@ public class Converter {
                 try {
                     String raw = res.body().string();
                     callback.onSuccess(GSON.fromJson(raw, GetBitmarksResponse.class));
-                } catch (IOException e) {
+                } catch (Exception e) {
                     callback.onError(new UnexpectedException(e));
                 }
 
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
+    public static Callback1<Response> toAssetRecord(Callback1<AssetRecord> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response res) {
+                try {
+                    String raw = res.body().string();
+                    Map<String, Object> jsonMap = GSON.fromJson(raw, new TypeToken<Map<String,
+                            Object>>() {
+                    }.getType());
+                    String json =
+                            GSON.toJsonTree(jsonMap.get("asset")).getAsJsonObject().toString();
+                    AssetRecord asset = GSON.fromJson(json, AssetRecord.class);
+                    callback.onSuccess(asset);
+                } catch (Exception e) {
+                    callback.onError(new UnexpectedException(e));
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
+    public static Callback1<Response> toAssetRecords(Callback1<List<AssetRecord>> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response res) {
+                try {
+                    String raw = res.body().string();
+                    Map<String, Object> jsonMap = GSON.fromJson(raw, new TypeToken<Map<String,
+                            Object>>() {
+                    }.getType());
+                    String json =
+                            GSON.toJsonTree(jsonMap.get("assets")).getAsJsonArray().toString();
+                    List<AssetRecord> assets = GSON.fromJson(json,
+                            new TypeToken<List<AssetRecord>>() {
+                            }.getType());
+                    callback.onSuccess(assets);
+                } catch (Exception e) {
+                    callback.onError(new UnexpectedException(e));
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
+    public static Callback1<Response> toGetTransactionResponse(Callback1<GetTransactionResponse> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response res) {
+                try {
+                    String raw = res.body().string();
+                    GetTransactionResponse response = GSON.fromJson(raw,
+                            GetTransactionResponse.class);
+                    callback.onSuccess(response);
+                } catch (Exception e) {
+                    callback.onError(new UnexpectedException(e));
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
+    public static Callback1<Response> toGetTransactionsResponse(Callback1<GetTransactionsResponse> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response res) {
+                try {
+                    String raw = res.body().string();
+                    GetTransactionsResponse response = GSON.fromJson(raw,
+                            GetTransactionsResponse.class);
+                    callback.onSuccess(response);
+                } catch (Exception e) {
+                    callback.onError(new UnexpectedException(e));
+                }
             }
 
             @Override

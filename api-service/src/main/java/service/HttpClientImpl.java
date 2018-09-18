@@ -47,7 +47,6 @@ public class HttpClientImpl implements HttpClient {
         int timeout = GlobalConfiguration.connectionTimeout();
         builder.readTimeout(timeout, TimeUnit.SECONDS);
         builder.connectTimeout(timeout, TimeUnit.SECONDS);
-
         return builder.build();
     }
 

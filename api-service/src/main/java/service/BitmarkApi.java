@@ -2,11 +2,11 @@ package service;
 
 import service.params.*;
 import service.params.query.QueryParams;
-import service.response.GetBitmarkResponse;
-import service.response.GetBitmarksResponse;
-import service.response.IssueResponse;
-import service.response.RegistrationResponse;
+import service.response.*;
 import utils.callback.Callback1;
+import utils.record.AssetRecord;
+
+import java.util.List;
 
 /**
  * @author Hieu Pham
@@ -30,5 +30,13 @@ public interface BitmarkApi {
     void getBitmark(String bitmarkId, boolean includeAsset, Callback1<GetBitmarkResponse> callback);
 
     void listBitmarks(QueryParams params, Callback1<GetBitmarksResponse> callback);
+
+    void getAsset(String assetId, Callback1<AssetRecord> callback);
+
+    void listAssets(QueryParams params, Callback1<List<AssetRecord>> callback);
+
+    void getTransaction(String txId, Callback1<GetTransactionResponse> callback);
+
+    void listTransactions(QueryParams params, Callback1<GetTransactionsResponse> callback);
 
 }

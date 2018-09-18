@@ -30,6 +30,7 @@ public class BitmarkApiInterceptor implements Interceptor {
                 .addHeader("Accept", "application/json")
                 .addHeader("Cache-Control", "no-cache")
                 .addHeader("Cache-Control", "no-store")
+                .addHeader("Accept-Encoding","*")
                 .build();
         return chain.proceed(request);
     }

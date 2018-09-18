@@ -1,0 +1,32 @@
+{
+  "tx": {
+    "id": "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e",
+    "owner": "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+    "asset_id": "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
+    "head": "head",
+    "status": "confirmed",
+    "block_number": 9093,
+    "block_offset": 7,
+    "offset": 744967,
+    "expires_at": null,
+    "pay_id": "",
+    "previous_id": null,
+    "bitmark_id": "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e"
+  },
+  "asset": {
+    "id": "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
+    "name": "JavaSDK_Test_1537258135324.txt",
+    "fingerprint": "01beef7f85a4bae3bc8e46930a38f7f96812b67d43d2e2796e8cfa3cecea6d32d699f48d96366c51fa2aef7a0e0e9271c189dea51e3bc250dc1e4a53763baf80b3",
+    "metadata": {
+      "name": "JavaSDK_Test_1537258135324.txt",
+      "description": "Temporary File create from java sdk test"
+    },
+    "registrant": "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+    "status": "confirmed",
+    "block_number": 9093,
+    "block_offset": 1,
+    "expires_at": null,
+    "offset": 10086,
+    "created_at": "2018-09-18T08:09:20.000000Z"
+  }
+}
