@@ -41,10 +41,10 @@ public class OfferRecord implements Record {
         checkValidHex(signature);
         checkValid(() -> id != null && !id.isEmpty() && owner != null && Address.fromAccountNumber(owner).isValid() && link != null && HEX.decode(link).length == LINK_LENGTH, "Invalid params");
         this.id = id;
-        this.to = owner;
         record = new Record();
         record.link = link;
         record.signature = signature;
+        record.owner = owner;
     }
 
     public String getId() {

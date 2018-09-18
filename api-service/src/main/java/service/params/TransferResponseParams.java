@@ -16,8 +16,8 @@ import java.util.Map;
 
 import static crypto.encoder.Hex.HEX;
 import static crypto.encoder.Raw.RAW;
-import static utils.Validator.checkNonNull;
-import static utils.Validator.checkValid;
+import static service.params.TransferResponseParams.Response.*;
+import static utils.Validator.*;
 
 /**
  * @author Hieu Pham
@@ -28,7 +28,7 @@ import static utils.Validator.checkValid;
 
 public class TransferResponseParams extends AbsSingleParams {
 
-    public enum Response {
+    enum Response {
         ACCEPT("accept"), REJECT("reject"), CANCEL("cancel");
 
         private String value;
@@ -48,7 +48,23 @@ public class TransferResponseParams extends AbsSingleParams {
 
     private KeyPair key;
 
-    public TransferResponseParams(OfferRecord offer, Response response) {
+    private String currentOwner;
+
+    public static TransferResponseParams accept(OfferRecord offer) {
+        return new TransferResponseParams(offer, ACCEPT);
+    }
+
+    public static TransferResponseParams reject(OfferRecord offer) {
+        return new TransferResponseParams(offer, REJECT);
+    }
+
+    public static TransferResponseParams cancel(OfferRecord offer, String owner) {
+        TransferResponseParams params = new TransferResponseParams(offer, CANCEL);
+        params.setCurrentOwner(owner);
+        return params;
+    }
+
+    private TransferResponseParams(OfferRecord offer, Response response) {
         checkNonNull(offer);
         checkNonNull(response);
         this.offer = offer;
@@ -91,7 +107,7 @@ public class TransferResponseParams extends AbsSingleParams {
     public Map<String, String> buildHeaders(long time) {
         checkValid(() -> key != null && key.isValid(), "Invalid or missing key for signing");
         Map<String, String> headers = new HashMap<>();
-        String requester = offer.getOwner();
+        String requester = isCancel() ? currentOwner : offer.getOwner();
         String message = String.format("updateOffer|%s|%s|%s", offer.getId(),
                 requester, String.valueOf(time));
         byte[] signature = Ed25519.sign(RAW.decode(message),
@@ -102,7 +118,16 @@ public class TransferResponseParams extends AbsSingleParams {
         return headers;
     }
 
+    private void setCurrentOwner(String owner) {
+        checkValidString(owner);
+        this.currentOwner = owner;
+    }
+
     public boolean isAccept() {
-        return response == Response.ACCEPT;
+        return response == ACCEPT;
+    }
+
+    private boolean isCancel() {
+        return response == Response.CANCEL;
     }
 }

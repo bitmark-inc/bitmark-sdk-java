@@ -53,6 +53,8 @@ public class SdkConfig {
 
         public static final int LINK_LENGTH = Sha3256.HASH_LENGTH;
 
+        public static final int BITMARK_ID_LENGTH = Sha3256.HASH_LENGTH;
+
         public static final int TRANSFER_TAG = 0x04;
 
         public static final int OFFER_TAG = 0x05;

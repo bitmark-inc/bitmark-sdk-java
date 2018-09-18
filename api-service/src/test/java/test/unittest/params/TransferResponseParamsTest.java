@@ -4,6 +4,7 @@ import crypto.key.KeyPair;
 import crypto.key.StandardKeyPair;
 import error.ValidateException;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,7 +19,6 @@ import java.util.stream.Stream;
 
 import static crypto.encoder.Hex.HEX;
 import static org.junit.jupiter.api.Assertions.*;
-import static service.params.TransferResponseParams.Response.*;
 import static test.utils.FileUtils.loadRequest;
 
 /**
@@ -39,24 +39,41 @@ public class TransferResponseParamsTest extends BaseTest {
     private static final KeyPair KEY = StandardKeyPair.from(HEX.decode(PUBLIC_KEY),
             HEX.decode(PRIVATE_KEY));
 
-    @DisplayName("Verify function new TransferResponseParams(OfferRecord, Response) " +
-                         "works well with valid params")
+    @DisplayName("Verify all constructors work well with valid params")
     @ParameterizedTest
-    @MethodSource("createValidOfferResponse")
-    public void testConstructTransferResponseParams_ValidParams_CorrectInstanceIsReturn(
-            OfferRecord offer, TransferResponseParams.Response response) {
-        assertDoesNotThrow(() -> new TransferResponseParams(offer, response));
+    @MethodSource("createValidOffer")
+    public void testConstructTransferResponseParams_ValidOfferRecord_CorrectInstanceIsReturn(
+            OfferRecord offer) {
+        assertDoesNotThrow(() -> TransferResponseParams.accept(offer));
+        assertDoesNotThrow(() -> TransferResponseParams.reject(offer));
+        assertDoesNotThrow(() -> TransferResponseParams.cancel(offer,
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX"));
     }
 
-    @DisplayName("Verify function new TransferResponseParams(OfferRecord, Response) " +
-                         "throws exception with invalid params")
-    @ParameterizedTest
-    @MethodSource("createInvalidOfferResponse")
-    public void testConstructTransferResponseParams_InvalidParams_ErrorIsThrow(OfferRecord offer,
-                                                                               TransferResponseParams.Response response) {
+    @DisplayName("Verify function TransferResponseParams.accept(OfferRecord) throws exception " +
+                         "with invalid OfferRecord")
+    @Test
+    public void testConstructAcceptTransferResponseParams_InvalidOfferRecord_ErrorIsThrow() {
 
-        assertThrows(ValidateException.class, () -> new TransferResponseParams(offer,
-                response));
+        assertThrows(ValidateException.class, () -> TransferResponseParams.accept(null));
+    }
+
+    @DisplayName("Verify function TransferResponseParams.reject(OfferRecord) throws exception " +
+                         "with invalid OfferRecord")
+    @Test
+    public void testConstructRejectTransferResponseParams_InvalidOfferRecord_ErrorIsThrow() {
+
+        assertThrows(ValidateException.class, () -> TransferResponseParams.reject(null));
+    }
+
+    @DisplayName("Verify function TransferResponseParams.cancel(OfferRecord, String) throws " +
+                         "exception with invalid OfferRecord")
+    @ParameterizedTest
+    @MethodSource("createInvalidOfferRecordOwner")
+    public void testConstructCancelTransferResponseParams_InvalidParams_ErrorIsThrow(OfferRecord offerRecord, String owner) {
+
+        assertThrows(ValidateException.class, () -> TransferResponseParams.cancel(offerRecord,
+                owner));
     }
 
     @DisplayName("Verify function TransferResponseParams.toJson() works well with signed accept " +
@@ -115,7 +132,7 @@ public class TransferResponseParamsTest extends BaseTest {
         assertThrows(ValidateException.class, params::buildHeaders);
     }
 
-    private static Stream<Arguments> createValidOfferResponse() {
+    private static Stream<OfferRecord> createValidOffer() {
         final OfferRecord offer1 = new OfferRecord("c9b9911a4-4237-419b-9862" +
                 "-00957d7c4618",
                 "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
@@ -126,18 +143,7 @@ public class TransferResponseParamsTest extends BaseTest {
                 "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        return Stream.of(Arguments.of(offer1, ACCEPT), Arguments.of(offer2,
-                CANCEL));
-    }
-
-    private static Stream<Arguments> createInvalidOfferResponse() {
-        final OfferRecord offer = new OfferRecord("39de1800-ecec-4dea-8425" +
-                "-d2a87e468ace",
-                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
-                "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
-                "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        return Stream.of(Arguments.of(null, null), Arguments.of(offer, null),
-                Arguments.of(null, ACCEPT));
+        return Stream.of(offer1, offer2);
     }
 
     private static Stream<Arguments> createSignedAcceptParamsJson() throws IOException {
@@ -150,8 +156,8 @@ public class TransferResponseParamsTest extends BaseTest {
                 "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(offer1, ACCEPT);
-        final TransferResponseParams params2 = new TransferResponseParams(offer2, ACCEPT);
+        final TransferResponseParams params1 = TransferResponseParams.accept(offer1);
+        final TransferResponseParams params2 = TransferResponseParams.accept(offer2);
         params1.sign(KEY);
         params2.sign(KEY);
         final String json1 = loadRequest("/transfer/transfer_response1.json");
@@ -170,8 +176,8 @@ public class TransferResponseParamsTest extends BaseTest {
                 "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(offer1, ACCEPT);
-        final TransferResponseParams params2 = new TransferResponseParams(offer2, ACCEPT);
+        final TransferResponseParams params1 = TransferResponseParams.accept(offer1);
+        final TransferResponseParams params2 = TransferResponseParams.accept(offer2);
         return Stream.of(params1, params2);
     }
 
@@ -186,8 +192,9 @@ public class TransferResponseParamsTest extends BaseTest {
                 "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(offer1, CANCEL);
-        final TransferResponseParams params2 = new TransferResponseParams(offer2, REJECT);
+        final TransferResponseParams params1 = TransferResponseParams.cancel(offer1,
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX");
+        final TransferResponseParams params2 = TransferResponseParams.reject(offer2);
         final String json1 = loadRequest("/transfer/transfer_response3.json");
         final String json2 = loadRequest("/transfer/transfer_response4.json");
         return Stream.of(Arguments.of(params1, json1), Arguments.of(params2, json2));
@@ -204,8 +211,8 @@ public class TransferResponseParamsTest extends BaseTest {
                 "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(offer1, ACCEPT);
-        final TransferResponseParams params2 = new TransferResponseParams(offer2, ACCEPT);
+        final TransferResponseParams params1 = TransferResponseParams.accept(offer1);
+        final TransferResponseParams params2 = TransferResponseParams.accept(offer2);
         return Stream.of(Arguments.of(params1,
                 "fc107b1f0922ba645b0c728a9071cd2591e95ddb4197834145c5e0a685b9e72510e81c7ca8f4ea50ffa8aa2ef6f55001d3f6685599ece4d00ffe5a336ed29505"),
                 Arguments.of(params2,
@@ -227,9 +234,10 @@ public class TransferResponseParamsTest extends BaseTest {
                 "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(offer1, ACCEPT);
-        final TransferResponseParams params2 = new TransferResponseParams(offer2, ACCEPT);
-        final TransferResponseParams params3 = new TransferResponseParams(offer3, CANCEL);
+        final TransferResponseParams params1 = TransferResponseParams.accept(offer1);
+        final TransferResponseParams params2 = TransferResponseParams.accept(offer2);
+        final TransferResponseParams params3 = TransferResponseParams.cancel(offer3,
+                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva");
         params3.setSigningKey(StandardKeyPair.from(HEX.decode(
                 "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f"), HEX.decode(
                 "0246a917d422e596168185cea9943459c09751532c52fe4ddc27b06e2893ef2258760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f")));
@@ -269,8 +277,9 @@ public class TransferResponseParamsTest extends BaseTest {
                 "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(offer1, CANCEL);
-        final TransferResponseParams params2 = new TransferResponseParams(offer2, REJECT);
+        final TransferResponseParams params1 = TransferResponseParams.cancel(offer1,
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX");
+        final TransferResponseParams params2 = TransferResponseParams.reject(offer2);
         return Stream.of(params1, params2);
     }
 
@@ -285,9 +294,19 @@ public class TransferResponseParamsTest extends BaseTest {
                 "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                 "49e28a044a18d183d9a135745f4f01abd0a50e9cac0bb1d8e3de5f0e92713296",
                 "f57a6edcf23f274a5d94d99b68dde2b9c20f167f269b4fc01e6486619f894cbf10913a96e77077c1c76508dd97cc36063496ed1c99684e1f92cbba4fd50cdc0d");
-        final TransferResponseParams params1 = new TransferResponseParams(offer1, CANCEL);
-        final TransferResponseParams params2 = new TransferResponseParams(offer2, REJECT);
+        final TransferResponseParams params1 = TransferResponseParams.cancel(offer1,
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX");
+        final TransferResponseParams params2 = TransferResponseParams.reject(offer2);
         return Stream.of(params1, params2);
+    }
+
+    private static Stream<Arguments> createInvalidOfferRecordOwner() {
+        final OfferRecord offerRecord = new OfferRecord("9b9911a4-4237-419b-9862-00957d7c4618",
+                "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
+                "c1faf958d6247e4b398db1de1b454ea756eda3b840e10feaf3a37232f4c8b1fa",
+                "4a669194150be01382fd204eded4df01341c1fd2b045fedadb1aee68c3fe68dc1d99bea13c4185af20ad83042ef6bb06ecf20678842cfa40eb879938eb024f0f");
+        return Stream.of(Arguments.of(null, ""), Arguments.of(offerRecord, ""),
+                Arguments.of(offerRecord, null));
     }
 
 }

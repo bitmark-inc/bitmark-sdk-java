@@ -28,7 +28,6 @@ import java.util.concurrent.CompletionException;
 import static crypto.encoder.Hex.HEX;
 import static java.net.HttpURLConnection.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static service.params.TransferResponseParams.Response.*;
 import static test.utils.CommonUtils.await;
 import static utils.record.BitmarkRecord.Head.MOVED;
 import static utils.record.BitmarkRecord.Status.SETTLED;
@@ -239,7 +238,7 @@ public class BitmarkTest extends BaseFeatureTest {
         GetBitmarkResponse response = await(callback -> Bitmark.get(bitmark.getId(), false,
                 callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
-        TransferResponseParams responseParams = new TransferResponseParams(offerRecord, ACCEPT);
+        TransferResponseParams responseParams = TransferResponseParams.accept(offerRecord);
         responseParams.sign(KEY2);
         String txId = await(callback -> Bitmark.respond(responseParams, callback));
         assertNotNull(txId);
@@ -271,7 +270,8 @@ public class BitmarkTest extends BaseFeatureTest {
         // Respond offer
         GetBitmarkResponse response = await(callback -> Bitmark.get(bitmark.getId(), callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
-        TransferResponseParams responseParams = new TransferResponseParams(offerRecord, CANCEL);
+        TransferResponseParams responseParams = TransferResponseParams.cancel(offerRecord,
+                bitmark.getOwner());
         responseParams.setSigningKey(KEY1);
         String status = await(callback -> Bitmark.respond(responseParams, callback));
         assertNotNull(status);
@@ -303,7 +303,7 @@ public class BitmarkTest extends BaseFeatureTest {
         // Respond offer
         GetBitmarkResponse response = await(callback -> Bitmark.get(bitmark.getId(), callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
-        TransferResponseParams responseParams = new TransferResponseParams(offerRecord, REJECT);
+        TransferResponseParams responseParams = TransferResponseParams.reject(offerRecord);
         responseParams.setSigningKey(KEY2);
         String status = await(callback -> Bitmark.respond(responseParams, callback));
         assertNotNull(status);
