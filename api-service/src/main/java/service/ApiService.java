@@ -72,8 +72,8 @@ public class ApiService extends AbsApiService implements BitmarkApi {
     }
 
     @Override
-    public void get(String bitmarkId, boolean includeAsset,
-                    Callback1<GetBitmarkResponse> callback) {
+    public void getBitmark(String bitmarkId, boolean includeAsset,
+                           Callback1<GetBitmarkResponse> callback) {
         final String path = String.format("/%s/bitmarks/%s?asset=%b", SdkConfig.ApiServer.VERSION
                 , bitmarkId, includeAsset);
         getAsync(path, toGetBitmarkResponse(callback));
@@ -81,7 +81,7 @@ public class ApiService extends AbsApiService implements BitmarkApi {
     }
 
     @Override
-    public void list(QueryParams params, Callback1<GetBitmarksResponse> callback) {
+    public void listBitmarks(QueryParams params, Callback1<GetBitmarksResponse> callback) {
         final String path = String.format("/%s/bitmarks", SdkConfig.ApiServer.VERSION);
         getAsync(path, params, toGetBitmarksResponse(callback));
     }

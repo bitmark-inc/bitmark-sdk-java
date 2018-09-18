@@ -38,7 +38,7 @@ public class Bitmark {
 
     public static void get(String bitmarkId, boolean includeAsset,
                            Callback1<GetBitmarkResponse> callback) {
-        ApiService.getInstance().get(bitmarkId, includeAsset, callback);
+        ApiService.getInstance().getBitmark(bitmarkId, includeAsset, callback);
     }
 
     public static void get(String bitmarkId, Callback1<GetBitmarkResponse> callback) {
@@ -46,7 +46,7 @@ public class Bitmark {
     }
 
     public static void list(BitmarkQueryBuilder builder, Callback1<GetBitmarksResponse> callback) {
-        ApiService.getInstance().list(builder.build(), callback);
+        ApiService.getInstance().listBitmarks(builder.build(), callback);
     }
 
 }

@@ -16,10 +16,12 @@ import test.utils.Callable;
 import test.utils.extensions.TemporaryFolderExtension;
 import utils.Address;
 import utils.error.HttpException;
+import utils.record.AssetRecord;
 import utils.record.BitmarkRecord;
 import utils.record.OfferRecord;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,9 +117,9 @@ public class BitmarkTest extends BaseFeatureTest {
     }
 
     @DisplayName("Verify function Bitmark.transfer(TransferParams, Callback1<>) works well with " +
-                         "owned bitmarks")
+                         "owned bitmarks and TransferParams is build from link")
     @Test
-    public void testTransferBitmark_OwnedBitmark_CorrectSuccessResponseIsReturn() {
+    public void testTransferBitmarkFromLink_OwnedBitmark_CorrectSuccessResponseIsReturn() {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
@@ -137,6 +139,7 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals(SdkConfig.Transfer.TRANSACTION_ID_LENGTH, HEX.decode(txId).length);
 
     }
+
 
     @DisplayName("Verify function Bitmark.transfer(TransferParams, Callback1<>) works well with " +
                          "not owned bitmarks")
@@ -308,6 +311,81 @@ public class BitmarkTest extends BaseFeatureTest {
         String status = await(callback -> Bitmark.respond(responseParams, callback));
         assertNotNull(status);
         assertEquals("ok", status);
+    }
+
+    @DisplayName("Verify function Bitmark.get(String, boolean, Callback1<>) works well")
+    @Test
+    public void testQueryBitmarkById_IncludeAsset_CorrectResponseIsReturn() {
+        // Get owned bitmarks
+        BitmarkQueryBuilder builder =
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
+        assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+
+        // Get bitmark by id
+        String id = bitmarksResponse.getBitmarks().get(0).getId();
+        GetBitmarkResponse bitmarkResponse = await(callback -> Bitmark.get(id, true, callback));
+        BitmarkRecord bitmark = bitmarkResponse.getBitmark();
+        AssetRecord asset = bitmarkResponse.getAsset();
+        assertNotNull(bitmark);
+        assertNotNull(asset);
+        assertEquals(id, bitmark.getId());
+        assertEquals(bitmark.getAssetId(), asset.getId());
+        assertEquals(bitmark.getBlockNumber(), asset.getBlockNumber());
+    }
+
+    @DisplayName("Verify function Bitmark.get(String, Callback1<>) works well")
+    @Test
+    public void testQueryBitmarkById_NotIncludeAsset_CorrectResponseIsReturn() {
+        // Get owned bitmarks
+        BitmarkQueryBuilder builder =
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
+        assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+
+        // Get bitmark by id
+        String id = bitmarksResponse.getBitmarks().get(0).getId();
+        GetBitmarkResponse bitmarkResponse = await(callback -> Bitmark.get(id, callback));
+        BitmarkRecord bitmark = bitmarkResponse.getBitmark();
+        AssetRecord asset = bitmarkResponse.getAsset();
+        assertNotNull(bitmark);
+        assertNull(asset);
+        assertEquals(id, bitmark.getId());
+    }
+
+    @DisplayName("Verify function Bitmark.list(BitmarkQueryBuilder, Callback1<>) with list " +
+                         "bitmark id works well")
+    @Test
+    public void testQueryBitmarksByIds_ValidBitmarkIds_CorrectResponseIsReturn() {
+        final String[] bitmarkIds = new String[]{
+                "cd8ded69310acabc803c79fbc12c42e8650d14b5ce9473f173e25221d585b881",
+                "a91dcef49a76248364243d67baadece0e02778222568b06e29276b1cd4d1182c",
+                "18fbc7030400f97d3e89c54ed5d5a186c89c757aa633f9c2f5e06e5ef6fe90cd"};
+        BitmarkQueryBuilder builder =
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).bitmarkIds(bitmarkIds);
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
+        List<BitmarkRecord> bitmarks = bitmarksResponse.getBitmarks();
+        List<AssetRecord> assets = bitmarksResponse.getAssets();
+        assertFalse(bitmarks.isEmpty());
+        assertEquals(bitmarkIds.length, bitmarks.size());
+        assertNull(assets);
+        assertTrue(Arrays.equals(bitmarkIds,
+                bitmarks.stream().map(BitmarkRecord::getId).toArray()));
+    }
+
+    @DisplayName("Verify function Bitmark.list(BitmarkQueryBuilder, Callback1<>) with the limit " +
+                         "record and load asset works well")
+    @Test
+    public void testQueryBitmarkByLimitAndLoadAsset_ValidLimitValue_CorrectResponseIsReturn() {
+        int limit = 10;
+        BitmarkQueryBuilder builder =
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(limit).loadAsset(true);
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
+        List<BitmarkRecord> bitmarks = bitmarksResponse.getBitmarks();
+        List<AssetRecord> assets = bitmarksResponse.getAssets();
+        assertFalse(bitmarks.isEmpty());
+        assertEquals(limit, bitmarks.size());
+        assertNotNull(assets);
     }
 
 

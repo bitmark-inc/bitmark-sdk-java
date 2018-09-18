@@ -27,8 +27,8 @@ public interface BitmarkApi {
 
     void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback);
 
-    void get(String bitmarkId, boolean includeAsset, Callback1<GetBitmarkResponse> callback);
+    void getBitmark(String bitmarkId, boolean includeAsset, Callback1<GetBitmarkResponse> callback);
 
-    void list(QueryParams params, Callback1<GetBitmarksResponse> callback);
+    void listBitmarks(QueryParams params, Callback1<GetBitmarksResponse> callback);
 
 }
