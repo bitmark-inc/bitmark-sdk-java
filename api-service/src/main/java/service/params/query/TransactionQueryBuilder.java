@@ -33,13 +33,13 @@ public class TransactionQueryBuilder extends AbsQueryBuilder {
         return this;
     }
 
-    public TransactionQueryBuilder assetId(String assetId) {
+    public TransactionQueryBuilder referenceAsset(String assetId) {
         checkValidString(assetId);
         this.assetId = assetId;
         return this;
     }
 
-    public TransactionQueryBuilder bitmarkId(String bitmarkId) {
+    public TransactionQueryBuilder referenceBitmark(String bitmarkId) {
         checkValidString(bitmarkId);
         this.bitmarkId = bitmarkId;
         return this;
