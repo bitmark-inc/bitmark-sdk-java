@@ -2,6 +2,7 @@ package service.middleware;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
 import service.response.*;
@@ -9,6 +10,7 @@ import utils.callback.Callback1;
 import utils.error.UnexpectedException;
 import utils.record.AssetRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,14 +25,20 @@ public class Converter {
 
     private static final Gson GSON = new GsonBuilder().create();
 
-    public static Callback1<Response> toIssueResponse(Callback1<IssueResponse> callback) {
+    public static Callback1<Response> toIssueResponse(Callback1<List<String>> callback) {
         return new Callback1<Response>() {
             @Override
             public void onSuccess(Response res) {
                 try {
                     String raw = res.body().string();
-                    IssueResponse response = GSON.fromJson(raw, IssueResponse.class);
-                    callback.onSuccess(response);
+                    Map<String, Object> mapJson = GSON.fromJson(raw, new TypeToken<Map<String,
+                            Object>>() {
+                    }.getType());
+                    JsonArray jsonArray = GSON.toJsonTree(mapJson.get("bitmarks")).getAsJsonArray();
+                    List<String> txIds = new ArrayList<>(jsonArray.size());
+                    jsonArray.forEach(jsonElement -> txIds.add(jsonElement.getAsJsonObject().get(
+                            "id").getAsString()));
+                    callback.onSuccess(txIds);
                 } catch (Exception e) {
                     callback.onError(new UnexpectedException(e));
                 }

@@ -37,16 +37,16 @@ public class ConverterTest extends BaseTest {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    @DisplayName("Verify function Converter.toIssueResponse(Callback1<IssueResponse>) works well " +
+    @DisplayName("Verify function Converter.toIssueResponse(Callback1<List<String>>) works well " +
                          "with happy condition")
     @ParameterizedTest
-    @MethodSource("createSuccessResponseIssueResponse")
+    @MethodSource("createSuccessResponseListTxId")
     public void testConvertIssueResponse_ValidResponse_CorrectIssueResponseIsReturn(Response response,
-                                                                                    IssueResponse expectedResponse) {
-        Callback1<Response> callback = Converter.toIssueResponse(new Callback1<IssueResponse>() {
+                                                                                    List<String> expectedTxIds) {
+        Callback1<Response> callback = Converter.toIssueResponse(new Callback1<List<String>>() {
             @Override
-            public void onSuccess(IssueResponse response) {
-                assertEquals(expectedResponse, response);
+            public void onSuccess(List<String> txIds) {
+                assertEquals(expectedTxIds, txIds);
             }
 
             @Override
@@ -254,43 +254,30 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    private static Stream<Arguments> createSuccessResponseIssueResponse() throws IOException {
-        final IssueResponse issueResponse1 =
-                new IssueResponse(new ArrayList<IssueResponse.Bitmark>() {{
-                    add(new IssueResponse.Bitmark(
-                            "e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f"));
-                    add(new IssueResponse.Bitmark(
-                            "995f2d5f3bcb6cab43d4a758efe39016d5012f07098eaf63179a60dedba85a25"));
-                    add(new IssueResponse.Bitmark(
-                            "d25e784a72d2c12a7813368167a6d3a2b47a38e836ab88bb10e6b2b71dfb8cb7"));
-                    add(new IssueResponse.Bitmark(
-                            "682e1d3762a6b2c103d2b98233db04aadfd66e39d6a5d4f32cd5762f7352d492"));
-                    add(new IssueResponse.Bitmark(
-                            "e489a1dc930f55ce74f3f39e2e4b52cb1e0a57e720cea2ba7c2dc0b471354e27"));
-                    add(new IssueResponse.Bitmark(
-                            "1246e2a223a9c4e7a63b12ad0b854a92d26a79cf53bd780783779e08f88131bd"));
-                    add(new IssueResponse.Bitmark(
-                            "8ca6cfb7e689e11bf32d6a44528678155f77278349b8d8c938050951a9c8b664"));
-                    add(new IssueResponse.Bitmark(
-                            "a845c1666f45ac7ac7a6413a1b36f846ef638201cceb85fcef7333df8aa20e53"));
-                    add(new IssueResponse.Bitmark(
-                            "eb799ecdc2e0911d1744899c830c75600469f316ad033312d64cb0c1739bf0a6"));
-                    add(new IssueResponse.Bitmark(
-                            "0107f4dbc256591c540722fd2f558e43dd7f197faa88ace608ab82438aa650c0"));
-                }});
-        final IssueResponse issueResponse2 =
-                new IssueResponse(new ArrayList<IssueResponse.Bitmark>() {{
-                    add(new IssueResponse.Bitmark(
-                            "e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f"));
-                }});
+    private static Stream<Arguments> createSuccessResponseListTxId() throws IOException {
+        final List<String> txIds1 = new ArrayList<String>() {{
+            add("e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f");
+            add("995f2d5f3bcb6cab43d4a758efe39016d5012f07098eaf63179a60dedba85a25");
+            add("d25e784a72d2c12a7813368167a6d3a2b47a38e836ab88bb10e6b2b71dfb8cb7");
+            add("682e1d3762a6b2c103d2b98233db04aadfd66e39d6a5d4f32cd5762f7352d492");
+            add("e489a1dc930f55ce74f3f39e2e4b52cb1e0a57e720cea2ba7c2dc0b471354e27");
+            add("1246e2a223a9c4e7a63b12ad0b854a92d26a79cf53bd780783779e08f88131bd");
+            add("8ca6cfb7e689e11bf32d6a44528678155f77278349b8d8c938050951a9c8b664");
+            add("a845c1666f45ac7ac7a6413a1b36f846ef638201cceb85fcef7333df8aa20e53");
+            add("eb799ecdc2e0911d1744899c830c75600469f316ad033312d64cb0c1739bf0a6");
+            add("0107f4dbc256591c540722fd2f558e43dd7f197faa88ace608ab82438aa650c0");
+        }};
+
+        final List<String> txIds2 = new ArrayList<String>() {{
+            add("e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f");
+        }};
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
                 "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
                 loadResponse("/issue/multiple_issue.json"))).message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
                 "://dummy.com").build()).protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
                 loadResponse("/issue/single_issue.json"))).message("dummy").build();
-        return Stream.of(Arguments.of(response1, issueResponse1), Arguments.of(response2,
-                issueResponse2));
+        return Stream.of(Arguments.of(response1, txIds1), Arguments.of(response2, txIds2));
     }
 
     private static Stream<Arguments> createSuccessResponseRegistrationResponse() throws IOException {

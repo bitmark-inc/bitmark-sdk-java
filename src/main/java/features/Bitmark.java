@@ -8,8 +8,9 @@ import service.params.TransferResponseParams;
 import service.params.query.BitmarkQueryBuilder;
 import service.response.GetBitmarkResponse;
 import service.response.GetBitmarksResponse;
-import service.response.IssueResponse;
 import utils.callback.Callback1;
+
+import java.util.List;
 
 /**
  * @author Hieu Pham
@@ -20,7 +21,7 @@ import utils.callback.Callback1;
 
 public class Bitmark {
 
-    public static void issue(IssuanceParams params, Callback1<IssueResponse> callback) {
+    public static void issue(IssuanceParams params, Callback1<List<String>> callback) {
         ApiService.getInstance().issueBitmark(params, callback);
     }
 

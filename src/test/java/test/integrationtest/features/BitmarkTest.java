@@ -10,7 +10,6 @@ import service.params.*;
 import service.params.query.BitmarkQueryBuilder;
 import service.response.GetBitmarkResponse;
 import service.response.GetBitmarksResponse;
-import service.response.IssueResponse;
 import service.response.RegistrationResponse;
 import test.utils.Callable;
 import test.utils.extensions.TemporaryFolderExtension;
@@ -68,9 +67,9 @@ public class BitmarkTest extends BaseFeatureTest {
         final int quantity = 5;
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner, quantity);
         issuanceParams.sign(KEY1);
-        IssueResponse issueResponse = await(callback -> Bitmark.issue(issuanceParams, callback));
-        assertEquals(issueResponse.getBitmarks().size(), quantity);
-        assertFalse(issueResponse.getBitmarks().get(0).getId().isEmpty());
+        List<String> txIds = await(callback -> Bitmark.issue(issuanceParams, callback));
+        assertEquals(txIds.size(), quantity);
+        assertFalse(txIds.get(0).isEmpty());
     }
 
     @DisplayName("Verify function Bitmark.issue(IssuanceParams, Callback1<>) works well with " +
@@ -96,9 +95,9 @@ public class BitmarkTest extends BaseFeatureTest {
         // Issue bitmarks
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
         issuanceParams.sign(KEY1);
-        IssueResponse issueResponse = await(callback -> Bitmark.issue(issuanceParams, callback));
-        assertEquals(issueResponse.getBitmarks().size(), 1);
-        assertFalse(issueResponse.getBitmarks().get(0).getId().isEmpty());
+        List<String> txIds = await(callback -> Bitmark.issue(issuanceParams, callback));
+        assertEquals(txIds.size(), 1);
+        assertFalse(txIds.get(0).isEmpty());
     }
 
     @DisplayName("Verify function Bitmark.issue(IssuanceParams, Callback1<>) works well with " +
@@ -110,7 +109,7 @@ public class BitmarkTest extends BaseFeatureTest {
                 "bda050d2235402751ed09e73486c2cced34424c35d4d799eaa37ab73c3dba663", issuer);
         issuanceParams.sign(KEY1);
         HttpException exception = (HttpException) assertThrows(CompletionException.class, () ->
-                await((Callable<IssueResponse>) callback -> Bitmark.issue(issuanceParams,
+                await((Callable<List<String>>) callback -> Bitmark.issue(issuanceParams,
                         callback))).getCause();
         assertEquals(1000, exception.getErrorCode());
         assertEquals(HTTP_BAD_REQUEST, exception.getStatusCode());

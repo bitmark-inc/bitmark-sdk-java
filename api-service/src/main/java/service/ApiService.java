@@ -40,7 +40,7 @@ public class ApiService extends AbsApiService implements BitmarkApi {
     }
 
     @Override
-    public void issueBitmark(IssuanceParams params, Callback1<IssueResponse> callback) {
+    public void issueBitmark(IssuanceParams params, Callback1<List<String>> callback) {
         final String path = String.format("/%s/issue", SdkConfig.ApiServer.VERSION);
         postAsync(path, params, toIssueResponse(callback));
     }
