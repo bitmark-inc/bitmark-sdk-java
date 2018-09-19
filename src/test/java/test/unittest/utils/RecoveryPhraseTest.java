@@ -36,8 +36,8 @@ public class RecoveryPhraseTest extends BaseTest {
     @Test
     public void testConstructRecoveryPhrase_NoCondition_ValidInstanceIsReturn() {
         final RecoveryPhrase phrase = new RecoveryPhrase();
+        assertNotNull(phrase.getMnemonicWords());
         assertEquals(RecoveryPhrase.MNEMONIC_WORD_LENGTH, phrase.getMnemonicWords().length);
-        assertFalse(isDuplicate(phrase.getMnemonicWords()));
     }
 
     @DisplayName("Verify function RecoveryPhrase.fromSeed(Seed) works well with happy condition")
@@ -91,7 +91,7 @@ public class RecoveryPhraseTest extends BaseTest {
     @DisplayName("Verify function RecoveryPhrase.recoverSeed(String...) throws error with invalid" +
                          " mnemonic words")
     @ParameterizedTest
-    @ValueSource(strings = {"accident syrup accident you clutch liquid fame upset joke glow best " +
+    @ValueSource(strings = {"accident syrup hiring you clutch liquid fame upset joke glow best " +
             "school repeat birth library combine access camera organ trial crazy jeans lizard " +
             "science", "ability leave spike mixture voice certain today market grief " +
             "crater cruise smart camera palm wheat rib swamp labor bid rifle piano glass"})

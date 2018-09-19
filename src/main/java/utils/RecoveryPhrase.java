@@ -124,7 +124,7 @@ public class RecoveryPhrase {
     }
 
     private static void validate(String... mnemonicWords) {
-        checkValid(() -> mnemonicWords != null && mnemonicWords.length == MNEMONIC_WORD_LENGTH && contains(WORDS, mnemonicWords) && !isDuplicate(mnemonicWords));
+        checkValid(() -> mnemonicWords != null && mnemonicWords.length == MNEMONIC_WORD_LENGTH && contains(WORDS, mnemonicWords));
     }
 
     private static byte[] getEntropy(Network network, byte[] seed) {
