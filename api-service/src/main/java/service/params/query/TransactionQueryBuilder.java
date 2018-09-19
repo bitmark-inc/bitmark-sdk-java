@@ -27,7 +27,7 @@ public class TransactionQueryBuilder extends AbsQueryBuilder {
 
     private int limit = 100;
 
-    public TransactionQueryBuilder owner(String owner) {
+    public TransactionQueryBuilder ownedBy(String owner) {
         checkValidString(owner);
         this.owner = owner;
         return this;

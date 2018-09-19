@@ -33,7 +33,7 @@ public class TransactionTest extends BaseFeatureTest {
     public void testQueryTransactionWithoutAsset_ExistedTxId_CorrectResponseIsReturn() {
         // Get existed tx
         TransactionQueryBuilder builder =
-                new TransactionQueryBuilder().owner(ACCOUNT1.getAccountNumber()).limit(1);
+                new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
         GetTransactionsResponse getTransactionsResponse =
                 await(callback -> Transaction.list(builder,
                         callback));
@@ -56,7 +56,7 @@ public class TransactionTest extends BaseFeatureTest {
     public void testQueryTransactionWithAsset_ExistedTxId_CorrectResponseIsReturn() {
         // Get existed tx
         TransactionQueryBuilder builder =
-                new TransactionQueryBuilder().owner(ACCOUNT1.getAccountNumber()).limit(1);
+                new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
         GetTransactionsResponse getTransactionsResponse =
                 await(callback -> Transaction.list(builder,
                         callback));
@@ -96,7 +96,7 @@ public class TransactionTest extends BaseFeatureTest {
         int limit = 3;
         String owner = ACCOUNT1.getAccountNumber();
         TransactionQueryBuilder builder =
-                new TransactionQueryBuilder().owner(owner).limit(limit);
+                new TransactionQueryBuilder().ownedBy(owner).limit(limit);
         GetTransactionsResponse getTransactionsResponse =
                 await(callback -> Transaction.list(builder,
                         callback));
