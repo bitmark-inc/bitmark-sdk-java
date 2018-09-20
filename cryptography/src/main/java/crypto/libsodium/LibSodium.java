@@ -23,7 +23,9 @@ public class LibSodium {
         if (SODIUM_INSTANCE == null) {
             synchronized (LibSodium.class) {
                 if (SODIUM_INSTANCE == null) {
-                    SODIUM_INSTANCE = LibraryLoader.create(Sodium.class).search("libs").load(LIBRARY_NAME);
+                    final String path = "../cryptography/src/main/java/libs";
+                    SODIUM_INSTANCE =
+                            LibraryLoader.create(Sodium.class).search(path).load(LIBRARY_NAME);
                 }
             }
         }
