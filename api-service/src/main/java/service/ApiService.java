@@ -22,7 +22,7 @@ import static service.middleware.Converter.*;
 
 public class ApiService extends AbsApiService implements BitmarkApi {
 
-    private static ApiService INSTANCE;
+    private static volatile ApiService INSTANCE;
 
     public static ApiService getInstance() {
         if (INSTANCE == null) {
