@@ -1,11 +1,16 @@
+apply plugin: 'java-library'
+
 buildscript {
-    apply plugin: 'java-library'
+    apply from: 'configuration.gradle'
     apply from: 'dependencies.gradle'
     addRepos(repositories)
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+group = ext.GROUP_ID
+version = ext.VERSION
+
+sourceCompatibility = ext.SOURCE_COMPATIBILITY
+targetCompatibility = ext.TARGET_COMPATIBILITY
 
 allprojects {
     addRepos(repositories)
