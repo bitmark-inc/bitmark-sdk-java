@@ -6,6 +6,8 @@ buildscript {
     addRepos(repositories)
 }
 
+def ext = project.ext
+
 group = ext.GROUP_ID
 version = ext.VERSION
 
@@ -20,10 +22,39 @@ test {
     useJUnitPlatform()
 }
 
+jar {
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    baseName = 'bitmark-java-sdk'
+    version = project.ext.VERSION
+    manifest {
+        attributes 'Name': ext.LIB_NAME
+        attributes 'Specification-Title': ext.LIB_DES
+        attributes 'Specification-Version': ext.VERSION
+        attributes 'Specification-Vendor': ext.LIB_VENDOR
+        attributes 'Implementation-Version': ext.VERSION
+        attributes 'Implementation-Vendor': ext.LIB_VENDOR
+        attributes 'Class-Path': 'junit-jupiter-api-5.2.0.jar junit-jupiter-params-5.2.0.jar' +
+                ' okio-1.13.0.jar asm-tree-5.0.3.jar junit-4.12.jar junit-platform-com' +
+                ' mons-1.2.0.jar asm-5.0.3.jar mockito-core-2.21.0.jar mockwebserver-3.' +
+                ' 9.1.jar objenesis-2.6.jar asm-analysis-5.0.3.jar apiguardian-api-1.0.' +
+                ' 0.jar bcprov-jdk15on-1.50.jar jffi-1.2.17.jar junit-platform-runner-1' +
+                ' .2.0.jar jffi-1.2.17-native.jar logging-interceptor-3.9.1.jar gson-2.' +
+                ' 8.5.jar junit-platform-launcher-1.2.0.jar bcprov-jdk15on-1.60.jar jnr' +
+                ' -ffi-2.1.8.jar asm-commons-5.0.3.jar junit-jupiter-engine-5.2.0.jar j' +
+                ' nr-x86asm-1.0.2.jar junit-platform-engine-1.2.0.jar opentest4j-1.1.0.' +
+                ' jar byte-buddy-1.8.15.jar okhttp-3.9.1.jar hamcrest-core-1.3.jar byte' +
+                ' -buddy-agent-1.8.15.jar junit-platform-suite-api-1.2.0.jar asm-util-5' +
+                ' .0.3.jar'
+    }
+}
+
 dependencies {
-    implementation project(':configuration')
-    implementation project(':cryptography')
-    implementation project(':api-service')
+    compile project(':configuration')
+    compile project(':cryptography')
+    compile project(':api-service')
 
     implementation deps.bouncycastle
 
