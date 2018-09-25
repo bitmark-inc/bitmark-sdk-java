@@ -1,9 +1,6 @@
 package com.bitmark.sdk.test.utils;
 
-import com.bitmark.sdk.utils.callback.Callback1;
-
 import java.security.SecureRandom;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Hieu Pham
@@ -18,23 +15,6 @@ public class CommonUtils {
             "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 
     private CommonUtils() {
-    }
-
-    public static <T> T await(Callable<T> callable) {
-        final CompletableFuture<T> completableFuture = new CompletableFuture<>();
-        callable.call(new Callback1<T>() {
-            @Override
-            public void onSuccess(T data) {
-                completableFuture.complete(data);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                completableFuture.completeExceptionally(throwable);
-            }
-        });
-        return completableFuture.join();
-
     }
 
     public static String randomString(int length) {

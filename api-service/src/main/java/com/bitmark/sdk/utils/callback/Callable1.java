@@ -1,15 +1,13 @@
-package com.bitmark.sdk.test.utils;
-
-import com.bitmark.sdk.utils.callback.Callback1;
+package com.bitmark.sdk.utils.callback;
 
 /**
  * @author Hieu Pham
- * @since 9/14/18
+ * @since 9/25/18
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Callable<T> {
+public interface Callable1<T> extends Callable {
 
     void call(Callback1<T> callback);
 }

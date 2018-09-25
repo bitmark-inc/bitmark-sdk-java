@@ -1,22 +1,22 @@
 package com.bitmark.sdk.test.integrationtest.features;
 
 import com.bitmark.sdk.features.Transaction;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import com.bitmark.sdk.service.params.query.TransactionQueryBuilder;
 import com.bitmark.sdk.service.response.GetTransactionResponse;
 import com.bitmark.sdk.service.response.GetTransactionsResponse;
-import com.bitmark.sdk.test.utils.Callable;
+import com.bitmark.sdk.utils.callback.Callable1;
 import com.bitmark.sdk.utils.error.HttpException;
 import com.bitmark.sdk.utils.record.AssetRecord;
 import com.bitmark.sdk.utils.record.TransactionRecord;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.concurrent.CompletionException;
 
+import static com.bitmark.sdk.utils.Awaitility.await;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.bitmark.sdk.test.utils.CommonUtils.await;
 
 /**
  * @author Hieu Pham
@@ -35,7 +35,7 @@ public class TransactionTest extends BaseFeatureTest {
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
         GetTransactionsResponse getTransactionsResponse =
-                await(callback -> Transaction.list(builder,
+                await((Callable1<GetTransactionsResponse>) callback -> Transaction.list(builder,
                         callback));
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
         assertNotNull(transactions, "This guy does not have any transaction");
@@ -43,8 +43,9 @@ public class TransactionTest extends BaseFeatureTest {
         String txId = transactions.get(0).getId();
 
         // Get tx by id
-        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
-                callback));
+        GetTransactionResponse getTransactionResponse =
+                await((Callable1<GetTransactionResponse>) callback -> Transaction.get(txId,
+                        callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         assertNotNull(transaction);
         assertEquals(txId, transaction.getId());
@@ -58,7 +59,7 @@ public class TransactionTest extends BaseFeatureTest {
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
         GetTransactionsResponse getTransactionsResponse =
-                await(callback -> Transaction.list(builder,
+                await((Callable1<GetTransactionsResponse>) callback -> Transaction.list(builder,
                         callback));
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
         assertNotNull(transactions, "This guy does not have any transaction");
@@ -66,8 +67,9 @@ public class TransactionTest extends BaseFeatureTest {
         String txId = transactions.get(0).getId();
 
         // Get tx by id
-        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
-                true, callback));
+        GetTransactionResponse getTransactionResponse =
+                await((Callable1<GetTransactionResponse>) callback -> Transaction.get(txId,
+                        true, callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         AssetRecord asset = getTransactionResponse.getAsset();
         assertNotNull(transaction);
@@ -83,7 +85,7 @@ public class TransactionTest extends BaseFeatureTest {
         String id =
                 "1234567890123456789012345678901234567890123456789012345678901234";
         HttpException exception = (HttpException) assertThrows(CompletionException.class,
-                () -> await((Callable<GetTransactionResponse>) callback -> Transaction.get(id,
+                () -> await((Callable1<GetTransactionResponse>) callback -> Transaction.get(id,
                         callback))).getCause();
         assertEquals(HTTP_NOT_FOUND, exception.getStatusCode());
     }
@@ -98,7 +100,7 @@ public class TransactionTest extends BaseFeatureTest {
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(owner).limit(limit);
         GetTransactionsResponse getTransactionsResponse =
-                await(callback -> Transaction.list(builder,
+                await((Callable1<GetTransactionsResponse>) callback -> Transaction.list(builder,
                         callback));
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
         assertEquals(limit, transactions.size());

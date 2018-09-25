@@ -1,18 +1,18 @@
 package com.bitmark.sdk.test.integrationtest.features;
 
 import com.bitmark.sdk.features.Asset;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import com.bitmark.sdk.service.params.RegistrationParams;
 import com.bitmark.sdk.service.params.query.AssetQueryBuilder;
 import com.bitmark.sdk.service.response.RegistrationResponse;
-import com.bitmark.sdk.test.utils.Callable;
 import com.bitmark.sdk.test.utils.extensions.TemporaryFolderExtension;
 import com.bitmark.sdk.test.utils.extensions.annotations.TemporaryFile;
 import com.bitmark.sdk.utils.Address;
+import com.bitmark.sdk.utils.callback.Callable1;
 import com.bitmark.sdk.utils.error.HttpException;
 import com.bitmark.sdk.utils.record.AssetRecord;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.File;
 import java.util.HashMap;
@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionException;
 
+import static com.bitmark.sdk.utils.Awaitility.await;
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.bitmark.sdk.test.utils.CommonUtils.await;
 
 /**
  * @author Hieu Pham
@@ -47,7 +47,9 @@ public class AssetTest extends BaseFeatureTest {
         RegistrationParams params = new RegistrationParams(asset.getName(), metadata, registrant);
         params.generateFingerprint(asset);
         params.sign(KEY1);
-        RegistrationResponse response = await(callback -> Asset.register(params, callback));
+        RegistrationResponse response =
+                await((Callable1<RegistrationResponse>) callback -> Asset.register(params,
+                        callback));
         List<RegistrationResponse.Asset> assets = response.getAssets();
         assertNotNull(assets.get(0).getId());
         assertFalse(assets.get(0).isDuplicate());
@@ -66,7 +68,7 @@ public class AssetTest extends BaseFeatureTest {
         params.generateFingerprint(asset);
         params.sign(KEY1);
         HttpException exception = (HttpException) assertThrows(CompletionException.class,
-                () -> await((Callable<RegistrationResponse>) callback -> Asset.register(params,
+                () -> await((Callable1<RegistrationResponse>) callback -> Asset.register(params,
                         callback))).getCause();
         assertEquals(HTTP_FORBIDDEN, exception.getStatusCode());
         assertEquals(2009, exception.getErrorCode());
@@ -79,12 +81,13 @@ public class AssetTest extends BaseFeatureTest {
         // Query existed assets
         AssetQueryBuilder builder =
                 new AssetQueryBuilder().registrant(ACCOUNT1.getAccountNumber()).limit(1);
-        List<AssetRecord> assets = await(callback -> Asset.list(builder, callback));
+        List<AssetRecord> assets =
+                await((Callable1<List<AssetRecord>>) callback -> Asset.list(builder, callback));
         assertFalse(assets.isEmpty(), "This guy has not registered any assets");
 
         // Get asset by id
         String id = assets.get(0).getId();
-        AssetRecord asset = await(callback -> Asset.get(id, callback));
+        AssetRecord asset = await((Callable1<AssetRecord>) callback -> Asset.get(id, callback));
         assertNotNull(asset);
         assertEquals(id, asset.getId());
     }
@@ -96,7 +99,7 @@ public class AssetTest extends BaseFeatureTest {
         String id =
                 "12345678901234567890123456789012345678901234567890123456789012341234567890123456789012345678901234567890123456789012345678901234";
         HttpException exception = (HttpException) assertThrows(CompletionException.class,
-                () -> await((Callable<AssetRecord>) callback -> Asset.get(id, callback))).getCause();
+                () -> await((Callable1<AssetRecord>) callback -> Asset.get(id, callback))).getCause();
         assertEquals(HTTP_NOT_FOUND, exception.getStatusCode());
     }
 
@@ -106,7 +109,8 @@ public class AssetTest extends BaseFeatureTest {
         int limit = 3;
         String registrant = "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva";
         AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registrant(registrant);
-        List<AssetRecord> assets = await(callback -> Asset.list(builder, callback));
+        List<AssetRecord> assets =
+                await((Callable1<List<AssetRecord>>) callback -> Asset.list(builder, callback));
         assertEquals(limit, assets.size());
         assets.forEach(asset -> assertEquals(registrant, asset.getRegistrant()));
     }
