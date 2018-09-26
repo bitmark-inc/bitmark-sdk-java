@@ -9,4 +9,5 @@ ext {
     LIB_NAME = "Bitmark Java SDK"
     LIB_DES = "Java SDK for Bitmark platform"
     LIB_VENDOR = "Bitmark Inc"
+    JAR_NAME = "java-sdk"
 }

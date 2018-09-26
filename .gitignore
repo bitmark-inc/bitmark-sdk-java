@@ -11,3 +11,4 @@ local.properties
 *.log
 out
 build
+*.asc
