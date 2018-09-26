@@ -1,6 +1,6 @@
 package com.bitmark.sdk.service.params;
 
-import com.bitmark.sdk.config.SdkConfig;
+import com.bitmark.sdk.crypto.Sha3256;
 import com.bitmark.sdk.crypto.encoder.VarInt;
 import com.bitmark.sdk.crypto.key.KeyPair;
 import com.bitmark.sdk.utils.Address;
@@ -9,7 +9,6 @@ import com.bitmark.sdk.utils.BinaryPacking;
 
 import java.util.Map;
 
-import static com.bitmark.sdk.config.SdkConfig.Transfer.LINK_LENGTH;
 import static com.bitmark.sdk.crypto.encoder.Hex.HEX;
 import static com.bitmark.sdk.utils.Validator.checkValid;
 
@@ -63,7 +62,7 @@ public class TransferOfferParams extends AbsSingleParams {
 
     @Override
     byte[] pack() {
-        byte[] data = VarInt.writeUnsignedVarInt(SdkConfig.Transfer.OFFER_TAG);
+        byte[] data = VarInt.writeUnsignedVarInt(0x05);
         data = BinaryPacking.concat(HEX.decode(link), data);
         data = ArrayUtil.concat(data, new byte[]{0x00});
         data = BinaryPacking.concat(offeredOwner.pack(), data);
@@ -71,7 +70,8 @@ public class TransferOfferParams extends AbsSingleParams {
     }
 
     private void checkValidLink(String link) {
-        checkValid(() -> link != null && HEX.decode(link).length == LINK_LENGTH, "Invalid link");
+        checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_LENGTH, "Invalid" +
+                " link");
     }
 
     private String getExtraInfoJson() {

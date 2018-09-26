@@ -1,6 +1,6 @@
 package com.bitmark.sdk.utils;
 
-import com.bitmark.sdk.config.Network;
+import com.bitmark.sdk.service.configuration.Network;
 import com.bitmark.sdk.crypto.key.PublicKey;
 
 /**

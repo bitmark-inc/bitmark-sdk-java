@@ -1,6 +1,6 @@
 package com.bitmark.sdk.test.unittest.features;
 
-import com.bitmark.sdk.config.Network;
+import com.bitmark.sdk.service.configuration.Network;
 import com.bitmark.sdk.crypto.Ed25519;
 import com.bitmark.sdk.error.ValidateException;
 import com.bitmark.sdk.features.Account;

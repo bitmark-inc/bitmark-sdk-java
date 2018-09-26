@@ -1,22 +1,21 @@
 package com.bitmark.sdk.utils;
 
-import com.bitmark.sdk.config.GlobalConfiguration;
-import com.bitmark.sdk.config.Network;
-import com.bitmark.sdk.config.SdkConfig;
 import com.bitmark.sdk.crypto.Ed25519;
 import com.bitmark.sdk.crypto.Sha3256;
 import com.bitmark.sdk.crypto.encoder.VarInt;
 import com.bitmark.sdk.crypto.key.PublicKey;
+import com.bitmark.sdk.error.ValidateException;
+import com.bitmark.sdk.service.configuration.GlobalConfiguration;
+import com.bitmark.sdk.service.configuration.Network;
 import com.bitmark.sdk.utils.error.InvalidAddressException;
 import com.bitmark.sdk.utils.error.InvalidNetworkException;
 
 import java.util.Arrays;
 
-import static com.bitmark.sdk.config.SdkConfig.CHECKSUM_LENGTH;
-import static com.bitmark.sdk.config.SdkConfig.KEY_TYPE;
-import static com.bitmark.sdk.config.SdkConfig.KeyPart.PUBLIC_KEY;
 import static com.bitmark.sdk.crypto.encoder.Base58.BASE_58;
+import static com.bitmark.sdk.service.configuration.KeyPart.PUBLIC_KEY;
 import static com.bitmark.sdk.utils.ArrayUtil.*;
+import static com.bitmark.sdk.utils.Validator.checkNonNull;
 
 /**
  * @author Hieu Pham
@@ -26,6 +25,8 @@ import static com.bitmark.sdk.utils.ArrayUtil.*;
  */
 
 public class Address implements Validation {
+
+    public static final int CHECKSUM_LENGTH = 4;
 
     private PublicKey key;
 
@@ -52,7 +53,7 @@ public class Address implements Validation {
                         "is " + Arrays.toString(checksumFromAddress));
 
         // Check for whether it's an address
-        if ((keyVariant & 0x01) != SdkConfig.KeyPart.PUBLIC_KEY.value())
+        if ((keyVariant & 0x01) != PUBLIC_KEY.value())
             throw new InvalidAddressException();
 
         // Verify network value
@@ -65,6 +66,12 @@ public class Address implements Validation {
                 addressLength - CHECKSUM_LENGTH);
         return new Address(PublicKey.from(publicKey), network);
 
+    }
+
+    public static Address getDefault(PublicKey key, Network network) throws ValidateException {
+        checkNonNull(key);
+        checkNonNull(network);
+        return new Address(key, network);
     }
 
     private Address() {
@@ -85,6 +92,14 @@ public class Address implements Validation {
         return key != null && key.size() == Ed25519.PUBLIC_KEY_LENGTH && network != null;
     }
 
+    public Network getNetwork() {
+        return network;
+    }
+
+    public PublicKey getKey() {
+        return key;
+    }
+
     public String getAddress() {
         final byte[] keyVariantVarInt = getPrefix();
         final byte[] publicKeyBytes = key.toBytes();
@@ -94,8 +109,8 @@ public class Address implements Validation {
         return BASE_58.encode(address);
     }
 
-    private byte[] getPrefix() {
-        int keyVariantValue = KEY_TYPE << 4;
+    public byte[] getPrefix() {
+        int keyVariantValue = 0x01 << 4;
         keyVariantValue |= PUBLIC_KEY.value();
         keyVariantValue |= (network.value() << 1);
         return VarInt.writeUnsignedVarInt(keyVariantValue);

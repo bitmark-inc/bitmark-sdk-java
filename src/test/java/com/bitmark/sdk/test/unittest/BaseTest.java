@@ -1,7 +1,7 @@
 package com.bitmark.sdk.test.unittest;
 
-import com.bitmark.sdk.config.GlobalConfiguration;
-import com.bitmark.sdk.config.Network;
+import com.bitmark.sdk.service.configuration.GlobalConfiguration;
+import com.bitmark.sdk.service.configuration.Network;
 import com.bitmark.sdk.features.BitmarkSDK;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

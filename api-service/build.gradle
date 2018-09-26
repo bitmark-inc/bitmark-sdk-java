@@ -9,7 +9,6 @@ targetCompatibility = ext.TARGET_COMPATIBILITY
 
 dependencies {
     implementation project(':cryptography')
-    implementation project(':configuration')
     implementation deps.okhttp.okhttp3
     implementation deps.okhttp.logging
     implementation deps.gson

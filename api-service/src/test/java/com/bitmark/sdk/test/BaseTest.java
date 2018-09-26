@@ -1,7 +1,7 @@
 package com.bitmark.sdk.test;
 
-import com.bitmark.sdk.config.GlobalConfiguration;
-import com.bitmark.sdk.config.Network;
+import com.bitmark.sdk.service.configuration.GlobalConfiguration;
+import com.bitmark.sdk.service.configuration.Network;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class BaseTest {
+public abstract class BaseTest {
 
     @BeforeAll
     public static void beforeAll() {

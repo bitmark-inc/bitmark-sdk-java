@@ -1,9 +1,8 @@
 package com.bitmark.sdk.utils;
 
-import com.bitmark.sdk.config.GlobalConfiguration;
-import com.bitmark.sdk.config.Network;
-import com.bitmark.sdk.config.SdkConfig;
 import com.bitmark.sdk.error.ValidateException;
+import com.bitmark.sdk.service.configuration.GlobalConfiguration;
+import com.bitmark.sdk.service.configuration.Network;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,7 +49,7 @@ public class RecoveryPhrase {
     }
 
     public static RecoveryPhrase fromSeed(Seed seed) throws ValidateException {
-        checkValid(() -> seed != null && seed.getSeed().length == SdkConfig.Seed.LENGTH, "Invalid" +
+        checkValid(() -> seed != null && seed.getSeed().length == Seed.LENGTH, "Invalid" +
                 " Seed");
         final Network network = seed.getNetwork();
         final byte[] seedData = seed.getSeed();

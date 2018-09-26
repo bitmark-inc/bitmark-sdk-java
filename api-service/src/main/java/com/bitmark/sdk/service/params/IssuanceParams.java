@@ -1,12 +1,11 @@
 package com.bitmark.sdk.service.params;
 
-import com.bitmark.sdk.annotation.VisibleForTesting;
-import com.bitmark.sdk.config.SdkConfig;
 import com.bitmark.sdk.crypto.encoder.VarInt;
 import com.bitmark.sdk.error.ValidateException;
 import com.bitmark.sdk.utils.Address;
 import com.bitmark.sdk.utils.ArrayUtil;
 import com.bitmark.sdk.utils.BinaryPacking;
+import com.bitmark.sdk.utils.annotation.VisibleForTesting;
 
 import static com.bitmark.sdk.crypto.Random.secureRandomInt;
 import static com.bitmark.sdk.crypto.Random.secureRandomInts;
@@ -25,6 +24,8 @@ import static com.bitmark.sdk.utils.Validator.checkValidHex;
 
 public class IssuanceParams extends AbsMultipleParams {
 
+    private static final int ASSET_ID_LENGTH = 64;
+
     private String assetId;
 
     private int[] nonces;
@@ -33,7 +34,7 @@ public class IssuanceParams extends AbsMultipleParams {
 
     public IssuanceParams(String assetId, Address owner) throws ValidateException {
         checkValidHex(assetId);
-        checkValid(() -> HEX.decode(assetId).length <= SdkConfig.Issue.ASSET_ID_LENGTH);
+        checkValid(() -> HEX.decode(assetId).length <= ASSET_ID_LENGTH);
         checkValid(() -> owner != null && owner.isValid(), "Invalid Address");
         this.assetId = assetId;
         this.owner = owner;
@@ -75,7 +76,7 @@ public class IssuanceParams extends AbsMultipleParams {
     @Override
     byte[] pack(int index) {
         final byte[] assetId = HEX.decode(this.assetId);
-        byte[] data = VarInt.writeUnsignedVarInt(SdkConfig.Issue.TAG);
+        byte[] data = VarInt.writeUnsignedVarInt(0x03);
         data = BinaryPacking.concat(assetId, data);
         data = BinaryPacking.concat(owner.pack(), data);
         data = ArrayUtil.concat(data, VarInt.writeUnsignedVarInt(nonces[index]));

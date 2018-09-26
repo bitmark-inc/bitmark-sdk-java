@@ -1,21 +1,18 @@
 package com.bitmark.sdk.service;
 
-import com.bitmark.sdk.config.GlobalConfiguration;
-import com.bitmark.sdk.config.Network;
-import okhttp3.*;
-import okhttp3.logging.HttpLoggingInterceptor;
+import com.bitmark.sdk.service.configuration.GlobalConfiguration;
+import com.bitmark.sdk.service.configuration.Network;
 import com.bitmark.sdk.service.middleware.BitmarkApiInterceptor;
 import com.bitmark.sdk.service.params.Params;
 import com.bitmark.sdk.service.params.query.QueryParams;
 import com.bitmark.sdk.utils.callback.Callback1;
 import com.bitmark.sdk.utils.error.HttpException;
 import com.bitmark.sdk.utils.error.NetworkException;
+import okhttp3.*;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-import static com.bitmark.sdk.config.SdkConfig.ApiServer.LIVE_NET_ENDPOINT;
-import static com.bitmark.sdk.config.SdkConfig.ApiServer.TEST_NET_ENDPOINT;
 
 /**
  * @author Hieu Pham
@@ -27,6 +24,10 @@ import static com.bitmark.sdk.config.SdkConfig.ApiServer.TEST_NET_ENDPOINT;
 public class HttpClientImpl implements HttpClient {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    public static final String LIVE_NET_ENDPOINT = "https://api.bitmark.com";
+
+    public static final String TEST_NET_ENDPOINT = "https://api.test.bitmark.com";
 
     private OkHttpClient client;
 

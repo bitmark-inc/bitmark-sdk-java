@@ -1,8 +1,8 @@
 package com.bitmark.sdk.features;
 
-import com.bitmark.sdk.annotation.MainThread;
-import com.bitmark.sdk.annotation.VisibleForTesting;
-import com.bitmark.sdk.config.GlobalConfiguration;
+import com.bitmark.sdk.utils.annotation.MainThread;
+import com.bitmark.sdk.utils.annotation.VisibleForTesting;
+import com.bitmark.sdk.service.configuration.GlobalConfiguration;
 
 /**
  * @author Hieu Pham

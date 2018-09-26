@@ -1,6 +1,6 @@
 package com.bitmark.sdk.test.integrationtest.features;
 
-import com.bitmark.sdk.config.SdkConfig;
+import com.bitmark.sdk.crypto.Sha3256;
 import com.bitmark.sdk.features.Asset;
 import com.bitmark.sdk.features.Bitmark;
 import com.bitmark.sdk.service.params.*;
@@ -140,7 +140,7 @@ public class BitmarkTest extends BaseFeatureTest {
         params.sign(KEY1);
         String txId = await((Callable1<String>) callback -> Bitmark.transfer(params, callback));
         assertNotNull(txId);
-        assertEquals(SdkConfig.Transfer.TRANSACTION_ID_LENGTH, HEX.decode(txId).length);
+        assertEquals(Sha3256.HASH_LENGTH, HEX.decode(txId).length);
 
     }
 
@@ -257,7 +257,7 @@ public class BitmarkTest extends BaseFeatureTest {
         String txId = await((Callable1<String>) callback -> Bitmark.respond(responseParams,
                 callback));
         assertNotNull(txId);
-        assertEquals(SdkConfig.Transfer.TRANSACTION_ID_LENGTH, HEX.decode(txId).length);
+        assertEquals(Sha3256.HASH_LENGTH, HEX.decode(txId).length);
     }
 
     @DisplayName("Verify function Bitmark.respond(TransferResponseParams, Callback1<>) works well" +

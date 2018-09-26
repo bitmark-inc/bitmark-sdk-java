@@ -52,7 +52,6 @@ jar {
 }
 
 dependencies {
-    compile project(':configuration')
     compile project(':cryptography')
     compile project(':api-service')
 

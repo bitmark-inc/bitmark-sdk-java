@@ -1,6 +1,6 @@
 package com.bitmark.sdk.service.response;
 
-import com.bitmark.sdk.annotation.VisibleForTesting;
+import com.bitmark.sdk.utils.annotation.VisibleForTesting;
 import com.google.gson.annotations.SerializedName;
 import com.bitmark.sdk.utils.record.AssetRecord;
 import com.bitmark.sdk.utils.record.TransactionRecord;

@@ -1,6 +1,6 @@
 package com.bitmark.sdk.utils.record;
 
-import com.bitmark.sdk.annotation.VisibleForTesting;
+import com.bitmark.sdk.utils.annotation.VisibleForTesting;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;

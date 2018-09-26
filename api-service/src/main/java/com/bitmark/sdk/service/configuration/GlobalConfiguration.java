@@ -1,6 +1,6 @@
-package com.bitmark.sdk.config;
+package com.bitmark.sdk.service.configuration;
 
-import com.bitmark.sdk.annotation.VisibleForTesting;
+import com.bitmark.sdk.utils.annotation.VisibleForTesting;
 
 import static com.bitmark.sdk.utils.Validator.checkNonNull;
 

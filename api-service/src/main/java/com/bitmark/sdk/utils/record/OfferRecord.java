@@ -1,12 +1,12 @@
 package com.bitmark.sdk.utils.record;
 
-import com.google.gson.annotations.SerializedName;
+import com.bitmark.sdk.crypto.Sha3256;
 import com.bitmark.sdk.utils.Address;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 import java.util.Objects;
 
-import static com.bitmark.sdk.config.SdkConfig.Transfer.LINK_LENGTH;
 import static com.bitmark.sdk.crypto.encoder.Hex.HEX;
 import static com.bitmark.sdk.utils.Validator.checkValid;
 import static com.bitmark.sdk.utils.Validator.checkValidHex;
@@ -39,7 +39,7 @@ public class OfferRecord implements Record {
 
     public OfferRecord(String id, String owner, String link, String signature) {
         checkValidHex(signature);
-        checkValid(() -> id != null && !id.isEmpty() && owner != null && Address.fromAccountNumber(owner).isValid() && link != null && HEX.decode(link).length == LINK_LENGTH, "Invalid params");
+        checkValid(() -> id != null && !id.isEmpty() && owner != null && Address.fromAccountNumber(owner).isValid() && link != null && HEX.decode(link).length == Sha3256.HASH_LENGTH, "Invalid params");
         this.id = id;
         record = new Record();
         record.link = link;

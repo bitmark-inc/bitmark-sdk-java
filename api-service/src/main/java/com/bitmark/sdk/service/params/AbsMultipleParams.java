@@ -1,6 +1,6 @@
 package com.bitmark.sdk.service.params;
 
-import com.bitmark.sdk.annotation.VisibleForTesting;
+import com.bitmark.sdk.utils.annotation.VisibleForTesting;
 import com.bitmark.sdk.crypto.Ed25519;
 import com.bitmark.sdk.crypto.key.KeyPair;
 

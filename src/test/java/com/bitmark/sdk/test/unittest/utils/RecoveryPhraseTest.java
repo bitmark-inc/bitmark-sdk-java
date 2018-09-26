@@ -1,6 +1,6 @@
 package com.bitmark.sdk.test.unittest.utils;
 
-import com.bitmark.sdk.config.Network;
+import com.bitmark.sdk.service.configuration.Network;
 import com.bitmark.sdk.error.ValidateException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +17,8 @@ import com.bitmark.sdk.utils.Seed;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static com.bitmark.sdk.config.Network.LIVE_NET;
-import static com.bitmark.sdk.config.Network.TEST_NET;
+import static com.bitmark.sdk.service.configuration.Network.LIVE_NET;
+import static com.bitmark.sdk.service.configuration.Network.TEST_NET;
 import static com.bitmark.sdk.crypto.encoder.Hex.HEX;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.bitmark.sdk.utils.ArrayUtil.*;

@@ -1,20 +1,19 @@
 package com.bitmark.sdk.utils;
 
-import com.bitmark.sdk.config.GlobalConfiguration;
-import com.bitmark.sdk.config.Network;
-import com.bitmark.sdk.config.SdkConfig;
+import com.bitmark.sdk.crypto.Ed25519;
 import com.bitmark.sdk.crypto.Sha3256;
 import com.bitmark.sdk.crypto.encoder.VarInt;
 import com.bitmark.sdk.error.ValidateException;
+import com.bitmark.sdk.service.configuration.GlobalConfiguration;
+import com.bitmark.sdk.service.configuration.Network;
 import com.bitmark.sdk.utils.error.InvalidChecksumException;
 import com.bitmark.sdk.utils.error.InvalidNetworkException;
 import com.bitmark.sdk.utils.error.InvalidSeedException;
 
 import java.util.Arrays;
 
-import static com.bitmark.sdk.config.SdkConfig.CHECKSUM_LENGTH;
-import static com.bitmark.sdk.config.SdkConfig.Seed.*;
 import static com.bitmark.sdk.crypto.encoder.Base58.BASE_58;
+import static com.bitmark.sdk.crypto.encoder.Hex.HEX;
 import static com.bitmark.sdk.utils.ArrayUtil.concat;
 import static com.bitmark.sdk.utils.ArrayUtil.slice;
 import static com.bitmark.sdk.utils.Validator.checkValid;
@@ -28,6 +27,18 @@ import static com.bitmark.sdk.utils.Validator.checkValidLength;
  */
 
 public class Seed {
+
+    public static final int LENGTH = Ed25519.SEED_LENGTH;
+
+    public static final int VERSION = 0x01;
+
+    private static final int ENCODED_LENGTH = 40;
+
+    private static final byte[] MAGIC_NUMBER = HEX.decode("5AFE");
+
+    private static final int NETWORK_LENGTH = 1;
+
+    private static final int CHECKSUM_LENGTH = 4;
 
     private byte[] seed;
 
@@ -85,7 +96,7 @@ public class Seed {
     }
 
     public Seed(byte[] seed, Network network, int version) throws ValidateException {
-        checkValid(() -> seed != null && seed.length == SdkConfig.Seed.LENGTH && network != null && version > 0);
+        checkValid(() -> seed != null && seed.length == LENGTH && network != null && version > 0);
         this.seed = seed;
         this.network = network;
         this.version = version;

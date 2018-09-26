@@ -1,4 +1,4 @@
-package com.bitmark.sdk.config;
+package com.bitmark.sdk.service.configuration;
 
 /**
  * @author Hieu Pham

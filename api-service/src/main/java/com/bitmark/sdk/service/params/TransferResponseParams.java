@@ -1,13 +1,12 @@
 package com.bitmark.sdk.service.params;
 
-import com.bitmark.sdk.annotation.VisibleForTesting;
-import com.bitmark.sdk.config.SdkConfig;
 import com.bitmark.sdk.crypto.Ed25519;
 import com.bitmark.sdk.crypto.encoder.VarInt;
 import com.bitmark.sdk.crypto.key.KeyPair;
 import com.bitmark.sdk.utils.Address;
 import com.bitmark.sdk.utils.ArrayUtil;
 import com.bitmark.sdk.utils.BinaryPacking;
+import com.bitmark.sdk.utils.annotation.VisibleForTesting;
 import com.bitmark.sdk.utils.record.OfferRecord;
 
 import java.util.Calendar;
@@ -73,7 +72,7 @@ public class TransferResponseParams extends AbsSingleParams {
 
     @Override
     byte[] pack() {
-        byte[] data = VarInt.writeUnsignedVarInt(SdkConfig.Transfer.OFFER_TAG);
+        byte[] data = VarInt.writeUnsignedVarInt(0x05);
         data = BinaryPacking.concat(HEX.decode(offer.getLink()), data);
         data = ArrayUtil.concat(data, new byte[]{0x00});
         data = BinaryPacking.concat(Address.fromAccountNumber(offer.getOwner()).pack(), data);

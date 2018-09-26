@@ -1,6 +1,5 @@
 package com.bitmark.sdk.service.params;
 
-import com.bitmark.sdk.config.SdkConfig;
 import com.bitmark.sdk.crypto.Sha3512;
 import com.bitmark.sdk.crypto.encoder.VarInt;
 import com.bitmark.sdk.error.ValidateException;
@@ -13,7 +12,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-import static com.bitmark.sdk.config.SdkConfig.Asset.PREFIX_FINGERPRINT;
 import static com.bitmark.sdk.crypto.encoder.Hex.HEX;
 import static com.bitmark.sdk.utils.BinaryPacking.concat;
 import static com.bitmark.sdk.utils.FileUtils.getBytes;
@@ -66,7 +64,7 @@ public class RegistrationParams extends AbsSingleParams {
 
     @Override
     byte[] pack() {
-        byte[] data = VarInt.writeUnsignedVarInt(SdkConfig.Asset.TAG);
+        byte[] data = VarInt.writeUnsignedVarInt(0x02);
         data = concat(name, data);
         data = concat(fingerprint, data);
         data = concat(getPackedMetadata(metadata), data);
@@ -77,7 +75,7 @@ public class RegistrationParams extends AbsSingleParams {
     private String computeFingerprint(File file) throws IOException {
         final byte[] bytes = getBytes(file);
         final byte[] hashedBytes = Sha3512.hash(bytes);
-        return PREFIX_FINGERPRINT + HEX.encode(hashedBytes);
+        return "01" + HEX.encode(hashedBytes);
     }
 
     private String getPackedMetadata(Map<String, String> metadata) {
