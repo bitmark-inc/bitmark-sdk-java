@@ -32,21 +32,29 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
     baseName ext.JAR_NAME
     from sourceSets.main.allJava
-    subprojects.each {subProject ->
-        from subProject.sourceSets.main.allJava
-    }
+    subprojects.each { from it.sourceSets.main.allJava }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier "javadoc"
+    baseName ext.JAR_NAME
+    from javadoc.destinationDir
+}
+
+javadoc {
+    source = sourceSets.main.allJava + subprojects.collect { it.sourceSets.main.allJava }
+    destinationDir = file("${buildDir}/docs/javadoc")
 }
 
 artifacts {
     archives sourcesJar
+    archives javadocJar
 }
 
 jar {
     doFirst {
         from sourceSets.main.output.asList()
         subprojects.each { from it.sourceSets.main.output.asList() }
-        def manifestClasspath = configurations.runtime.collect { it.name }
-        manifestClasspath = manifestClasspath.unique().join(" ")
         manifest {
             attributes 'Name': ext.LIB_NAME
             attributes 'Specification-Title': ext.LIB_DES
@@ -54,7 +62,6 @@ jar {
             attributes 'Specification-Vendor': ext.LIB_VENDOR
             attributes 'Implementation-Version': ext.VERSION
             attributes 'Implementation-Vendor': ext.LIB_VENDOR
-            attributes 'Class-Path': manifestClasspath
         }
     }
 
@@ -121,7 +128,7 @@ install {
                         dependencyNode.appendNode('scope', 'test')
                     }
                 }
-                
+
             }
             // Collect all runtime dependencies in sub projects
             subprojects.each {
