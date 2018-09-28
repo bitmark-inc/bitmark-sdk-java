@@ -1,13 +1,10 @@
-apply plugin: 'java-library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+import java.util.stream.Collectors
 
 buildscript {
     apply from: 'configuration.gradle'
     apply from: 'dependencies.gradle'
     addRepos(repositories)
     dependencies {
-        classpath deps.maven_plugin
         classpath deps.bintray_plugin
     }
 }
@@ -16,24 +13,28 @@ def ext = project.ext
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-group = ext.GROUP_ID
-version = ext.VERSION
-
-sourceCompatibility = ext.SOURCE_COMPATIBILITY
-targetCompatibility = ext.TARGET_COMPATIBILITY
-
 allprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven'
+    apply plugin: 'com.jfrog.bintray'
     addRepos(repositories)
-}
+    sourceCompatibility = ext.SOURCE_COMPATIBILITY
+    targetCompatibility = ext.TARGET_COMPATIBILITY
+    group = ext.GROUP_ID
+    version = ext.VERSION
 
-test {
-    useJUnitPlatform()
+    test {
+        useJUnitPlatform()
+    }
 }
 
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     baseName ext.JAR_NAME
     from sourceSets.main.allJava
+    subprojects.each {subProject ->
+        from subProject.sourceSets.main.allJava
+    }
 }
 
 artifacts {
@@ -42,7 +43,8 @@ artifacts {
 
 jar {
     doFirst {
-        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+        from sourceSets.main.output.asList()
+        subprojects.each { from it.sourceSets.main.output.asList() }
         def manifestClasspath = configurations.runtime.collect { it.name }
         manifestClasspath = manifestClasspath.unique().join(" ")
         manifest {
@@ -55,6 +57,7 @@ jar {
             attributes 'Class-Path': manifestClasspath
         }
     }
+
     dependsOn ':cryptography:jar', ':api-service:jar'
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     baseName = ext.JAR_NAME
@@ -63,6 +66,7 @@ jar {
 
 install {
     repositories.mavenInstaller {
+        
         pom.project {
             packaging 'jar'
             groupId ext.GROUP_ID
@@ -89,6 +93,59 @@ install {
                 connection properties.getProperty("lib.giturl")
                 developerConnection properties.getProperty("lib.giturl")
                 url properties.getProperty("lib.siteurl")
+            }
+        }
+
+        pom.withXml {
+            def dependenciesNode = asNode().dependencies.get(0)
+            // Collect all implementation/compile dependencies in sub projects
+            subprojects.each {
+                it.configurations.matching { it.name.equals('implementation') || it.name.equals('compile') }.each {
+                    it.dependencies*.findAll { it instanceof ExternalModuleDependency}.flatten().each { dp ->
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dp.group)
+                        dependencyNode.appendNode('artifactId', dp.name)
+                        dependencyNode.appendNode('version', dp.version)
+                    }
+                }
+
+            }
+            // Collect all test dependencies in sub projects
+            subprojects.each {
+                it.configurations.matching { it.name.contains('test') }.each {
+                    it.dependencies*.findAll { it instanceof ExternalModuleDependency}.flatten().each { dp ->
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dp.group)
+                        dependencyNode.appendNode('artifactId', dp.name)
+                        dependencyNode.appendNode('version', dp.version)
+                        dependencyNode.appendNode('scope', 'test')
+                    }
+                }
+                
+            }
+            // Collect all runtime dependencies in sub projects
+            subprojects.each {
+                it.configurations.matching { it.name.contains('runtime') && !it.name.contains('test') }.each {
+                    it.dependencies*.findAll { it instanceof ExternalModuleDependency}.flatten().each { dp ->
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dp.group)
+                        dependencyNode.appendNode('artifactId', dp.name)
+                        dependencyNode.appendNode('version', dp.version)
+                        dependencyNode.appendNode('scope', 'runtime')
+                    }
+                }
+
+            }
+            def existedDependencies = new ArrayList<>()
+            dependenciesNode.findAll {
+                // Remove all duplicate or unnecessary dependencies
+                def dependencies = it.groupId.text() + ':' + it.artifactId.text() + ':' + it.version.text()
+                if (existedDependencies.contains(dependencies)) return true
+                else existedDependencies.add(dependencies)
+                def subProjects = subprojects.asList().stream().map { project -> project.toString().replaceAll("(project|':|')", "").trim() }.collect(Collectors.toList())
+                return subProjects.contains(it.artifactId.text())
+            }.each {
+                it.parent().remove(it)
             }
         }
     }
@@ -123,9 +180,9 @@ bintray {
 }
 
 dependencies {
-    compile project(':cryptography')
-    compile project(':api-service')
-
+    implementation project(':cryptography')
+    implementation project(':api-service')
+    
     implementation deps.bouncycastle
 
     testImplementation deps.junit_jupiter.api
