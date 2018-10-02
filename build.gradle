@@ -1,4 +1,4 @@
-import java.util.stream.Collectors
+apply from: 'publication.gradle'
 
 buildscript {
     apply from: 'configuration.gradle'
@@ -10,186 +10,22 @@ buildscript {
 }
 
 def ext = project.ext
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def config = ext.configuration
 
 allprojects {
     apply plugin: 'java-library'
-    apply plugin: 'maven'
-    apply plugin: 'com.jfrog.bintray'
     addRepos(repositories)
-    sourceCompatibility = ext.SOURCE_COMPATIBILITY
-    targetCompatibility = ext.TARGET_COMPATIBILITY
-    group = ext.GROUP_ID
-    version = ext.VERSION
+    sourceCompatibility = config.SOURCE_COMPATIBILITY
+    targetCompatibility = config.TARGET_COMPATIBILITY
 
     test {
         useJUnitPlatform()
     }
 }
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    baseName ext.JAR_NAME
-    from sourceSets.main.allJava
-    subprojects.each { from it.sourceSets.main.allJava }
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier "javadoc"
-    baseName ext.JAR_NAME
-    from javadoc.destinationDir
-}
-
-javadoc {
-    source = sourceSets.main.allJava + subprojects.collect { it.sourceSets.main.allJava }
-    destinationDir = file("${buildDir}/docs/javadoc")
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
-jar {
-    doFirst {
-        from sourceSets.main.output.asList()
-        subprojects.each { from it.sourceSets.main.output.asList() }
-        manifest {
-            attributes 'Name': ext.LIB_NAME
-            attributes 'Specification-Title': ext.LIB_DES
-            attributes 'Specification-Version': ext.VERSION
-            attributes 'Specification-Vendor': ext.LIB_VENDOR
-            attributes 'Implementation-Version': ext.VERSION
-            attributes 'Implementation-Vendor': ext.LIB_VENDOR
-        }
-    }
-
-    dependsOn ':cryptography:jar', ':api-service:jar'
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-    baseName = ext.JAR_NAME
-    version = ext.VERSION
-}
-
-install {
-    repositories.mavenInstaller {
-        
-        pom.project {
-            packaging 'jar'
-            groupId ext.GROUP_ID
-            artifactId ext.ARTIFACT_ID
-
-            name properties.getProperty("lib.name")
-            description properties.getProperty("lib.des")
-            url properties.getProperty("lib.siteurl")
-
-            licenses {
-                license {
-                    name properties.getProperty("license.name")
-                    url properties.getProperty("license.url")
-                }
-            }
-            developers {
-                developer {
-                    id properties.getProperty("dev.id")
-                    name properties.getProperty("dev.name")
-                    email properties.getProperty("dev.email")
-                }
-            }
-            scm {
-                connection properties.getProperty("lib.giturl")
-                developerConnection properties.getProperty("lib.giturl")
-                url properties.getProperty("lib.siteurl")
-            }
-        }
-
-        pom.withXml {
-            def dependenciesNode = asNode().dependencies.get(0)
-            // Collect all implementation/compile dependencies in sub projects
-            subprojects.each {
-                it.configurations.matching { it.name.equals('implementation') || it.name.equals('compile') }.each {
-                    it.dependencies*.findAll { it instanceof ExternalModuleDependency}.flatten().each { dp ->
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dp.group)
-                        dependencyNode.appendNode('artifactId', dp.name)
-                        dependencyNode.appendNode('version', dp.version)
-                    }
-                }
-
-            }
-            // Collect all test dependencies in sub projects
-            subprojects.each {
-                it.configurations.matching { it.name.contains('test') }.each {
-                    it.dependencies*.findAll { it instanceof ExternalModuleDependency}.flatten().each { dp ->
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dp.group)
-                        dependencyNode.appendNode('artifactId', dp.name)
-                        dependencyNode.appendNode('version', dp.version)
-                        dependencyNode.appendNode('scope', 'test')
-                    }
-                }
-
-            }
-            // Collect all runtime dependencies in sub projects
-            subprojects.each {
-                it.configurations.matching { it.name.contains('runtime') && !it.name.contains('test') }.each {
-                    it.dependencies*.findAll { it instanceof ExternalModuleDependency}.flatten().each { dp ->
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dp.group)
-                        dependencyNode.appendNode('artifactId', dp.name)
-                        dependencyNode.appendNode('version', dp.version)
-                        dependencyNode.appendNode('scope', 'runtime')
-                    }
-                }
-
-            }
-            def existedDependencies = new ArrayList<>()
-            dependenciesNode.findAll {
-                // Remove all duplicate or unnecessary dependencies
-                def dependencies = it.groupId.text() + ':' + it.artifactId.text() + ':' + it.version.text()
-                if (existedDependencies.contains(dependencies)) return true
-                else existedDependencies.add(dependencies)
-                def subProjects = subprojects.asList().stream().map { project -> project.toString().replaceAll("(project|':|')", "").trim() }.collect(Collectors.toList())
-                return subProjects.contains(it.artifactId.text())
-            }.each {
-                it.parent().remove(it)
-            }
-        }
-    }
-}
-
-bintray {
-
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    def license = [properties.getProperty("license.all")]
-
-    configurations = ['archives']
-    pkg {
-        repo = properties.getProperty("bintray.repo")
-        name = properties.getProperty("bintray.name")
-        desc = properties.getProperty("lib.des")
-        websiteUrl = properties.getProperty("lib.siteurl")
-        vcsUrl = properties.getProperty("lib.giturl")
-        licenses = license
-        dryRun = false
-        publish = true
-        override = false
-        publicDownloadNumbers = true
-        version {
-            desc = properties.getProperty("lib.des")
-            gpg {
-                sign = true
-                passphrase = properties.getProperty("bintray.gpg.password")
-            }
-        }
-    }
-}
-
 dependencies {
-    implementation project(':cryptography')
-    implementation project(':api-service')
-    
+    implementation deps.bitmark_sdk.cryptography
+    implementation deps.bitmark_sdk.api_service
     implementation deps.bouncycastle
 
     testImplementation deps.junit_jupiter.api

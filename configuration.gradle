@@ -1,13 +1,65 @@
-ext {
-    GROUP_ID = "com.bitmark.sdk"
-    ARTIFACT_ID = "java-sdk"
-    VERSION = "1.0"
+ext.configuration = [:]
+ext.configuration.SOURCE_COMPATIBILITY = 1.8
+ext.configuration.TARGET_COMPATIBILITY = 1.8
 
-    SOURCE_COMPATIBILITY = 1.8
-    TARGET_COMPATIBILITY = 1.8
+ext.publication = [:]
+def DEV_ID = "bitmarkinc"
+def DEV_NAME = "Bitmark Inc"
+def DEV_EMAIL = "support@bitmark.com"
+def LICENSE_NAME = "The Apache Software License, Version 2.0"
+def LICENSE_URL = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+def LICENSE_ALL = ["Apache-2.0"]
+ext.publication.DEV_ID = DEV_ID
+ext.publication.DEV_NAME = DEV_NAME
+ext.publication.DEV_EMAIL = DEV_EMAIL
+ext.publication.LICENSE_NAME = LICENSE_NAME
+ext.publication.LICENSE_URL = LICENSE_URL
+ext.publication.LICENSE_ALL = LICENSE_ALL
 
-    LIB_NAME = "Bitmark Java SDK"
-    LIB_DES = "Java SDK for Bitmark platform"
-    LIB_VENDOR = "Bitmark Inc"
-    JAR_NAME = "java-sdk"
+ext.publication.sdk = [:]
+def sdk = [:]
+sdk.GROUP_ID = "com.bitmark.sdk"
+sdk.ARTIFACT_ID = "java-sdk"
+sdk.VERSION = "1.0"
+sdk.LIB_NAME = "Bitmark Java SDK"
+sdk.LIB_DES = "Java SDK for Bitmark platform"
+sdk.LIB_VENDOR = "Bitmark Inc"
+sdk.JAR_NAME = "java-sdk"
+sdk.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java"
+sdk.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
+ext.publication.sdk = sdk
+
+ext.publication.cryptography = [:]
+def cryptography = [:]
+cryptography.GROUP_ID = "com.bitmark.sdk"
+cryptography.ARTIFACT_ID = "cryptography"
+cryptography.VERSION = "1.0"
+cryptography.LIB_NAME = "Bitmark Cryptography Library"
+cryptography.LIB_DES = "Cryptography Library for Bitmark platform"
+cryptography.LIB_VENDOR = "Bitmark Inc"
+cryptography.JAR_NAME = "cryptography"
+cryptography.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java/tree/master/cryptography"
+cryptography.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
+ext.publication.cryptography = cryptography
+
+ext.publication.api_service = [:]
+def api_service = [:]
+api_service.GROUP_ID = "com.bitmark.sdk"
+api_service.ARTIFACT_ID = "api-service"
+api_service.VERSION = "1.0"
+api_service.LIB_NAME = "Bitmark Api Service Library"
+api_service.LIB_DES = "Api Service Library for Bitmark platform"
+api_service.LIB_VENDOR = "Bitmark Inc"
+api_service.JAR_NAME = "api-service"
+api_service.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java/tree/master/api-service"
+api_service.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
+ext.publication.api_service = api_service
+
+ext.publicationProperties = { name ->
+    switch (name) {
+        case 'javasdk': return ext.publication.sdk
+        case 'cryptography': return ext.publication.cryptography
+        case 'api-service': return ext.publication.api_service
+        default: throw new GradleException(String.format("Invalid project name %s", name))
+    }
 }

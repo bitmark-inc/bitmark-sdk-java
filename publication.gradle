@@ -1,0 +1,118 @@
+apply plugin: 'maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'java-library'
+
+apply {
+    from project.rootProject == project ? 'configuration.gradle' : '../configuration.gradle'
+}
+
+def ext = project.ext
+def root_publication = ext.publication
+def project_publication = ext.publicationProperties(project.name)
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+group = project_publication.GROUP_ID
+version = project_publication.VERSION
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    baseName project_publication.JAR_NAME
+    from sourceSets.main.allJava
+    subprojects.each { from it.sourceSets.main.allJava }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier "javadoc"
+    baseName project_publication.JAR_NAME
+    from javadoc.destinationDir
+}
+
+javadoc {
+    source = sourceSets.main.allJava + subprojects.collect { it.sourceSets.main.allJava }
+    destinationDir = file("${buildDir}/docs/javadoc")
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+jar {
+    doFirst {
+        from sourceSets.main.output.asList()
+        manifest {
+            attributes 'Name': project_publication.LIB_NAME
+            attributes 'Specification-Title': project_publication.LIB_DES
+            attributes 'Specification-Version': project_publication.VERSION
+            attributes 'Specification-Vendor': project_publication.LIB_VENDOR
+            attributes 'Implementation-Version': project_publication.VERSION
+            attributes 'Implementation-Vendor': project_publication.LIB_VENDOR
+        }
+    }
+
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    baseName = project_publication.JAR_NAME
+    version = project_publication.VERSION
+}
+
+install {
+
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'jar'
+            groupId project_publication.GROUP_ID
+            artifactId project_publication.ARTIFACT_ID
+
+            name project_publication.LIB_NAME
+            description project_publication.LIB_DES
+            url project_publication.LIB_SITE_URL
+
+            licenses {
+                license {
+                    name root_publication.LICENSE_NAME
+                    url root_publication.LICENSE_URL
+                }
+            }
+            developers {
+                developer {
+                    id root_publication.DEV_ID
+                    name root_publication.DEV_NAME
+                    email root_publication.DEV_EMAIL
+                }
+            }
+            scm {
+                connection project_publication.LIB_GIT_URL
+                developerConnection project_publication.LIB_GIT_URL
+                url project_publication.LIB_SITE_URL
+            }
+        }
+    }
+}
+
+bintray {
+
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = properties.getProperty("bintray.repo")
+        name = properties.getProperty("bintray.name")
+        desc = project_publication.LIB_DES
+        websiteUrl = project_publication.LIB_SITE_URL
+        vcsUrl = project_publication.LIB_GIT_URL
+        licenses = root_publication.LICENSE_ALL
+        dryRun = false
+        publish = true
+        override = false
+        publicDownloadNumbers = true
+        version {
+            desc = project_publication.LIB_DES
+            gpg {
+                sign = true
+                passphrase = properties.getProperty("bintray.gpg.password")
+            }
+        }
+    }
+}

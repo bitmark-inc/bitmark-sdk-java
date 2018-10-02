@@ -1,7 +1,8 @@
-apply from: '../configuration.gradle'
+apply from: '../publication.gradle'
 
 dependencies {
-    implementation project(':cryptography')
+    
+    implementation deps.bitmark_sdk.cryptography
     implementation deps.okhttp.okhttp3
     implementation deps.okhttp.logging
     implementation deps.gson

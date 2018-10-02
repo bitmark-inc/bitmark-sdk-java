@@ -1,4 +1,4 @@
-apply from: '../configuration.gradle'
+apply from: '../publication.gradle'
 
 dependencies {
 
