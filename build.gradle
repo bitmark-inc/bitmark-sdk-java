@@ -24,10 +24,8 @@ allprojects {
 }
 
 dependencies {
-    implementation deps.bitmark_sdk.cryptography
     implementation deps.bitmark_sdk.api_service
-    implementation deps.bouncycastle
-
+    
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.junit_platform.suite_api

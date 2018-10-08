@@ -40,7 +40,6 @@ artifacts {
 
 jar {
     doFirst {
-        from sourceSets.main.output.asList()
         manifest {
             attributes 'Name': project_publication.LIB_NAME
             attributes 'Specification-Title': project_publication.LIB_DES
