@@ -1,0 +1,3 @@
+[submodule "cryptography/libsodium"]
+	path = cryptography/libsodium
+	url = git@github.com:jedisct1/libsodium.git

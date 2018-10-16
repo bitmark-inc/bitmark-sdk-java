@@ -1,4 +1,5 @@
 apply from: 'publication.gradle'
+apply plugin: 'java-library'
 
 buildscript {
     apply from: 'configuration.gradle'
@@ -12,18 +13,19 @@ buildscript {
 def ext = project.ext
 def config = ext.configuration
 
-allprojects {
-    apply plugin: 'java-library'
-    addRepos(repositories)
-    sourceCompatibility = config.SOURCE_COMPATIBILITY
-    targetCompatibility = config.TARGET_COMPATIBILITY
+sourceCompatibility = config.SOURCE_COMPATIBILITY
+targetCompatibility = config.TARGET_COMPATIBILITY
 
-    test {
-        useJUnitPlatform()
-    }
+test {
+    useJUnitPlatform()
+}
+
+allprojects {
+    addRepos(repositories)
 }
 
 dependencies {
+    
     implementation deps.bitmark_sdk.api_service
     
     testImplementation deps.junit_jupiter.api

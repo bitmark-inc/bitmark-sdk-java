@@ -1,8 +1,9 @@
 package cryptography.crypto;
 
+import cryptography.crypto.sodium.Sodium;
+
 import java.util.Arrays;
 
-import static cryptography.crypto.libsodium.LibSodium.sodium;
 
 /**
  * @author Hieu Pham
@@ -24,7 +25,7 @@ public class SecretBox {
 
         System.arraycopy(msg, 0, m, m.length - msgLength, msgLength);
 
-        sodium().crypto_secretbox(c, m, m.length, nonce, key);
+        Sodium.crypto_secretbox(c, m, m.length, nonce, key);
         return Arrays.copyOfRange(c, msgLength, c.length);
     }
 }

@@ -2,11 +2,10 @@ package cryptography.crypto;
 
 import cryptography.crypto.key.KeyPair;
 import cryptography.crypto.key.StandardKeyPair;
+import cryptography.crypto.sodium.Sodium;
 import cryptography.error.ValidateException;
-import jnr.ffi.byref.LongLongByReference;
 
 import static cryptography.crypto.encoder.Hex.HEX;
-import static cryptography.crypto.libsodium.LibSodium.sodium;
 import static cryptography.utils.Validator.checkValidHex;
 import static cryptography.utils.Validator.checkValidLength;
 
@@ -33,7 +32,7 @@ public class Ed25519 {
     public static KeyPair generateKeyPair() {
         final byte[] publicKey = new byte[PUBLIC_KEY_LENGTH];
         final byte[] privateKey = new byte[PRIVATE_KEY_LENGTH];
-        sodium().crypto_sign_ed25519_keypair(publicKey, privateKey);
+        Sodium.crypto_sign_ed25519_keypair(publicKey, privateKey);
         return StandardKeyPair.from(publicKey, privateKey);
     }
 
@@ -41,21 +40,21 @@ public class Ed25519 {
         checkValidLength(seed, SEED_LENGTH);
         final byte[] publicKey = new byte[PUBLIC_KEY_LENGTH];
         final byte[] privateKey = new byte[PRIVATE_KEY_LENGTH];
-        sodium().crypto_sign_ed25519_seed_keypair(publicKey, privateKey, seed);
+        Sodium.crypto_sign_ed25519_seed_keypair(publicKey, privateKey, seed);
         return StandardKeyPair.from(publicKey, privateKey);
     }
 
     public static KeyPair getKeyPair(byte[] privateKey) throws ValidateException.InvalidLength {
         checkValidLength(privateKey, PRIVATE_KEY_LENGTH);
         final byte[] publicKey = new byte[PUBLIC_KEY_LENGTH];
-        sodium().crypto_sign_ed25519_sk_to_pk(publicKey, privateKey);
+        Sodium.crypto_sign_ed25519_sk_to_pk(publicKey, privateKey);
         return StandardKeyPair.from(publicKey, privateKey);
     }
 
     public static byte[] getSeed(byte[] privateKey) throws ValidateException.InvalidLength {
         checkValidLength(privateKey, PRIVATE_KEY_LENGTH);
         final byte[] seed = new byte[SEED_LENGTH];
-        sodium().crypto_sign_ed25519_sk_to_seed(seed, privateKey);
+        Sodium.crypto_sign_ed25519_sk_to_seed(seed, privateKey);
         return seed;
     }
 
@@ -67,7 +66,8 @@ public class Ed25519 {
     public static byte[] sign(byte[] message, byte[] privateKey) throws ValidateException.InvalidLength {
         checkValidLength(privateKey, PRIVATE_KEY_LENGTH);
         final byte[] signature = new byte[SIG_LENGTH];
-        sodium().crypto_sign_ed25519_detached(signature, new LongLongByReference(signature.length), message, message.length, privateKey);
+        Sodium.crypto_sign_ed25519_detached(signature, new int[]{signature.length},
+                message, message.length, privateKey);
         return signature;
     }
 
@@ -80,7 +80,8 @@ public class Ed25519 {
     public static boolean verify(byte[] signature, byte[] message, byte[] publicKey) throws ValidateException.InvalidLength {
         checkValidLength(publicKey, PUBLIC_KEY_LENGTH);
         checkValidLength(signature, SIG_LENGTH);
-        return sodium().crypto_sign_ed25519_verify_detached(signature, message, message.length, publicKey) == 0;
+        return Sodium.crypto_sign_ed25519_verify_detached(signature, message, message.length,
+                publicKey) == 0;
     }
 
     public static boolean verify(String hexSignature, String hexMessage, String hexPublicKey) throws ValidateException.InvalidHex {

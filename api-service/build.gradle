@@ -1,4 +1,15 @@
 apply from: '../publication.gradle'
+apply plugin: 'java-library'
+
+def ext = project.ext
+def config = ext.configuration
+
+sourceCompatibility = config.SOURCE_COMPATIBILITY
+targetCompatibility = config.TARGET_COMPATIBILITY
+
+test {
+    useJUnitPlatform()
+}
 
 dependencies {
     
@@ -9,7 +20,6 @@ dependencies {
 
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
-    testImplementation deps.mockito
     testImplementation deps.okhttp.okhttp3_mockserver
 
     testRuntime deps.junit_jupiter.engine

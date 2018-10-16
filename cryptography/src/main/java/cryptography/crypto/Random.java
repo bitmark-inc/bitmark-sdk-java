@@ -1,8 +1,8 @@
 package cryptography.crypto;
 
-import java.security.SecureRandom;
+import cryptography.crypto.sodium.Sodium;
 
-import static cryptography.crypto.libsodium.LibSodium.sodium;
+import java.security.SecureRandom;
 
 /**
  * @author Hieu Pham
@@ -18,7 +18,7 @@ public class Random {
 
     public static byte[] randomBytes(int size) {
         final byte[] bytes = new byte[size];
-        sodium().randombytes(bytes, size);
+        Sodium.randombytes(bytes, size);
         return bytes;
     }
 

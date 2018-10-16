@@ -1,14 +1,301 @@
-apply from: '../publication.gradle'
+apply from: '../configuration.gradle'
+apply plugin: 'maven'
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+import org.gradle.internal.os.OperatingSystem
+
+def ext = project.ext
+def config = ext.configuration
+def root_publication = ext.publication
+def project_publication = ext.publicationProperties(project.name)
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+group = project_publication.GROUP_ID
+version = project_publication.VERSION
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility config.SOURCE_COMPATIBILITY
+        targetCompatibility config.TARGET_COMPATIBILITY
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    // To let the libs be included in other projects
+    externalNativeBuild {
+        ndkBuild {
+            path "jni/Android.mk"
+        }
+    }
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName publication.VERSION
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+buildscript {
+    apply from: '../dependencies.gradle'
+    addRepos(repositories)
+    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
+    dependencies {
+        classpath deps.android_plugin
+        classpath deps.android_maven_plugin
+        classpath deps.bintray_plugin
+    }
+}
+
+[
+        [input_arch: 'arm', output_arch: 'android-armv6', ndk_platform: 'android-16'],
+        [input_arch: 'armv7-a', output_arch: 'android-armv7-a', ndk_platform: 'android-16'],
+        [input_arch: 'armv8-a', output_arch: 'android-armv8-a', ndk_platform: 'android-21'],
+        [input_arch: 'x86', output_arch: 'android-i686', ndk_platform: 'android-16'],
+        [input_arch: 'x86_64', output_arch: 'android-westmere', ndk_platform: 'android-21'],
+].each { opts ->
+
+    def taskname = "compileNative_${opts['output_arch']}"
+
+    task(taskname) {
+        inputs.dir fileTree(dir: 'libsodium/src', exclude: ['libsodium/**/.libs', 'libsodium/*.la', 'libsodium/**/*.lo', 'libsodium/**/*.o', 'libsodium/**/*.Plo', '**/Makefile', '**/Makefile.in', '**/.deps/*', '**/.libs/*'])
+        outputs.dir("libsodium/libsodium-${opts['output_arch']}")
+        doFirst {
+            exec {
+                workingDir 'libsodium'
+                commandLine './autogen.sh'
+            }
+            exec {
+                workingDir 'libsodium'
+                environment 'LIBSODIUM_FULL_BUILD', 'true'
+                executable "dist-build/android-${opts['input_arch']}.sh"
+                environment 'CONFIG_SITE', ''
+            }
+        }
+    }
+
+    gradle.projectsEvaluated {
+        externalNativeBuildDebug.dependsOn taskname
+        externalNativeBuildRelease.dependsOn taskname
+    }
+}
+
+gradle.buildFinished { BuildResult result ->
+    if (result.failure == null) {
+        buildNativeJar.execute()
+    }
+}
+
+task unzipAAR(type: Copy) {
+    def aar = file("${buildDir}/outputs/aar/" + project_publication.ARTIFACT_ID + "-release.aar")
+    from zipTree(aar)
+    into "${buildDir}/outputs/aar/unzip"
+}
+
+task copyNativeLib(type: Copy, dependsOn: 'deleteNativeLib') {
+    from "${buildDir}/libs/sodiumjni/shared/", "${buildDir}/intermediates/library_and_local_jars_jni/release/"
+    into 'native-lib/lib'
+}
+
+task deleteNativeLib(type: Delete){
+    delete 'native-lib'
+}
+
+task libraryJar(type: Zip, dependsOn: ['copyNativeLib', 'unzipAAR']) {
+    destinationDir file("$buildDir/libs")
+    baseName project_publication.ARTIFACT_ID
+    extension 'jar'
+    from zipTree(file("${buildDir}/outputs/aar/unzip/classes.jar")), "native-lib"
+}
+
+task deleteNativeJar(type: Delete) {
+    delete "${buildDir}/libs/native-jar"
+}
+
+task buildNativeJar(type: Zip, dependsOn: ['copyNativeLib', 'deleteNativeJar']) {
+    destinationDir file("$buildDir/libs/native-jar")
+    baseName 'libsodium'
+    extension 'jar'
+    from('native-lib/lib') {
+        include '**/*.so*', '*.dylib', '*.dll', '*.so'
+    }
+    into 'lib'
+    doLast {
+        copy {
+            from "$buildDir/libs/native-jar"
+            into "lib"
+        }
+    }
+}
+
+apply plugin: "c"
+
+model {
+    flavors {
+        host
+        // Also compile the native library for the host OS to allow running tests which access the library on the host OS.
+    }
+    repositories {
+        libs(PrebuiltLibraries) {
+            jdk {
+                headers.srcDir "${System.getenv("JAVA_HOME")}/include"
+                headers.srcDir "${System.getenv("JAVA_HOME")}/include/linux"
+                // this seems to be host OS dependent, but should be host OS independent
+            }
+            sodium {
+                headers.srcDir "${projectDir}/libsodium/libsodium-host/include"
+                binaries.withType(StaticLibraryBinary) { binary ->
+                    staticLibraryFile = file("${projectDir}/libsodium/libsodium-host/lib/libsodium.a")
+                }
+            }
+        }
+    }
+    components {
+        sodiumjni(NativeLibrarySpec) {
+            sources {
+                c {
+                    source {
+                        srcDir "${projectDir}/jni"
+                        include "sodium_wrap.c"
+                    }
+                    lib library: 'jdk', linkage: 'api'
+                    lib library: 'sodium', linkage: 'static'
+                }
+                binaries.all {
+                    if (OperatingSystem.current().isLinux()) {
+                        //flag not on macos clang
+                        linker.args "-Wl,-Bsymbolic"
+                        // to work around error "shared library text segment is not shareable"
+                    }
+                }
+            }
+        }
+    }
+}
+
+task('generateSWIGsource') {
+    inputs.dir fileTree(dir: "${projectDir}/jni")
+    outputs.dir("${projectDir}/src/main/java/cryptography/crypto/sodium")
+    outputs.file "${projectDir}/jni/sodium_wrap.c"
+    doFirst {
+        exec {
+            workingDir "${projectDir}/jni"
+            commandLine 'swig', '-java', '-package', 'cryptography.crypto.sodium', '-outdir', '../src/main/java/cryptography/crypto/sodium', 'sodium.i'
+        }
+    }
+}
+
+gradle.projectsEvaluated {
+    generateJsonModelDebug.dependsOn 'generateSWIGsource'
+    generateJsonModelRelease.dependsOn 'generateSWIGsource'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives javadocJar, sourcesJar, libraryJar
+}
+
+install {
+
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'jar'
+            groupId project_publication.GROUP_ID
+            artifactId project_publication.ARTIFACT_ID
+
+            name project_publication.LIB_NAME
+            description project_publication.LIB_DES
+            url project_publication.LIB_SITE_URL
+
+            licenses {
+                license {
+                    name root_publication.LICENSE_NAME
+                    url root_publication.LICENSE_URL
+                }
+            }
+            developers {
+                developer {
+                    id root_publication.DEV_ID
+                    name root_publication.DEV_NAME
+                    email root_publication.DEV_EMAIL
+                }
+            }
+            scm {
+                connection project_publication.LIB_GIT_URL
+                developerConnection project_publication.LIB_GIT_URL
+                url project_publication.LIB_SITE_URL
+            }
+        }
+    }
+}
+
+bintrayUpload.dependsOn(install)
+
+bintray {
+
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = properties.getProperty("bintray.repo")
+        name = properties.getProperty("bintray.name")
+        desc = project_publication.LIB_DES
+        websiteUrl = project_publication.LIB_SITE_URL
+        vcsUrl = project_publication.LIB_GIT_URL
+        licenses = root_publication.LICENSE_ALL
+        dryRun = false
+        publish = true
+        override = false
+        publicDownloadNumbers = true
+        version {
+            desc = project_publication.LIB_DES
+            gpg {
+                sign = true
+                passphrase = properties.getProperty("bintray.gpg.password")
+            }
+        }
+    }
+}
 
 dependencies {
 
-    runtime files('libs/libsodium.dylib', 'libs/libsodium.so', 'libs/libsodium.dll')
-    implementation deps.jnr_ffi
+    compile fileTree(include: '*.jar', dir: 'lib')
     implementation deps.bouncycastle
 
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
-    testImplementation deps.mockito
 
-    testRuntime deps.junit_jupiter.engine
+    testImplementation deps.junit_jupiter.engine
 }
