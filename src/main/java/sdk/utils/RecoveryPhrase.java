@@ -14,6 +14,7 @@ import java.util.List;
 import static apiservice.utils.ArrayUtil.*;
 import static cryptography.crypto.Random.secureRandomBytes;
 import static cryptography.utils.Validator.checkValid;
+import static sdk.utils.FileUtils.getResourceAsFile;
 
 /**
  * @author Hieu Pham
@@ -36,7 +37,7 @@ public class RecoveryPhrase {
 
     static {
         try {
-            File file = new File(RecoveryPhrase.class.getResource("/bip39_eng.txt").getFile());
+            File file = getResourceAsFile("bip/bip39_eng.txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             for (int i = 0; i < WORDS.length; i++) {
                 String word = reader.readLine();
@@ -129,4 +130,5 @@ public class RecoveryPhrase {
     private static byte[] getEntropy(Network network, byte[] seed) {
         return concat(toByteArray(network.value()), seed);
     }
+
 }
