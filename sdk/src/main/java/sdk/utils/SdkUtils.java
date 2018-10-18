@@ -33,13 +33,14 @@ public class SdkUtils {
      * 09..16: 76543210 76543210 76543210 76543210 76543210 76543210 76543210 ffff3210<br>
      * 17:     7654xxxx<br>
      * where:<br>
-     * digits 0..7 = random data<br>
-     * ffff        = the network flag<br>
-     * xxxx        = unused and zero<br>
+     * <i>digits 0..7</i> = random data<br>
+     * <i>ffff</i>        = the network flag<br>
+     * <i>xxxx</i>        = unused and zero<br>
      * network flag derived as:<br>
-     * ffff        = (b0.7 | b1.6 | b2.5 | b3.4) ^ (testnet & 1111)<br>
+     * <i>ffff</i>        = (b0.7 | b1.6 | b2.5 | b3.4) ^ (testnet &amp;&amp; 1111)<br>
      *
-     * @return
+     * @param network The network value for random entropy
+     * @return An array of byte of entropy
      */
     public static byte[] randomEntropy(Network network) {
         // Space for 128 bits random number

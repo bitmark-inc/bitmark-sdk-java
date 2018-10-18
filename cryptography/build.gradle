@@ -1,8 +1,8 @@
-apply from: '../configuration.gradle'
 apply plugin: 'maven'
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply from: '../configuration.gradle'
 
 import org.gradle.internal.os.OperatingSystem
 
@@ -15,6 +15,14 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 group = project_publication.GROUP_ID
 version = project_publication.VERSION
+
+buildscript {
+    apply from: '../dependencies.gradle'
+    addRepos(repositories)
+    dependencies {
+        classpath deps.bintray_plugin
+    }
+}
 
 android {
     compileSdkVersion 27

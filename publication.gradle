@@ -1,10 +1,7 @@
 apply plugin: 'maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'java-library'
-
-apply {
-    from project.rootProject == project ? 'configuration.gradle' : '../configuration.gradle'
-}
+apply from: '../configuration.gradle'
 
 def ext = project.ext
 def root_publication = ext.publication
@@ -89,6 +86,8 @@ install {
         }
     }
 }
+
+bintrayUpload.dependsOn(install)
 
 bintray {
 

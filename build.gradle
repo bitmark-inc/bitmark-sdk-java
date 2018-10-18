@@ -1,41 +1,9 @@
-apply from: 'publication.gradle'
-apply plugin: 'java-library'
-
-buildscript {
-    apply from: 'configuration.gradle'
-    apply from: 'dependencies.gradle'
-    addRepos(repositories)
-    dependencies {
-        classpath deps.bintray_plugin
-    }
-}
-
-def ext = project.ext
-def config = ext.configuration
-
-sourceCompatibility = config.SOURCE_COMPATIBILITY
-targetCompatibility = config.TARGET_COMPATIBILITY
-
-test {
-    useJUnitPlatform()
-}
+apply from: 'dependencies.gradle'
 
 allprojects {
     addRepos(repositories)
 }
 
-dependencies {
-    
-    implementation deps.bitmark_sdk.cryptography
-    implementation (deps.bitmark_sdk.api_service) {
-        exclude module: 'cryptography'
-    }
-    
-    testImplementation deps.junit_jupiter.api
-    testImplementation deps.junit_jupiter.params
-    testImplementation deps.junit_platform.suite_api
-    testImplementation deps.junit_platform.runner
-    testImplementation deps.mockito
-
-    testRuntime deps.junit_jupiter.engine
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

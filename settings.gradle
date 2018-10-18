@@ -1,4 +1,5 @@
 rootProject.name = 'javasdk'
 include 'cryptography'
 include 'api-service'
+include 'sdk'
 

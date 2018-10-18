@@ -1,13 +1,7 @@
+apply plugin: 'java-library'
 apply from: '../publication.gradle'
 apply from: '../dependencies.gradle'
 apply from: '../configuration.gradle'
-apply plugin: 'java-library'
-
-def ext = project.ext
-def config = ext.configuration
-
-sourceCompatibility = config.SOURCE_COMPATIBILITY
-targetCompatibility = config.TARGET_COMPATIBILITY
 
 buildscript {
     apply from: '../dependencies.gradle'
@@ -17,21 +11,28 @@ buildscript {
     }
 }
 
+def ext = project.ext
+def config = ext.configuration
+
+sourceCompatibility = config.SOURCE_COMPATIBILITY
+targetCompatibility = config.TARGET_COMPATIBILITY
+
 test {
     useJUnitPlatform()
 }
 
 dependencies {
-    
+
     implementation deps.bitmark_sdk.cryptography
-    implementation deps.okhttp.okhttp3
-    implementation deps.okhttp.logging
-    implementation deps.gson
+    implementation (deps.bitmark_sdk.api_service) {
+        exclude module: 'cryptography'
+    }
 
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
-    testImplementation deps.okhttp.okhttp3_mockserver
+    testImplementation deps.junit_platform.suite_api
+    testImplementation deps.junit_platform.runner
+    testImplementation deps.mockito
 
     testRuntime deps.junit_jupiter.engine
 }
-
