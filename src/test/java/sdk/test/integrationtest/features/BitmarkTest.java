@@ -383,7 +383,7 @@ public class BitmarkTest extends BaseFeatureTest {
     @Test
     public void testQueryBitmarksByIds_ValidBitmarkIds_CorrectResponseIsReturn() {
         // Get owned bitmarks
-        int limit = 3;
+        int limit = 1;
         BitmarkQueryBuilder builder1 =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(limit);
         GetBitmarksResponse bitmarksResponse1 =
@@ -411,7 +411,7 @@ public class BitmarkTest extends BaseFeatureTest {
                          "record and load asset works well")
     @Test
     public void testQueryBitmarkByLimitAndLoadAsset_ValidLimitValue_CorrectResponseIsReturn() {
-        int limit = 10;
+        int limit = 1;
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(limit).loadAsset(true);
         GetBitmarksResponse bitmarksResponse =

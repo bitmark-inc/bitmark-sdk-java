@@ -1,1 +1,4 @@
 .externalNativeBuild
+lib
+native-lib
+libsodium

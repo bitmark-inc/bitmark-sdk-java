@@ -1,6 +1,7 @@
 package cryptography.crypto;
 
 import cryptography.error.ValidateException;
+import org.bouncycastle.crypto.digests.SHAKEDigest;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 
 import static cryptography.crypto.encoder.Hex.HEX;
@@ -65,6 +66,26 @@ public class Sha3256 implements Comparable<Sha3256> {
         checkValidHex(hexInput);
         final byte[] input = HEX.decode(hexInput);
         return hashTwice(input);
+    }
+
+    public static byte[] shake(byte[] input, int size) {
+        checkValid(() -> input != null && input.length > 0);
+        SHAKEDigest digest = new SHAKEDigest(size);
+        byte[] out = new byte[HASH_LENGTH];
+        digest.update(input, 0, input.length);
+        digest.doFinal(out, 0);
+        return out;
+    }
+
+    public static byte[] shake(byte[] input, int size, int time) {
+        checkValid(() -> input != null && input.length > 0 && time > 0);
+        SHAKEDigest digest = new SHAKEDigest(size);
+        byte[] out = new byte[HASH_LENGTH];
+        for (int i = 0; i < time; i++) {
+            digest.update(input, 0, input.length);
+        }
+        digest.doFinal(out, 0);
+        return out;
     }
 
     public byte[] getBytes() {

@@ -3,23 +3,24 @@ package sdk.features;
 import apiservice.configuration.GlobalConfiguration;
 import apiservice.configuration.Network;
 import apiservice.utils.Address;
-import sdk.utils.AccountNumberData;
-import sdk.utils.RecoveryPhrase;
-import sdk.utils.Seed;
 import cryptography.crypto.Ed25519;
 import cryptography.crypto.Sha3256;
 import cryptography.crypto.key.KeyPair;
 import cryptography.crypto.key.PublicKey;
 import cryptography.error.ValidateException;
+import sdk.utils.AccountNumberData;
+import sdk.utils.RecoveryPhrase;
+import sdk.utils.Seed;
+
+import java.util.Locale;
 
 import static apiservice.utils.Address.CHECKSUM_LENGTH;
 import static apiservice.utils.ArrayUtil.concat;
 import static apiservice.utils.ArrayUtil.slice;
-import static cryptography.crypto.Random.randomBytes;
-import static cryptography.crypto.SecretBox.generateSecretBox;
 import static cryptography.crypto.encoder.Base58.BASE_58;
-import static cryptography.crypto.encoder.Hex.HEX;
 import static cryptography.utils.Validator.checkValid;
+import static sdk.utils.SdkUtils.generateSeedKey;
+import static sdk.utils.SdkUtils.randomEntropy;
 
 /**
  * @author Hieu Pham
@@ -29,12 +30,6 @@ import static cryptography.utils.Validator.checkValid;
  */
 
 public class Account {
-
-    private static final byte[] KEY_INDEX = HEX.decode("000000000000000000000000000003E7"); // 999
-
-    private static final int CORE_LENGTH = 32;
-
-    private static final int NONCE_LENGTH = 24;
 
     private String accountNumber;
 
@@ -56,7 +51,7 @@ public class Account {
     }
 
     public Account() {
-        core = randomBytes(CORE_LENGTH);
+        core = randomEntropy(GlobalConfiguration.network());
         final KeyPair key = generateKeyPair(core);
         accountNumber = generateAccountNumber(key.publicKey());
     }
@@ -75,12 +70,16 @@ public class Account {
     }
 
     public RecoveryPhrase getRecoveryPhrase() {
-        return RecoveryPhrase.fromSeed(getSeed());
+        return getRecoveryPhrase(Locale.ENGLISH);
+    }
+
+    public RecoveryPhrase getRecoveryPhrase(Locale locale) {
+        return RecoveryPhrase.fromSeed(getSeed(), locale);
     }
 
     public Seed getSeed() {
         final AccountNumberData data = parseAccountNumber(accountNumber);
-        return new Seed(core, data.getNetwork(), Seed.VERSION);
+        return new Seed(core, data.getNetwork());
     }
 
     public Address toAddress() {
@@ -102,7 +101,7 @@ public class Account {
     }
 
     private static KeyPair generateKeyPair(byte[] core) {
-        final byte[] seed = generateSecretBox(KEY_INDEX, new byte[NONCE_LENGTH], core);
+        final byte[] seed = generateSeedKey(core, Ed25519.SEED_LENGTH);
         return Ed25519.generateKeyPairFromSeed(seed);
     }
 

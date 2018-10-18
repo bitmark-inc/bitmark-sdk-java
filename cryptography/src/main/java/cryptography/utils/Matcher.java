@@ -14,6 +14,6 @@ public class Matcher {
     private static final String HEX_REGEX = "^[a-fA-F0-9]+$";
 
     public static boolean isHex(String input) {
-        return Pattern.compile(HEX_REGEX).matcher(input).matches() && input.length() % 2 == 0;
+        return Pattern.compile(HEX_REGEX).matcher(input).matches();
     }
 }

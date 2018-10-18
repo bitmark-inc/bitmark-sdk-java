@@ -1,10 +1,6 @@
 package sdk.test.unittest.features;
 
 import apiservice.configuration.Network;
-import sdk.features.Account;
-import sdk.test.unittest.BaseTest;
-import sdk.utils.AccountNumberData;
-import sdk.utils.Seed;
 import cryptography.crypto.Ed25519;
 import cryptography.error.ValidateException;
 import org.junit.jupiter.api.DisplayName;
@@ -14,8 +10,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import sdk.features.Account;
+import sdk.test.unittest.BaseTest;
+import sdk.utils.AccountNumberData;
+import sdk.utils.Seed;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static cryptography.crypto.encoder.Hex.HEX;
@@ -42,12 +43,9 @@ public class AccountTest extends BaseTest {
 
     @DisplayName("Verify function Account.fromSeed(Seed) works well with valid Seed")
     @ParameterizedTest
-    @CsvSource({"5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD, " +
-            "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva, " +
-            "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f",
-                       "5XEECsXPYA9wDVXMtRMAVrtaWx7WSc5tG2hqj6b8iiz9rARjg2BgA9w, " +
-                               "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX, " +
-                               "807f4d123c944e0c3ecc95d9bde89916ced6341a8c8cedeb8caafef8f35654e7"})
+    @CsvSource({"9J87CAsHdFdoEu6N1unZk3sqhVBkVL8Z8, " +
+            "eMCcmw1SKoohNUf3LeioTFKaYNYfp2bzFYpjm3EddwxBSWYVCb, " +
+            "369f6ceb1c23dbccc61b75e7990d0b2db8e1ee8da1c44db32280e63ca5804f38"})
     public void testNewAccountFromSeed_ValidSeed_ValidAccountIsCreated(String encodedSeed,
                                                                        String accountNumber,
                                                                        String publicKey) {
@@ -61,7 +59,9 @@ public class AccountTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("createInvalidSeed")
     public void testNewAccountFromSeed_InvalidSeed_ErrorIsThrow(Seed seed) {
-        assertThrows(ValidateException.class, () -> Account.fromSeed(seed));
+        ValidateException exception = assertThrows(ValidateException.class,
+                () -> Account.fromSeed(seed));
+        assertEquals("Incorrect network from Seed", exception.getMessage());
     }
 
     @DisplayName("Verify function Account.fromRecoveryPhrase(String...) works well with valid " +
@@ -79,9 +79,8 @@ public class AccountTest extends BaseTest {
     @DisplayName("Verify function Account.fromRecoveryPhrase(String...) throws error with " +
                          "invalid recovery phrase")
     @ParameterizedTest
-    @ValueSource(strings = {"this is the recovery phrase that has 24 words but not contains the " +
-            "words from bip39 list so it will throw exception $ ^", "ability panel leave spike " +
-            "mixture token voice certain today market", ""})
+    @ValueSource(strings = {"% ^", "crime cricket castle fun purse announce nephew profit cloth " +
+            "trim delivery", ""})
     public void testNewAccountFromRecoveryPhrase_InvalidRecoveryPhrase_ErrorIsThrow(String recoveryPhrase) {
         assertThrows(ValidateException.class,
                 () -> Account.fromRecoveryPhrase(recoveryPhrase.split(" ")));
@@ -89,31 +88,36 @@ public class AccountTest extends BaseTest {
 
     @DisplayName("Verify function Account.getSeed() works well")
     @ParameterizedTest
-    @CsvSource({"accident syrup inquiry you clutch liquid fame upset joke glow best " +
-            "school repeat birth library combine access camera organ trial crazy jeans lizard " +
-            "science, 5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD", "abuse tooth riot" +
-            " whale dance dawn armor patch tube sugar edit clean guilt person lake height tilt " +
-            "wall prosper episode produce spy artist account, " +
-            "5XEECsXPYA9wDVXMtRMAVrtaWx7WSc5tG2hqj6b8iiz9rARjg2BgA9w"})
+    @CsvSource({"file earn crack fever crack differ wreck crazy salon imitate swamp sample, " +
+            "9J878SbnM2GFqAELkkiZbqHJDkAj57fYK", "during kingdom crew atom practice brisk weird " +
+            "document eager artwork ride then, 9J877LVjhr3Xxd2nGzRVRVNUZpSKJF4TH"})
     public void testGetSeedFromExistedAccount_ValidAccount_CorrectSeedIsReturn(String recoveryPhrase, String expectedSeed) {
         final Account account = Account.fromRecoveryPhrase(recoveryPhrase.split(" "));
         final String encodedSeed = account.getSeed().getEncodedSeed();
         assertEquals(expectedSeed, encodedSeed);
     }
 
-    @DisplayName("Verify function Account.getRecoveryPhrase works well")
+    @DisplayName("Verify function Account.getRecoveryPhrase() works well")
     @ParameterizedTest
-    @CsvSource({"5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD, accident syrup inquiry " +
-            "you clutch liquid fame upset joke glow best school repeat birth library " +
-            "combine access camera organ trial crazy jeans lizard science",
-                       "5XEECsXPYA9wDVXMtRMAVrtaWx7WSc5tG2hqj6b8iiz9rARjg2BgA9w, abuse tooth riot" +
-                               " whale dance dawn armor patch tube sugar edit clean guilt person " +
-                               "lake height tilt wall prosper episode produce spy artist account"})
+    @CsvSource({"9J877LVjhr3Xxd2nGzRVRVNUZpSKJF4TH, during kingdom crew atom practice brisk weird" +
+            " document eager artwork ride then",
+                       "9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2, depend crime cricket castle fun purse " +
+                               "announce nephew profit cloth trim deliver"})
     public void testGetRecoveryPhrase_NoCondition_CorrectRecoveryPhraseIsReturn(String encodedSeed, String expectedRecoveryPhrase) {
         final Seed seed = Seed.fromEncodedSeed(encodedSeed);
         final Account account = Account.fromSeed(seed);
         assertTrue(Arrays.equals(expectedRecoveryPhrase.split(" "),
                 account.getRecoveryPhrase().getMnemonicWords()));
+    }
+
+    @DisplayName("Verify function Account.getRecoveryPhrase(Locale) works well")
+    @ParameterizedTest
+    @MethodSource("createValidEncodedSeedLocaleRecoveryPhrase")
+    public void testGetRecoveryPhraseWithLocale_NoCondition_CorrectRecoveryPhraseIsReturn(String encodedSeed, Locale locale, String expectedRecoveryPhrase) {
+        final Seed seed = Seed.fromEncodedSeed(encodedSeed);
+        final Account account = Account.fromSeed(seed);
+        assertTrue(Arrays.equals(expectedRecoveryPhrase.split(" "),
+                account.getRecoveryPhrase(locale).getMnemonicWords()));
     }
 
     @DisplayName("Verify function Account.isValidAccountNumber(String)")
@@ -145,16 +149,14 @@ public class AccountTest extends BaseTest {
     }
 
     private static Stream<Arguments> createRecoveryPhraseAccountNumberPublicKey() {
-        return Stream.of(Arguments.of("accident syrup inquiry you clutch liquid fame upset joke " +
-                        "glow best school repeat birth library combine access camera organ trial " +
-                        "crazy jeans lizard science",
-                "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
-                "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f"),
-                Arguments.of("abuse tooth riot whale dance dawn armor patch tube sugar edit clean" +
-                                " guilt person lake height tilt wall prosper episode produce spy " +
-                                "artist account",
-                        "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
-                        "807f4d123c944e0c3ecc95d9bde89916ced6341a8c8cedeb8caafef8f35654e7"));
+        return Stream.of(Arguments.of("name gaze apart lamp lift zone believe steak session " +
+                        "laptop crowd hill",
+                "eMCcmw1SKoohNUf3LeioTFKaYNYfp2bzFYpjm3EddwxBSWYVCb",
+                "369f6ceb1c23dbccc61b75e7990d0b2db8e1ee8da1c44db32280e63ca5804f38"),
+                Arguments.of("depend crime cricket castle fun purse announce nephew profit cloth " +
+                                "trim deliver",
+                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs",
+                        "d1c177ef358e9d1f0d4b09328cc1213e8d3580703aee51ccf97e482be977f7bc"));
     }
 
     private static Stream<Arguments> createAccountNumberPublicKeyNetwork() {
@@ -165,10 +167,15 @@ public class AccountTest extends BaseTest {
 
     private static Stream<Seed> createInvalidSeed() {
         return Stream.of(new Seed(HEX.decode(
-                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"),
-                Network.LIVE_NET), new Seed(HEX.decode(
-                "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
-                Network.LIVE_NET));
+                "ba0e357d9157a1a7299fbc4cb4c933bd00")),
+                new Seed(HEX.decode("00d00c884d08394698fbffbb6259d646b0")));
+    }
+
+    private static Stream<Arguments> createValidEncodedSeedLocaleRecoveryPhrase() {
+        return Stream.of(Arguments.of("9J877LVjhr3Xxd2nGzRVRVNUZpSKJF4TH", Locale.ENGLISH,
+                "during kingdom crew atom practice brisk weird document eager artwork ride then")
+                , Arguments.of("9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2", Locale.CHINESE, "专 青 办 增 孔 咱 " +
+                        "里 耕 穷 节 扑 易"));
     }
 
 }

@@ -24,12 +24,9 @@ public class Hex implements Encoder {
     @Override
     public byte[] decode(String value) throws ValidateException {
         checkValidHex(value);
+        if (value.length() % 2 == 1) value = "0" + value;
         final char[] data = value.toCharArray();
         final int len = data.length;
-
-        if ((len & 0x01) != 0) {
-            throw new RuntimeException("Odd number of characters.");
-        }
 
         final byte[] out = new byte[len >> 1];
 

@@ -95,7 +95,7 @@ public class TransactionTest extends BaseFeatureTest {
     @Test
     public void testQueryTransactions_NoCondition_CorrectResponseIsReturn() {
         // With limit and owner
-        int limit = 3;
+        int limit = 1;
         String owner = ACCOUNT1.getAccountNumber();
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(owner).limit(limit);

@@ -26,7 +26,10 @@ allprojects {
 
 dependencies {
     
-    implementation deps.bitmark_sdk.api_service
+    implementation deps.bitmark_sdk.cryptography
+    implementation (deps.bitmark_sdk.api_service) {
+        exclude module: 'cryptography'
+    }
     
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params

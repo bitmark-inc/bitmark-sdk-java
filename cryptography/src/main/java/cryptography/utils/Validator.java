@@ -21,6 +21,7 @@ public class Validator {
 
     public static void checkValidHex(String input) {
         checkNonNull(input);
+        if (input.length() % 2 == 1) input = "0" + input;
         if (!Matcher.isHex(input)) throw new ValidateException.InvalidHex();
     }
 

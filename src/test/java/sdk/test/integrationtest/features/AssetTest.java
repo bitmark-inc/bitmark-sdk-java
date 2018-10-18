@@ -106,8 +106,8 @@ public class AssetTest extends BaseFeatureTest {
     @DisplayName("Verify function Asset.list(AssetQueryBuilder, Callback1<>) works well")
     @Test
     public void testQueryAssets_NoCondition_CorrectResponseIsReturn() {
-        int limit = 3;
-        String registrant = "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva";
+        int limit = 1;
+        String registrant = ACCOUNT1.getAccountNumber();
         AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registrant(registrant);
         List<AssetRecord> assets =
                 await((Callable1<List<AssetRecord>>) callback -> Asset.list(builder, callback));

@@ -14,8 +14,6 @@ import sdk.utils.Seed;
 
 public abstract class BaseFeatureTest extends BaseTest {
 
-    static final int TIMEOUT = 20; // Second
-
     static final Account ACCOUNT1;
 
     static final KeyPair KEY1;
@@ -30,13 +28,13 @@ public abstract class BaseFeatureTest extends BaseTest {
 
     static {
         ACCOUNT1 = Account.fromSeed(Seed.fromEncodedSeed(
-                "5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD"));
+                "9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2"));
         KEY1 = ACCOUNT1.getKey();
         ACCOUNT2 = Account.fromSeed(Seed.fromEncodedSeed(
-                "5XEECsXPYA9wDVXMtRMAVrtaWx7WSc5tG2hqj6b8iiz9rARjg2BgA9w"));
+                "9J877LVjhr3Xxd2nGzRVRVNUZpSKJF4TH"));
         KEY2 = ACCOUNT2.getKey();
         ACCOUNT3 = Account.fromSeed(Seed.fromEncodedSeed(
-                "5XEECsavEHickBSYe6xMLcoGvxBQhY1ungWFD9Va4jLrFCL7TYk9Wfg"));
+                "9J878SbnM2GFqAELkkiZbqHJDkAj57fYK"));
         KEY3 = ACCOUNT3.getKey();
     }
 }
