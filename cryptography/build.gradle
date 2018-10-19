@@ -279,7 +279,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = properties.getProperty("bintray.repo")
-        name = properties.getProperty("bintray.name")
+        name = ext.publicationPackageName(project.name)
         desc = project_publication.LIB_DES
         websiteUrl = project_publication.LIB_SITE_URL
         vcsUrl = project_publication.LIB_GIT_URL

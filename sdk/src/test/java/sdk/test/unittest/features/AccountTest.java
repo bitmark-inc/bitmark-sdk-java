@@ -174,8 +174,8 @@ public class AccountTest extends BaseTest {
     private static Stream<Arguments> createValidEncodedSeedLocaleRecoveryPhrase() {
         return Stream.of(Arguments.of("9J877LVjhr3Xxd2nGzRVRVNUZpSKJF4TH", Locale.ENGLISH,
                 "during kingdom crew atom practice brisk weird document eager artwork ride then")
-                , Arguments.of("9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2", Locale.CHINESE, "专 青 办 增 孔 咱 " +
-                        "里 耕 穷 节 扑 易"));
+                , Arguments.of("9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2", Locale.CHINESE, "專 青 辦 增 孔 咱 " +
+                        "裡 耕 窮 節 撲 易"));
     }
 
 }

@@ -46,7 +46,7 @@ ext.publication.api_service = [:]
 def api_service = [:]
 api_service.GROUP_ID = "com.bitmark.sdk"
 api_service.ARTIFACT_ID = "api-service"
-api_service.VERSION = "1.1"
+api_service.VERSION = "1.2"
 api_service.LIB_NAME = "Bitmark Api Service Library"
 api_service.LIB_DES = "Api Service Library for Bitmark platform"
 api_service.LIB_VENDOR = "Bitmark Inc"
@@ -60,6 +60,15 @@ ext.publicationProperties = { name ->
         case 'sdk': return ext.publication.sdk
         case 'cryptography': return ext.publication.cryptography
         case 'api-service': return ext.publication.api_service
+        default: throw new GradleException(String.format("Invalid project name %s", name))
+    }
+}
+
+ext.publicationPackageName = { name ->
+    switch (name) {
+        case 'sdk': return 'java-sdk'
+        case 'cryptography': return 'cryptography'
+        case 'api-service': return 'api-service'
         default: throw new GradleException(String.format("Invalid project name %s", name))
     }
 }

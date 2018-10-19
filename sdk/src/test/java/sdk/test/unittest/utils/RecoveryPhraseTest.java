@@ -154,14 +154,14 @@ public class RecoveryPhraseTest extends BaseTest {
                 Arguments.of(HEX.decode(
                         "3ae670cd91c5e15d0254a2abc57ba29d00"),
                         TEST_NET, Locale.CHINESE,
-                        ("专 青 办 增 孔 咱 里 耕 穷 节 扑 易").split(" ")));
+                        ("專 青 辦 增 孔 咱 裡 耕 窮 節 撲 易").split(" ")));
     }
 
     private static Stream<Arguments> createValidMnemonicSeed() {
         return Stream.of(Arguments.of(("during kingdom crew atom practice brisk weird document " +
                 "eager artwork ride then").split(" "), new Seed(HEX.decode(
                 "442f54cd072a9638be4a0344e1a6e5f010"),
-                TEST_NET)), Arguments.of(("专 青 办 增 孔 咱 里 耕 穷 节 扑 易").split(" "),
+                TEST_NET)), Arguments.of(("專 青 辦 增 孔 咱 裡 耕 窮 節 撲 易").split(" "),
                 new Seed(HEX.decode(
                         "3ae670cd91c5e15d0254a2abc57ba29d00"),
                         TEST_NET)));
@@ -181,7 +181,7 @@ public class RecoveryPhraseTest extends BaseTest {
         return Stream.of(Arguments.of(entropy1, Locale.ENGLISH, ("during kingdom crew atom " +
                 "practice brisk weird " +
                 "document eager artwork ride then").split(" ")), Arguments.of(entropy2,
-                Locale.CHINESE, ("专 青 办 增 孔 咱 里 耕 穷 节 扑 易").split(" ")));
+                Locale.CHINESE, ("專 青 辦 增 孔 咱 裡 耕 窮 節 撲 易").split(" ")));
     }
 
     private static Stream<byte[]> createInvalidEntropy() {

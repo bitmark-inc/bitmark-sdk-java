@@ -176,21 +176,21 @@ public class ArrayUtil {
         return slice(data, i, data.length);
     }
 
-    public static boolean contains(String[] source, String examined) {
-        for (String item : source) {
+    public static <T> boolean contains(T[] source, T examined) {
+        for (T item : source) {
             if (item.equals(examined)) return true;
         }
         return false;
     }
 
-    public static boolean contains(String[] source, String[] examined) {
-        for (String item : examined) {
+    public static <T> boolean contains(T[] source, T[] examined) {
+        for (T item : examined) {
             if (!contains(source, item)) return false;
         }
         return true;
     }
 
-    public static int indexOf(String[] source, String examined) {
+    public static <T> int indexOf(T[] source, T examined) {
         for (int i = 0; i < source.length; i++) {
             if (source[i].equals(examined)) return i;
         }
@@ -206,9 +206,9 @@ public class ArrayUtil {
         return result;
     }
 
-    public static boolean isDuplicate(String[] input) {
-        final List<String> nonDupArray = new ArrayList<>();
-        for (String item : input) {
+    public static <T> boolean isDuplicate(T[] input) {
+        final List<T> nonDupArray = new ArrayList<>();
+        for (T item : input) {
             if (nonDupArray.contains(item)) return true;
             else nonDupArray.add(item);
         }

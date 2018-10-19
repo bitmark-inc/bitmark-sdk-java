@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import static apiservice.utils.ArrayUtil.*;
 import static cryptography.utils.Validator.checkValid;
@@ -99,6 +98,7 @@ public class RecoveryPhrase {
     public static Seed recoverSeed(String[] mnemonicWord) throws ValidateException {
         validate(mnemonicWord);
         Locale locale = detectLocale(mnemonicWord[0]);
+        if (locale == null) throw new ValidateException("Does not support this language");
         String[] words = getWords(locale);
         int[] data = new int[]{};
         int remainder = 0;
@@ -150,10 +150,7 @@ public class RecoveryPhrase {
     }
 
     private static Locale detectLocale(String examined) {
-        final String engRegex = "^[a-z]+$";
-        final String cnRegex = "\\p{IsHan}";
-        if (Pattern.compile(engRegex).matcher(examined).matches()) return Locale.ENGLISH;
-        if (Pattern.compile(cnRegex).matcher(examined).matches()) return Locale.CHINESE;
-        throw new ValidateException("Cannot detect your language.");
+        return contains(getWords(Locale.ENGLISH), examined) ? Locale.ENGLISH :
+                contains(getWords(Locale.CHINESE), examined) ? Locale.CHINESE : null;
     }
 }
