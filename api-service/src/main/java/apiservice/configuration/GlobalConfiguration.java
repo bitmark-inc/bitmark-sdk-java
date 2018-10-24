@@ -1,7 +1,5 @@
 package apiservice.configuration;
 
-import apiservice.utils.annotation.VisibleForTesting;
-
 import static cryptography.utils.Validator.checkNonNull;
 
 /**
@@ -40,11 +38,6 @@ public class GlobalConfiguration {
 
     public static boolean isInitialized() {
         return INSTANCE != null;
-    }
-
-    @VisibleForTesting
-    public static void destroy(){
-        INSTANCE = null;
     }
 
     private GlobalConfiguration(Builder builder) {

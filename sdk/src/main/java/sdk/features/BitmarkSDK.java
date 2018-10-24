@@ -2,7 +2,6 @@ package sdk.features;
 
 import apiservice.configuration.GlobalConfiguration;
 import apiservice.utils.annotation.MainThread;
-import apiservice.utils.annotation.VisibleForTesting;
 
 /**
  * @author Hieu Pham
@@ -24,14 +23,13 @@ public class BitmarkSDK {
         GlobalConfiguration.createInstance(builder);
     }
 
-    @VisibleForTesting
-    public static void destroy() {
-        GlobalConfiguration.destroy();
+    public static boolean isInitialized() {
+        return GlobalConfiguration.isInitialized();
     }
 
     private static void validate() {
         if (GlobalConfiguration.isInitialized()) throw new UnsupportedOperationException("You " +
-                "must call BitmarkSDK.init() once");
+                "can only call BitmarkSDK.init() once");
     }
 
 }

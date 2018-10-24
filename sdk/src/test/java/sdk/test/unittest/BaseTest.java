@@ -2,9 +2,8 @@ package sdk.test.unittest;
 
 import apiservice.configuration.GlobalConfiguration;
 import apiservice.configuration.Network;
-import sdk.features.BitmarkSDK;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import sdk.features.BitmarkSDK;
 
 /**
  * @author Hieu Pham
@@ -17,13 +16,9 @@ public abstract class BaseTest {
 
     @BeforeAll
     public static void beforeAll() {
-        BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("dummy-token").withNetwork(Network.TEST_NET));
+        if (!BitmarkSDK.isInitialized())
+            BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg").withNetwork(Network.TEST_NET));
 
-    }
-
-    @AfterAll
-    public static void afterAll() {
-        BitmarkSDK.destroy();
     }
 
 }

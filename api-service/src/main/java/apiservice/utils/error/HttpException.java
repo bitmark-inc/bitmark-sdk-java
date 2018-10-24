@@ -29,7 +29,8 @@ public class HttpException extends RuntimeException {
         this.statusCode = code;
         Map<String, String> jsonMap = deserialize(response);
         if (jsonMap != null) {
-            this.errorCode = Integer.valueOf(jsonMap.get("code"));
+            String codeStr = jsonMap.get("code");
+            this.errorCode = codeStr == null ? -1 : Integer.valueOf(codeStr);
             this.message = jsonMap.get("message");
             this.reason = jsonMap.get("reason");
         } else
