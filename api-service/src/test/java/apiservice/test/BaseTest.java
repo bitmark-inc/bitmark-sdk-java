@@ -2,7 +2,6 @@ package apiservice.test;
 
 import apiservice.configuration.GlobalConfiguration;
 import apiservice.configuration.Network;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
 /**
@@ -16,12 +15,9 @@ public abstract class BaseTest {
 
     @BeforeAll
     public static void beforeAll() {
-        GlobalConfiguration.createInstance(GlobalConfiguration.builder().withNetwork(Network.TEST_NET).withApiToken("DummyApiToken"));
+        if (!GlobalConfiguration.isInitialized())
+            GlobalConfiguration.createInstance(GlobalConfiguration.builder().withNetwork(Network.TEST_NET).withApiToken("DummyApiToken"));
 
     }
 
-    @AfterAll
-    public static void afterAll() {
-        GlobalConfiguration.destroy();
-    }
 }
