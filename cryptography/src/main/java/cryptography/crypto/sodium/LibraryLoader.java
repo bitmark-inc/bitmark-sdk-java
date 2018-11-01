@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
 
 /**
@@ -130,11 +128,10 @@ public class LibraryLoader {
             tempFile = File.createTempFile("native-lib", "." + getLibExtension());
             tempFile.deleteOnExit();
             outputStream = new FileOutputStream(tempFile);
-            ReadableByteChannel srcChannel = Channels.newChannel(inputStream);
-
-            for (long pos = 0; inputStream.available() > 0; ) {
-                pos += outputStream.getChannel().transferFrom(srcChannel, pos, Math.max(4096,
-                        inputStream.available()));
+            byte[] buffer = new byte[1024 * 8];
+            int byteRead;
+            while ((byteRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, byteRead);
             }
 
             outputStream.close();

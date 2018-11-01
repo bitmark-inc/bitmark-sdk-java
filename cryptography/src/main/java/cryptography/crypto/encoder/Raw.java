@@ -1,9 +1,9 @@
 package cryptography.crypto.encoder;
 
+import cryptography.error.UnexpectedException;
 import cryptography.error.ValidateException;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 
 import static cryptography.utils.Validator.checkValid;
 
@@ -18,7 +18,7 @@ public class Raw implements Encoder {
 
     public static final Raw RAW = new Raw();
 
-    private static final Charset CHARSET = StandardCharsets.UTF_8;
+    private static final String CHARSET = "UTF-8";
 
     private Raw() {
     }
@@ -26,12 +26,20 @@ public class Raw implements Encoder {
     @Override
     public byte[] decode(final String data) throws ValidateException {
         checkValid(() -> data != null && !data.isEmpty());
-        return data.getBytes(CHARSET);
+        try {
+            return data.getBytes(CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            throw new UnexpectedException(e.getCause());
+        }
     }
 
     @Override
     public String encode(byte[] data) throws ValidateException {
         checkValid(() -> data != null && data.length > 0);
-        return new String(data, CHARSET);
+        try {
+            return new String(data, CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            throw new UnexpectedException(e.getCause());
+        }
     }
 }

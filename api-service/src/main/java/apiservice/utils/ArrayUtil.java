@@ -1,8 +1,6 @@
 package apiservice.utils;
 
 import java.math.BigInteger;
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +22,8 @@ public class ArrayUtil {
         return new BigInteger(value).intValue();
     }
 
-    public static byte[] toByteArray(int value) throws BufferUnderflowException {
-        return value == 0 ? new byte[]{0} :
-                minimize(ByteBuffer.allocate(Integer.SIZE / 8).putInt(value).array());
+    public static byte[] toByteArray(int value) {
+        return new byte[]{(byte) value};
     }
 
     public static byte[] toByteArray(int[] value) {

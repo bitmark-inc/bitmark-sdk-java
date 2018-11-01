@@ -1,9 +1,9 @@
 package apiservice.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 
 /**
  * @author Hieu Pham
@@ -21,6 +21,13 @@ public class FileUtils {
         if (!file.exists())
             throw new FileNotFoundException("File with path " + file.getAbsolutePath() + " is not" +
                     " found");
-        return Files.readAllBytes(file.toPath());
+        byte[] bytes = new byte[(int) file.length()];
+        FileInputStream stream = new FileInputStream(file);
+        try {
+            stream.read(bytes);
+        } finally {
+            stream.close();
+        }
+        return bytes;
     }
 }
