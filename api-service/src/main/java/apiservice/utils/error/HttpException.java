@@ -37,8 +37,7 @@ public class HttpException extends RuntimeException {
             this.message = response;
     }
 
-    @Override
-    public String getMessage() {
+    public String getErrorMessage(){
         return message;
     }
 

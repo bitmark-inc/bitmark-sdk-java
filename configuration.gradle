@@ -16,18 +16,31 @@ ext.publication.LICENSE_NAME = LICENSE_NAME
 ext.publication.LICENSE_URL = LICENSE_URL
 ext.publication.LICENSE_ALL = LICENSE_ALL
 
-ext.publication.sdk = [:]
-def sdk = [:]
-sdk.GROUP_ID = "com.bitmark.sdk"
-sdk.ARTIFACT_ID = "java-sdk"
-sdk.VERSION = "1.3"
-sdk.LIB_NAME = "Bitmark Java SDK"
-sdk.LIB_DES = "Java SDK for Bitmark platform"
-sdk.LIB_VENDOR = "Bitmark Inc"
-sdk.JAR_NAME = "java-sdk"
-sdk.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java"
-sdk.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
-ext.publication.sdk = sdk
+ext.publication.java_sdk = [:]
+def java_sdk = [:]
+java_sdk.GROUP_ID = "com.bitmark.sdk"
+java_sdk.ARTIFACT_ID = "java-sdk"
+java_sdk.VERSION = "1.3"
+java_sdk.LIB_NAME = "Bitmark Java SDK"
+java_sdk.LIB_DES = "Java SDK for Bitmark platform"
+java_sdk.LIB_VENDOR = "Bitmark Inc"
+java_sdk.JAR_NAME = "java-sdk"
+java_sdk.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java/tree/master/java-sdk"
+java_sdk.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
+ext.publication.java_sdk = java_sdk
+
+ext.publication.android_sdk = [:]
+def android_sdk = [:]
+android_sdk.GROUP_ID = "com.bitmark.sdk"
+android_sdk.ARTIFACT_ID = "android-sdk"
+android_sdk.VERSION = "1.0"
+android_sdk.LIB_NAME = "Bitmark Android SDK"
+android_sdk.LIB_DES = "Android SDK for Bitmark platform"
+android_sdk.LIB_VENDOR = "Bitmark Inc"
+android_sdk.JAR_NAME = "android-sdk"
+android_sdk.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java/tree/master/android-sdk"
+android_sdk.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
+ext.publication.android_sdk = android_sdk
 
 ext.publication.cryptography = [:]
 def cryptography = [:]
@@ -57,7 +70,8 @@ ext.publication.api_service = api_service
 
 ext.publicationProperties = { name ->
     switch (name) {
-        case 'sdk': return ext.publication.sdk
+        case 'java-sdk': return ext.publication.java_sdk
+        case 'android-sdk': return ext.publication.android_sdk
         case 'cryptography': return ext.publication.cryptography
         case 'api-service': return ext.publication.api_service
         default: throw new GradleException(String.format("Invalid project name %s", name))
@@ -66,7 +80,8 @@ ext.publicationProperties = { name ->
 
 ext.publicationPackageName = { name ->
     switch (name) {
-        case 'sdk': return 'java-sdk'
+        case 'java-sdk': return 'java-sdk'
+        case 'android-sdk': return 'android-sdk'
         case 'cryptography': return 'cryptography'
         case 'api-service': return 'api-service'
         default: throw new GradleException(String.format("Invalid project name %s", name))

@@ -1,5 +1,5 @@
 apply plugin: 'java-library'
-apply from: '../publication.gradle'
+apply from: '../publication_java.gradle'
 apply from: '../dependencies.gradle'
 apply from: '../configuration.gradle'
 
@@ -22,14 +22,10 @@ test {
 }
 
 dependencies {
-    
-    implementation (deps.bitmark_sdk.api_service)
-
+    implementation deps.bitmark_sdk.api_service
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.junit_platform.suite_api
     testImplementation deps.junit_platform.runner
-    testImplementation deps.mockito
-
     testRuntime deps.junit_jupiter.engine
 }

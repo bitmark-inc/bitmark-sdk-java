@@ -1,11 +1,12 @@
 package apiservice.utils;
 
 import apiservice.utils.callback.Callable1;
-import apiservice.utils.callback.Callback2;
 import apiservice.utils.callback.Callable2;
 import apiservice.utils.callback.Callback1;
+import apiservice.utils.callback.Callback2;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 /**
  * @author Hieu Pham
@@ -20,7 +21,7 @@ public class Awaitility {
 
     }
 
-    public static <T> T await(Callable1<T> callable) {
+    public static <T> T await(Callable1<T> callable) throws Throwable {
         final CompletableFuture<T> completableFuture = new CompletableFuture<>();
         callable.call(new Callback1<T>() {
             @Override
@@ -33,10 +34,15 @@ public class Awaitility {
                 completableFuture.completeExceptionally(throwable);
             }
         });
-        return completableFuture.join();
+        try {
+            return completableFuture.join();
+        } catch (CompletionException e) {
+            throw e.getCause();
+        }
+
     }
 
-    public static <T1, T2> Pair<T1, T2> await(Callable2<T1, T2> callable) {
+    public static <T1, T2> Pair<T1, T2> await(Callable2<T1, T2> callable) throws Throwable {
         final CompletableFuture<Pair<T1, T2>> completableFuture = new CompletableFuture<>();
         callable.call(new Callback2<T1, T2>() {
             @Override
@@ -49,6 +55,11 @@ public class Awaitility {
                 completableFuture.completeExceptionally(throwable);
             }
         });
-        return completableFuture.join();
+        try {
+            return completableFuture.join();
+        } catch (CompletionException e) {
+            throw e.getCause();
+        }
+
     }
 }

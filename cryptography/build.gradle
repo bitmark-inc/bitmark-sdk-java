@@ -19,18 +19,17 @@ version = project_publication.VERSION
 buildscript {
     apply from: '../dependencies.gradle'
     addRepos(repositories)
+    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
     dependencies {
+        classpath deps.android_plugin
+        classpath deps.android_maven_plugin
         classpath deps.bintray_plugin
     }
 }
 
 android {
     compileSdkVersion 27
-
-    defaultConfig {
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
+    
     compileOptions {
         sourceCompatibility config.SOURCE_COMPATIBILITY
         targetCompatibility config.TARGET_COMPATIBILITY
@@ -48,27 +47,17 @@ android {
     }
 
     defaultConfig {
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
-        versionName publication.VERSION
+        versionName project_publication.VERSION
     }
 
     buildTypes {
         release {
             minifyEnabled false
         }
-    }
-}
-
-buildscript {
-    apply from: '../dependencies.gradle'
-    addRepos(repositories)
-    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
-    dependencies {
-        classpath deps.android_plugin
-        classpath deps.android_maven_plugin
-        classpath deps.bintray_plugin
     }
 }
 

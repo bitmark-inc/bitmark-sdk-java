@@ -7,18 +7,17 @@ import apiservice.utils.Address;
 import apiservice.utils.callback.Callable1;
 import apiservice.utils.error.HttpException;
 import apiservice.utils.record.AssetRecord;
-import sdk.features.Asset;
-import sdk.test.utils.extensions.TemporaryFolderExtension;
-import sdk.test.utils.extensions.annotations.TemporaryFile;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import sdk.features.Asset;
+import sdk.test.utils.extensions.TemporaryFolderExtension;
+import sdk.test.utils.extensions.annotations.TemporaryFile;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletionException;
 
 import static apiservice.utils.Awaitility.await;
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
@@ -38,7 +37,7 @@ public class AssetTest extends BaseFeatureTest {
     @DisplayName("Verify function Asset.register(RegistrationParams, Callback1<>) works well with" +
                          " a new asset")
     @Test
-    public void testRegisterAsset_NewAsset_CorrectResponseIsReturn(File asset) {
+    public void testRegisterAsset_NewAsset_CorrectResponseIsReturn(File asset) throws Throwable {
         Address registrant = ACCOUNT1.toAddress();
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
@@ -67,9 +66,9 @@ public class AssetTest extends BaseFeatureTest {
         RegistrationParams params = new RegistrationParams(asset.getName(), metadata, registrant);
         params.generateFingerprint(asset);
         params.sign(KEY1);
-        HttpException exception = (HttpException) assertThrows(CompletionException.class,
+        HttpException exception = assertThrows(HttpException.class,
                 () -> await((Callable1<RegistrationResponse>) callback -> Asset.register(params,
-                        callback))).getCause();
+                        callback)));
         assertEquals(HTTP_FORBIDDEN, exception.getStatusCode());
         assertEquals(2009, exception.getErrorCode());
     }
@@ -77,7 +76,7 @@ public class AssetTest extends BaseFeatureTest {
 
     @DisplayName("Verify function Asset.get(String, Callback1<>) works well with existed asset id")
     @Test
-    public void testQueryAssetById_ExistedAssetId_CorrectResponseIsReturn() {
+    public void testQueryAssetById_ExistedAssetId_CorrectResponseIsReturn() throws Throwable {
         // Query existed assets
         AssetQueryBuilder builder =
                 new AssetQueryBuilder().registrant(ACCOUNT1.getAccountNumber()).limit(1);
@@ -98,14 +97,14 @@ public class AssetTest extends BaseFeatureTest {
     public void testQueryAssetById_NotExistedAssetId_ErrorIsThrow() {
         String id =
                 "12345678901234567890123456789012345678901234567890123456789012341234567890123456789012345678901234567890123456789012345678901234";
-        HttpException exception = (HttpException) assertThrows(CompletionException.class,
-                () -> await((Callable1<AssetRecord>) callback -> Asset.get(id, callback))).getCause();
+        HttpException exception = assertThrows(HttpException.class,
+                () -> await((Callable1<AssetRecord>) callback -> Asset.get(id, callback)));
         assertEquals(HTTP_NOT_FOUND, exception.getStatusCode());
     }
 
     @DisplayName("Verify function Asset.list(AssetQueryBuilder, Callback1<>) works well")
     @Test
-    public void testQueryAssets_NoCondition_CorrectResponseIsReturn() {
+    public void testQueryAssets_NoCondition_CorrectResponseIsReturn() throws Throwable {
         int limit = 1;
         String registrant = ACCOUNT1.getAccountNumber();
         AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registrant(registrant);

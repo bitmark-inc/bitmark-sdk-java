@@ -1,0 +1,161 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven'
+apply from: '../configuration.gradle'
+
+def ext = project.ext
+def config = ext.configuration
+def root_publication = ext.publication
+def project_publication = ext.publicationProperties(project.name)
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+group = project_publication.GROUP_ID
+version = project_publication.VERSION
+
+buildscript {
+    apply from: '../dependencies.gradle'
+    addRepos(repositories)
+    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
+    dependencies {
+        classpath deps.android_plugin
+        classpath deps.android_maven_plugin
+        classpath deps.bintray_plugin
+    }
+}
+
+android {
+    compileSdkVersion 27
+
+    compileOptions {
+        sourceCompatibility config.SOURCE_COMPATIBILITY
+        targetCompatibility config.TARGET_COMPATIBILITY
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName project_publication.VERSION
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/LICENSE-notice.md'
+        exclude 'META-INF/ASL2.0'
+    }
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+install {
+
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'jar'
+            groupId project_publication.GROUP_ID
+            artifactId project_publication.ARTIFACT_ID
+
+            name project_publication.LIB_NAME
+            description project_publication.LIB_DES
+            url project_publication.LIB_SITE_URL
+
+            licenses {
+                license {
+                    name root_publication.LICENSE_NAME
+                    url root_publication.LICENSE_URL
+                }
+            }
+            developers {
+                developer {
+                    id root_publication.DEV_ID
+                    name root_publication.DEV_NAME
+                    email root_publication.DEV_EMAIL
+                }
+            }
+            scm {
+                connection project_publication.LIB_GIT_URL
+                developerConnection project_publication.LIB_GIT_URL
+                url project_publication.LIB_SITE_URL
+            }
+        }
+    }
+}
+
+bintrayUpload.dependsOn(install)
+
+bintray {
+
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = properties.getProperty("bintray.repo")
+        name = ext.publicationPackageName(project.name)
+        desc = project_publication.LIB_DES
+        websiteUrl = project_publication.LIB_SITE_URL
+        vcsUrl = project_publication.LIB_GIT_URL
+        licenses = root_publication.LICENSE_ALL
+        dryRun = false
+        publish = true
+        override = false
+        publicDownloadNumbers = true
+        version {
+            desc = project_publication.LIB_DES
+            gpg {
+                sign = true
+                passphrase = properties.getProperty("bintray.gpg.password")
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation deps.bitmark_sdk.api_service
+    testImplementation deps.junit_jupiter.api
+    testImplementation deps.junit_jupiter.params
+    testImplementation deps.junit_platform.suite_api
+    testImplementation deps.junit_platform.runner
+    testImplementation deps.junit_jupiter.engine
+
+    androidTestImplementation "junit:junit:4.12"
+    androidTestImplementation "com.android.support.test:runner:1.0.2"
+
+}

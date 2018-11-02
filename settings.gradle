@@ -1,5 +1,6 @@
-rootProject.name = 'javasdk'
+rootProject.name = 'bitmark-sdk'
 include 'cryptography'
 include 'api-service'
-include 'sdk'
+include 'java-sdk'
+include 'android-sdk'
 

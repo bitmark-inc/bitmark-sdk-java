@@ -1,4 +1,4 @@
-apply from: '../publication.gradle'
+apply from: '../publication_java.gradle'
 apply from: '../dependencies.gradle'
 apply from: '../configuration.gradle'
 apply plugin: 'java-library'
