@@ -3,8 +3,8 @@ package apiservice.params.query;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static apiservice.utils.HttpUtils.buildArrayQueryString;
 
@@ -46,7 +46,7 @@ public abstract class AbsQueryBuilder implements QueryBuilder {
     }
 
     private Map<String, Object> getValues(QueryBuilder builder) throws IllegalAccessException {
-        Map<String, Object> valueMap = new HashMap<>();
+        Map<String, Object> valueMap = new TreeMap<>();
         Field[] fields = builder.getClass().getDeclaredFields();
         if (fields.length > 0) {
             for (Field field : fields) {

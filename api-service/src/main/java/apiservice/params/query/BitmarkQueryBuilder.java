@@ -2,8 +2,7 @@ package apiservice.params.query;
 
 import com.google.gson.annotations.SerializedName;
 
-import static cryptography.utils.Validator.checkValid;
-import static cryptography.utils.Validator.checkValidString;
+import static cryptography.utils.Validator.*;
 
 /**
  * @author Hieu Pham
@@ -20,7 +19,7 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
     private String issuedBy;
 
     @SerializedName("pending")
-    private boolean isPending;
+    private Boolean isPending;
 
     @SerializedName("offer_to")
     private String offerTo;
@@ -35,9 +34,13 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
     private String referencedAssetId;
 
     @SerializedName("asset")
-    private boolean loadAsset;
+    private Boolean loadAsset;
 
-    private int limit = 100;
+    private Long at;
+
+    private String to;
+
+    private Integer limit = 100;
 
     public BitmarkQueryBuilder ownedBy(String owner) {
         checkValidString(owner);
@@ -51,7 +54,8 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
         return this;
     }
 
-    public BitmarkQueryBuilder pending(boolean pending) {
+    public BitmarkQueryBuilder pending(Boolean pending) {
+        checkNonNull(pending);
         isPending = pending;
         return this;
     }
@@ -80,14 +84,28 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
         return this;
     }
 
-    public BitmarkQueryBuilder loadAsset(boolean loadAsset) {
+    public BitmarkQueryBuilder loadAsset(Boolean loadAsset) {
+        checkNonNull(loadAsset);
         this.loadAsset = loadAsset;
         return this;
     }
 
-    public BitmarkQueryBuilder limit(int limit) {
-        checkValid(() -> limit > 0, "Invalid limit value. Must be greater 0");
+    public BitmarkQueryBuilder limit(Integer limit) {
+        checkValid(() -> limit != null && limit > 0, "Invalid limit value. Must be greater 0");
         this.limit = limit;
+        return this;
+    }
+
+    public BitmarkQueryBuilder at(Long at) {
+        checkValid(() -> at != null && at > 0, "Invalid at value. Must greater than 0");
+        this.at = at;
+        return this;
+    }
+
+    public BitmarkQueryBuilder to(String to) {
+        checkValid(() -> to != null && (to.equals("earlier") || to.equals("later")), "Invalid " +
+                "value to. It must be 'later' or 'earlier'.");
+        this.to = to;
         return this;
     }
 }

@@ -2,8 +2,7 @@ package apiservice.params.query;
 
 import com.google.gson.annotations.SerializedName;
 
-import static cryptography.utils.Validator.checkValid;
-import static cryptography.utils.Validator.checkValidString;
+import static cryptography.utils.Validator.*;
 
 /**
  * @author Hieu Pham
@@ -23,9 +22,9 @@ public class TransactionQueryBuilder extends AbsQueryBuilder {
     private String bitmarkId;
 
     @SerializedName("asset")
-    private boolean loadAsset;
+    private Boolean loadAsset;
 
-    private int limit = 100;
+    private Integer limit = 100;
 
     public TransactionQueryBuilder ownedBy(String owner) {
         checkValidString(owner);
@@ -45,13 +44,14 @@ public class TransactionQueryBuilder extends AbsQueryBuilder {
         return this;
     }
 
-    public TransactionQueryBuilder loadAsset(boolean loadAsset) {
+    public TransactionQueryBuilder loadAsset(Boolean loadAsset) {
+        checkNonNull(loadAsset);
         this.loadAsset = loadAsset;
         return this;
     }
 
-    public TransactionQueryBuilder limit(int limit) {
-        checkValid(() -> limit > 0, "Invalid limit value");
+    public TransactionQueryBuilder limit(Integer limit) {
+        checkValid(() -> limit != null && limit > 0, "Invalid limit value");
         this.limit = limit;
         return this;
     }

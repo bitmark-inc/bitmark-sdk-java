@@ -19,7 +19,7 @@ public class AssetQueryBuilder extends AbsQueryBuilder {
     @SerializedName("asset_ids")
     private String[] assetIds;
 
-    private int limit = 100;
+    private Integer limit = 100;
 
     public AssetQueryBuilder registrant(String registrant) {
         checkValidString(registrant);
@@ -33,8 +33,8 @@ public class AssetQueryBuilder extends AbsQueryBuilder {
         return this;
     }
 
-    public AssetQueryBuilder limit(int limit) {
-        checkValid(() -> limit > 0, "Invalid limit value");
+    public AssetQueryBuilder limit(Integer limit) {
+        checkValid(() -> limit != null && limit > 0, "Invalid limit value");
         this.limit = limit;
         return this;
     }
