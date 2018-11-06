@@ -1,8 +1,10 @@
-package sdk.utils;
+package sdk.features;
 
 import apiservice.configuration.GlobalConfiguration;
+import apiservice.configuration.Network;
 import apiservice.utils.error.UnexpectedException;
 import cryptography.error.ValidateException;
+import sdk.utils.Version;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +18,7 @@ import static apiservice.utils.ArrayUtil.*;
 import static cryptography.utils.Validator.checkValid;
 import static sdk.utils.FileUtils.getResourceAsFile;
 import static sdk.utils.SdkUtils.randomEntropy;
+import static sdk.utils.Version.TWELVE;
 
 /**
  * @author Hieu Pham
@@ -25,10 +28,6 @@ import static sdk.utils.SdkUtils.randomEntropy;
  */
 
 public class RecoveryPhrase {
-
-    public static final int MNEMONIC_WORD_LENGTH = 12;
-
-    private static final int ENTROPY_LENGTH = 17;
 
     private final String[] mnemonicWords;
 
@@ -68,9 +67,12 @@ public class RecoveryPhrase {
     }
 
     public static RecoveryPhrase fromSeed(Seed seed, Locale locale) throws ValidateException {
-        checkValid(() -> seed != null && seed.getSeed().length == Seed.SEED_LENGTH, "Invalid" +
-                " Seed");
-        return new RecoveryPhrase(generateMnemonic(seed.getSeed(), locale));
+        checkValid(() -> seed != null && Version.matchesCore(seed.getSeed()), "Invalid Seed");
+        final byte[] core = seed.getSeed();
+        final Version version = Version.fromCore(core);
+        return version == TWELVE ? new RecoveryPhrase(generateMnemonic(core, locale)) :
+                new RecoveryPhrase(generateMnemonic(concat(toByteArray(seed.getNetwork().value())
+                        , core), locale));
     }
 
     public static RecoveryPhrase fromMnemonicWords(String... mnemonicWords) throws ValidateException {
@@ -97,14 +99,19 @@ public class RecoveryPhrase {
 
     public static Seed recoverSeed(String[] mnemonicWord) throws ValidateException {
         validate(mnemonicWord);
-        Locale locale = detectLocale(mnemonicWord[0]);
+        final Version version = Version.fromMnemonicWords(mnemonicWord);
+        final int wordsLength = version.getMnemonicWordsLength();
+        final int coreLength = version.getCoreLength();
+        final int entropyLength = version == TWELVE ? coreLength : coreLength + 1;
+        final Locale locale = detectLocale(mnemonicWord[0]);
         if (locale == null) throw new ValidateException("Does not support this language");
+
         String[] words = getWords(locale);
         int[] data = new int[]{};
         int remainder = 0;
         int bits = 0;
 
-        for (int i = 0; i < MNEMONIC_WORD_LENGTH; i++) {
+        for (int i = 0; i < wordsLength; i++) {
             final String word = mnemonicWord[i];
             final int index = indexOf(words, word);
             remainder = (remainder << 11) + index;
@@ -114,9 +121,16 @@ public class RecoveryPhrase {
             }
             remainder &= MASKS[bits];
         }
-        final byte[] entropy = concat(toByteArray(data), new byte[]{(byte) (remainder << 4)});
-        checkValid(() -> entropy.length == ENTROPY_LENGTH, "Invalid mnemonic words");
-        return new Seed(entropy);
+        final byte[] entropy = version == TWELVE ? concat(toByteArray(data),
+                new byte[]{(byte) (remainder << 4)}) : toByteArray(data);
+        checkValid(() -> entropy.length == entropyLength, "Invalid mnemonic words");
+        if (version == TWELVE) {
+            return new Seed(entropy);
+        } else {
+            final Network network = Network.valueOf(entropy[0]);
+            final byte[] core = slice(entropy, 1, entropyLength);
+            return new Seed(core, network);
+        }
     }
 
     public static String[] generateMnemonic(byte[] entropy) throws ValidateException {
@@ -124,14 +138,17 @@ public class RecoveryPhrase {
     }
 
     public static String[] generateMnemonic(byte[] entropy, Locale locale) throws ValidateException {
-        checkValid(() -> entropy != null && entropy.length == ENTROPY_LENGTH, "Invalid entropy " +
-                "length. The valid length must be " + ENTROPY_LENGTH);
+        checkValid(() -> entropy != null && Version.matchesEntropy(entropy), "Invalid entropy");
         final String[] words = getWords(locale);
-        final List<String> mnemonicWords = new ArrayList<>(MNEMONIC_WORD_LENGTH);
+        final Version version = Version.fromEntropy(entropy);
+        final int mnenonicWordsLength = version.getMnemonicWordsLength();
+        final int entropyLength = version.getEntropyLength();
+
+        final List<String> mnemonicWords = new ArrayList<>(mnenonicWordsLength);
         final int[] unsignedEntropy = toUInt(entropy);
         int accumulator = 0;
         int bits = 0;
-        for (int i = 0; i < ENTROPY_LENGTH; i++) {
+        for (int i = 0; i < entropyLength; i++) {
             accumulator = (accumulator << 8) + unsignedEntropy[i];
             bits += 8;
             if (bits >= 11) {
@@ -141,11 +158,11 @@ public class RecoveryPhrase {
                 mnemonicWords.add(words[index]);
             }
         }
-        return mnemonicWords.toArray(new String[MNEMONIC_WORD_LENGTH]);
+        return mnemonicWords.toArray(new String[mnenonicWordsLength]);
     }
 
     private static void validate(String... mnemonicWords) {
-        checkValid(() -> mnemonicWords != null && mnemonicWords.length == MNEMONIC_WORD_LENGTH
+        checkValid(() -> mnemonicWords != null && Version.matchesMnemonicWords(mnemonicWords)
                 && (contains(getWords(Locale.ENGLISH), mnemonicWords) || contains(getWords(Locale.CHINESE), mnemonicWords)));
     }
 

@@ -9,18 +9,20 @@ import cryptography.crypto.key.KeyPair;
 import cryptography.crypto.key.PublicKey;
 import cryptography.error.ValidateException;
 import sdk.utils.AccountNumberData;
-import sdk.utils.RecoveryPhrase;
-import sdk.utils.Seed;
+import sdk.utils.Version;
 
 import java.util.Locale;
 
 import static apiservice.utils.Address.CHECKSUM_LENGTH;
 import static apiservice.utils.ArrayUtil.concat;
 import static apiservice.utils.ArrayUtil.slice;
+import static cryptography.crypto.SecretBox.generateSecretBox;
 import static cryptography.crypto.encoder.Base58.BASE_58;
+import static cryptography.crypto.encoder.Hex.HEX;
 import static cryptography.utils.Validator.checkValid;
 import static sdk.utils.SdkUtils.generateSeedKey;
 import static sdk.utils.SdkUtils.randomEntropy;
+import static sdk.utils.Version.TWELVE;
 
 /**
  * @author Hieu Pham
@@ -30,6 +32,10 @@ import static sdk.utils.SdkUtils.randomEntropy;
  */
 
 public class Account {
+
+    private static final byte[] KEY_INDEX = HEX.decode("000000000000000000000000000003E7"); // 999
+
+    private static final int NONCE_LENGTH = 24;
 
     private String accountNumber;
 
@@ -101,7 +107,9 @@ public class Account {
     }
 
     private static KeyPair generateKeyPair(byte[] core) {
-        final byte[] seed = generateSeedKey(core, Ed25519.SEED_LENGTH);
+        final Version version = Version.fromCore(core);
+        final byte[] seed = version == TWELVE ? generateSeedKey(core, Ed25519.SEED_LENGTH) :
+                generateSecretBox(KEY_INDEX, new byte[NONCE_LENGTH], core);
         return Ed25519.generateKeyPairFromSeed(seed);
     }
 

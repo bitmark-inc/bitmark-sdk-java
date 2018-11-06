@@ -3,7 +3,7 @@ package sdk.test.integrationtest.features;
 import cryptography.crypto.key.KeyPair;
 import sdk.features.Account;
 import sdk.test.integrationtest.BaseTest;
-import sdk.utils.Seed;
+import sdk.features.Seed;
 
 /**
  * @author Hieu Pham

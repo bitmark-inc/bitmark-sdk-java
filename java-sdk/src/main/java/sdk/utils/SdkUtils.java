@@ -21,7 +21,7 @@ import static cryptography.utils.Validator.checkValid;
 
 public class SdkUtils {
 
-    private static final int CORE_LENGTH = 17;
+    public static final int CORE_LENGTH = 17;
 
     private SdkUtils() {
 
@@ -64,6 +64,7 @@ public class SdkUtils {
         } else if (mode == (core[15] & 0xF0 ^ 0xF0)) {
             return Network.TEST_NET;
         } else throw new InvalidNetworkException("Cannot extract network from core");
+
     }
 
     public static byte[] generateSeedKey(byte[] core, int keySize) throws ValidateException {
