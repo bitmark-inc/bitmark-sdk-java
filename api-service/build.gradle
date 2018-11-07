@@ -22,16 +22,13 @@ test {
 }
 
 dependencies {
-    
     implementation deps.bitmark_sdk.cryptography
     implementation deps.okhttp.okhttp3
     implementation deps.okhttp.logging
     implementation deps.gson
-
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.okhttp.okhttp3_mockserver
-
     testRuntime deps.junit_jupiter.engine
 }
 

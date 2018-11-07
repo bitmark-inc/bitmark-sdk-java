@@ -4,7 +4,7 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import sdk.test.integrationtest.BaseTest;
 import sdk.features.Account;
-import sdk.utils.Seed;
+import sdk.features.Seed;
 import cryptography.crypto.key.KeyPair;
 
 /**

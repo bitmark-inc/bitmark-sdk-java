@@ -1,5 +1,7 @@
 package sdk.utils;
 
+import sdk.features.RecoveryPhrase;
+
 import java.io.*;
 
 /**

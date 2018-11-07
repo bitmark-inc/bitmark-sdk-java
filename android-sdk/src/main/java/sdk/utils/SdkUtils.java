@@ -21,7 +21,7 @@ import static cryptography.utils.Validator.checkValid;
 
 public class SdkUtils {
 
-    private static final int CORE_LENGTH = 17;
+    public static final int CORE_LENGTH = 17;
 
     private SdkUtils() {
 

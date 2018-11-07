@@ -149,13 +149,16 @@ bintray {
 
 dependencies {
     implementation deps.bitmark_sdk.api_service
+    implementation deps.rx.java
+    
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.junit_platform.suite_api
     testImplementation deps.junit_platform.runner
     testImplementation deps.junit_jupiter.engine
 
-    androidTestImplementation "junit:junit:4.12"
-    androidTestImplementation "com.android.support.test:runner:1.0.2"
+    androidTestImplementation deps.junit
+    androidTestImplementation deps.android_test_runner
+    androidTestImplementation 'com.annimon:stream:1.2.1'
 
 }

@@ -7,6 +7,7 @@ import apiservice.utils.callback.Callable1;
 import apiservice.utils.error.HttpException;
 import apiservice.utils.record.AssetRecord;
 import apiservice.utils.record.TransactionRecord;
+import com.annimon.stream.Stream;
 import org.junit.Test;
 import sdk.features.Transaction;
 
@@ -31,17 +32,15 @@ public class TransactionTest extends BaseFeatureTest {
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
         GetTransactionsResponse getTransactionsResponse =
-                await((Callable1<GetTransactionsResponse>) callback -> Transaction.list(builder,
-                        callback));
+                await(callback -> Transaction.list(builder, callback));
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
         assertNotNull("This guy does not have any transaction", transactions);
         assertFalse("This guy does not have any transaction", transactions.isEmpty());
         String txId = transactions.get(0).getId();
 
         // Get tx by id
-        GetTransactionResponse getTransactionResponse =
-                await((Callable1<GetTransactionResponse>) callback -> Transaction.get(txId,
-                        callback));
+        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
+                callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         assertNotNull(transaction);
         assertEquals(txId, transaction.getId());
@@ -54,17 +53,15 @@ public class TransactionTest extends BaseFeatureTest {
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
         GetTransactionsResponse getTransactionsResponse =
-                await((Callable1<GetTransactionsResponse>) callback -> Transaction.list(builder,
-                        callback));
+                await(callback -> Transaction.list(builder, callback));
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
         assertNotNull("This guy does not have any transaction", transactions);
         assertFalse("This guy does not have any transaction", transactions.isEmpty());
         String txId = transactions.get(0).getId();
 
         // Get tx by id
-        GetTransactionResponse getTransactionResponse =
-                await((Callable1<GetTransactionResponse>) callback -> Transaction.get(txId,
-                        true, callback));
+        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
+                true, callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         AssetRecord asset = getTransactionResponse.getAsset();
         assertNotNull(transaction);
@@ -91,10 +88,9 @@ public class TransactionTest extends BaseFeatureTest {
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(owner).limit(limit);
         GetTransactionsResponse getTransactionsResponse =
-                await((Callable1<GetTransactionsResponse>) callback -> Transaction.list(builder,
-                        callback));
+                await(callback -> Transaction.list(builder, callback));
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
         assertEquals(limit, transactions.size());
-        transactions.forEach(transaction -> assertEquals(owner, transaction.getOwner()));
+        Stream.of(transactions).forEach(transaction -> assertEquals(owner, transaction.getOwner()));
     }
 }

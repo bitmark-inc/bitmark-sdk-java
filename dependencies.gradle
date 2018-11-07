@@ -13,6 +13,8 @@ versions.cryptography = "1.3"
 versions.api_service = "1.5"
 versions.android_plugin = "3.2.1"
 versions.android_maven_plugin = "2.1"
+versions.android_test_runner = "1.0.2"
+versions.rxjava = "2.2.3"
 
 def okhttp = [:]
 okhttp.okhttp3 = "com.squareup.okhttp3:okhttp:$versions.okhttp"
@@ -37,6 +39,9 @@ def bitmark_sdk = [:]
 bitmark_sdk.cryptography = "com.bitmark.sdk:cryptography:$versions.cryptography"
 bitmark_sdk.api_service = "com.bitmark.sdk:api-service:$versions.api_service"
 
+def rx = [:]
+rx.java = "io.reactivex.rxjava2:rxjava:$versions.rxjava"
+
 def junit = "junit:junit:$versions.junit"
 def mockito = "org.mockito:mockito-core:$versions.mockito"
 def bouncycastle = "org.bouncycastle:bcprov-jdk15on:$versions.bouncycastle"
@@ -44,6 +49,7 @@ def gson = "com.google.code.gson:gson:$versions.gson"
 def bintray_plugin = "com.jfrog.bintray.gradle:gradle-bintray-plugin:$versions.bintray_plugin"
 def android_plugin = "com.android.tools.build:gradle:$versions.android_plugin"
 def android_maven_plugin = "com.github.dcendents:android-maven-gradle-plugin:$versions.android_maven_plugin"
+def android_test_runner = "com.android.support.test:runner:$versions.android_test_runner"
 
 def dependencies = [:]
 dependencies.okhttp = okhttp
@@ -58,6 +64,8 @@ dependencies.bintray_plugin = bintray_plugin
 dependencies.bitmark_sdk = bitmark_sdk
 dependencies.android_plugin = android_plugin
 dependencies.android_maven_plugin = android_maven_plugin
+dependencies.android_test_runner = android_test_runner
+dependencies.rx = rx
 ext.deps = dependencies
 
 

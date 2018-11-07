@@ -7,6 +7,7 @@ import apiservice.utils.Address;
 import apiservice.utils.callback.Callable1;
 import apiservice.utils.error.HttpException;
 import apiservice.utils.record.AssetRecord;
+import com.annimon.stream.Stream;
 import org.junit.Rule;
 import org.junit.Test;
 import sdk.features.Asset;
@@ -45,9 +46,7 @@ public class AssetTest extends BaseFeatureTest {
         RegistrationParams params = new RegistrationParams(asset.getName(), metadata, registrant);
         params.generateFingerprint(asset);
         params.sign(KEY1);
-        RegistrationResponse response =
-                await((Callable1<RegistrationResponse>) callback -> Asset.register(params,
-                        callback));
+        RegistrationResponse response = await(callback -> Asset.register(params, callback));
         List<RegistrationResponse.Asset> assets = response.getAssets();
         assertNotNull(assets.get(0).getId());
         assertFalse(assets.get(0).isDuplicate());
@@ -78,13 +77,12 @@ public class AssetTest extends BaseFeatureTest {
         // Query existed assets
         AssetQueryBuilder builder =
                 new AssetQueryBuilder().registrant(ACCOUNT1.getAccountNumber()).limit(1);
-        List<AssetRecord> assets =
-                await((Callable1<List<AssetRecord>>) callback -> Asset.list(builder, callback));
+        List<AssetRecord> assets = await(callback -> Asset.list(builder, callback));
         assertFalse("This guy has not registered any assets", assets.isEmpty());
 
         // Get asset by id
         String id = assets.get(0).getId();
-        AssetRecord asset = await((Callable1<AssetRecord>) callback -> Asset.get(id, callback));
+        AssetRecord asset = await(callback -> Asset.get(id, callback));
         assertNotNull(asset);
         assertEquals(id, asset.getId());
     }
@@ -103,10 +101,9 @@ public class AssetTest extends BaseFeatureTest {
         int limit = 1;
         String registrant = ACCOUNT1.getAccountNumber();
         AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registrant(registrant);
-        List<AssetRecord> assets =
-                await((Callable1<List<AssetRecord>>) callback -> Asset.list(builder, callback));
+        List<AssetRecord> assets = await(callback -> Asset.list(builder, callback));
         assertEquals(limit, assets.size());
-        assets.forEach(asset -> assertEquals(registrant, asset.getRegistrant()));
+        Stream.of(assets).forEach(asset -> assertEquals(registrant, asset.getRegistrant()));
     }
 
 }
