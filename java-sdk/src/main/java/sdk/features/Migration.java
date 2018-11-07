@@ -76,16 +76,16 @@ public class Migration {
         // Get the latest bitmark by offset
         List<BitmarkRecord> firstBitmarks =
                 await((Callable1<GetBitmarksResponse>) internalCallback ->
-                        Bitmark.list(new BitmarkQueryBuilder().ownedBy(accountNumber).limit(1),
+                        Bitmark.list(new BitmarkQueryBuilder().ownedBy(accountNumber).pending(true).limit(1),
                                 internalCallback)).getBitmarks();
         if (firstBitmarks == null || firstBitmarks.isEmpty()) return null;
         Long lastOffset = firstBitmarks.get(0).getOffset();
         while (lastOffset != null) {
 
             BitmarkQueryBuilder builder =
-                    new BitmarkQueryBuilder().ownedBy(accountNumber).at(lastOffset).to("earlier").loadAsset(true).limit(limit);
-            GetBitmarksResponse response =
-                    await((Callable1<GetBitmarksResponse>) internalCallback -> Bitmark.list(builder, internalCallback));
+                    new BitmarkQueryBuilder().ownedBy(accountNumber).at(lastOffset).to("earlier").loadAsset(true).pending(true).limit(limit);
+            GetBitmarksResponse response = await(internalCallback -> Bitmark.list(builder,
+                    internalCallback));
             result.add(response);
             final List<BitmarkRecord> bitmarks = response.getBitmarks();
             final int size = bitmarks == null ? 0 : bitmarks.size();
