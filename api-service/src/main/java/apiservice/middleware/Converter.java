@@ -7,6 +7,7 @@ import apiservice.utils.record.AssetRecord;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
 
@@ -36,8 +37,9 @@ public class Converter {
                     }.getType());
                     JsonArray jsonArray = GSON.toJsonTree(mapJson.get("bitmarks")).getAsJsonArray();
                     List<String> txIds = new ArrayList<>(jsonArray.size());
-                    jsonArray.forEach(jsonElement -> txIds.add(jsonElement.getAsJsonObject().get(
-                            "id").getAsString()));
+                    for (JsonElement jsonElement : jsonArray) {
+                        txIds.add(jsonElement.getAsJsonObject().get("id").getAsString());
+                    }
                     callback.onSuccess(txIds);
                 } catch (Exception e) {
                     callback.onError(new UnexpectedException(e));
