@@ -9,9 +9,8 @@ import cryptography.error.ValidateException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
+import static apiservice.utils.Awaitility.await;
 import static apiservice.utils.BinaryPacking.concat;
 import static apiservice.utils.FileUtils.getBytes;
 import static cryptography.crypto.encoder.Hex.HEX;
@@ -42,16 +41,22 @@ public class RegistrationParams extends AbsSingleParams {
     }
 
     public String generateFingerprint(File file) {
-        checkValid(() -> file != null, "Invalid file. File is null");
-        CompletableFuture<String> task = CompletableFuture.supplyAsync(() -> {
-            try {
-                return fingerprint = computeFingerprint(file);
-            } catch (IOException e) {
-                throw new CompletionException(new UnexpectedException("Error when trying compute " +
-                        "fingerprint from file " + file.getAbsolutePath()));
-            }
-        });
-        return task.join();
+        checkValid(() -> file != null && !file.isDirectory(), "Invalid file");
+        try {
+            fingerprint = await(() -> {
+                try {
+                    return computeFingerprint(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new UnexpectedException(e);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            throw new UnexpectedException(throwable);
+        }
+        if (fingerprint == null) throw new UnexpectedException("Cannot generate fingerprint");
+        return fingerprint;
     }
 
     @Override
