@@ -88,17 +88,14 @@ public class BitmarkTest extends BaseFeatureTest {
         registrationParams.generateFingerprint(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
-                await((Callable1<RegistrationResponse>) callback -> Asset.register(registrationParams,
-                        callback));
+                await(callback -> Asset.register(registrationParams, callback));
         List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
         issuanceParams.sign(KEY1);
-        List<String> txIds =
-                await((Callable1<List<String>>) callback -> Bitmark.issue(issuanceParams,
-                        callback));
+        List<String> txIds = await(callback -> Bitmark.issue(issuanceParams, callback));
         assertEquals(txIds.size(), 1);
         assertFalse(txIds.get(0).isEmpty());
     }
@@ -125,8 +122,7 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Transfer bitmark
@@ -137,7 +133,7 @@ public class BitmarkTest extends BaseFeatureTest {
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
-        String txId = await((Callable1<String>) callback -> Bitmark.transfer(params, callback));
+        String txId = await(callback -> Bitmark.transfer(params, callback));
         assertNotNull(txId);
         assertEquals(Sha3256.HASH_LENGTH, HEX.decode(txId).length);
 
@@ -151,8 +147,7 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get not owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT2.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Transfer bitmark
@@ -178,8 +173,7 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Offer bitmark
@@ -190,7 +184,7 @@ public class BitmarkTest extends BaseFeatureTest {
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
-        String offerId = await((Callable1<String>) callback -> Bitmark.offer(params, callback));
+        String offerId = await(callback -> Bitmark.offer(params, callback));
         assertNotNull(offerId);
         assertFalse(offerId.isEmpty());
     }
@@ -202,8 +196,7 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get not owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT2.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Offer bitmark
@@ -228,8 +221,7 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Offer bitmark
@@ -240,21 +232,17 @@ public class BitmarkTest extends BaseFeatureTest {
         String link = bitmark.getHeadId();
         offerParams.setLink(link);
         offerParams.sign(KEY1);
-        String offerId = await((Callable1<String>) callback -> Bitmark.offer(offerParams,
-                callback));
+        String offerId = await(callback -> Bitmark.offer(offerParams, callback));
         assertNotNull(offerId, "Offer is not successful");
         assertFalse(offerId.isEmpty(), "Offer is not successful");
 
         // Respond offer
-        GetBitmarkResponse response =
-                await((Callable1<GetBitmarkResponse>) callback -> Bitmark.get(bitmark.getId(),
-                        false,
-                        callback));
+        GetBitmarkResponse response = await(callback -> Bitmark.get(bitmark.getId(), false,
+                callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.accept(offerRecord);
         responseParams.sign(KEY2);
-        String txId = await((Callable1<String>) callback -> Bitmark.respond(responseParams,
-                callback));
+        String txId = await(callback -> Bitmark.respond(responseParams, callback));
         assertNotNull(txId);
         assertEquals(Sha3256.HASH_LENGTH, HEX.decode(txId).length);
     }
@@ -266,8 +254,7 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Offer bitmark
@@ -278,21 +265,17 @@ public class BitmarkTest extends BaseFeatureTest {
         String link = bitmark.getHeadId();
         offerParams.setLink(link);
         offerParams.sign(KEY1);
-        String offerId = await((Callable1<String>) callback -> Bitmark.offer(offerParams,
-                callback));
+        String offerId = await(callback -> Bitmark.offer(offerParams, callback));
         assertNotNull(offerId, "Offer is not successful");
         assertFalse(offerId.isEmpty(), "Offer is not successful");
 
         // Respond offer
-        GetBitmarkResponse response =
-                await((Callable1<GetBitmarkResponse>) callback -> Bitmark.get(bitmark.getId(),
-                        callback));
+        GetBitmarkResponse response = await(callback -> Bitmark.get(bitmark.getId(), callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.cancel(offerRecord,
                 bitmark.getOwner());
         responseParams.setSigningKey(KEY1);
-        String status = await((Callable1<String>) callback -> Bitmark.respond(responseParams,
-                callback));
+        String status = await(callback -> Bitmark.respond(responseParams, callback));
         assertNotNull(status);
         assertEquals("ok", status);
     }
@@ -304,8 +287,7 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Offer bitmark
@@ -316,15 +298,12 @@ public class BitmarkTest extends BaseFeatureTest {
         String link = bitmark.getHeadId();
         offerParams.setLink(link);
         offerParams.sign(KEY1);
-        String offerId = await((Callable1<String>) callback -> Bitmark.offer(offerParams,
-                callback));
+        String offerId = await(callback -> Bitmark.offer(offerParams, callback));
         assertNotNull(offerId, "Offer is not successful");
         assertFalse(offerId.isEmpty(), "Offer is not successful");
 
         // Respond offer
-        GetBitmarkResponse response =
-                await((Callable1<GetBitmarkResponse>) callback -> Bitmark.get(bitmark.getId(),
-                        callback));
+        GetBitmarkResponse response = await(callback -> Bitmark.get(bitmark.getId(), callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.reject(offerRecord);
         responseParams.setSigningKey(KEY2);
@@ -340,14 +319,12 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Get bitmark by id
         String id = bitmarksResponse.getBitmarks().get(0).getId();
-        GetBitmarkResponse bitmarkResponse =
-                await((Callable1<GetBitmarkResponse>) callback -> Bitmark.get(id, true, callback));
+        GetBitmarkResponse bitmarkResponse = await(callback -> Bitmark.get(id, true, callback));
         BitmarkRecord bitmark = bitmarkResponse.getBitmark();
         AssetRecord asset = bitmarkResponse.getAsset();
         assertNotNull(bitmark);
@@ -362,14 +339,12 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Get bitmark by id
         String id = bitmarksResponse.getBitmarks().get(0).getId();
-        GetBitmarkResponse bitmarkResponse =
-                await((Callable1<GetBitmarkResponse>) callback -> Bitmark.get(id, callback));
+        GetBitmarkResponse bitmarkResponse = await(callback -> Bitmark.get(id, callback));
         BitmarkRecord bitmark = bitmarkResponse.getBitmark();
         AssetRecord asset = bitmarkResponse.getAsset();
         assertNotNull(bitmark);
@@ -385,18 +360,14 @@ public class BitmarkTest extends BaseFeatureTest {
         int limit = 1;
         BitmarkQueryBuilder builder1 =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(limit);
-        GetBitmarksResponse bitmarksResponse1 =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder1,
-                        callback));
+        GetBitmarksResponse bitmarksResponse1 = await(callback -> Bitmark.list(builder1, callback));
         assertFalse(bitmarksResponse1.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
         String[] bitmarkIds =
                 bitmarksResponse1.getBitmarks().stream().map(BitmarkRecord::getId).toArray(String[]::new);
 
         BitmarkQueryBuilder builder2 =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).bitmarkIds(bitmarkIds);
-        GetBitmarksResponse bitmarksResponse2 =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder2,
-                        callback));
+        GetBitmarksResponse bitmarksResponse2 = await(callback -> Bitmark.list(builder2, callback));
         List<BitmarkRecord> bitmarks = bitmarksResponse2.getBitmarks();
         List<AssetRecord> assets = bitmarksResponse2.getAssets();
         assertFalse(bitmarks.isEmpty());
@@ -413,8 +384,7 @@ public class BitmarkTest extends BaseFeatureTest {
         int limit = 1;
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(limit).loadAsset(true);
-        GetBitmarksResponse bitmarksResponse =
-                await((Callable1<GetBitmarksResponse>) callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
         List<BitmarkRecord> bitmarks = bitmarksResponse.getBitmarks();
         List<AssetRecord> assets = bitmarksResponse.getAssets();
         assertFalse(bitmarks.isEmpty());

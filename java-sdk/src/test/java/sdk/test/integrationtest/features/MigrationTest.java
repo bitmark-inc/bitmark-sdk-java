@@ -25,11 +25,13 @@ import static sdk.utils.Version.TWELVE;
 
 public class MigrationTest extends BaseFeatureTest {
 
+    private static final long TIMEOUT = 50000;
+
     @ParameterizedTest
     @MethodSource("createValid24Words")
     public void testMigration_Valid24Words_CorrectValuesReturn(String[] twentyFourWords) throws Throwable {
-        Pair<Account, List<String>> pair =
-                await((Callable1<Pair<Account, List<String>>>) callback -> Migration.migrate(twentyFourWords, callback));
+        Pair<Account, List<String>> pair = await(callback -> Migration.migrate(twentyFourWords,
+                callback), TIMEOUT);
         Account account = pair.first();
         List<String> bitmarksId = pair.second();
         assertTrue(Account.isValidAccountNumber(account.getAccountNumber()));
