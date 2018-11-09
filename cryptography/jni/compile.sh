@@ -22,7 +22,7 @@ rm -f *.so
 
 export PATH=/usr/local/bin:$PATH
 
-swig -I../libsodium/src/libsodium/include -java -package cryptography.crypto.sodium -outdir ../src/main/java/cryptography/crypto/sodium sodium.i
+swig -I../libsodium/src/libsodium/include -java -package com.bitmark.cryptography.crypto.sodium -outdir ../src/main/java/com/bitmark/cryptography/crypto/sodium sodium.i
 
 
 ./jnilib.sh

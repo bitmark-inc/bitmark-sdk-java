@@ -106,7 +106,7 @@ task unzipAAR(type: Copy) {
     into "${buildDir}/outputs/aar/unzip"
 }
 
-task copyNativeLib(type: Copy) {
+task copyNativeLib(type: Copy, dependsOn: 'deleteNativeLib') {
     from "${buildDir}/libs/sodiumjni/shared/", "${buildDir}/intermediates/library_and_local_jars_jni/release/"
     into 'native-lib/lib'
 }
@@ -129,7 +129,7 @@ task deleteNativeJar(type: Delete) {
 task buildNativeJar(type: Zip, dependsOn: ['copyNativeLib', 'deleteNativeJar']) {
     destinationDir file("$buildDir/libs/native-jar")
     baseName 'libsodium'
-    version '1.0'
+    version ''
     extension 'jar'
     from('native-lib/lib') {
         include '**/*.so*', '*.dylib', '*.dll', '*.so'
@@ -190,12 +190,12 @@ model {
 
 task('generateSWIGsource') {
     inputs.dir fileTree(dir: "${projectDir}/jni")
-    outputs.dir("${projectDir}/src/main/java/cryptography/crypto/sodium")
+    outputs.dir("${projectDir}/src/main/java/com/bitmark/cryptography/crypto/sodium")
     outputs.file "${projectDir}/jni/sodium_wrap.c"
     doFirst {
         exec {
             workingDir "${projectDir}/jni"
-            commandLine 'swig', '-java', '-package', 'cryptography.crypto.sodium', '-outdir', '../src/main/java/cryptography/crypto/sodium', 'sodium.i'
+            commandLine 'swig', '-java', '-package', 'com.bitmark.cryptography.crypto.sodium', '-outdir', '../src/main/java/com/bitmark/cryptography/crypto/sodium', 'sodium.i'
         }
     }
 }

@@ -788,7 +788,7 @@ static jdoubleArray SWIG_JavaArrayOutDouble (JNIEnv *jenv, double *result, jsize
 extern "C" {
 #endif
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_sodium_1init(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_sodium_1init(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   int result;
   
@@ -800,7 +800,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_sodium_1init(J
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_sodium_1version_1string(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_sodium_1version_1string(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -812,7 +812,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_sodium_1
 }
 
 
-SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2) {
+SWIGEXPORT void JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_randombytes(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2) {
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long arg2 ;
   
@@ -830,7 +830,7 @@ SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes(JN
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes_1random(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_randombytes_1random(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   uint32_t result;
   
@@ -842,7 +842,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes_1r
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes_1uniform(JNIEnv *jenv, jclass jcls, jint jarg1) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_randombytes_1uniform(JNIEnv *jenv, jclass jcls, jint jarg1) {
   jint jresult = 0 ;
   uint32_t arg1 ;
   uint32_t result;
@@ -856,7 +856,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes_1u
 }
 
 
-SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes_1buf(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2) {
+SWIGEXPORT void JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_randombytes_1buf(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2) {
   unsigned char *arg1 = (unsigned char *) (unsigned char *)0 ;
   unsigned long long arg2 ;
   
@@ -874,7 +874,7 @@ SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes_1b
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes_1close(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_randombytes_1close(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   int result;
   
@@ -886,14 +886,14 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes_1c
 }
 
 
-SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_randombytes_1stir(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT void JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_randombytes_1stir(JNIEnv *jenv, jclass jcls) {
   (void)jenv;
   (void)jcls;
   randombytes_stir();
 }
 
 
-SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_sodium_1increment(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2) {
+SWIGEXPORT void JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_sodium_1increment(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2) {
   unsigned char *arg1 = (unsigned char *) 0 ;
   size_t arg2 ;
   
@@ -911,7 +911,7 @@ SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_sodium_1increm
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -923,7 +923,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1noncebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1noncebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -935,7 +935,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1macbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1macbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -947,7 +947,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1zerobytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1zerobytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -959,7 +959,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1boxzerobytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1boxzerobytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -971,7 +971,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1primitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1primitive(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -983,7 +983,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1029,7 +1029,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1open_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1open_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1075,7 +1075,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1121,7 +1121,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1167,7 +1167,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1221,7 +1221,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1open_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1open_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1275,7 +1275,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -1287,7 +1287,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalar
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1scalarbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1scalarbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -1299,7 +1299,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalar
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1primitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1primitive(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -1311,7 +1311,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1base(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1base(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1339,7 +1339,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalar
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1375,7 +1375,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalar
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1seedbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1seedbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -1387,7 +1387,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1s
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1publickeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1publickeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -1399,7 +1399,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1p
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -1411,7 +1411,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1s
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1noncebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1noncebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -1423,7 +1423,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1n
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1macbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1macbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -1435,7 +1435,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1m
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1primitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1primitive(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -1447,7 +1447,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1475,7 +1475,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1k
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1511,7 +1511,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1s
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1565,7 +1565,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1e
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1619,7 +1619,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1o
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jbyteArray jarg7) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jbyteArray jarg7) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1681,7 +1681,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1d
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jbyteArray jarg7) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jbyteArray jarg7) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1743,7 +1743,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1o
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1beforenmbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1beforenmbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -1755,7 +1755,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1b
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1beforenm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1beforenm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1791,7 +1791,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1b
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1easy_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1easy_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1837,7 +1837,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1e
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1easy_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1easy_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1883,7 +1883,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1o
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1detached_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1detached_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1937,7 +1937,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1d
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1detached_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1detached_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -1991,7 +1991,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1o
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1sealbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1sealbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2003,7 +2003,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1s
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1seal(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1seal(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2041,7 +2041,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1s
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1seal_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1seal_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2087,7 +2087,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1s
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1zerobytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1zerobytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2099,7 +2099,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1z
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1boxzerobytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1boxzerobytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2111,7 +2111,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1b
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2165,7 +2165,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box(JN
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2219,7 +2219,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1o
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2265,7 +2265,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1a
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1open_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2311,7 +2311,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1o
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2323,7 +2323,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1seedbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1seedbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2335,7 +2335,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1publickeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1publickeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2347,7 +2347,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2359,7 +2359,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1primitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1primitive(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -2371,7 +2371,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2399,7 +2399,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2435,7 +2435,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -2478,7 +2478,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign(J
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -2521,7 +2521,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -2564,7 +2564,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1verify_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1verify_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2602,7 +2602,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1sk_1to_1seed(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1sk_1to_1seed(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2630,7 +2630,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1sk_1to_1pk(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1sk_1to_1pk(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2658,7 +2658,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2670,7 +2670,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1bytes_1min(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1bytes_1min(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2682,7 +2682,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1bytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1bytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2694,7 +2694,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2706,7 +2706,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1keybytes_1min(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1keybytes_1min(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2718,7 +2718,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1keybytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1keybytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2730,7 +2730,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1primitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1primitive(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -2742,7 +2742,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long arg2 ;
@@ -2784,7 +2784,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1statebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1statebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2796,7 +2796,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4) {
   jint jresult = 0 ;
   crypto_generichash_state *arg1 = (crypto_generichash_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2828,7 +2828,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_generichash_state *arg1 = (crypto_generichash_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2858,7 +2858,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_generichash_state *arg1 = (crypto_generichash_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2888,7 +2888,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2900,7 +2900,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorth
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2912,7 +2912,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorth
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1primitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1primitive(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -2924,7 +2924,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -2962,7 +2962,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorth
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2974,7 +2974,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -2986,7 +2986,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1primitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1primitive(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -2998,7 +2998,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3036,7 +3036,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth(J
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3074,7 +3074,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3086,7 +3086,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3098,7 +3098,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1primitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1primitive(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -3110,7 +3110,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3148,7 +3148,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3186,7 +3186,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1statebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1statebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3198,7 +3198,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   crypto_onetimeauth_state *arg1 = (crypto_onetimeauth_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3226,7 +3226,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_onetimeauth_state *arg1 = (crypto_onetimeauth_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3256,7 +3256,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   crypto_onetimeauth_state *arg1 = (crypto_onetimeauth_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3284,7 +3284,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3312,7 +3312,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1ke
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3348,7 +3348,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1se
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1client_1session_1keys(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1client_1session_1keys(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3400,7 +3400,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1cl
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1server_1session_1keys(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1server_1session_1keys(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3452,7 +3452,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1kx_1se
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3464,7 +3464,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1nsecbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1nsecbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3476,7 +3476,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1npubbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1npubbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3488,7 +3488,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1abytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1abytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3500,7 +3500,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3512,7 +3512,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1keygen(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
+SWIGEXPORT void JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1keygen(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
   unsigned char *arg1 = (unsigned char *) 0 ;
   
   (void)jenv;
@@ -3528,7 +3528,7 @@ SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1encrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jbyteArray jarg8, jbyteArray jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1encrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jbyteArray jarg8, jbyteArray jarg9) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -3597,7 +3597,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1encrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9, jbyteArray jarg10) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1encrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9, jbyteArray jarg10) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3674,7 +3674,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1decrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1decrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -3743,7 +3743,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1decrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1decrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -3815,7 +3815,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3827,7 +3827,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1nsecbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1nsecbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3839,7 +3839,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1abytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1abytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3851,7 +3851,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3863,7 +3863,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1npubbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1npubbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -3875,7 +3875,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1keygen(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
+SWIGEXPORT void JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1keygen(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
   unsigned char *arg1 = (unsigned char *) 0 ;
   
   (void)jenv;
@@ -3891,7 +3891,7 @@ SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1encrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jbyteArray jarg8, jbyteArray jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1encrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jbyteArray jarg8, jbyteArray jarg9) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -3960,7 +3960,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1encrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9, jbyteArray jarg10) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1encrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9, jbyteArray jarg10) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4037,7 +4037,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1decrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1decrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -4106,7 +4106,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1decrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1chacha20poly1305_1ietf_1decrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4178,7 +4178,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4190,7 +4190,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1npubbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1npubbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4202,7 +4202,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1nsecbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1nsecbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4214,7 +4214,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1abytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1abytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4226,7 +4226,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4238,7 +4238,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1keygen(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
+SWIGEXPORT void JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1keygen(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
   unsigned char *arg1 = (unsigned char *) 0 ;
   
   (void)jenv;
@@ -4254,7 +4254,7 @@ SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1encrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9, jbyteArray jarg10) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1encrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9, jbyteArray jarg10) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4331,7 +4331,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1encrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jbyteArray jarg8, jbyteArray jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1encrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jbyteArray jarg8, jbyteArray jarg9) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -4400,7 +4400,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1decrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1decrypt_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4472,7 +4472,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1decrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1decrypt(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jbyteArray jarg8, jbyteArray jarg9) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -4541,7 +4541,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1aead_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4553,7 +4553,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4565,7 +4565,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4603,7 +4603,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4641,7 +4641,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1statebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1statebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4653,7 +4653,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_auth_hmacsha256_state *arg1 = (crypto_auth_hmacsha256_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4683,7 +4683,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_auth_hmacsha256_state *arg1 = (crypto_auth_hmacsha256_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4713,7 +4713,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha256_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   crypto_auth_hmacsha256_state *arg1 = (crypto_auth_hmacsha256_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4741,7 +4741,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4753,7 +4753,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4765,7 +4765,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4803,7 +4803,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4841,7 +4841,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1statebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1statebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4853,7 +4853,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_auth_hmacsha512_state *arg1 = (crypto_auth_hmacsha512_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4883,7 +4883,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_auth_hmacsha512_state *arg1 = (crypto_auth_hmacsha512_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4913,7 +4913,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   crypto_auth_hmacsha512_state *arg1 = (crypto_auth_hmacsha512_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -4941,7 +4941,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4953,7 +4953,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -4965,7 +4965,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5003,7 +5003,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5041,7 +5041,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1statebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1statebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5053,7 +5053,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_auth_hmacsha512256_state *arg1 = (crypto_auth_hmacsha512256_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5083,7 +5083,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_auth_hmacsha512256_state *arg1 = (crypto_auth_hmacsha512256_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5113,7 +5113,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1hmacsha512256_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   crypto_auth_hmacsha512256_state *arg1 = (crypto_auth_hmacsha512256_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5141,7 +5141,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1auth_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1seedbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1seedbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5153,7 +5153,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1publickeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1publickeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5165,7 +5165,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5177,7 +5177,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1beforenmbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1beforenmbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5189,7 +5189,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1noncebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1noncebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5201,7 +5201,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1zerobytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1zerobytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5213,7 +5213,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1boxzerobytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1boxzerobytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5225,7 +5225,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1macbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1macbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5237,7 +5237,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5291,7 +5291,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5345,7 +5345,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5381,7 +5381,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5409,7 +5409,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1beforenm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1beforenm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5445,7 +5445,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5491,7 +5491,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1open_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xsalsa20poly1305_1open_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5537,7 +5537,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20_1outputbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20_1outputbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5549,7 +5549,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20_1inputbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20_1inputbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5561,7 +5561,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5573,7 +5573,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20_1constbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20_1constbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5585,7 +5585,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1hsalsa20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5629,7 +5629,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20_1outputbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20_1outputbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5641,7 +5641,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20_1inputbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20_1inputbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5653,7 +5653,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5665,7 +5665,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20_1constbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20_1constbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5677,7 +5677,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1salsa20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5721,7 +5721,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1core_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1bytes_1min(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1bytes_1min(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5733,7 +5733,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1bytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1bytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5745,7 +5745,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5757,7 +5757,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1keybytes_1min(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1keybytes_1min(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5769,7 +5769,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1keybytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1keybytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5781,7 +5781,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5793,7 +5793,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1saltbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1saltbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5805,7 +5805,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1personalbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1personalbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -5817,7 +5817,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   size_t arg2 ;
@@ -5859,7 +5859,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1salt_1personal(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jbyteArray jarg8) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1salt_1personal(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jbyteArray jarg8) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   size_t arg2 ;
@@ -5917,7 +5917,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4) {
   jint jresult = 0 ;
   crypto_generichash_blake2b_state *arg1 = (crypto_generichash_blake2b_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5949,7 +5949,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1init_1salt_1personal(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1init_1salt_1personal(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   crypto_generichash_blake2b_state *arg1 = (crypto_generichash_blake2b_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -5997,7 +5997,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_generichash_blake2b_state *arg1 = (crypto_generichash_blake2b_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6027,7 +6027,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1generichash_1blake2b_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_generichash_blake2b_state *arg1 = (crypto_generichash_blake2b_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6057,7 +6057,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1generi
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6069,7 +6069,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6099,7 +6099,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1statebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1statebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6111,7 +6111,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
   jint jresult = 0 ;
   crypto_hash_sha256_state *arg1 = (crypto_hash_sha256_state *) 0 ;
   int result;
@@ -6131,7 +6131,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_hash_sha256_state *arg1 = (crypto_hash_sha256_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6161,7 +6161,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha256_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   crypto_hash_sha256_state *arg1 = (crypto_hash_sha256_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6189,7 +6189,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6201,7 +6201,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6231,7 +6231,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1statebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1statebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6243,7 +6243,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
   jint jresult = 0 ;
   crypto_hash_sha512_state *arg1 = (crypto_hash_sha512_state *) 0 ;
   int result;
@@ -6263,7 +6263,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_hash_sha512_state *arg1 = (crypto_hash_sha512_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6293,7 +6293,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1sha512_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   crypto_hash_sha512_state *arg1 = (crypto_hash_sha512_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6321,7 +6321,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1hash_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6333,7 +6333,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6345,7 +6345,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6383,7 +6383,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6421,7 +6421,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1init(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   crypto_onetimeauth_poly1305_state *arg1 = (crypto_onetimeauth_poly1305_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6449,7 +6449,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1update(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   crypto_onetimeauth_poly1305_state *arg1 = (crypto_onetimeauth_poly1305_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6479,7 +6479,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1onetimeauth_1poly1305_1final(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   crypto_onetimeauth_poly1305_state *arg1 = (crypto_onetimeauth_poly1305_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -6507,7 +6507,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1onetim
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1alg_1argon2i13(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1alg_1argon2i13(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   int result;
   
@@ -6519,7 +6519,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1alg_1default(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1alg_1default(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   int result;
   
@@ -6531,7 +6531,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1bytes_1min(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1bytes_1min(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6543,7 +6543,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1bytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1bytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6555,7 +6555,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1passwd_1min(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1passwd_1min(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6567,7 +6567,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1passwd_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1passwd_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6579,7 +6579,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1saltbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1saltbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6591,7 +6591,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1strbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1strbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6603,7 +6603,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1strprefix(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1strprefix(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -6615,7 +6615,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1min(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1min(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6627,7 +6627,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6639,7 +6639,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1min(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1min(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6651,7 +6651,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6663,7 +6663,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1interactive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1interactive(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6675,7 +6675,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1interactive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1interactive(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6687,7 +6687,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1moderate(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1moderate(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6699,7 +6699,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1moderate(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1moderate(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6711,7 +6711,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1sensitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1opslimit_1sensitive(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6723,7 +6723,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1sensitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1memlimit_1sensitive(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6735,7 +6735,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jint jarg7, jint jarg8) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jint jarg7, jint jarg8) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) (unsigned char *)0 ;
   unsigned long long arg2 ;
@@ -6781,7 +6781,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1str(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4, jint jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1str(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4, jint jarg5) {
   jint jresult = 0 ;
   char *arg1 ;
   char *arg2 = (char *) (char *)0 ;
@@ -6815,7 +6815,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1str_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1str_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   char *arg1 ;
   char *arg2 = (char *) (char *)0 ;
@@ -6845,7 +6845,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1primitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1primitive(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -6857,7 +6857,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1saltbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1saltbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6869,7 +6869,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1strbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1strbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6881,7 +6881,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1strprefix(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jbyteArray JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1strprefix(JNIEnv *jenv, jclass jcls) {
   jbyteArray jresult = 0 ;
   char *result = 0 ;
   
@@ -6893,7 +6893,7 @@ SWIGEXPORT jbyteArray JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1opslimit_1interactive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1opslimit_1interactive(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6905,7 +6905,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1memlimit_1interactive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1memlimit_1interactive(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6917,7 +6917,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1opslimit_1sensitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1opslimit_1sensitive(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6929,7 +6929,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1memlimit_1sensitive(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1memlimit_1sensitive(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -6941,7 +6941,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jint jarg7) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jint jarg6, jint jarg7) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) (unsigned char *)0 ;
   unsigned long long arg2 ;
@@ -6985,7 +6985,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1str(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4, jint jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1str(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jint jarg4, jint jarg5) {
   jint jresult = 0 ;
   char *arg1 ;
   char *arg2 = (char *) (char *)0 ;
@@ -7019,7 +7019,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1str_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1str_1verify(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3) {
   jint jresult = 0 ;
   char *arg1 ;
   char *arg2 = (char *) (char *)0 ;
@@ -7049,7 +7049,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1ll(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jint jarg5, jint jarg6, jint jarg7, jbyteArray jarg8, jint jarg9) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash_1scryptsalsa208sha256_1ll(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jint jarg4, jint jarg5, jint jarg6, jint jarg7, jbyteArray jarg8, jint jarg9) {
   jint jresult = 0 ;
   uint8_t *arg1 = (uint8_t *) 0 ;
   size_t arg2 ;
@@ -7097,7 +7097,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1pwhash
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1curve25519_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1curve25519_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7109,7 +7109,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalar
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1curve25519_1scalarbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1curve25519_1scalarbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7121,7 +7121,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalar
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1curve25519(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1curve25519(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7157,7 +7157,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalar
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1curve25519_1base(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1scalarmult_1curve25519_1base(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7185,7 +7185,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1scalar
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7197,7 +7197,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1noncebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1noncebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7209,7 +7209,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1zerobytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1zerobytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7221,7 +7221,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1boxzerobytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1boxzerobytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7233,7 +7233,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1macbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1macbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7245,7 +7245,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7291,7 +7291,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretbox_1xsalsa20poly1305_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7337,7 +7337,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1siphash24_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1siphash24_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7349,7 +7349,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorth
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1siphash24_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1siphash24_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7361,7 +7361,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorth
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1siphash24(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1shorthash_1siphash24(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7399,7 +7399,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1shorth
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1bytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1bytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7411,7 +7411,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1seedbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1seedbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7423,7 +7423,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1publickeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1publickeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7435,7 +7435,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7447,7 +7447,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -7490,7 +7490,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -7533,7 +7533,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long arg2 ;
@@ -7571,7 +7571,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jintArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long *arg2 = (unsigned long long *) 0 ;
@@ -7614,7 +7614,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1verify_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1verify_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7652,7 +7652,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7680,7 +7680,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7716,7 +7716,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1pk_1to_1curve25519(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1pk_1to_1curve25519(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7744,7 +7744,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1sk_1to_1curve25519(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1ed25519_1sk_1to_1curve25519(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7772,7 +7772,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1sign_1
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7784,7 +7784,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1noncebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1noncebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7796,7 +7796,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long arg2 ;
@@ -7834,7 +7834,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1xor(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1xor(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7880,7 +7880,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1xor_1ic(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1xor_1ic(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -7928,7 +7928,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1ietf_1noncebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1ietf_1noncebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -7940,7 +7940,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1ietf(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1ietf(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long arg2 ;
@@ -7978,7 +7978,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1ietf_1xor(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1ietf_1xor(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8024,7 +8024,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1ietf_1xor_1ic(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1chacha20_1ietf_1xor_1ic(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8072,7 +8072,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8084,7 +8084,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20_1noncebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20_1noncebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8096,7 +8096,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jint jarg2, jbyteArray jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned long long arg2 ;
@@ -8134,7 +8134,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20_1xor(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20_1xor(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8180,7 +8180,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20_1xor_1ic(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1salsa20_1xor_1ic(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8228,7 +8228,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8240,7 +8240,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20_1noncebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20_1noncebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8252,7 +8252,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20_1xor(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20_1xor(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8298,7 +8298,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20_1xor_1ic(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1stream_1xsalsa20_1xor_1ic(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8346,7 +8346,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1stream
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1keybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1keybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8358,7 +8358,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1headerbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1headerbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8370,7 +8370,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1abytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1abytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8382,7 +8382,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1statebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1statebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8394,7 +8394,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1tag_1message(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1tag_1message(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8406,7 +8406,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1tag_1push(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1tag_1push(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8418,7 +8418,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1tag_1rekey(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1tag_1rekey(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8430,7 +8430,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1tag_1final(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1tag_1final(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8442,7 +8442,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8454,7 +8454,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1keygen(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
+SWIGEXPORT void JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1keygen(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
   unsigned char *arg1 = (unsigned char *) 0 ;
   
   (void)jenv;
@@ -8470,7 +8470,7 @@ SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1init_1push(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1init_1push(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   crypto_secretstream_xchacha20poly1305_state *arg1 = (crypto_secretstream_xchacha20poly1305_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8506,7 +8506,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1push(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jshort jarg8) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1push(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jint jarg5, jbyteArray jarg6, jint jarg7, jshort jarg8) {
   jint jresult = 0 ;
   crypto_secretstream_xchacha20poly1305_state *arg1 = (crypto_secretstream_xchacha20poly1305_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8561,7 +8561,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1init_1pull(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1init_1pull(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   crypto_secretstream_xchacha20poly1305_state *arg1 = (crypto_secretstream_xchacha20poly1305_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8597,7 +8597,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1pull(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jint jarg8) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1pull(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jintArray jarg3, jbyteArray jarg4, jbyteArray jarg5, jint jarg6, jbyteArray jarg7, jint jarg8) {
   jint jresult = 0 ;
   crypto_secretstream_xchacha20poly1305_state *arg1 = (crypto_secretstream_xchacha20poly1305_state *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8658,7 +8658,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1rekey(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
+SWIGEXPORT void JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1secretstream_1xchacha20poly1305_1rekey(JNIEnv *jenv, jclass jcls, jbyteArray jarg1) {
   crypto_secretstream_xchacha20poly1305_state *arg1 = (crypto_secretstream_xchacha20poly1305_state *) 0 ;
   
   (void)jenv;
@@ -8674,7 +8674,7 @@ SWIGEXPORT void JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1secret
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1seedbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1seedbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8686,7 +8686,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1publickeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1publickeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8698,7 +8698,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8710,7 +8710,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1beforenmbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1beforenmbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8722,7 +8722,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1noncebytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1noncebytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8734,7 +8734,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1macbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1macbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8746,7 +8746,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1messagebytes_1max(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8758,7 +8758,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1sealbytes(JNIEnv *jenv, jclass jcls) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1sealbytes(JNIEnv *jenv, jclass jcls) {
   jint jresult = 0 ;
   size_t result;
   
@@ -8770,7 +8770,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1seed_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8806,7 +8806,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1keypair(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8834,7 +8834,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1beforenm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1beforenm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8870,7 +8870,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1detached_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1detached_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8924,7 +8924,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jbyteArray jarg7) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jbyteArray jarg7) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -8986,7 +8986,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1easy_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1easy_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -9032,7 +9032,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -9086,7 +9086,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1open_1detached_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1open_1detached_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -9140,7 +9140,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1open_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jbyteArray jarg7) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1open_1detached(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jbyteArray jarg3, jint jarg4, jbyteArray jarg5, jbyteArray jarg6, jbyteArray jarg7) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -9202,7 +9202,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1open_1easy_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1open_1easy_1afternm(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -9248,7 +9248,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1open_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1open_1easy(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5, jbyteArray jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -9302,7 +9302,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1seal(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1seal(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
@@ -9340,7 +9340,7 @@ SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1c
 }
 
 
-SWIGEXPORT jint JNICALL Java_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1seal_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
+SWIGEXPORT jint JNICALL Java_com_bitmark_cryptography_crypto_sodium_SodiumJNI_crypto_1box_1curve25519xchacha20poly1305_1seal_1open(JNIEnv *jenv, jclass jcls, jbyteArray jarg1, jbyteArray jarg2, jint jarg3, jbyteArray jarg4, jbyteArray jarg5) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
   unsigned char *arg2 = (unsigned char *) 0 ;
