@@ -48,12 +48,12 @@ public class RegistrationParams extends AbsSingleParams {
                     return computeFingerprint(file);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    throw new com.bitmark.apiservice.utils.error.UnexpectedException(e);
+                    throw new UnexpectedException(e);
                 }
             });
         } catch (Throwable throwable) {
             throwable.printStackTrace();
-            throw new com.bitmark.apiservice.utils.error.UnexpectedException(throwable);
+            throw new UnexpectedException(throwable);
         }
         if (fingerprint == null) throw new UnexpectedException("Cannot generate fingerprint");
         return fingerprint;

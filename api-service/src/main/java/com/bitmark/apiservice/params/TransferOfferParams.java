@@ -27,7 +27,7 @@ public class TransferOfferParams extends AbsSingleParams {
 
     private Map<String, String> extraInfo;
 
-    public TransferOfferParams(com.bitmark.apiservice.utils.Address offeredOwner) {
+    public TransferOfferParams(Address offeredOwner) {
         checkValid(() -> offeredOwner != null && offeredOwner.isValid(), "Invalid offer owner " +
                 "address");
         this.offeredOwner = offeredOwner;
@@ -63,7 +63,7 @@ public class TransferOfferParams extends AbsSingleParams {
     @Override
     byte[] pack() {
         byte[] data = VarInt.writeUnsignedVarInt(0x05);
-        data = com.bitmark.apiservice.utils.BinaryPacking.concat(HEX.decode(link), data);
+        data = BinaryPacking.concat(HEX.decode(link), data);
         data = ArrayUtil.concat(data, new byte[]{0x00});
         data = BinaryPacking.concat(offeredOwner.pack(), data);
         return data;

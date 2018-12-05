@@ -17,7 +17,7 @@ public class RegistrationResponse implements Response {
 
     private List<Asset> assets;
 
-    @com.bitmark.apiservice.utils.annotation.VisibleForTesting
+    @VisibleForTesting
     public RegistrationResponse(List<Asset> assets) {
         this.assets = assets;
     }

@@ -18,12 +18,12 @@ import java.util.Objects;
 public class GetTransactionsResponse implements Response {
 
     @SerializedName("txs")
-    private List<com.bitmark.apiservice.utils.record.TransactionRecord> transactions;
+    private List<TransactionRecord> transactions;
 
-    private List<com.bitmark.apiservice.utils.record.AssetRecord> assets;
+    private List<AssetRecord> assets;
 
     @VisibleForTesting
-    public GetTransactionsResponse(List<com.bitmark.apiservice.utils.record.TransactionRecord> transactions, List<com.bitmark.apiservice.utils.record.AssetRecord> assets) {
+    public GetTransactionsResponse(List<TransactionRecord> transactions, List<AssetRecord> assets) {
         this.transactions = transactions;
         this.assets = assets;
     }

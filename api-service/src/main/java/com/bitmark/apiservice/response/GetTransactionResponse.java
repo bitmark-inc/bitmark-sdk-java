@@ -17,12 +17,12 @@ import java.util.Objects;
 public class GetTransactionResponse implements Response {
 
     @SerializedName("tx")
-    private com.bitmark.apiservice.utils.record.TransactionRecord transaction;
+    private TransactionRecord transaction;
 
-    private com.bitmark.apiservice.utils.record.AssetRecord asset;
+    private AssetRecord asset;
 
     @VisibleForTesting
-    public GetTransactionResponse(com.bitmark.apiservice.utils.record.TransactionRecord transaction, com.bitmark.apiservice.utils.record.AssetRecord asset) {
+    public GetTransactionResponse(TransactionRecord transaction, AssetRecord asset) {
         this.transaction = transaction;
         this.asset = asset;
     }

@@ -1,9 +1,9 @@
 package com.bitmark.apiservice;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
-import com.bitmark.apiservice.params.TransferParams;
+import com.bitmark.apiservice.params.*;
 import com.bitmark.apiservice.params.query.QueryParams;
-import com.bitmark.apiservice.response.GetTransactionsResponse;
+import com.bitmark.apiservice.response.*;
 import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import okhttp3.Headers;
@@ -43,13 +43,13 @@ public class ApiService implements BitmarkApi {
     }
 
     @Override
-    public void issueBitmark(com.bitmark.apiservice.params.IssuanceParams params, Callback1<List<String>> callback) {
+    public void issueBitmark(IssuanceParams params, Callback1<List<String>> callback) {
         final String path = String.format("/%s/issue", VERSION);
         client.postAsync(path, params, toIssueResponse(callback));
     }
 
     @Override
-    public void registerAsset(com.bitmark.apiservice.params.RegistrationParams params, Callback1<com.bitmark.apiservice.response.RegistrationResponse> callback) {
+    public void registerAsset(RegistrationParams params, Callback1<RegistrationResponse> callback) {
         final String path = String.format("/%s/register-asset", VERSION);
         client.postAsync(path, params, toRegistrationResponse(callback));
     }
@@ -61,13 +61,13 @@ public class ApiService implements BitmarkApi {
     }
 
     @Override
-    public void offerBitmark(com.bitmark.apiservice.params.TransferOfferParams params, Callback1<String> callback) {
+    public void offerBitmark(TransferOfferParams params, Callback1<String> callback) {
         final String path = String.format("/%s/transfer", VERSION);
         client.postAsync(path, params, toOfferId(callback));
     }
 
     @Override
-    public void respondBitmarkOffer(com.bitmark.apiservice.params.TransferResponseParams params, Callback1<String> callback) {
+    public void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback) {
         final String path = String.format("/%s/transfer", VERSION);
         Headers headers = Headers.of(params.buildHeaders());
         if (params.isAccept()) client.patchAsync(path, headers, params, toTxId(callback));
@@ -76,7 +76,7 @@ public class ApiService implements BitmarkApi {
 
     @Override
     public void getBitmark(String bitmarkId, boolean includeAsset,
-                           Callback1<com.bitmark.apiservice.response.GetBitmarkResponse> callback) {
+                           Callback1<GetBitmarkResponse> callback) {
         final String path = String.format("/%s/bitmarks/%s?asset=%b", VERSION
                 , bitmarkId, includeAsset);
         client.getAsync(path, toGetBitmarkResponse(callback));
@@ -84,7 +84,7 @@ public class ApiService implements BitmarkApi {
     }
 
     @Override
-    public void listBitmarks(QueryParams params, Callback1<com.bitmark.apiservice.response.GetBitmarksResponse> callback) {
+    public void listBitmarks(QueryParams params, Callback1<GetBitmarksResponse> callback) {
         final String path = String.format("/%s/bitmarks", VERSION);
         client.getAsync(path, params, toGetBitmarksResponse(callback));
     }
@@ -103,7 +103,7 @@ public class ApiService implements BitmarkApi {
 
     @Override
     public void getTransaction(String txId, boolean includeAsset,
-                               Callback1<com.bitmark.apiservice.response.GetTransactionResponse> callback) {
+                               Callback1<GetTransactionResponse> callback) {
         final String path = String.format("/%s/txs/%s?asset=%b", VERSION,
                 txId, includeAsset);
         client.getAsync(path, toGetTransactionResponse(callback));

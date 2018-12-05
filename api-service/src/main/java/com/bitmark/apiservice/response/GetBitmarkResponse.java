@@ -15,12 +15,12 @@ import java.util.Objects;
 
 public class GetBitmarkResponse implements Response {
 
-    private com.bitmark.apiservice.utils.record.BitmarkRecord bitmark;
+    private BitmarkRecord bitmark;
 
-    private com.bitmark.apiservice.utils.record.AssetRecord asset;
+    private AssetRecord asset;
 
     @VisibleForTesting
-    public GetBitmarkResponse(com.bitmark.apiservice.utils.record.BitmarkRecord bitmark, com.bitmark.apiservice.utils.record.AssetRecord asset) {
+    public GetBitmarkResponse(BitmarkRecord bitmark, AssetRecord asset) {
         this.bitmark = bitmark;
         this.asset = asset;
     }

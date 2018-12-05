@@ -19,11 +19,11 @@ import static com.bitmark.cryptography.utils.Validator.checkValid;
 
 public class TransferParams extends AbsSingleParams {
 
-    private com.bitmark.apiservice.utils.Address owner;
+    private Address owner;
 
     private String link;
 
-    public TransferParams(com.bitmark.apiservice.utils.Address owner) {
+    public TransferParams(Address owner) {
         checkValid(() -> owner != null && owner.isValid(), "Invalid owner address");
         this.owner = owner;
     }
@@ -54,7 +54,7 @@ public class TransferParams extends AbsSingleParams {
     @Override
     byte[] pack() {
         byte[] data = VarInt.writeUnsignedVarInt(0x04);
-        data = com.bitmark.apiservice.utils.BinaryPacking.concat(HEX.decode(link), data);
+        data = BinaryPacking.concat(HEX.decode(link), data);
         data = ArrayUtil.concat(data, new byte[]{0x00});
         data = BinaryPacking.concat(owner.pack(), data);
         return data;

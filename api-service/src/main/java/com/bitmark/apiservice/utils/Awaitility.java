@@ -30,9 +30,9 @@ public class Awaitility {
      * @throws Throwable Error is thrown from task
      */
     public static <T> T await(Call<T> call) throws Throwable {
-        final com.bitmark.apiservice.utils.Data<T> data = new com.bitmark.apiservice.utils.Data<>();
-        final com.bitmark.apiservice.utils.Data<Throwable> error = new com.bitmark.apiservice.utils.Data<>();
-        final com.bitmark.apiservice.utils.BackgroundJobScheduler scheduler = new BackgroundJobScheduler();
+        final Data<T> data = new Data<>();
+        final Data<Throwable> error = new Data<>();
+        final BackgroundJobScheduler scheduler = new BackgroundJobScheduler();
         scheduler.execute(() -> {
             try {
                 data.setValue(call.call());
@@ -58,8 +58,8 @@ public class Awaitility {
     }
 
     public static <T> T await(Callable1<T> callable, Long timeout) throws Throwable {
-        com.bitmark.apiservice.utils.Data<T> data = new com.bitmark.apiservice.utils.Data<>();
-        com.bitmark.apiservice.utils.Data<Throwable> error = new Data<>();
+        Data<T> data = new Data<>();
+        Data<Throwable> error = new Data<>();
 
         callable.call(new Callback1<T>() {
             @Override

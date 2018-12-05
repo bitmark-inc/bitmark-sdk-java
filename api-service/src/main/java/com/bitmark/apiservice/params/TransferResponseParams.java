@@ -49,15 +49,15 @@ public class TransferResponseParams extends AbsSingleParams {
 
     private String currentOwner;
 
-    public static TransferResponseParams accept(com.bitmark.apiservice.utils.record.OfferRecord offer) {
+    public static TransferResponseParams accept(OfferRecord offer) {
         return new TransferResponseParams(offer, ACCEPT);
     }
 
-    public static TransferResponseParams reject(com.bitmark.apiservice.utils.record.OfferRecord offer) {
+    public static TransferResponseParams reject(OfferRecord offer) {
         return new TransferResponseParams(offer, REJECT);
     }
 
-    public static TransferResponseParams cancel(com.bitmark.apiservice.utils.record.OfferRecord offer, String owner) {
+    public static TransferResponseParams cancel(OfferRecord offer, String owner) {
         TransferResponseParams params = new TransferResponseParams(offer, CANCEL);
         params.setCurrentOwner(owner);
         return params;
@@ -73,9 +73,9 @@ public class TransferResponseParams extends AbsSingleParams {
     @Override
     byte[] pack() {
         byte[] data = VarInt.writeUnsignedVarInt(0x05);
-        data = com.bitmark.apiservice.utils.BinaryPacking.concat(HEX.decode(offer.getLink()), data);
+        data = BinaryPacking.concat(HEX.decode(offer.getLink()), data);
         data = ArrayUtil.concat(data, new byte[]{0x00});
-        data = com.bitmark.apiservice.utils.BinaryPacking.concat(Address.fromAccountNumber(offer.getOwner()).pack(), data);
+        data = BinaryPacking.concat(Address.fromAccountNumber(offer.getOwner()).pack(), data);
         data = BinaryPacking.concat(HEX.decode(offer.getSignature()), data);
         return data;
     }

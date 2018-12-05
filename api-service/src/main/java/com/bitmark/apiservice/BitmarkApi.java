@@ -1,8 +1,8 @@
 package com.bitmark.apiservice;
 
-import com.bitmark.apiservice.params.TransferParams;
+import com.bitmark.apiservice.params.*;
 import com.bitmark.apiservice.params.query.QueryParams;
-import com.bitmark.apiservice.response.GetTransactionsResponse;
+import com.bitmark.apiservice.response.*;
 import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 
@@ -17,26 +17,26 @@ import java.util.List;
 
 public interface BitmarkApi {
 
-    void issueBitmark(com.bitmark.apiservice.params.IssuanceParams params, Callback1<List<String>> callback);
+    void issueBitmark(IssuanceParams params, Callback1<List<String>> callback);
 
-    void registerAsset(com.bitmark.apiservice.params.RegistrationParams params, Callback1<com.bitmark.apiservice.response.RegistrationResponse> callback);
+    void registerAsset(RegistrationParams params, Callback1<RegistrationResponse> callback);
 
     void transferBitmark(TransferParams params, Callback1<String> callback);
 
-    void offerBitmark(com.bitmark.apiservice.params.TransferOfferParams params, Callback1<String> callback);
+    void offerBitmark(TransferOfferParams params, Callback1<String> callback);
 
-    void respondBitmarkOffer(com.bitmark.apiservice.params.TransferResponseParams params, Callback1<String> callback);
+    void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback);
 
-    void getBitmark(String bitmarkId, boolean includeAsset, Callback1<com.bitmark.apiservice.response.GetBitmarkResponse> callback);
+    void getBitmark(String bitmarkId, boolean includeAsset, Callback1<GetBitmarkResponse> callback);
 
-    void listBitmarks(QueryParams params, Callback1<com.bitmark.apiservice.response.GetBitmarksResponse> callback);
+    void listBitmarks(QueryParams params, Callback1<GetBitmarksResponse> callback);
 
     void getAsset(String assetId, Callback1<AssetRecord> callback);
 
     void listAssets(QueryParams params, Callback1<List<AssetRecord>> callback);
 
     void getTransaction(String txId, boolean includeAsset,
-                        Callback1<com.bitmark.apiservice.response.GetTransactionResponse> callback);
+                        Callback1<GetTransactionResponse> callback);
 
     void listTransactions(QueryParams params, Callback1<GetTransactionsResponse> callback);
 

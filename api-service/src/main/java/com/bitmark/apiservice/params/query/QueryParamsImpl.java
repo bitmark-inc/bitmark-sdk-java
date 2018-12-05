@@ -9,7 +9,7 @@ package com.bitmark.apiservice.params.query;
 
 public class QueryParamsImpl implements QueryParams {
 
-    private com.bitmark.apiservice.params.query.QueryBuilder builder;
+    private QueryBuilder builder;
 
     QueryParamsImpl(QueryBuilder builder) {
         this.builder = builder;
