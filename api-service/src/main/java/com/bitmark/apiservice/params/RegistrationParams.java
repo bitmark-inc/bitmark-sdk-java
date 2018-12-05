@@ -13,8 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.bitmark.apiservice.utils.Awaitility.await;
-import static com.bitmark.apiservice.utils.BinaryPacking.concat;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
 
@@ -33,7 +31,7 @@ public class RegistrationParams extends AbsSingleParams {
 
     private String fingerprint;
 
-    private com.bitmark.apiservice.utils.Address registrant;
+    private Address registrant;
 
     public RegistrationParams(String name, Map<String, String> metadata, Address registrant) throws ValidateException {
         checkValid(() -> name != null && metadata != null && registrant != null && !name.isEmpty() && metadata.size() > 0 && registrant.isValid(), "Invalid RegistrationParams");
@@ -79,13 +77,13 @@ public class RegistrationParams extends AbsSingleParams {
         return data;
     }
 
-    private String computeFingerprint(File file) throws IOException {
+    public static String computeFingerprint(File file) throws IOException {
         final byte[] bytes = FileUtils.getBytes(file);
         final byte[] hashedBytes = Sha3512.hash(bytes);
         return "01" + HEX.encode(hashedBytes);
     }
 
-    private String getPackedMetadata(Map<String, String> metadata) {
+    public static String getPackedMetadata(Map<String, String> metadata) {
         StringBuilder builder = new StringBuilder();
         int iteration = 0;
         for (Map.Entry<String, String> entry : metadata.entrySet()) {
@@ -97,7 +95,7 @@ public class RegistrationParams extends AbsSingleParams {
         return builder.toString();
     }
 
-    private String getJsonMetadata(Map<String, String> metadata) {
+    public static String getJsonMetadata(Map<String, String> metadata) {
         StringBuilder builder = new StringBuilder();
         int iteration = 0;
         for (Map.Entry<String, String> entry : metadata.entrySet()) {
