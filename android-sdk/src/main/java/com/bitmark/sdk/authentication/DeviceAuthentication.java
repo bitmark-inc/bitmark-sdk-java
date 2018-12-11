@@ -57,6 +57,9 @@ class DeviceAuthentication extends AbsAuthentication {
             if (this.activity instanceof StatefulActivity) {
                 ((StatefulActivity) this.activity).setStateListener(this);
             }
+            if (this.activity instanceof StatefulReactActivity) {
+                ((StatefulReactActivity) this.activity).setStateListener(this);
+            }
         }
 
         void authenticate(Cipher cipher) {

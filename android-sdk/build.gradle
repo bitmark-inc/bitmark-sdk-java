@@ -153,6 +153,7 @@ dependencies {
     implementation deps.android_support.annotation
     implementation deps.android_support.compat
     implementation deps.android_support.appcompat
+    implementation "com.facebook.react:react-native:+"
     
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
