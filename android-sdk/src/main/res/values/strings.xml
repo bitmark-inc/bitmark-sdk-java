@@ -1,0 +1,14 @@
+<resources>
+    <string name="dismiss">Dismiss</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="touch_the_fingerprint">Touch the fingerprint sensor</string>
+    <string name="successful">Successful</string>
+    <string name="fingerprint_is_recognized">Fingerprint is recognized</string>
+    <string name="failed">Failed</string>
+    <string name="fingerprint_not_recognized">Fingerprint is not recognized. Try again</string>
+    <string name="try_again">Try again</string>
+    <string name="identification">Identification</string>
+    <string name="application_need_to_authenticate_you">Application need to authenticate you</string>
+    <string name="something_error">Something error.Try again later</string>
+</resources>

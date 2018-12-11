@@ -15,6 +15,8 @@ versions.android_plugin = "3.2.1"
 versions.android_maven_plugin = "2.1"
 versions.android_test_runner = "1.0.2"
 versions.rxjava = "2.2.3"
+versions.android_support = "28.0.0"
+versions.java_stream = "1.2.1"
 
 def okhttp = [:]
 okhttp.okhttp3 = "com.squareup.okhttp3:okhttp:$versions.okhttp"
@@ -42,6 +44,11 @@ bitmark_sdk.api_service = "com.bitmark.sdk:api-service:$versions.api_service"
 def rx = [:]
 rx.java = "io.reactivex.rxjava2:rxjava:$versions.rxjava"
 
+def android_support = [:]
+android_support.annotation = "com.android.support:support-annotations:$versions.android_support"
+android_support.compat = "com.android.support:support-compat:$versions.android_support"
+android_support.appcompat = "com.android.support:appcompat-v7:$versions.android_support"
+
 def junit = "junit:junit:$versions.junit"
 def mockito = "org.mockito:mockito-core:$versions.mockito"
 def bouncycastle = "org.bouncycastle:bcprov-jdk15on:$versions.bouncycastle"
@@ -50,6 +57,7 @@ def bintray_plugin = "com.jfrog.bintray.gradle:gradle-bintray-plugin:$versions.b
 def android_plugin = "com.android.tools.build:gradle:$versions.android_plugin"
 def android_maven_plugin = "com.github.dcendents:android-maven-gradle-plugin:$versions.android_maven_plugin"
 def android_test_runner = "com.android.support.test:runner:$versions.android_test_runner"
+def java_stream = "com.annimon:stream:$versions.java_stream"
 
 def dependencies = [:]
 dependencies.okhttp = okhttp
@@ -66,6 +74,8 @@ dependencies.android_plugin = android_plugin
 dependencies.android_maven_plugin = android_maven_plugin
 dependencies.android_test_runner = android_test_runner
 dependencies.rx = rx
+dependencies.android_support = android_support
+dependencies.java_stream = java_stream
 ext.deps = dependencies
 
 

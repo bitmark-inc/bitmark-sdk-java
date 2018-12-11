@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:background="@android:color/transparent" android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_corner_white"
+                    android:paddingStart="@dimen/dp_8"
+                    android:paddingEnd="@dimen/dp_8"
+                    android:paddingTop="@dimen/dp_16"
+                    android:layout_gravity="bottom"
+                    android:paddingBottom="@dimen/dp_4">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/primary_text_light"
+            android:textSize="@dimen/sp_18"
+            tools:text="Identification"/>
+
+        <TextView
+            android:id="@+id/text_description"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_title"
+            android:layout_marginTop="@dimen/dp_12"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="@dimen/sp_14"
+            tools:text="Application need to authenticate you"/>
+
+        <ImageView
+            android:id="@+id/image_status"
+            android:layout_width="@dimen/dp_56"
+            android:layout_height="@dimen/dp_56"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/text_description"
+            android:layout_marginTop="@dimen/dp_36"
+            android:src="@drawable/ic_fingerprint_circle"/>
+
+        <TextView
+            android:id="@+id/text_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_status"
+            android:gravity="center_vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="@string/touch_the_fingerprint"
+            android:textColor="@color/lynch"
+            android:textSize="@dimen/sp_14"/>
+
+        <Button android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:layout_marginTop="@dimen/dp_16"
+                android:background="@android:color/transparent"
+                android:textColor="@color/persian_green"
+                android:layout_below="@id/text_status"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

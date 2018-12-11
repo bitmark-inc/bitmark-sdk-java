@@ -26,7 +26,7 @@ buildscript {
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     compileOptions {
         sourceCompatibility config.SOURCE_COMPATIBILITY
@@ -40,7 +40,7 @@ android {
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName project_publication.VERSION
     }
@@ -150,6 +150,9 @@ bintray {
 dependencies {
     implementation deps.bitmark_sdk.api_service
     implementation deps.rx.java
+    implementation deps.android_support.annotation
+    implementation deps.android_support.compat
+    implementation deps.android_support.appcompat
     
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
@@ -159,6 +162,6 @@ dependencies {
 
     androidTestImplementation deps.junit
     androidTestImplementation deps.android_test_runner
-    androidTestImplementation 'com.annimon:stream:1.2.1'
+    androidTestImplementation deps.java_stream
 
 }

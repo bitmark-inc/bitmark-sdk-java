@@ -67,4 +67,39 @@ public class FileUtils {
     private static String getTmpDir() {
         return System.getProperty("java.io.tmpdir");
     }
+
+    public static void write(File file, byte[] content) throws IOException {
+        if (!file.exists()) {
+            throw new FileNotFoundException("File with path " + file.getAbsolutePath() + " is not found");
+        } else {
+            FileOutputStream stream = new FileOutputStream(file);
+            try {
+                stream.write(content);
+            } finally {
+                stream.close();
+            }
+        }
+    }
+
+    public static byte[] read(File file) throws IOException {
+        if (!file.exists()) {
+            throw new FileNotFoundException("File with path " + file.getAbsolutePath() + " is not found");
+        } else {
+            byte[] bytes = new byte[(int) file.length()];
+            FileInputStream stream = new FileInputStream(file);
+
+            try {
+                stream.read(bytes);
+            } finally {
+                stream.close();
+            }
+
+            return bytes;
+        }
+    }
+
+    public static boolean isValid(File file){
+        return file.exists() && file.isFile();
+    }
+
 }

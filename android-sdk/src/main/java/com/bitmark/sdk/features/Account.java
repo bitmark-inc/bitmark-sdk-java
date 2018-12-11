@@ -1,13 +1,19 @@
 package com.bitmark.sdk.features;
 
+import android.app.Activity;
+import android.text.TextUtils;
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.utils.Address;
+import com.bitmark.apiservice.utils.callback.Callback0;
+import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.PublicKey;
 import com.bitmark.cryptography.error.ValidateException;
+import com.bitmark.sdk.keymanagement.KeyManager;
+import com.bitmark.sdk.keymanagement.KeyManagerImpl;
 import com.bitmark.sdk.utils.AccountNumberData;
 import com.bitmark.sdk.utils.Version;
 
@@ -43,7 +49,7 @@ public class Account {
 
     public static Account fromSeed(Seed seed) throws ValidateException {
         checkValid(() -> seed.getNetwork() == GlobalConfiguration.network(), "Incorrect network " +
-                "from Seed");
+                                                                             "from Seed");
         final byte[] core = seed.getSeed();
         final KeyPair key = generateKeyPair(core);
         final String accountNumber = generateAccountNumber(key.publicKey(), seed.getNetwork());
@@ -54,6 +60,28 @@ public class Account {
         final RecoveryPhrase phrase = RecoveryPhrase.fromMnemonicWords(recoveryPhrase);
         final Seed seed = phrase.recoverSeed();
         return fromSeed(seed);
+    }
+
+    public static void loadFromKeyStore(Activity activity, String accountNumber,
+                                        Callback1<Account> callback) {
+        final KeyManager keyManager = new KeyManagerImpl(activity);
+        keyManager.getKey(accountNumber, new Callback1<byte[]>() {
+            @Override
+            public void onSuccess(byte[] core) {
+                try {
+                    Seed seed = new Seed(core);
+                    Account account = Account.fromSeed(seed);
+                    callback.onSuccess(account);
+                } catch (Throwable e) {
+                    callback.onError(e);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
     }
 
     public Account() {
@@ -90,6 +118,23 @@ public class Account {
 
     public Address toAddress() {
         return Address.fromAccountNumber(accountNumber);
+    }
+
+    public void saveToKeyStore(Activity activity, String alias, boolean isAuthenticationRequired,
+                               Callback0 callback) {
+        final String keyAlias = TextUtils.isEmpty(alias) ? accountNumber : alias;
+        final KeyManager keyManager = new KeyManagerImpl(activity);
+        keyManager.saveKey(keyAlias, core, isAuthenticationRequired, callback);
+    }
+
+    public void saveToKeyStore(Activity activity, boolean isAuthenticationRequired,
+                               Callback0 callback) {
+        saveToKeyStore(activity, null, isAuthenticationRequired, callback);
+    }
+
+    public void removeFromKeyStore(Activity activity, String alias, Callback0 callback) {
+        final KeyManager keyManager = new KeyManagerImpl(activity);
+        keyManager.removeKey(alias, callback);
     }
 
     public static boolean isValidAccountNumber(String accountNumber) {
