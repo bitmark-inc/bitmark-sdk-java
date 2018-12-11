@@ -132,7 +132,11 @@ public class Account {
         saveToKeyStore(activity, null, isAuthenticationRequired, callback);
     }
 
-    public void removeFromKeyStore(Activity activity, String alias, Callback0 callback) {
+    public void removeFromKeyStore(Activity activity, Callback0 callback) {
+        removeFromKeyStore(activity, accountNumber, callback);
+    }
+
+    public static void removeFromKeyStore(Activity activity, String alias, Callback0 callback) {
         final KeyManager keyManager = new KeyManagerImpl(activity);
         keyManager.removeKey(alias, callback);
     }

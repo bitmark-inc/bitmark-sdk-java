@@ -17,7 +17,11 @@ public class SharedPreferenceApi {
     private final SharedPreferences sharedPreferences;
 
     public SharedPreferenceApi(Context context) {
-        sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        this(context, PREF_NAME);
+    }
+
+    public SharedPreferenceApi(Context context, String prefName) {
+        sharedPreferences = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
     }
 
     public <T> void put(String key, T data) {
