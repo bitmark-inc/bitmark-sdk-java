@@ -1,6 +1,7 @@
 package com.bitmark.sdk.authentication;
 
 import android.content.Intent;
+import com.bitmark.sdk.utils.annotation.Experimental;
 import com.facebook.react.ReactActivity;
 
 /**
@@ -9,6 +10,7 @@ import com.facebook.react.ReactActivity;
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
+@Experimental
 public abstract class StatefulReactActivity extends ReactActivity {
 
     private ActivityListener stateListener;
