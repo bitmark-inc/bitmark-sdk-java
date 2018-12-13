@@ -9,6 +9,10 @@ package com.bitmark.cryptography.error;
 
 public class UnexpectedException extends RuntimeException {
 
+    public UnexpectedException(String message){
+        super(message);
+    }
+
     public UnexpectedException(Throwable cause) {
         super(cause);
     }
