@@ -29,7 +29,7 @@ buildscript {
 
 android {
     compileSdkVersion 27
-    
+
     compileOptions {
         sourceCompatibility config.SOURCE_COMPATIBILITY
         targetCompatibility config.TARGET_COMPATIBILITY
@@ -40,11 +40,12 @@ android {
     }
 
     // To let the libs be included in other projects
-    externalNativeBuild {
-        ndkBuild {
-            path "jni/Android.mk"
-        }
-    }
+    // Uncomment if you want to rebuild libsodiumjni 
+    //    externalNativeBuild {
+    //        ndkBuild {
+    //            path "jni/Android.mk"
+    //        }
+    //    }
 
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -88,10 +89,11 @@ android {
         }
     }
 
-    gradle.projectsEvaluated {
-        externalNativeBuildDebug.dependsOn taskname
-        externalNativeBuildRelease.dependsOn taskname
-    }
+    // Uncomment if you want to rebuild libsodiumjni 
+    // gradle.projectsEvaluated {
+    //    externalNativeBuildDebug.dependsOn taskname
+    //    externalNativeBuildRelease.dependsOn taskname
+    // }
 }
 
 //gradle.buildFinished { BuildResult result ->
@@ -115,7 +117,7 @@ task deleteNativeLib(type: Delete){
     delete 'native-lib'
 }
 
-task libraryJar(type: Zip, dependsOn: ['copyNativeLib', 'unzipAAR']) {
+task libraryJar(type: Zip, dependsOn: [/*'copyNativeLib',*/ 'unzipAAR']) {
     destinationDir file("$buildDir/libs")
     baseName project_publication.ARTIFACT_ID
     extension 'jar'
@@ -200,10 +202,11 @@ task('generateSWIGsource') {
     }
 }
 
-gradle.projectsEvaluated {
-    generateJsonModelDebug.dependsOn 'generateSWIGsource'
-    generateJsonModelRelease.dependsOn 'generateSWIGsource'
-}
+// Uncomment if you want to re-generate jni file
+//gradle.projectsEvaluated {
+//    generateJsonModelDebug.dependsOn 'generateSWIGsource'
+//    generateJsonModelRelease.dependsOn 'generateSWIGsource'
+//}
 
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
@@ -295,5 +298,5 @@ dependencies {
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.junit_jupiter.engine
-    
+
 }
