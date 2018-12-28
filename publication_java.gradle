@@ -104,7 +104,7 @@ bintray {
         licenses = root_publication.LICENSE_ALL
         dryRun = false
         publish = true
-        override = false
+        override = true
         publicDownloadNumbers = true
         version {
             desc = project_publication.LIB_DES
