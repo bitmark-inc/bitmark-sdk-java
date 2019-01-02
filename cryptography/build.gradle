@@ -40,7 +40,7 @@ android {
     }
 
     // To let the libs be included in other projects
-    // Uncomment if you want to rebuild libsodiumjni 
+    // Uncomment if you want to rebuild libsodiumjni
     //    externalNativeBuild {
     //        ndkBuild {
     //            path "jni/Android.mk"
@@ -60,6 +60,7 @@ android {
             minifyEnabled false
         }
     }
+    
 }
 
 [
@@ -89,7 +90,7 @@ android {
         }
     }
 
-    // Uncomment if you want to rebuild libsodiumjni 
+    // Uncomment if you want to rebuild libsodiumjni
     // gradle.projectsEvaluated {
     //    externalNativeBuildDebug.dependsOn taskname
     //    externalNativeBuildRelease.dependsOn taskname
@@ -278,7 +279,7 @@ bintray {
         licenses = root_publication.LICENSE_ALL
         dryRun = false
         publish = true
-        override = false
+        override = true
         publicDownloadNumbers = true
         version {
             desc = project_publication.LIB_DES
