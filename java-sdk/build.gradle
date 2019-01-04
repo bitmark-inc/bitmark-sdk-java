@@ -22,7 +22,10 @@ test {
 }
 
 dependencies {
-    implementation deps.bitmark_sdk.api_service
+    implementation (deps.bitmark_sdk.api_service){
+        exclude group:'com.bitmark.sdk', module:'cryptography'
+    }
+    implementation deps.bitmark_sdk.cryptography
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.junit_platform.suite_api

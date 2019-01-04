@@ -3,6 +3,9 @@ package com.bitmark.sdk.test.unittest.features;
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.utils.ArrayUtil;
 import com.bitmark.cryptography.error.ValidateException;
+import com.bitmark.sdk.features.RecoveryPhrase;
+import com.bitmark.sdk.features.Seed;
+import com.bitmark.sdk.test.unittest.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,9 +13,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import com.bitmark.sdk.test.unittest.BaseTest;
-import com.bitmark.sdk.features.RecoveryPhrase;
-import com.bitmark.sdk.features.Seed;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -24,7 +24,6 @@ import static com.bitmark.apiservice.utils.ArrayUtil.concat;
 import static com.bitmark.apiservice.utils.ArrayUtil.toByteArray;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.bitmark.sdk.utils.Version.TWELVE;
 
 /**
  * @author Hieu Pham
@@ -34,15 +33,6 @@ import static com.bitmark.sdk.utils.Version.TWELVE;
  */
 
 public class RecoveryPhraseTest extends BaseTest {
-
-    @DisplayName("Verify function new RecoveryPhrase() works well with happy condition. The " +
-                         "phrase generate is 12 words")
-    @Test
-    public void testConstructRecoveryPhrase_NoCondition_ValidInstanceIsReturn() {
-        final RecoveryPhrase phrase = new RecoveryPhrase();
-        assertNotNull(phrase.getMnemonicWords());
-        assertEquals(TWELVE.getMnemonicWordsLength(), phrase.getMnemonicWords().length);
-    }
 
     @DisplayName("Verify function RecoveryPhrase.fromSeed(Seed) works well with happy condition")
     @ParameterizedTest

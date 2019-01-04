@@ -7,6 +7,7 @@ import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.utils.Address;
 import com.bitmark.apiservice.utils.callback.Callback0;
 import com.bitmark.apiservice.utils.callback.Callback1;
+import com.bitmark.cryptography.crypto.Box;
 import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
@@ -27,6 +28,7 @@ import static com.bitmark.cryptography.crypto.encoder.Base58.BASE_58;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
 import static com.bitmark.sdk.utils.SdkUtils.generateSeedKey;
+import static com.bitmark.sdk.utils.SdkUtils.generateSeedKeys;
 import static com.bitmark.sdk.utils.SdkUtils.randomEntropy;
 import static com.bitmark.sdk.utils.Version.TWELVE;
 
@@ -39,7 +41,9 @@ import static com.bitmark.sdk.utils.Version.TWELVE;
 
 public class Account {
 
-    private static final byte[] KEY_INDEX = HEX.decode("000000000000000000000000000003E7"); // 999
+    private static final byte[] KEY_INDEX = HEX.decode("000000000000000000000000000003E7");
+
+    private static final byte[] ENC_KEY_INDEX = HEX.decode("000000000000000000000000000003E8");
 
     private static final int NONCE_LENGTH = 24;
 
@@ -97,6 +101,10 @@ public class Account {
 
     public KeyPair getKey() {
         return generateKeyPair(core);
+    }
+
+    public KeyPair getEncryptionKey() {
+        return generateEncKeyPair(core);
     }
 
     public String getAccountNumber() {
@@ -160,6 +168,17 @@ public class Account {
         final byte[] seed = version == TWELVE ? generateSeedKey(core, Ed25519.SEED_LENGTH) :
                 generateSecretBox(KEY_INDEX, new byte[NONCE_LENGTH], core);
         return Ed25519.generateKeyPairFromSeed(seed);
+    }
+
+    private static KeyPair generateEncKeyPair(byte[] core) {
+        Version version = Version.fromCore(core);
+        final byte[] privateKeyBytes =
+                version == TWELVE ? generateSeedKeys(core,
+                                                     Ed25519.SEED_LENGTH,
+                                                     2).get(1) : generateSecretBox(ENC_KEY_INDEX,
+                                                                                   new byte[NONCE_LENGTH],
+                                                                                   core);
+        return Box.generateKeyPair(privateKeyBytes);
     }
 
     private static String generateAccountNumber(PublicKey key) {

@@ -1,6 +1,5 @@
 package com.bitmark.sdk.features;
 
-import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.utils.error.UnexpectedException;
 import com.bitmark.cryptography.error.ValidateException;
@@ -17,7 +16,6 @@ import java.util.Locale;
 import static com.bitmark.apiservice.utils.ArrayUtil.*;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
 import static com.bitmark.sdk.utils.FileUtils.getResourceAsFile;
-import static com.bitmark.sdk.utils.SdkUtils.randomEntropy;
 import static com.bitmark.sdk.utils.Version.TWELVE;
 
 /**
@@ -77,11 +75,6 @@ public class RecoveryPhrase {
 
     public static RecoveryPhrase fromMnemonicWords(String... mnemonicWords) throws ValidateException {
         return new RecoveryPhrase(mnemonicWords);
-    }
-
-    public RecoveryPhrase() {
-        final byte[] entropy = randomEntropy(GlobalConfiguration.network());
-        this.mnemonicWords = generateMnemonic(entropy);
     }
 
     private RecoveryPhrase(String... mnemonicWords) throws ValidateException {

@@ -17,7 +17,7 @@ public enum Version {
 
     public static Version fromCore(byte[] core) throws ValidateException {
         int length = core.length;
-        Version version = length == SdkUtils.CORE_LENGTH ? TWELVE : length == 32 ? TWENTY_FOUR :
+        Version version = length == 17 ? TWELVE : length == 32 ? TWENTY_FOUR :
                 null;
         if (version == null) throw new ValidateException("Invalid core length " + length);
         return version;
@@ -39,7 +39,7 @@ public enum Version {
 
     public static Version fromEntropy(byte[] entropy) throws ValidateException {
         int length = entropy.length;
-        Version version = length == SdkUtils.CORE_LENGTH ? TWELVE : length == 33 ? TWENTY_FOUR :
+        Version version = length == 17 ? TWELVE : length == 33 ? TWENTY_FOUR :
                 null;
         if (version == null) throw new ValidateException("Invalid entropy length " + length);
         return version;
@@ -73,7 +73,7 @@ public enum Version {
     }
 
     public int getCoreLength() {
-        return this == TWELVE ? SdkUtils.CORE_LENGTH : 32;
+        return this == TWELVE ? 17 : 32;
     }
 
     public int getMnemonicWordsLength() {
