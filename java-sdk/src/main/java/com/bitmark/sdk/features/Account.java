@@ -3,26 +3,22 @@ package com.bitmark.sdk.features;
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.utils.Address;
-import com.bitmark.cryptography.crypto.Box;
-import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.PublicKey;
 import com.bitmark.cryptography.error.ValidateException;
+import com.bitmark.sdk.features.internal.RecoveryPhrase;
+import com.bitmark.sdk.features.internal.Seed;
+import com.bitmark.sdk.features.internal.SeedTwelve;
 import com.bitmark.sdk.utils.AccountNumberData;
-import com.bitmark.sdk.utils.Version;
 
 import java.util.Locale;
 
 import static com.bitmark.apiservice.utils.Address.CHECKSUM_LENGTH;
 import static com.bitmark.apiservice.utils.ArrayUtil.concat;
 import static com.bitmark.apiservice.utils.ArrayUtil.slice;
-import static com.bitmark.cryptography.crypto.SecretBox.generateSecretBox;
 import static com.bitmark.cryptography.crypto.encoder.Base58.BASE_58;
-import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
-import static com.bitmark.sdk.utils.SdkUtils.*;
-import static com.bitmark.sdk.utils.Version.TWELVE;
 
 /**
  * @author Hieu Pham
@@ -33,23 +29,17 @@ import static com.bitmark.sdk.utils.Version.TWELVE;
 
 public class Account {
 
-    private static final byte[] KEY_INDEX = HEX.decode("000000000000000000000000000003E7");
-
-    private static final byte[] ENC_KEY_INDEX = HEX.decode("000000000000000000000000000003E8");
-
-    private static final int NONCE_LENGTH = 24;
-
     private String accountNumber;
 
-    private byte[] core;
+    private Seed seed;
 
     public static Account fromSeed(Seed seed) throws ValidateException {
         checkValid(() -> seed.getNetwork() == GlobalConfiguration.network(), "Incorrect network " +
-                "from Seed");
-        final byte[] core = seed.getSeed();
-        final KeyPair key = generateKeyPair(core);
-        final String accountNumber = generateAccountNumber(key.publicKey(), seed.getNetwork());
-        return new Account(core, accountNumber);
+                                                                             "from Seed");
+
+        final String accountNumber =
+                generateAccountNumber(seed.getAuthKeyPair().publicKey(), seed.getNetwork());
+        return new Account(seed, accountNumber);
     }
 
     public static Account fromRecoveryPhrase(String... recoveryPhrase) throws ValidateException {
@@ -59,22 +49,21 @@ public class Account {
     }
 
     public Account() {
-        core = randomEntropy(GlobalConfiguration.network());
-        final KeyPair key = generateKeyPair(core);
-        accountNumber = generateAccountNumber(key.publicKey());
+        seed = new SeedTwelve();
+        accountNumber = generateAccountNumber(seed.getAuthKeyPair().publicKey());
     }
 
-    private Account(byte[] core, String accountNumber) {
-        this.core = core;
+    private Account(Seed seed, String accountNumber) {
+        this.seed = seed;
         this.accountNumber = accountNumber;
     }
 
-    public KeyPair getKey() {
-        return generateKeyPair(core);
+    public KeyPair getKeyPair() {
+        return seed.getAuthKeyPair();
     }
 
     public KeyPair getEncryptionKey() {
-        return generateEncKeyPair(core);
+        return seed.getEncKeyPair();
     }
 
     public String getAccountNumber() {
@@ -86,12 +75,11 @@ public class Account {
     }
 
     public RecoveryPhrase getRecoveryPhrase(Locale locale) {
-        return RecoveryPhrase.fromSeed(getSeed(), locale);
+        return seed.getRecoveryPhrase(locale);
     }
 
     public Seed getSeed() {
-        final AccountNumberData data = parseAccountNumber(accountNumber);
-        return new Seed(core, data.getNetwork());
+        return seed;
     }
 
     public Address toAddress() {
@@ -110,24 +98,6 @@ public class Account {
     public static AccountNumberData parseAccountNumber(String accountNumber) {
         Address address = Address.fromAccountNumber(accountNumber);
         return AccountNumberData.from(address.getKey(), address.getNetwork());
-    }
-
-    private static KeyPair generateKeyPair(byte[] core) {
-        final Version version = Version.fromCore(core);
-        final byte[] seed = version == TWELVE ? generateSeedKey(core, Ed25519.SEED_LENGTH) :
-                generateSecretBox(KEY_INDEX, new byte[NONCE_LENGTH], core);
-        return Ed25519.generateKeyPairFromSeed(seed);
-    }
-
-    private static KeyPair generateEncKeyPair(byte[] core) {
-        Version version = Version.fromCore(core);
-        final byte[] privateKeyBytes =
-                version == TWELVE ? generateSeedKeys(core,
-                                                     Ed25519.SEED_LENGTH,
-                                                     2).get(1) : generateSecretBox(ENC_KEY_INDEX,
-                                                                                   new byte[NONCE_LENGTH],
-                                                                                   core);
-        return Box.generateKeyPair(privateKeyBytes);
     }
 
     private static String generateAccountNumber(PublicKey key) {

@@ -135,7 +135,7 @@ public class BitmarkTest extends BaseFeatureTest {
         params.sign(KEY1);
         String txId = await(callback -> Bitmark.transfer(params, callback));
         assertNotNull(txId);
-        assertEquals(Sha3256.HASH_LENGTH, HEX.decode(txId).length);
+        assertEquals(Sha3256.HASH_BYTE_LENGTH, HEX.decode(txId).length);
 
     }
 
@@ -244,7 +244,7 @@ public class BitmarkTest extends BaseFeatureTest {
         responseParams.sign(KEY2);
         String txId = await(callback -> Bitmark.respond(responseParams, callback));
         assertNotNull(txId);
-        assertEquals(Sha3256.HASH_LENGTH, HEX.decode(txId).length);
+        assertEquals(Sha3256.HASH_BYTE_LENGTH, HEX.decode(txId).length);
     }
 
     @DisplayName("Verify function Bitmark.respond(TransferResponseParams, Callback1<>) works well" +
