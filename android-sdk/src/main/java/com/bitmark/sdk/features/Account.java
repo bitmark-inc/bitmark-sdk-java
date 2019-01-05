@@ -14,6 +14,7 @@ import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.internal.RecoveryPhrase;
 import com.bitmark.sdk.features.internal.Seed;
 import com.bitmark.sdk.features.internal.SeedTwelve;
+import com.bitmark.sdk.features.internal.SeedTwentyFour;
 import com.bitmark.sdk.keymanagement.KeyManager;
 import com.bitmark.sdk.keymanagement.KeyManagerImpl;
 import com.bitmark.sdk.utils.AccountNumberData;
@@ -61,7 +62,9 @@ public class Account {
             @Override
             public void onSuccess(byte[] seedBytes) {
                 try {
-                    Seed seed = new SeedTwelve(seedBytes);
+                    Seed seed = seedBytes.length == SeedTwelve.SEED_BYTE_LENGTH ? new SeedTwelve(
+                            seedBytes) : new SeedTwentyFour(seedBytes,
+                                                            GlobalConfiguration.network());
                     Account account = Account.fromSeed(seed);
                     callback.onSuccess(account);
                 } catch (Throwable e) {
