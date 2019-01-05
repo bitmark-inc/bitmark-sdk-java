@@ -70,7 +70,7 @@ public class TransferOfferParams extends AbsSingleParams {
     }
 
     private void checkValidLink(String link) {
-        checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_LENGTH, "Invalid" +
+        checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH, "Invalid" +
                 " link");
     }
 

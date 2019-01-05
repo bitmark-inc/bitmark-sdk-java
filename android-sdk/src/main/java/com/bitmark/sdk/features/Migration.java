@@ -99,7 +99,7 @@ public class Migration {
                                                         List<AssetRecord> assets) {
 
         final Address ownerAddress = owner.toAddress();
-        final KeyPair key = owner.getKey();
+        final KeyPair key = owner.getKeyPair();
 
         // Build collection of IssuanceParams
         List<IssuanceParams> params = new ArrayList<>();

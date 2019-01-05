@@ -16,7 +16,7 @@ import static com.bitmark.cryptography.utils.Validator.*;
 
 public class Sha3256 implements Comparable<Sha3256> {
 
-    public static final int HASH_LENGTH = 32;
+    public static final int HASH_BYTE_LENGTH = 32;
 
     private final byte[] bytes;
 
@@ -25,7 +25,7 @@ public class Sha3256 implements Comparable<Sha3256> {
     }
 
     public static Sha3256 from(byte[] bytes) throws ValidateException {
-        checkValidLength(bytes, HASH_LENGTH);
+        checkValidLength(bytes, HASH_BYTE_LENGTH);
         return new Sha3256(bytes);
     }
 
@@ -68,23 +68,23 @@ public class Sha3256 implements Comparable<Sha3256> {
         return hashTwice(input);
     }
 
-    public static byte[] shake(byte[] input, int size) {
-        checkValid(() -> input != null && input.length > 0);
-        SHAKEDigest digest = new SHAKEDigest(size);
-        byte[] out = new byte[HASH_LENGTH];
-        digest.update(input, 0, input.length);
-        digest.doFinal(out, 0);
-        return out;
+    public static byte[] shake(byte[] input) {
+        return shake(input, 1);
     }
 
-    public static byte[] shake(byte[] input, int size, int time) {
+    public static byte[] shake(byte[] input, int time) {
+        return shake(input, time, 1);
+    }
+
+    public static byte[] shake(byte[] input, int time, int count) {
         checkValid(() -> input != null && input.length > 0 && time > 0);
-        SHAKEDigest digest = new SHAKEDigest(size);
-        byte[] out = new byte[HASH_LENGTH];
+        SHAKEDigest digest = new SHAKEDigest(HASH_BYTE_LENGTH * 8);
+        int outBytesLength = HASH_BYTE_LENGTH * count;
+        byte[] out = new byte[outBytesLength];
         for (int i = 0; i < time; i++) {
             digest.update(input, 0, input.length);
         }
-        digest.doFinal(out, 0);
+        digest.doFinal(out, 0, outBytesLength);
         return out;
     }
 
@@ -99,7 +99,7 @@ public class Sha3256 implements Comparable<Sha3256> {
 
     @Override
     public int compareTo(Sha3256 other) {
-        for (int i = HASH_LENGTH - 1; i >= 0; i--) {
+        for (int i = HASH_BYTE_LENGTH - 1; i >= 0; i--) {
             final int thisByte = this.bytes[i] & 0xFF;
             final int otherByte = other.bytes[i] & 0xFF;
             if (thisByte > otherByte)

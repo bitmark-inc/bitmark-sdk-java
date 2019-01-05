@@ -14,10 +14,12 @@ import com.bitmark.sdk.features.BitmarkSDK;
 
 public abstract class BaseTest {
 
+    protected static final Network NETWORK = Network.TEST_NET;
+
     @BeforeAll
     public static void beforeAll() {
         if (!BitmarkSDK.isInitialized())
-            BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg").withNetwork(Network.TEST_NET));
+            BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg").withNetwork(NETWORK));
 
     }
 

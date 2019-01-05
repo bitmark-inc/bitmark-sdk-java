@@ -1,10 +1,8 @@
-package com.bitmark.sdk.features;
+package com.bitmark.sdk.features.internal;
 
-import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.utils.error.UnexpectedException;
 import com.bitmark.cryptography.error.ValidateException;
-import com.bitmark.sdk.utils.Version;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,8 +15,7 @@ import java.util.Locale;
 import static com.bitmark.apiservice.utils.ArrayUtil.*;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
 import static com.bitmark.sdk.utils.FileUtils.getResourceAsFile;
-import static com.bitmark.sdk.utils.SdkUtils.randomEntropy;
-import static com.bitmark.sdk.utils.Version.TWELVE;
+import static com.bitmark.sdk.features.internal.Version.TWELVE;
 
 /**
  * @author Hieu Pham
@@ -39,14 +36,14 @@ public class RecoveryPhrase {
 
     private static String[] getWords(Locale locale) {
         checkValid(() -> locale == Locale.ENGLISH || locale == Locale.CHINESE, "Does not support " +
-                "this locale");
+                                                                               "this locale");
         if (locale == Locale.ENGLISH && EN_WORDS != null) return EN_WORDS;
         if (locale == Locale.CHINESE && CN_WORDS != null) return CN_WORDS;
 
         try {
             final int size = 2048;
             File file = getResourceAsFile(locale == Locale.ENGLISH ? "bip/bip39_eng.txt" : "bip" +
-                    "/bip39_cn.txt");
+                                                                                           "/bip39_cn.txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String[] words = new String[size];
             for (int i = 0; i < size; i++) {
@@ -67,21 +64,17 @@ public class RecoveryPhrase {
     }
 
     public static RecoveryPhrase fromSeed(Seed seed, Locale locale) throws ValidateException {
-        checkValid(() -> seed != null && Version.matchesCore(seed.getSeed()), "Invalid Seed");
-        final byte[] core = seed.getSeed();
-        final Version version = Version.fromCore(core);
-        return version == TWELVE ? new RecoveryPhrase(generateMnemonic(core, locale)) :
+        checkValid(() -> seed != null, "Invalid Seed");
+        final byte[] seedBytes = seed.getSeedBytes();
+        final Version version = seed.getVersion();
+        return version == TWELVE ? new RecoveryPhrase(generateMnemonic(seedBytes, locale)) :
                 new RecoveryPhrase(generateMnemonic(concat(toByteArray(seed.getNetwork().value())
-                        , core), locale));
+                        , seedBytes), locale));
     }
 
-    public static RecoveryPhrase fromMnemonicWords(String... mnemonicWords) throws ValidateException {
+    public static RecoveryPhrase fromMnemonicWords(String... mnemonicWords)
+            throws ValidateException {
         return new RecoveryPhrase(mnemonicWords);
-    }
-
-    public RecoveryPhrase() {
-        final byte[] entropy = randomEntropy(GlobalConfiguration.network());
-        this.mnemonicWords = generateMnemonic(entropy);
     }
 
     private RecoveryPhrase(String... mnemonicWords) throws ValidateException {
@@ -101,8 +94,9 @@ public class RecoveryPhrase {
         validate(mnemonicWord);
         final Version version = Version.fromMnemonicWords(mnemonicWord);
         final int wordsLength = version.getMnemonicWordsLength();
-        final int coreLength = version.getCoreLength();
-        final int entropyLength = version == TWELVE ? coreLength : coreLength + 1;
+        final int seedBytesLen =
+                version == TWELVE ? SeedTwelve.SEED_BYTE_LENGTH : SeedTwentyFour.SEED_BYTE_LENGTH;
+        final int entropyLength = version == TWELVE ? seedBytesLen : seedBytesLen + 1;
         final Locale locale = detectLocale(mnemonicWord[0]);
         if (locale == null) throw new ValidateException("Does not support this language");
 
@@ -122,14 +116,16 @@ public class RecoveryPhrase {
             remainder &= MASKS[bits];
         }
         final byte[] entropy = version == TWELVE ? concat(toByteArray(data),
-                new byte[]{(byte) (remainder << 4)}) : toByteArray(data);
+                                                          new byte[]{(byte) (remainder <<
+                                                                             4)}) : toByteArray(
+                data);
         checkValid(() -> entropy.length == entropyLength, "Invalid mnemonic words");
         if (version == TWELVE) {
-            return new Seed(entropy);
+            return new SeedTwelve(entropy);
         } else {
             final Network network = Network.valueOf(entropy[0]);
             final byte[] core = slice(entropy, 1, entropyLength);
-            return new Seed(core, network);
+            return new SeedTwentyFour(core, network);
         }
     }
 
@@ -137,7 +133,8 @@ public class RecoveryPhrase {
         return generateMnemonic(entropy, Locale.ENGLISH);
     }
 
-    public static String[] generateMnemonic(byte[] entropy, Locale locale) throws ValidateException {
+    public static String[] generateMnemonic(byte[] entropy, Locale locale)
+            throws ValidateException {
         checkValid(() -> entropy != null && Version.matchesEntropy(entropy), "Invalid entropy");
         final String[] words = getWords(locale);
         final Version version = Version.fromEntropy(entropy);
@@ -163,7 +160,8 @@ public class RecoveryPhrase {
 
     private static void validate(String... mnemonicWords) {
         checkValid(() -> mnemonicWords != null && Version.matchesMnemonicWords(mnemonicWords)
-                && (contains(getWords(Locale.ENGLISH), mnemonicWords) || contains(getWords(Locale.CHINESE), mnemonicWords)));
+                         && (contains(getWords(Locale.ENGLISH), mnemonicWords) ||
+                             contains(getWords(Locale.CHINESE), mnemonicWords)));
     }
 
     private static Locale detectLocale(String examined) {

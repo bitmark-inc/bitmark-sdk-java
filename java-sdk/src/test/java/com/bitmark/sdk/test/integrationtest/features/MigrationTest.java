@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.bitmark.sdk.utils.Version.TWELVE;
+import static com.bitmark.sdk.features.internal.Version.TWELVE;
 
 /**
  * @author Hieu Pham

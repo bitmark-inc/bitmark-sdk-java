@@ -27,7 +27,8 @@ import static org.junit.Assert.*;
 public class TransactionTest extends BaseFeatureTest {
 
     @Test
-    public void testQueryTransactionWithoutAsset_ExistedTxId_CorrectResponseIsReturn() throws Throwable {
+    public void testQueryTransactionWithoutAsset_ExistedTxId_CorrectResponseIsReturn()
+            throws Throwable {
         // Get existed tx
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
@@ -40,7 +41,7 @@ public class TransactionTest extends BaseFeatureTest {
 
         // Get tx by id
         GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
-                callback));
+                                                                                          callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         assertNotNull(transaction);
         assertEquals(txId, transaction.getId());
@@ -48,7 +49,8 @@ public class TransactionTest extends BaseFeatureTest {
 
 
     @Test
-    public void testQueryTransactionWithAsset_ExistedTxId_CorrectResponseIsReturn() throws Throwable {
+    public void testQueryTransactionWithAsset_ExistedTxId_CorrectResponseIsReturn()
+            throws Throwable {
         // Get existed tx
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
@@ -61,7 +63,8 @@ public class TransactionTest extends BaseFeatureTest {
 
         // Get tx by id
         GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
-                true, callback));
+                                                                                          true,
+                                                                                          callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         AssetRecord asset = getTransactionResponse.getAsset();
         assertNotNull(transaction);

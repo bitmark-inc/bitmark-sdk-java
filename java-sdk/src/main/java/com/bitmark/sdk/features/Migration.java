@@ -15,13 +15,12 @@ import com.bitmark.cryptography.error.ValidateException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
-import static com.bitmark.sdk.utils.Version.TWENTY_FOUR;
+import static com.bitmark.sdk.features.internal.Version.TWENTY_FOUR;
 
 /**
  * @author Hieu Pham
@@ -106,7 +105,7 @@ public class Migration {
                                                                    List<AssetRecord> assets) {
 
         final Address ownerAddress = owner.toAddress();
-        final KeyPair key = owner.getKey();
+        final KeyPair key = owner.getKeyPair();
 
         // Build collection of IssuanceParams
 

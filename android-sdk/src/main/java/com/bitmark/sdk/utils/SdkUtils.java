@@ -21,7 +21,7 @@ import static com.bitmark.cryptography.utils.Validator.checkValid;
 
 public class SdkUtils {
 
-    public static final int CORE_LENGTH = 17;
+    private static final int CORE_LENGTH = 17;
 
     private SdkUtils() {
 
@@ -72,7 +72,8 @@ public class SdkUtils {
         return keys.get(0);
     }
 
-    public static List<byte[]> generateSeedKeys(byte[] core, int keyCount, int keySize) throws ValidateException {
+    public static List<byte[]> generateSeedKeys(byte[] core, int keyCount, int keySize)
+            throws ValidateException {
         checkValid(() -> core != null && core.length > 0 && keyCount > 0 && keySize > 0);
 
         // add the seed 4 times to hash value

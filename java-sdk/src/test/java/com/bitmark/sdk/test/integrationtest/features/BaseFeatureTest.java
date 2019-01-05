@@ -2,8 +2,8 @@ package com.bitmark.sdk.test.integrationtest.features;
 
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.sdk.features.Account;
+import com.bitmark.sdk.features.internal.SeedTwelve;
 import com.bitmark.sdk.test.integrationtest.BaseTest;
-import com.bitmark.sdk.features.Seed;
 
 /**
  * @author Hieu Pham
@@ -27,14 +27,14 @@ public abstract class BaseFeatureTest extends BaseTest {
     static final KeyPair KEY3;
 
     static {
-        ACCOUNT1 = Account.fromSeed(Seed.fromEncodedSeed(
+        ACCOUNT1 = Account.fromSeed(SeedTwelve.fromEncodedSeed(
                 "9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2"));
-        KEY1 = ACCOUNT1.getKey();
-        ACCOUNT2 = Account.fromSeed(Seed.fromEncodedSeed(
+        KEY1 = ACCOUNT1.getKeyPair();
+        ACCOUNT2 = Account.fromSeed(SeedTwelve.fromEncodedSeed(
                 "9J877LVjhr3Xxd2nGzRVRVNUZpSKJF4TH"));
-        KEY2 = ACCOUNT2.getKey();
-        ACCOUNT3 = Account.fromSeed(Seed.fromEncodedSeed(
+        KEY2 = ACCOUNT2.getKeyPair();
+        ACCOUNT3 = Account.fromSeed(SeedTwelve.fromEncodedSeed(
                 "9J878SbnM2GFqAELkkiZbqHJDkAj57fYK"));
-        KEY3 = ACCOUNT3.getKey();
+        KEY3 = ACCOUNT3.getKeyPair();
     }
 }
