@@ -1,6 +1,6 @@
 package com.bitmark.sdk.utils;
 
-import com.bitmark.sdk.features.RecoveryPhrase;
+import com.bitmark.sdk.features.internal.RecoveryPhrase;
 
 import java.io.*;
 

@@ -148,10 +148,7 @@ bintray {
 }
 
 dependencies {
-    implementation (deps.bitmark_sdk.api_service){
-        exclude group:'com.bitmark.sdk', module:'cryptography'
-    }
-    implementation deps.bitmark_sdk.cryptography
+    implementation deps.bitmark_sdk.api_service
     implementation deps.rx.java
     implementation deps.android_support.annotation
     implementation deps.android_support.compat
