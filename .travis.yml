@@ -57,7 +57,7 @@ script:
 #- ./gradlew clean test connectAndroidTest -p android-sdk --info
 
 # Deploy
-- ./.travis/deploy.sh
+#- ./.travis/deploy.sh
 
 branches:
   only:

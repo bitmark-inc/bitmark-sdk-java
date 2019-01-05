@@ -37,7 +37,7 @@ artifacts {
 
 jar {
     doFirst {
-        from configurations.compile.collect { it.isDirectory() ? it : zipTree(it)}
+        //from configurations.compile.collect { it.isDirectory() ? it : zipTree(it)}
         manifest {
             attributes 'Name': project_publication.LIB_NAME
             attributes 'Specification-Title': project_publication.LIB_DES
