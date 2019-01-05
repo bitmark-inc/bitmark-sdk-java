@@ -39,7 +39,9 @@ public class OfferRecord implements Record {
 
     public OfferRecord(String id, String owner, String link, String signature) {
         checkValidHex(signature);
-        checkValid(() -> id != null && !id.isEmpty() && owner != null && Address.fromAccountNumber(owner).isValid() && link != null && HEX.decode(link).length == Sha3256.HASH_LENGTH, "Invalid params");
+        checkValid(() -> id != null && !id.isEmpty() && owner != null &&
+                         Address.fromAccountNumber(owner).isValid() && link != null &&
+                         HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH, "Invalid params");
         this.id = id;
         record = new Record();
         record.link = link;
@@ -93,12 +95,12 @@ public class OfferRecord implements Record {
         if (o == null || getClass() != o.getClass()) return false;
         OfferRecord offer = (OfferRecord) o;
         return isOpen == offer.isOpen &&
-                Objects.equals(id, offer.id) &&
-                Objects.equals(from, offer.from) &&
-                Objects.equals(to, offer.to) &&
-                Objects.equals(record, offer.record) &&
-                Objects.equals(extraInfo, offer.extraInfo) &&
-                Objects.equals(createdAt, offer.createdAt);
+               Objects.equals(id, offer.id) &&
+               Objects.equals(from, offer.from) &&
+               Objects.equals(to, offer.to) &&
+               Objects.equals(record, offer.record) &&
+               Objects.equals(extraInfo, offer.extraInfo) &&
+               Objects.equals(createdAt, offer.createdAt);
     }
 
     @Override
@@ -132,8 +134,8 @@ public class OfferRecord implements Record {
             if (o == null || getClass() != o.getClass()) return false;
             Record record = (Record) o;
             return Objects.equals(link, record.link) &&
-                    Objects.equals(owner, record.owner) &&
-                    Objects.equals(signature, record.signature);
+                   Objects.equals(owner, record.owner) &&
+                   Objects.equals(signature, record.signature);
         }
 
         @Override
