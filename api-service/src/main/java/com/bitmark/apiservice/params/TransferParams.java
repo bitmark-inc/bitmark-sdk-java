@@ -38,6 +38,14 @@ public class TransferParams extends AbsSingleParams {
         this.link = link;
     }
 
+    public Address getOwner() {
+        return owner;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
     @Override
     public String toJson() {
         checkSigned();

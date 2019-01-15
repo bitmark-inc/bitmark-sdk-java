@@ -84,6 +84,7 @@ static def addRepos(RepositoryHandler handler) {
     handler.google()
     handler.maven { url = 'http://repo1.maven.org/maven2/' }
     handler.maven { url = 'https://oss.sonatype.org/content/repositories/releases/' }
+    handler.maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 ext.addRepos = this.&addRepos

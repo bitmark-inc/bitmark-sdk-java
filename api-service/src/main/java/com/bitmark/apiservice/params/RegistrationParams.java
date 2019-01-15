@@ -33,8 +33,11 @@ public class RegistrationParams extends AbsSingleParams {
 
     private Address registrant;
 
-    public RegistrationParams(String name, Map<String, String> metadata, Address registrant) throws ValidateException {
-        checkValid(() -> name != null && metadata != null && registrant != null && !name.isEmpty() && metadata.size() > 0 && registrant.isValid(), "Invalid RegistrationParams");
+    public RegistrationParams(String name, Map<String, String> metadata, Address registrant)
+            throws ValidateException {
+        checkValid(
+                () -> name != null && metadata != null && registrant != null && !name.isEmpty() &&
+                      metadata.size() > 0 && registrant.isValid(), "Invalid RegistrationParams");
         this.name = name;
         this.metadata = metadata;
         this.registrant = registrant;
@@ -59,12 +62,25 @@ public class RegistrationParams extends AbsSingleParams {
         return fingerprint;
     }
 
+    public Address getRegistrant() {
+        return registrant;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+
     @Override
     public String toJson() {
         checkSigned();
         return "{\"assets\":[{\"fingerprint\":\"" + fingerprint + "\",\"name\":\"" + name + "\"," +
-                "\"metadata\":\"" + getJsonMetadata(metadata) + "\",\"registrant\":\"" + registrant.getAddress() +
-                "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
+               "\"metadata\":\"" + getJsonMetadata(metadata) + "\",\"registrant\":\"" +
+               registrant.getAddress() +
+               "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
     }
 
     @Override

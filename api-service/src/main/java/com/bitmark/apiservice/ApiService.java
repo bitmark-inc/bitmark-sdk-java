@@ -5,12 +5,14 @@ import com.bitmark.apiservice.params.*;
 import com.bitmark.apiservice.params.query.QueryParams;
 import com.bitmark.apiservice.response.*;
 import com.bitmark.apiservice.utils.callback.Callback1;
+import com.bitmark.apiservice.utils.error.UnexpectedException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import okhttp3.Headers;
 
 import java.util.List;
 
 import static com.bitmark.apiservice.middleware.Converter.*;
+import static com.bitmark.apiservice.utils.Awaitility.await;
 
 /**
  * @author Hieu Pham
@@ -44,8 +46,23 @@ public class ApiService implements BitmarkApi {
 
     @Override
     public void issueBitmark(IssuanceParams params, Callback1<List<String>> callback) {
-        final String path = String.format("/%s/issue", VERSION);
-        client.postAsync(path, params, toIssueResponse(callback));
+        try {
+            // Check asset status
+            String assetId = params.getAssetId();
+            AssetRecord asset = await(assetCallback -> getAsset(assetId, assetCallback));
+
+            if (asset == null) {
+                callback.onError(new UnexpectedException("Asset is not existed"));
+                return;
+            }
+
+            // Generate nonce from asset status
+            params.generateNonces(asset.getStatus());
+            final String path = String.format("/%s/issue", VERSION);
+            client.postAsync(path, params, toIssueResponse(callback));
+        } catch (Throwable e) {
+            callback.onError(e);
+        }
     }
 
     @Override
@@ -105,7 +122,7 @@ public class ApiService implements BitmarkApi {
     public void getTransaction(String txId, boolean includeAsset,
                                Callback1<GetTransactionResponse> callback) {
         final String path = String.format("/%s/txs/%s?asset=%b", VERSION,
-                txId, includeAsset);
+                                          txId, includeAsset);
         client.getAsync(path, toGetTransactionResponse(callback));
     }
 

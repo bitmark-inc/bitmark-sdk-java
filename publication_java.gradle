@@ -2,6 +2,7 @@ apply plugin: 'maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'java-library'
 apply from: '../configuration.gradle'
+apply plugin: 'maven-publish'
 
 def ext = project.ext
 def root_publication = ext.publication
@@ -51,6 +52,58 @@ jar {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     baseName = project_publication.JAR_NAME
     version = project_publication.VERSION
+}
+
+publishing {
+
+    publications {
+        mavenjava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                packaging 'jar'
+                groupId project_publication.GROUP_ID
+                artifactId project_publication.ARTIFACT_ID
+
+                name = project_publication.LIB_NAME
+                description = project_publication.LIB_DES
+                url = project_publication.LIB_SITE_URL
+
+                licenses {
+                    license {
+                        name = root_publication.LICENSE_NAME
+                        url = root_publication.LICENSE_URL
+                    }
+                }
+                developers {
+                    developer {
+                        id = root_publication.DEV_ID
+                        name = root_publication.DEV_NAME
+                        email = root_publication.DEV_EMAIL
+                    }
+                }
+                scm {
+                    connection = project_publication.LIB_GIT_URL
+                    developerConnection = project_publication.LIB_GIT_URL
+                    url = project_publication.LIB_SITE_URL
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://oss.sonatype.org/content/repositories/releases/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            url version.endsWith('-SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username properties.getProperty('oss.sonatype.username')
+                password properties.getProperty('oss.sonatype.password')
+            }
+        }
+    }
 }
 
 install {

@@ -47,6 +47,18 @@ public class TransferOfferParams extends AbsSingleParams {
         this.link = link;
     }
 
+    public String getLink() {
+        return link;
+    }
+
+    public Address getOfferedOwner() {
+        return offeredOwner;
+    }
+
+    public Map<String, String> getExtraInfo() {
+        return extraInfo;
+    }
+
     @Override
     public String toJson() {
         checkSigned();
