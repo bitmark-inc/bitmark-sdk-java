@@ -3,11 +3,10 @@ package com.bitmark.apiservice.test.unittest.params;
 import com.bitmark.apiservice.params.IssuanceParams;
 import com.bitmark.apiservice.test.BaseTest;
 import com.bitmark.apiservice.utils.Address;
-import com.bitmark.apiservice.utils.record.AssetRecord;
+import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.StandardKeyPair;
 import com.bitmark.cryptography.error.ValidateException;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.bitmark.apiservice.test.utils.FileUtils.loadRequest;
+import static com.bitmark.apiservice.test.utils.TestUtils.reflectionSet;
 import static com.bitmark.apiservice.utils.ArrayUtil.isDuplicate;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,9 +49,6 @@ public class IssuanceParamsTest extends BaseTest {
     private static final String ASSET_ID =
             "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059";
 
-
-    @DisplayName("Verify function new IssuanceParams(String, Address) works well with happy " +
-                 "condition")
     @ParameterizedTest
     @ValueSource(strings = {
             "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059",
@@ -62,8 +59,6 @@ public class IssuanceParamsTest extends BaseTest {
         assertDoesNotThrow(() -> new IssuanceParams(assetId, ADDRESS));
     }
 
-    @DisplayName("Verify function new IssuanceParams(String, Address) throws exception with " +
-                 "invalid assetId")
     @ParameterizedTest
     @MethodSource("createInvalidAssetId")
     public void testConstructIssuanceParamsWithoutNonce_InvalidAssetId_ErrorIsThrow(
@@ -71,21 +66,18 @@ public class IssuanceParamsTest extends BaseTest {
         assertThrows(ValidateException.class, () -> new IssuanceParams(assetId, ADDRESS));
     }
 
-    @DisplayName("Verify function new IssuanceParams(String, Address, int) works well with happy " +
-                 "condition")
     @ParameterizedTest
     @ValueSource(ints = {1, 100, 1000})
     public void testConstructIssuanceParamsWithQuantity_ValidQuantity_ValidInstanceIsReturn(
             int quantity) {
         assertDoesNotThrow(() -> new IssuanceParams(ASSET_ID, ADDRESS, quantity));
         final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS, quantity);
-        params.generateNonces(AssetRecord.Status.CONFIRMED);
-        assertEquals(quantity, params.getNonces().length);
-        assertFalse(isDuplicate(params.getNonces()));
+        assertEquals(quantity, params.getNoncesPair().first().length);
+        assertEquals(quantity, params.getNoncesPair().second().length);
+        assertFalse(isDuplicate(params.getNoncesPair().first()));
+        assertFalse(isDuplicate(params.getNoncesPair().second()));
     }
 
-    @DisplayName("Verify function new IssuanceParams(String, Address, int) throws exception with " +
-                 "invalid quantity")
     @ParameterizedTest
     @ValueSource(ints = {-1, -100, 0})
     public void testConstructIssuanceParamsWithQuantity_InvalidQuantity_ErrorIsThrow(int quantity) {
@@ -93,29 +85,31 @@ public class IssuanceParamsTest extends BaseTest {
                                                                        quantity));
     }
 
-    @DisplayName("Verify function IssuanceParams.sign(KeyPair) in single params works well with " +
-                 "happy condition")
     @ParameterizedTest
     @MethodSource("createValidAssetIdNonceSignature")
     public void testSignOneNonce_NoCondition_ValidSignatureIsReturn(String assetId, int[] nonces,
-                                                                    byte[] signature) {
+                                                                    byte[] signature)
+            throws NoSuchFieldException, IllegalAccessException {
         final IssuanceParams params = new IssuanceParams(assetId, ADDRESS);
-        params.setNonces(nonces);
+        reflectionSet(params,
+                      new Pair<>("noncesPair", new Pair<>(nonces, nonces)));
         params.sign(KEY);
+        params.setContainsGenesisBitmark(false);
         assertEquals(params.getSignatures().size(), 1);
         assertTrue(Arrays.equals(signature, params.getSignatures().get(0)));
     }
 
-    @DisplayName("Verify function IssuanceParams.sign(KeyPair) in multiple params works well with" +
-                 " happy condition")
     @ParameterizedTest
     @MethodSource("createValidAssetIdNonceSignatures")
     public void testSignMultipleNonce_NoCondition_ValidSignatureIsReturn(String assetId,
                                                                          int[] nonces,
-                                                                         List<byte[]> expectedSignature) {
+                                                                         List<byte[]> expectedSignature)
+            throws NoSuchFieldException, IllegalAccessException {
         final IssuanceParams params = new IssuanceParams(assetId, ADDRESS);
-        params.setNonces(nonces);
+        reflectionSet(params,
+                      new Pair<>("noncesPair", new Pair<>(nonces, nonces)));
         params.sign(KEY);
+        params.setContainsGenesisBitmark(false);
         final List<byte[]> signatures = params.getSignatures();
         assertEquals(expectedSignature.size(), signatures.size());
         for (int i = 0, size = expectedSignature.size(); i < size; i++) {
@@ -123,7 +117,6 @@ public class IssuanceParamsTest extends BaseTest {
         }
     }
 
-    @DisplayName("Verify function IssuanceParams.toJson() works well with happy condition")
     @ParameterizedTest
     @MethodSource("createValidIssuanceParamsJson")
     public void testToJson_ParamsIsSigned_ValidJsonIsReturn(IssuanceParams params,
@@ -131,47 +124,22 @@ public class IssuanceParamsTest extends BaseTest {
         assertEquals(expectedJson, params.toJson());
     }
 
-    @DisplayName("Verify function IssuanceParams.toJson() throw error when the IssuanceParams is " +
-                 "not signed")
-    @ParameterizedTest
-    @MethodSource("createNotSignedIssuanceParams")
-    public void testToJson_ParamsIsNotSigned_ErrorIsThrow(IssuanceParams params) {
-        assertThrows(UnsupportedOperationException.class, params::toJson);
+    @Test
+    public void testConstructIssuanceParams_ValidParams_CorrectNonceIsGenerated() {
+        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS);
+        final Pair<int[], int[]> noncesPair = params.getNoncesPair();
+        assertNotNull(noncesPair.first());
+        assertNotNull(noncesPair.second());
+        assertEquals(1, noncesPair.first().length);
+        assertEquals(1, noncesPair.second().length);
     }
 
     @Test
-    public void testSignParams_MissingGenerateNonces_ErrorIsThrow(){
-        IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS);
-        assertThrows(IllegalArgumentException.class, () -> params.sign(KEY));
-    }
-
-    @Test
-    public void testGenerateNonce_ValidAssetStatus_ValidNonceIsReturn(){
-        IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS);
-        params.generateNonces(AssetRecord.Status.PENDING);
-        assertEquals(1, params.getNonces().length);
-        assertEquals(0, params.getNonces()[0]);
-
-        params = new IssuanceParams(ASSET_ID, ADDRESS, 3);
-        params.generateNonces(AssetRecord.Status.PENDING);
-        assertEquals(3, params.getNonces().length);
-        assertEquals(0, params.getNonces()[0]);
-        assertNotEquals(0, params.getNonces()[1]);
-
-        params = new IssuanceParams(ASSET_ID, ADDRESS);
-        params.generateNonces(AssetRecord.Status.CONFIRMED);
-        assertEquals(1, params.getNonces().length);
-        assertNotEquals(0, params.getNonces()[0]);
-
-        params = new IssuanceParams(ASSET_ID, ADDRESS, 3);
-        params.generateNonces(AssetRecord.Status.CONFIRMED);
-        assertEquals(3, params.getNonces().length);
-        assertNotEquals(0, params.getNonces()[0]);
-    }
-
-    @Test
-    public void testGenerateNonce_InvalidAssetStatus_ErrorIsThrow(){
-
+    public void testSignParams__CorrectSignatureReturn() {
+        final int quantity = 2;
+        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS, quantity);
+        List<byte[]> concatenatedSignature = params.sign(KEY);
+        assertEquals(quantity * 2, concatenatedSignature.size());
     }
 
     private static Stream<String> createInvalidAssetId() {
@@ -229,13 +197,20 @@ public class IssuanceParamsTest extends BaseTest {
                                          "21c1107d73d6da65ce5192bb12a93a22ed47400c76b076d4e43434728fdb369514a4956c19ce7116f6fd619c79f0aaae2d8cdfa9c4a2779702fe334fda4f8205")));
     }
 
-    private static Stream<Arguments> createValidIssuanceParamsJson() throws IOException {
+    private static Stream<Arguments> createValidIssuanceParamsJson()
+            throws IOException, NoSuchFieldException, IllegalAccessException {
         final IssuanceParams params1 = new IssuanceParams(ASSET_ID, ADDRESS);
-        params1.setNonces(new int[]{1});
+        reflectionSet(params1,
+                      new Pair<>("noncesPair", new Pair<>(new int[]{1}, new int[]{1})));
+        params1.setContainsGenesisBitmark(false);
         final IssuanceParams params2 = new IssuanceParams(ASSET_ID, ADDRESS);
-        params2.setNonces(new int[]{3});
+        reflectionSet(params2,
+                      new Pair<>("noncesPair", new Pair<>(new int[]{3}, new int[]{3})));
+        params2.setContainsGenesisBitmark(false);
         final IssuanceParams params3 = new IssuanceParams(ASSET_ID, ADDRESS);
-        params3.setNonces(new int[]{1, 3});
+        reflectionSet(params3,
+                      new Pair<>("noncesPair", new Pair<>(new int[]{1, 3}, new int[]{1, 3})));
+        params3.setContainsGenesisBitmark(false);
         params1.sign(KEY);
         params2.sign(KEY);
         params3.sign(KEY);
@@ -244,13 +219,6 @@ public class IssuanceParamsTest extends BaseTest {
         final String json3 = loadRequest("/issue/multiple_issue1.json");
         return Stream.of(Arguments.of(params1, json1), Arguments.of(params2, json2),
                          Arguments.of(params3, json3));
-    }
-
-    private static Stream<IssuanceParams> createNotSignedIssuanceParams() {
-        final IssuanceParams params1 = new IssuanceParams(ASSET_ID, ADDRESS, 1);
-        final IssuanceParams params2 = new IssuanceParams(ASSET_ID, ADDRESS, 3);
-        final IssuanceParams params3 = new IssuanceParams(ASSET_ID, ADDRESS, 2);
-        return Stream.of(params1, params2, params3);
     }
 
 }

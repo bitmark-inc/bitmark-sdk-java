@@ -9,7 +9,6 @@ import com.bitmark.apiservice.utils.record.BitmarkRecord;
 import com.bitmark.apiservice.utils.record.TransactionRecord;
 import okhttp3.*;
 import okhttp3.Response;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -37,8 +36,6 @@ public class ConverterTest extends BaseTest {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    @DisplayName("Verify function Converter.toIssueResponse(Callback1<List<String>>) works well " +
-                 "with happy condition")
     @ParameterizedTest
     @MethodSource("createSuccessResponseListTxId")
     public void testConvertIssueResponse_ValidResponse_CorrectIssueResponseIsReturn(Response response,
@@ -57,8 +54,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toRegistrationResponse" +
-                 "(Callback1<RegistrationResponse>) works well with happy condition")
     @ParameterizedTest
     @MethodSource("createSuccessResponseRegistrationResponse")
     public void testConvertRegistrationResponse_ValidResponse_CorrectRegistrationResponseIsReturn(Response response,
@@ -78,7 +73,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toTxId(Callback1<String> works well)")
     @ParameterizedTest
     @MethodSource("createSuccessResponseTxId")
     public void testConvertTxId_ValidResponse_CorrectTxIdIsReturn(Response response,
@@ -97,7 +91,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toStatus(Callback1<String> works well)")
     @Test
     public void testConvertStatus_ValidResponse_CorrectStatusIsReturn() throws IOException {
         Response response = new Response.Builder().request(new Request.Builder().url("http" +
@@ -120,7 +113,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toOfferId(Callback1<String> works well)")
     @ParameterizedTest
     @MethodSource("createSuccessResponseOfferId")
     public void testConvertOfferId_ValidResponse_CorrectTxIdIsReturn(Response response,
@@ -139,8 +131,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toGetBitmarkResponse(Callback1<GetBitmarkResponse> " +
-                 "works well)")
     @ParameterizedTest
     @MethodSource("createSuccessResponseGetBitmarkResponse")
     public void testConvertGetBitmarkResponse_ValidResponse_CorrectGetBitmarkResponseIsReturn(Response response, GetBitmarkResponse expectedResponse) {
@@ -159,8 +149,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toGetBitmarksResponse(Callback1<GetBitmarksResponse> " +
-                 "works well)")
     @ParameterizedTest
     @MethodSource("createSuccessResponseGetBitmarksResponse")
     public void testConvertGetBitmarksResponse_ValidResponse_CorrectGetBitmarkResponseIsReturn(Response response,
@@ -180,7 +168,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toAssetRecord(Callback1<AssetRecord>) works well")
     @ParameterizedTest
     @MethodSource("createValidResponseAssetRecord")
     public void testConvertAssetRecord_ValidResponse_CorrectAssetRecordIsReturn(Response response
@@ -199,8 +186,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toAssetRecords(Callback1<List<AssetRecord>>) works " +
-                 "well")
     @ParameterizedTest
     @MethodSource("createValidResponseAssetRecords")
     public void testConvertAssetRecords_ValidResponse_CorrectAssetRecordIsReturn(Response response,
@@ -219,8 +204,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toGetTransactionResponse" +
-                 "(Callback1<GetTransactionResponse>) works well")
     @ParameterizedTest
     @MethodSource("createValidResponseGetTransactionResponse")
     public void testConvertGetTransactionResponse_ValidResponse_CorrectGetTransactionResponseIsReturn(Response response,
@@ -240,8 +223,6 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    @DisplayName("Verify function Converter.toGetTransactionsResponse" +
-                 "(Callback1<GetTransactionsResponse>) works well")
     @ParameterizedTest
     @MethodSource("createValidResponseGetTransactionsResponse")
     public void testConvertGetTransactionsResponse_ValidResponse_CorrectGetTransactionsResponseIsReturn(

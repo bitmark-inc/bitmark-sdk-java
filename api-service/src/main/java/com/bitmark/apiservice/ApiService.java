@@ -2,10 +2,10 @@ package com.bitmark.apiservice;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.params.*;
+import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;
 import com.bitmark.apiservice.params.query.QueryParams;
 import com.bitmark.apiservice.response.*;
 import com.bitmark.apiservice.utils.callback.Callback1;
-import com.bitmark.apiservice.utils.error.UnexpectedException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import okhttp3.Headers;
 
@@ -47,17 +47,15 @@ public class ApiService implements BitmarkApi {
     @Override
     public void issueBitmark(IssuanceParams params, Callback1<List<String>> callback) {
         try {
-            // Check asset status
+
             String assetId = params.getAssetId();
-            AssetRecord asset = await(assetCallback -> getAsset(assetId, assetCallback));
+            GetBitmarksResponse bitmarksRes = await(bitmarkCallback -> listBitmarks(
+                    new BitmarkQueryBuilder().referencedAssetId(assetId).pending(true).limit(1)
+                                             .build(),
+                    bitmarkCallback));
 
-            if (asset == null) {
-                callback.onError(new UnexpectedException("Asset is not existed"));
-                return;
-            }
-
-            // Generate nonce from asset status
-            params.generateNonces(asset.getStatus());
+            params.setContainsGenesisBitmark(
+                    bitmarksRes.getBitmarks() != null && bitmarksRes.getBitmarks().isEmpty());
             final String path = String.format("/%s/issue", VERSION);
             client.postAsync(path, params, toIssueResponse(callback));
         } catch (Throwable e) {

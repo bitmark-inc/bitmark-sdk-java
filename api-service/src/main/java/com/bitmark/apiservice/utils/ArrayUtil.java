@@ -252,4 +252,10 @@ public class ArrayUtil {
                         .toArray(Float[]::new);
     }
 
+    public static <T> List<T> concat(List<T> first, List<T> second) {
+        List<T> copyFirst = new ArrayList<>(first);
+        copyFirst.addAll(new ArrayList<>(second));
+        return copyFirst;
+    }
+
 }
