@@ -1,5 +1,6 @@
 package com.bitmark.sdk.test.integrationtest.features;
 
+import com.annimon.stream.Stream;
 import com.bitmark.apiservice.params.query.TransactionQueryBuilder;
 import com.bitmark.apiservice.response.GetTransactionResponse;
 import com.bitmark.apiservice.response.GetTransactionsResponse;
@@ -7,14 +8,13 @@ import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.apiservice.utils.record.TransactionRecord;
-import com.annimon.stream.Stream;
-import org.junit.Test;
 import com.bitmark.sdk.features.Transaction;
+import org.junit.Test;
 
 import java.util.List;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static org.junit.Assert.*;
 
 /**
@@ -76,7 +76,7 @@ public class TransactionTest extends BaseFeatureTest {
     @Test
     public void testQueryTransaction_NonExistedTxId_ErrorIsThrow() throws Throwable {
         expectedException.expect(HttpException.class);
-        expectedException.expectMessage(String.valueOf(HTTP_NOT_FOUND));
+        expectedException.expectMessage(String.valueOf(HTTP_INTERNAL_ERROR));
 
         String id =
                 "1234567890123456789012345678901234567890123456789012345678901234";

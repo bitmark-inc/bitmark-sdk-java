@@ -7,14 +7,14 @@ import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.apiservice.utils.record.TransactionRecord;
+import com.bitmark.sdk.features.Transaction;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.bitmark.sdk.features.Transaction;
 
 import java.util.List;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -82,7 +82,7 @@ public class TransactionTest extends BaseFeatureTest {
         HttpException exception = assertThrows(HttpException.class,
                 () -> await((Callable1<GetTransactionResponse>) callback -> Transaction.get(id,
                         callback)));
-        assertEquals(HTTP_NOT_FOUND, exception.getStatusCode());
+        assertEquals(HTTP_INTERNAL_ERROR, exception.getStatusCode());
     }
 
     @DisplayName("Verify function Transaction.list(TransactionQueryBuilder, Callback1<>) works " +

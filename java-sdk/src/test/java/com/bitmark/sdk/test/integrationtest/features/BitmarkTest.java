@@ -6,24 +6,23 @@ import com.bitmark.apiservice.response.GetBitmarkResponse;
 import com.bitmark.apiservice.response.GetBitmarksResponse;
 import com.bitmark.apiservice.response.RegistrationResponse;
 import com.bitmark.apiservice.utils.Address;
+import com.bitmark.apiservice.utils.Data;
 import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.apiservice.utils.record.BitmarkRecord;
 import com.bitmark.apiservice.utils.record.OfferRecord;
 import com.bitmark.cryptography.crypto.Sha3256;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import com.bitmark.sdk.features.Asset;
 import com.bitmark.sdk.features.Bitmark;
 import com.bitmark.sdk.test.utils.extensions.TemporaryFolderExtension;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static com.bitmark.apiservice.utils.record.BitmarkRecord.Status.SETTLED;
@@ -155,17 +154,13 @@ public class BitmarkTest extends BaseFeatureTest {
             throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
-        assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true)
+                                         .limit(100);
+        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED);
+        assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Transfer bitmark
         TransferParams params = new TransferParams(ACCOUNT2.toAddress());
-        BitmarkRecord bitmark =
-                bitmarksResponse.getBitmarks().stream()
-                                .filter(b -> !b.isOffer() && b.getStatus() == SETTLED).findFirst()
-                                .orElse(null);
-        assertNotNull(bitmark, "No bitmark matches the specification");
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
@@ -184,16 +179,11 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get not owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT2.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
-        assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED);
+        assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Transfer bitmark
         TransferParams params = new TransferParams(ACCOUNT3.toAddress());
-        BitmarkRecord bitmark =
-                bitmarksResponse.getBitmarks().stream()
-                                .filter(b -> !b.isOffer() && b.getStatus() == SETTLED).findFirst()
-                                .orElse(null);
-        assertNotNull(bitmark, "No bitmark matches the specification");
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
@@ -213,16 +203,12 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
-        assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                                          b.getHead() != MOVED);
+        assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
         TransferOfferParams params = new TransferOfferParams(ACCOUNT2.toAddress());
-        BitmarkRecord bitmark =
-                bitmarksResponse.getBitmarks().stream()
-                                .filter(b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                             b.getHead() != MOVED).findFirst().orElse(null);
-        assertNotNull(bitmark, "No bitmark matches the specification");
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
@@ -238,16 +224,12 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get not owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT2.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
-        assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                                          b.getHead() != MOVED);
+        assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
         TransferOfferParams params = new TransferOfferParams(ACCOUNT3.toAddress());
-        BitmarkRecord bitmark =
-                bitmarksResponse.getBitmarks().stream()
-                                .filter(b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                             b.getHead() != MOVED).findFirst().orElse(null);
-        assertNotNull(bitmark, "No bitmark matches the specification");
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
@@ -266,17 +248,12 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
-        assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                                          b.getHead() != MOVED);
 
-        // Offer bitmark
-        TransferOfferParams offerParams = new TransferOfferParams(ACCOUNT2.toAddress());
-        BitmarkRecord bitmark =
-                bitmarksResponse.getBitmarks().stream()
-                                .filter(b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                             b.getHead() != MOVED).findFirst().orElse(null);
         assertNotNull(bitmark, "No bitmark matches the specification");
         String link = bitmark.getHeadId();
+        TransferOfferParams offerParams = new TransferOfferParams(ACCOUNT2.toAddress());
         offerParams.setLink(link);
         offerParams.sign(KEY1);
         String offerId = await(callback -> Bitmark.offer(offerParams, callback));
@@ -300,17 +277,14 @@ public class BitmarkTest extends BaseFeatureTest {
     public void testReplyOffer_CancelOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
-        assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true)
+                                         .limit(100);
+        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                                          b.getHead() != MOVED);
+        assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
         TransferOfferParams offerParams = new TransferOfferParams(ACCOUNT2.toAddress());
-        BitmarkRecord bitmark =
-                bitmarksResponse.getBitmarks().stream()
-                                .filter(b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                             b.getHead() != MOVED).findFirst().orElse(null);
-        assertNotNull(bitmark, "No bitmark matches the specification");
         String link = bitmark.getHeadId();
         offerParams.setLink(link);
         offerParams.sign(KEY1);
@@ -336,16 +310,12 @@ public class BitmarkTest extends BaseFeatureTest {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
-        assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
+        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                                          b.getHead() != MOVED);
+        assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
         TransferOfferParams offerParams = new TransferOfferParams(ACCOUNT2.toAddress());
-        BitmarkRecord bitmark =
-                bitmarksResponse.getBitmarks().stream()
-                                .filter(b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                             b.getHead() != MOVED).findFirst().orElse(null);
-        assertNotNull(bitmark, "No bitmark matches the specification");
         String link = bitmark.getHeadId();
         offerParams.setLink(link);
         offerParams.sign(KEY1);
@@ -447,6 +417,32 @@ public class BitmarkTest extends BaseFeatureTest {
         assertFalse(bitmarks.isEmpty());
         assertEquals(limit, bitmarks.size());
         assertNotNull(assets);
+    }
+
+    private BitmarkRecord findBitmark(BitmarkQueryBuilder queryBuilder,
+                                      Predicate<? super BitmarkRecord> predicate)
+            throws Throwable {
+        final Data<Long> minOffset = new Data<>();
+        while (true) {
+            GetBitmarksResponse bitmarksResponse =
+                    await(callback -> Bitmark
+                            .list(minOffset.getValue() == null ? queryBuilder : queryBuilder
+                                          .at(minOffset.getValue())
+                                          .to("earlier"),
+                                  callback));
+            assertFalse(bitmarksResponse.getBitmarks().isEmpty(),
+                        "This guy has not owned bitmarks");
+            Optional<BitmarkRecord> maxOffsetOpt = bitmarksResponse.getBitmarks().stream().min(
+                    Comparator.comparingLong(BitmarkRecord::getOffset));
+            if (maxOffsetOpt.isPresent()) minOffset.setValue(maxOffsetOpt.get().getOffset());
+            else throw new RuntimeException("Cannot get max offset");
+
+            BitmarkRecord bitmark =
+                    bitmarksResponse.getBitmarks().stream().filter(predicate).findFirst()
+                                    .orElse(null);
+            if (bitmark != null) return bitmark;
+        }
+
     }
 
 
