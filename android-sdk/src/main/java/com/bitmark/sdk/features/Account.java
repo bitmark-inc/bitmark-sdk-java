@@ -62,11 +62,16 @@ public class Account {
             @Override
             public void onSuccess(byte[] seedBytes) {
                 try {
-                    Seed seed = seedBytes.length == SeedTwelve.SEED_BYTE_LENGTH ? new SeedTwelve(
-                            seedBytes) : new SeedTwentyFour(seedBytes,
-                                                            GlobalConfiguration.network());
-                    Account account = Account.fromSeed(seed);
-                    callback.onSuccess(account);
+                    if (seedBytes == null) callback.onSuccess(null);
+                    else {
+                        Seed seed =
+                                seedBytes.length == SeedTwelve.SEED_BYTE_LENGTH ? new SeedTwelve(
+                                        seedBytes) : new SeedTwentyFour(seedBytes,
+                                                                        GlobalConfiguration
+                                                                                .network());
+                        Account account = Account.fromSeed(seed);
+                        callback.onSuccess(account);
+                    }
                 } catch (Throwable e) {
                     callback.onError(e);
                 }
@@ -126,7 +131,7 @@ public class Account {
 
     public void saveToKeyStore(Activity activity, boolean isAuthenticationRequired,
                                Callback0 callback) {
-        saveToKeyStore(activity, null, isAuthenticationRequired, callback);
+        saveToKeyStore(activity, accountNumber, isAuthenticationRequired, callback);
     }
 
     public void removeFromKeyStore(Activity activity, Callback0 callback) {
