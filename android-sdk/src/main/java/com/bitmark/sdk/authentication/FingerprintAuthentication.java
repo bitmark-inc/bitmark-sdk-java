@@ -77,7 +77,6 @@ class FingerprintAuthentication extends AbsAuthentication {
             this.callback = callback;
             dialog = new FingerprintDialog(activity, v -> {
                 cancellationSignal.cancel();
-                callback.onCancelled();
             });
         }
 
@@ -112,8 +111,12 @@ class FingerprintAuthentication extends AbsAuthentication {
         @Override
         public void onAuthenticationError(int errorCode, CharSequence errString) {
             super.onAuthenticationError(errorCode, errString);
-            dialog.updateView(ERROR, null);
-            callback.onError(errString.toString());
+            if (errorCode == FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
+                callback.onCancelled();
+            } else {
+                dialog.updateView(ERROR, null);
+                callback.onError(errString.toString());
+            }
         }
     }
 

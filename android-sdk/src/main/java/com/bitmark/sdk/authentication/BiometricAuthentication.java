@@ -94,7 +94,11 @@ class BiometricAuthentication extends AbsAuthentication {
         @Override
         public void onAuthenticationError(int errorCode, CharSequence errString) {
             super.onAuthenticationError(errorCode, errString);
-            callback.onError(errString.toString());
+            if (errorCode == BiometricPrompt.BIOMETRIC_ERROR_CANCELED ||
+                errorCode == BiometricPrompt.BIOMETRIC_ERROR_USER_CANCELED) {
+                callback.onCancelled();
+            } else
+                callback.onError(errString.toString());
         }
 
         private BiometricPrompt getBiometricPrompt() {
