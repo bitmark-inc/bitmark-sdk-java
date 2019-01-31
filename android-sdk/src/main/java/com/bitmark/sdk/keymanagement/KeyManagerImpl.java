@@ -88,7 +88,7 @@ public class KeyManagerImpl implements KeyManager {
 
         } catch (KeyStoreException | InvalidAlgorithmParameterException | CertificateException
                 | IOException | NoSuchAlgorithmException | NoSuchProviderException
-                | KeyGuardRequiredException | BadPaddingException | NoSuchPaddingException e) {
+                | KeyGuardRequiredException | BadPaddingException | NoSuchPaddingException | FingerprintException e) {
             e.printStackTrace();
             callback.onError(e);
         } catch (UnrecoverableEntryException | InvalidKeyException e) {
@@ -202,7 +202,7 @@ public class KeyManagerImpl implements KeyManager {
         } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException
                 | InvalidAlgorithmParameterException
                 | NoSuchProviderException | NoSuchPaddingException | KeyGuardRequiredException
-                | BadPaddingException e) {
+                | BadPaddingException | FingerprintException e) {
             e.printStackTrace();
             callback.onError(e);
         } catch (InvalidKeyException | UnrecoverableEntryException e) {
@@ -303,7 +303,8 @@ public class KeyManagerImpl implements KeyManager {
     private Object getWrapperKey(boolean isAuthenticationRequired)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException,
                    UnrecoverableEntryException, NoSuchProviderException,
-                   InvalidAlgorithmParameterException, KeyGuardRequiredException {
+                   InvalidAlgorithmParameterException, KeyGuardRequiredException,
+                   FingerprintException {
         if (isWrapperKeyExisted()) {
 
             KeyStore keyStore = getLoadedAndroidKeyStore();
@@ -327,26 +328,36 @@ public class KeyManagerImpl implements KeyManager {
     @SuppressLint("NewApi")
     private Object generateWrapperKey(boolean isAuthenticationRequired)
             throws NoSuchProviderException, NoSuchAlgorithmException,
-                   InvalidAlgorithmParameterException, KeyGuardRequiredException {
+                   InvalidAlgorithmParameterException, KeyGuardRequiredException,
+                   FingerprintException {
         if (isAboveM()) {
 
-            final KeyGenerator keyGenerator = KeyGenerator
-                    .getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE);
+            try {
+                final KeyGenerator keyGenerator = KeyGenerator
+                        .getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE);
 
-            final KeyGenParameterSpec.Builder builder = new KeyGenParameterSpec.Builder(
-                    KEY_ALIAS,
-                    KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE);
+                final KeyGenParameterSpec.Builder builder = new KeyGenParameterSpec.Builder(
+                        KEY_ALIAS,
+                        KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                        .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                        .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE);
 
-            if (isAuthenticationRequired && !isWeakSecureDevices(activity.getApplicationContext()))
-                builder.setUserAuthenticationRequired(true);
-            if (isAboveP()) builder.setIsStrongBoxBacked(true); // Enable hardware secure module
-            if (isAboveN()) builder.setInvalidatedByBiometricEnrollment(
-                    false); // Avoid invalidate the key when user setup new device security
+                if (isAuthenticationRequired &&
+                    !isWeakSecureDevices(activity.getApplicationContext()))
+                    builder.setUserAuthenticationRequired(true);
+                if (isAboveP()) builder.setIsStrongBoxBacked(true); // Enable hardware secure module
+                if (isAboveN()) builder.setInvalidatedByBiometricEnrollment(
+                        false); // Avoid invalidate the key when user setup new device security
 
-            keyGenerator.init(builder.build());
-            return keyGenerator.generateKey();
+                keyGenerator.init(builder.build());
+                return keyGenerator.generateKey();
+            } catch (InvalidAlgorithmParameterException e) {
+                if (e.getCause() instanceof IllegalStateException &&
+                    e.getMessage().contains("Secure lock screen")) {
+                    throw new FingerprintException("Fingerprint hasn't been enrolled");
+                }
+                throw e;
+            }
         } else {
             try {
                 Calendar start = Calendar.getInstance();
