@@ -36,8 +36,8 @@ public class RegistrationParams extends AbsSingleParams {
     public RegistrationParams(String name, Map<String, String> metadata, Address registrant)
             throws ValidateException {
         checkValid(
-                () -> name != null && metadata != null && registrant != null && !name.isEmpty() &&
-                      metadata.size() > 0 && registrant.isValid(), "Invalid RegistrationParams");
+                () -> name != null && registrant != null && !name.isEmpty() && registrant.isValid(),
+                "Invalid RegistrationParams");
         this.name = name;
         this.metadata = metadata;
         this.registrant = registrant;
@@ -78,7 +78,8 @@ public class RegistrationParams extends AbsSingleParams {
     public String toJson() {
         checkSigned();
         return "{\"assets\":[{\"fingerprint\":\"" + fingerprint + "\",\"name\":\"" + name + "\"," +
-               "\"metadata\":\"" + getJsonMetadata(metadata) + "\",\"registrant\":\"" +
+               "\"metadata\":\"" + (metadata != null ? getJsonMetadata(metadata) : "") +
+               "\",\"registrant\":\"" +
                registrant.getAddress() +
                "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
     }
@@ -88,7 +89,7 @@ public class RegistrationParams extends AbsSingleParams {
         byte[] data = VarInt.writeUnsignedVarInt(0x02);
         data = BinaryPacking.concat(name, data);
         data = BinaryPacking.concat(fingerprint, data);
-        data = BinaryPacking.concat(getPackedMetadata(metadata), data);
+        if (metadata != null) data = BinaryPacking.concat(getPackedMetadata(metadata), data);
         data = BinaryPacking.concat(registrant.pack(), data);
         return data;
     }
