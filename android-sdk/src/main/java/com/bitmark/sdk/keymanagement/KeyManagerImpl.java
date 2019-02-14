@@ -91,7 +91,8 @@ public class KeyManagerImpl implements KeyManager {
             try {
                 Cipher cipher = getDecryptCipher(alias, encryptionKey);
 
-                if (newKeyAuthSpec.isAuthenticationRequired()) {
+                if (newKeyAuthSpec.isAuthenticationRequired() &&
+                    !newKeyAuthSpec.willInvalidateInTimeFrame()) {
 
                     // The key authentication is required and user didn't set the validity time frame for it
                     authForGetKey(alias, newKeyAuthSpec, cipher, callback);
@@ -242,12 +243,14 @@ public class KeyManagerImpl implements KeyManager {
             try {
                 Cipher cipher = getEncryptCipher(encryptionKey);
 
-                if (newKeyAuthSpec.isAuthenticationRequired()) {
+                if (newKeyAuthSpec.isAuthenticationRequired() &&
+                    !keyAuthSpec.willInvalidateInTimeFrame()) {
                     // The key authentication is required and user didn't set the validity time frame for it
                     authForSaveKey(alias, keyAuthSpec, key, cipher, callback);
                 } else {
                     // Do not require for authentication
                     saveKey(alias, key, cipher);
+                    callback.onSuccess();
                 }
 
             } catch (UserNotAuthenticatedException e) {
