@@ -1,7 +1,5 @@
 package com.bitmark.sdk.authentication;
 
-import android.support.annotation.NonNull;
-
 import javax.crypto.Cipher;
 
 /**
@@ -10,7 +8,7 @@ import javax.crypto.Cipher;
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
-public interface Authentication {
+public interface Authenticator {
 
-    void authenticate(@NonNull Cipher cipher);
+    void authenticate(Cipher cipher);
 }

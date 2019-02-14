@@ -7,8 +7,6 @@
     <string name="fingerprint_is_recognized">Fingerprint is recognized</string>
     <string name="failed">Failed</string>
     <string name="fingerprint_not_recognized">Fingerprint is not recognized. Try again</string>
-    <string name="try_again">Try again</string>
-    <string name="identification">Identification</string>
-    <string name="application_need_to_authenticate_you">Application need to authenticate you</string>
-    <string name="something_error">Something error.Try again later</string>
+    <string name="authentication">Authentication</string>
+    <string name="please_authenticate_to_unlock">Please authenticate to unlock the app</string>
 </resources>

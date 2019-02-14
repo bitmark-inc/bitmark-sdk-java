@@ -1,6 +1,6 @@
 package com.bitmark.sdk.authentication;
 
-import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 
 import javax.crypto.Cipher;
 
@@ -12,7 +12,7 @@ import javax.crypto.Cipher;
  */
 public interface AuthenticationCallback {
 
-    void onSucceeded(@NonNull Cipher cipher);
+    void onSucceeded(@Nullable Cipher cipher);
 
     void onFailed();
 

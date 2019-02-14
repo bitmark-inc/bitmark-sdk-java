@@ -9,14 +9,15 @@ import android.support.annotation.NonNull;
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
-abstract class AbsAuthentication implements Authentication {
+abstract class AbsAuthenticator implements Authenticator {
 
     protected AuthenticationCallback callback;
 
     protected Activity activity;
 
-    AbsAuthentication(@NonNull Activity activity, @NonNull AuthenticationCallback callback) {
+    AbsAuthenticator(@NonNull Activity activity, @NonNull AuthenticationCallback callback) {
         this.activity = activity;
         this.callback = callback;
     }
+
 }

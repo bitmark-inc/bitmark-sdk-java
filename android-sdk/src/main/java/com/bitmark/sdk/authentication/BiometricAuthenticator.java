@@ -24,18 +24,24 @@ import java.util.Arrays;
 
 @RequiresApi(api = Build.VERSION_CODES.P)
 @Experimental
-class BiometricAuthentication extends AbsAuthentication {
+class BiometricAuthenticator extends AbsAuthenticator {
 
     private static final String FEATURE_IRIS = "android.hardware.iris";
 
     private static final String FEATURE_FACE = "android.hardware.face";
 
+    private String title;
+
+    private String description;
+
     private static final String[] SUPPORTED_FEATURES =
             new String[]{PackageManager.FEATURE_FINGERPRINT, FEATURE_IRIS, FEATURE_FACE};
 
-    BiometricAuthentication(@NonNull Activity activity,
-                            @NonNull AuthenticationCallback callback) {
+    BiometricAuthenticator(@NonNull Activity activity, String title, String description,
+                           @NonNull AuthenticationCallback callback) {
         super(activity, callback);
+        this.title = title;
+        this.description = description;
     }
 
     static boolean isHardwareDeteced(Context context) {
@@ -55,7 +61,8 @@ class BiometricAuthentication extends AbsAuthentication {
 
     @Override
     public void authenticate(@NonNull Cipher cipher) {
-        new BiometricAuthenticationHandler(activity, callback).authenticate(cipher);
+        new BiometricAuthenticationHandler(activity, title, description, callback)
+                .authenticate(cipher);
     }
 
     private static class BiometricAuthenticationHandler extends
@@ -65,13 +72,19 @@ class BiometricAuthentication extends AbsAuthentication {
 
         private AuthenticationCallback callback;
 
-        BiometricAuthenticationHandler(Activity activity, AuthenticationCallback callback) {
+        private String title;
+
+        private String description;
+
+        BiometricAuthenticationHandler(Activity activity, String title, String description,
+                                       AuthenticationCallback callback) {
             this.activity = activity;
+            this.title = title;
+            this.description = description;
             this.callback = callback;
         }
 
         void authenticate(Cipher cipher) {
-            if (cipher == null) return;
             BiometricPrompt biometricPrompt = getBiometricPrompt();
             final CancellationSignal cancellationSignal = new CancellationSignal();
             biometricPrompt
@@ -104,9 +117,8 @@ class BiometricAuthentication extends AbsAuthentication {
         private BiometricPrompt getBiometricPrompt() {
             Context context = activity.getApplicationContext();
             return new BiometricPrompt.Builder(context)
-                    .setTitle(context.getString(R.string.identification))
-                    .setDescription(
-                            context.getString(R.string.application_need_to_authenticate_you))
+                    .setTitle(title)
+                    .setDescription(description)
                     .setNegativeButton(context.getString(R.string.cancel),
                                        context.getMainExecutor(),
                                        (dialogInterface, i) -> callback.onCancelled())

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dismiss">關閉</string>
+    <string name="ok">OK</string>
+    <string name="cancel">取消</string>
+    <string name="touch_the_fingerprint">請觸摸指紋感測器。</string>
+    <string name="successful">成功！</string>
+    <string name="fingerprint_is_recognized">指紋已確認。</string>
+    <string name="failed">失敗！</string>
+    <string name="fingerprint_not_recognized">無法辨識指紋，請再次一次。</string>
+    <string name="authentication">身份認證</string>
+    <string name="please_authenticate_to_unlock">請進行身份認證來解鎖此程式。</string>
+</resources>

@@ -2,6 +2,7 @@ package com.bitmark.sdk.keymanagement;
 
 import com.bitmark.apiservice.utils.callback.Callback0;
 import com.bitmark.apiservice.utils.callback.Callback1;
+import com.bitmark.sdk.authentication.KeyAuthenticationSpec;
 
 /**
  * @author Hieu Pham
@@ -11,9 +12,9 @@ import com.bitmark.apiservice.utils.callback.Callback1;
  */
 public interface KeyManager {
 
-    void getKey(String alias, Callback1<byte[]> callback);
+    void getKey(String alias, KeyAuthenticationSpec keyAuthSpec, Callback1<byte[]> callback);
 
-    void saveKey(String alias, byte[] key, boolean isAuthenticationRequired, Callback0 callback);
+    void saveKey(String alias, KeyAuthenticationSpec keyAuthSpec, byte[] key, Callback0 callback);
 
-    void removeKey(String alias, Callback0 callback);
+    void removeKey(String alias, KeyAuthenticationSpec keyAuthSpec, Callback0 callback);
 }
