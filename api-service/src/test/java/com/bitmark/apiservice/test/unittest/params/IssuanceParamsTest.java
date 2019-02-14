@@ -3,10 +3,11 @@ package com.bitmark.apiservice.test.unittest.params;
 import com.bitmark.apiservice.params.IssuanceParams;
 import com.bitmark.apiservice.test.BaseTest;
 import com.bitmark.apiservice.utils.Address;
+import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.StandardKeyPair;
 import com.bitmark.cryptography.error.ValidateException;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.bitmark.apiservice.test.utils.FileUtils.loadRequest;
+import static com.bitmark.apiservice.test.utils.TestUtils.reflectionSet;
 import static com.bitmark.apiservice.utils.ArrayUtil.isDuplicate;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,7 +41,7 @@ public class IssuanceParamsTest extends BaseTest {
             "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f";
 
     private static final KeyPair KEY = StandardKeyPair.from(HEX.decode(PUBLIC_KEY),
-            HEX.decode(PRIVATE_KEY));
+                                                            HEX.decode(PRIVATE_KEY));
 
     private static final Address ADDRESS = Address.fromAccountNumber(
             "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva");
@@ -47,84 +49,67 @@ public class IssuanceParamsTest extends BaseTest {
     private static final String ASSET_ID =
             "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059";
 
-
-    @DisplayName("Verify function new IssuanceParams(String, Address) works well with happy " +
-                         "condition")
     @ParameterizedTest
     @ValueSource(strings = {
             "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059",
             "613ab997fb2172fd4d12fb2b82157e3cd081e2d95adefe96c6be9151667e67ed72fa0caedd109805b6f07c3efe428f03b836ad36ec51165f35adb4572530e2bf",
             "c5c834efb58a5106dd601676bf606da91b752cababfbe223122f71be5b2963dc57d593f5f45b61f1abe2fcf80277fd4075ee561813bc69c0343b4c4e68516237"})
-    public void testConstructIssuanceParamsWithoutNonce_ValidAssetId_ValidInstanceIsReturn(String assetId) {
+    public void testConstructIssuanceParamsWithoutNonce_ValidAssetId_ValidInstanceIsReturn(
+            String assetId) {
         assertDoesNotThrow(() -> new IssuanceParams(assetId, ADDRESS));
     }
 
-    @DisplayName("Verify function new IssuanceParams(String, Address) throws exception with " +
-                         "invalid assetId")
     @ParameterizedTest
     @MethodSource("createInvalidAssetId")
-    public void testConstructIssuanceParamsWithoutNonce_InvalidAssetId_ErrorIsThrow(String assetId) {
+    public void testConstructIssuanceParamsWithoutNonce_InvalidAssetId_ErrorIsThrow(
+            String assetId) {
         assertThrows(ValidateException.class, () -> new IssuanceParams(assetId, ADDRESS));
     }
 
-    @DisplayName("Verify function new IssuanceParams(String, Address, int[]) works well with " +
-                         "happy condition")
-    @ParameterizedTest
-    @MethodSource("createValidNonce")
-    public void testConstructIssuanceParamsWithNonce_ValidNonce_ValidInstanceIsReturn(int[] nonce) {
-        assertDoesNotThrow(() -> new IssuanceParams(ASSET_ID, ADDRESS, nonce));
-    }
-
-    @DisplayName("Verify function new IssuanceParams(String, Address, int[]) throws exception " +
-                         "with invalid nonce")
-    @ParameterizedTest
-    @MethodSource("createInvalidNonce")
-    public void testConstructIssuanceParamsWithNonce_InvalidNonce_ErrorIsThrow(int[] nonce) {
-        assertThrows(ValidateException.class, () -> new IssuanceParams(
-                ASSET_ID, ADDRESS, nonce));
-    }
-
-    @DisplayName("Verify function new IssuanceParams(String, Address, int) works well with happy " +
-                         "condition")
     @ParameterizedTest
     @ValueSource(ints = {1, 100, 1000})
-    public void testConstructIssuanceParamsWithQuantity_ValidQuantity_ValidInstanceIsReturn(int quantity) {
+    public void testConstructIssuanceParamsWithQuantity_ValidQuantity_ValidInstanceIsReturn(
+            int quantity) {
         assertDoesNotThrow(() -> new IssuanceParams(ASSET_ID, ADDRESS, quantity));
         final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS, quantity);
-        assertEquals(quantity, params.getNonces().length);
-        assertFalse(isDuplicate(params.getNonces()));
+        assertEquals(quantity, params.getNoncesPair().first().length);
+        assertEquals(quantity, params.getNoncesPair().second().length);
+        assertFalse(isDuplicate(params.getNoncesPair().first()));
+        assertFalse(isDuplicate(params.getNoncesPair().second()));
     }
 
-    @DisplayName("Verify function new IssuanceParams(String, Address, int) throws exception with " +
-                         "invalid quantity")
     @ParameterizedTest
     @ValueSource(ints = {-1, -100, 0})
     public void testConstructIssuanceParamsWithQuantity_InvalidQuantity_ErrorIsThrow(int quantity) {
         assertThrows(ValidateException.class, () -> new IssuanceParams(ASSET_ID, ADDRESS,
-                quantity));
+                                                                       quantity));
     }
 
-    @DisplayName("Verify function IssuanceParams.sign(KeyPair) in single params works well with " +
-                         "happy condition")
     @ParameterizedTest
     @MethodSource("createValidAssetIdNonceSignature")
-    public void testSignOneNonce_NoCondition_ValidSignatureIsReturn(String assetId, int[] nonce,
-                                                                    byte[] signature) {
-        final IssuanceParams params = new IssuanceParams(assetId, ADDRESS, nonce);
+    public void testSignOneNonce_NoCondition_ValidSignatureIsReturn(String assetId, int[] nonces,
+                                                                    byte[] signature)
+            throws NoSuchFieldException, IllegalAccessException {
+        final IssuanceParams params = new IssuanceParams(assetId, ADDRESS);
+        reflectionSet(params,
+                      new Pair<>("noncesPair", new Pair<>(nonces, nonces)));
         params.sign(KEY);
+        params.setContainsGenesisBitmark(false);
         assertEquals(params.getSignatures().size(), 1);
         assertTrue(Arrays.equals(signature, params.getSignatures().get(0)));
     }
 
-    @DisplayName("Verify function IssuanceParams.sign(KeyPair) in multiple params works well with" +
-                         " happy condition")
     @ParameterizedTest
     @MethodSource("createValidAssetIdNonceSignatures")
     public void testSignMultipleNonce_NoCondition_ValidSignatureIsReturn(String assetId,
-                                                                         int[] nonce,
-                                                                         List<byte[]> expectedSignature) {
-        final IssuanceParams params = new IssuanceParams(assetId, ADDRESS, nonce);
+                                                                         int[] nonces,
+                                                                         List<byte[]> expectedSignature)
+            throws NoSuchFieldException, IllegalAccessException {
+        final IssuanceParams params = new IssuanceParams(assetId, ADDRESS);
+        reflectionSet(params,
+                      new Pair<>("noncesPair", new Pair<>(nonces, nonces)));
         params.sign(KEY);
+        params.setContainsGenesisBitmark(false);
         final List<byte[]> signatures = params.getSignatures();
         assertEquals(expectedSignature.size(), signatures.size());
         for (int i = 0, size = expectedSignature.size(); i < size; i++) {
@@ -132,7 +117,6 @@ public class IssuanceParamsTest extends BaseTest {
         }
     }
 
-    @DisplayName("Verify function IssuanceParams.toJson() works well with happy condition")
     @ParameterizedTest
     @MethodSource("createValidIssuanceParamsJson")
     public void testToJson_ParamsIsSigned_ValidJsonIsReturn(IssuanceParams params,
@@ -140,28 +124,27 @@ public class IssuanceParamsTest extends BaseTest {
         assertEquals(expectedJson, params.toJson());
     }
 
-    @DisplayName("Verify function IssuanceParams.toJson() throw error when the IssuanceParams is " +
-                         "not signed")
-    @ParameterizedTest
-    @MethodSource("createNotSignedIssuanceParams")
-    public void testToJson_ParamsIsNotSigned_ErrorIsThrow(IssuanceParams params) {
-        assertThrows(UnsupportedOperationException.class, params::toJson);
+    @Test
+    public void testConstructIssuanceParams_ValidParams_CorrectNonceIsGenerated() {
+        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS);
+        final Pair<int[], int[]> noncesPair = params.getNoncesPair();
+        assertNotNull(noncesPair.first());
+        assertNotNull(noncesPair.second());
+        assertEquals(1, noncesPair.first().length);
+        assertEquals(1, noncesPair.second().length);
+    }
+
+    @Test
+    public void testSignParams__CorrectSignatureReturn() {
+        final int quantity = 2;
+        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS, quantity);
+        List<byte[]> concatenatedSignature = params.sign(KEY);
+        assertEquals(quantity * 2, concatenatedSignature.size());
     }
 
     private static Stream<String> createInvalidAssetId() {
         return Stream.of(null, "",
-                "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059ff");
-    }
-
-    private static Stream<int[]> createValidNonce() {
-        return Stream.of(new int[]{1, 3, 5, 7, 9},
-                new int[]{2, 4, 6, 8},
-                new int[]{1, 4, 7});
-    }
-
-    private static Stream<int[]> createInvalidNonce() {
-        return Stream.of(new int[]{}, new int[]{1, 1, 1, 2, 3, 4, 5, 5}, new int[]{1, 2, 3, 4, 5,
-                6, 7, 3}, new int[]{-2, 1, 3, 4, -5, 0}, null);
+                         "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059ff");
     }
 
     private static Stream<Arguments> createValidAssetIdNonceSignatures() {
@@ -189,30 +172,45 @@ public class IssuanceParamsTest extends BaseTest {
                     "e8b4994605f3462184c490ce620bd87f7149647dd6eca1d7eafec29ad58ab521d28f3b6df4260ec3ff23f806053faae4c66f89b78dff45f707eca25077fe5c01"));
         }};
         return Stream.of(Arguments.of(
-                "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059", new int[]{1, 2, 3, 4, 5}, signatures1),
-                Arguments.of(
-                        "613ab997fb2172fd4d12fb2b82157e3cd081e2d95adefe96c6be9151667e67ed72fa0caedd109805b6f07c3efe428f03b836ad36ec51165f35adb4572530e2bf", new int[]{1, 3, 5, 7}, signatures2));
+                "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059",
+                new int[]{1, 2, 3, 4, 5}, signatures1),
+                         Arguments.of(
+                                 "613ab997fb2172fd4d12fb2b82157e3cd081e2d95adefe96c6be9151667e67ed72fa0caedd109805b6f07c3efe428f03b836ad36ec51165f35adb4572530e2bf",
+                                 new int[]{1, 3, 5, 7}, signatures2));
     }
 
     private static Stream<Arguments> createValidAssetIdNonceSignature() {
         return Stream.of(Arguments.of(
-                "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059", new int[]{1},
+                "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059",
+                new int[]{1},
                 HEX.decode(
                         "0c1e8a5fb7ba6cbfa68da52354590df0d1979e0671dc2c9ba19811a166e8c4b54433dfbfb56c39ded50d0f54ba8676b9c01dad55f8ab1c1879bc335d635e4406")),
-                Arguments.of(
-                        "613ab997fb2172fd4d12fb2b82157e3cd081e2d95adefe96c6be9151667e67ed72fa0caedd109805b6f07c3efe428f03b836ad36ec51165f35adb4572530e2bf", new int[]{3},
-                        HEX.decode(
-                                "08189dd164b429078e7dccf0965d1b9d452074a52edb89a6ab8db538733b8c2aa162a27ef5c94cb3b58e7a345c4bf901d8a455af417ff3879744e012cd53e10b")),
-                Arguments.of(
-                        "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059", new int[]{5},
-                        HEX.decode(
-                                "21c1107d73d6da65ce5192bb12a93a22ed47400c76b076d4e43434728fdb369514a4956c19ce7116f6fd619c79f0aaae2d8cdfa9c4a2779702fe334fda4f8205")));
+                         Arguments.of(
+                                 "613ab997fb2172fd4d12fb2b82157e3cd081e2d95adefe96c6be9151667e67ed72fa0caedd109805b6f07c3efe428f03b836ad36ec51165f35adb4572530e2bf",
+                                 new int[]{3},
+                                 HEX.decode(
+                                         "08189dd164b429078e7dccf0965d1b9d452074a52edb89a6ab8db538733b8c2aa162a27ef5c94cb3b58e7a345c4bf901d8a455af417ff3879744e012cd53e10b")),
+                         Arguments.of(
+                                 "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059",
+                                 new int[]{5},
+                                 HEX.decode(
+                                         "21c1107d73d6da65ce5192bb12a93a22ed47400c76b076d4e43434728fdb369514a4956c19ce7116f6fd619c79f0aaae2d8cdfa9c4a2779702fe334fda4f8205")));
     }
 
-    private static Stream<Arguments> createValidIssuanceParamsJson() throws IOException {
-        final IssuanceParams params1 = new IssuanceParams(ASSET_ID, ADDRESS, new int[]{1});
-        final IssuanceParams params2 = new IssuanceParams(ASSET_ID, ADDRESS, new int[]{3});
-        final IssuanceParams params3 = new IssuanceParams(ASSET_ID, ADDRESS, new int[]{1, 3});
+    private static Stream<Arguments> createValidIssuanceParamsJson()
+            throws IOException, NoSuchFieldException, IllegalAccessException {
+        final IssuanceParams params1 = new IssuanceParams(ASSET_ID, ADDRESS);
+        reflectionSet(params1,
+                      new Pair<>("noncesPair", new Pair<>(new int[]{1}, new int[]{1})));
+        params1.setContainsGenesisBitmark(false);
+        final IssuanceParams params2 = new IssuanceParams(ASSET_ID, ADDRESS);
+        reflectionSet(params2,
+                      new Pair<>("noncesPair", new Pair<>(new int[]{3}, new int[]{3})));
+        params2.setContainsGenesisBitmark(false);
+        final IssuanceParams params3 = new IssuanceParams(ASSET_ID, ADDRESS);
+        reflectionSet(params3,
+                      new Pair<>("noncesPair", new Pair<>(new int[]{1, 3}, new int[]{1, 3})));
+        params3.setContainsGenesisBitmark(false);
         params1.sign(KEY);
         params2.sign(KEY);
         params3.sign(KEY);
@@ -220,14 +218,7 @@ public class IssuanceParamsTest extends BaseTest {
         final String json2 = loadRequest("/issue/single_issue2.json");
         final String json3 = loadRequest("/issue/multiple_issue1.json");
         return Stream.of(Arguments.of(params1, json1), Arguments.of(params2, json2),
-                Arguments.of(params3, json3));
-    }
-
-    private static Stream<IssuanceParams> createNotSignedIssuanceParams() {
-        final IssuanceParams params1 = new IssuanceParams(ASSET_ID, ADDRESS, new int[]{1});
-        final IssuanceParams params2 = new IssuanceParams(ASSET_ID, ADDRESS, new int[]{3});
-        final IssuanceParams params3 = new IssuanceParams(ASSET_ID, ADDRESS, new int[]{1, 3});
-        return Stream.of(params1, params2, params3);
+                         Arguments.of(params3, json3));
     }
 
 }

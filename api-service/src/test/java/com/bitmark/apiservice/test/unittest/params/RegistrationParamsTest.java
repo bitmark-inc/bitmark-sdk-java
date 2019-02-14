@@ -6,7 +6,6 @@ import com.bitmark.apiservice.utils.Address;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.StandardKeyPair;
 import com.bitmark.cryptography.error.ValidateException;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -51,8 +50,6 @@ public class RegistrationParamsTest extends BaseTest {
     private static final String NAME = "name";
 
 
-    @DisplayName("Verify function new RegistrationParams(String, Map, Address) works well with " +
-                         "happy condition")
     @ParameterizedTest
     @MethodSource("createValidNameMetadataAddress")
     public void testConstructRegistrationParams_ValidAllParams_ValidInstanceIsReturn(String name,
@@ -61,8 +58,6 @@ public class RegistrationParamsTest extends BaseTest {
         assertDoesNotThrow(() -> new RegistrationParams(name, metadata, address));
     }
 
-    @DisplayName("Verify function new RegistrationParams(String, Map, Address) throws error with " +
-                         "invalid params")
     @ParameterizedTest
     @MethodSource("createInvalidNameMetadataAddress")
     public void testConstructRegistrationParams_InvalidParams_ErrorIsThrow(String name,
@@ -72,8 +67,6 @@ public class RegistrationParamsTest extends BaseTest {
                 address));
     }
 
-    @DisplayName("Verify function RegistrationParams.generateFingerprint(File) works well with " +
-                         "happy condition")
     @ParameterizedTest
     @MethodSource("createFileFingerprint")
     public void testGenerateFingerprint_ValidFile_CorrectFingerprintIsReturn(File file,
@@ -83,8 +76,6 @@ public class RegistrationParamsTest extends BaseTest {
         assertTrue(expectedFingerprint.equalsIgnoreCase(fingerprint));
     }
 
-    @DisplayName("Verify function RegistrationParams.generateFingerprint(File) throws error with " +
-                         "invalid file")
     @ParameterizedTest
     @MethodSource("createInvalidFile")
     public void testGenerateFingerprint_InvalidFile_ErrorIsThrow(File file) {
@@ -92,8 +83,6 @@ public class RegistrationParamsTest extends BaseTest {
                 ADDRESS).generateFingerprint(file));
     }
 
-    @DisplayName("Verify function RegistrationParams.sign(KeyPair) works well with " +
-                         "happy condition")
     @ParameterizedTest
     @MethodSource("createParamsSignature")
     public void testSign_NoCondition_CorrectSignatureIsReturn(RegistrationParams params,
@@ -102,8 +91,6 @@ public class RegistrationParamsTest extends BaseTest {
         assertTrue(expectedSignature.equalsIgnoreCase(params.getSignature()));
     }
 
-    @DisplayName("Verify function RegistrationParams.sign(KeyPair) throws error with " +
-                         "invalid key")
     @ParameterizedTest
     @MethodSource("createValidParamsJson")
     public void testToJson_NoCondition_CorrectJsonIsReturn(RegistrationParams params,
@@ -111,8 +98,6 @@ public class RegistrationParamsTest extends BaseTest {
         assertTrue(expectedJson.equalsIgnoreCase(params.toJson()));
     }
 
-    @DisplayName("Verify function RegistrationParams.toJson() throw error when the " +
-                         "RegistrationParams is not signed")
     @ParameterizedTest
     @MethodSource("createNotSignedRegistrationParams")
     public void testToJson_ParamsIsNotSigned_ErrorIsThrow(RegistrationParams params) {

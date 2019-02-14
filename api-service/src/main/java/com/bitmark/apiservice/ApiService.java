@@ -2,6 +2,7 @@ package com.bitmark.apiservice;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.params.*;
+import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;
 import com.bitmark.apiservice.params.query.QueryParams;
 import com.bitmark.apiservice.response.*;
 import com.bitmark.apiservice.utils.callback.Callback1;
@@ -11,6 +12,7 @@ import okhttp3.Headers;
 import java.util.List;
 
 import static com.bitmark.apiservice.middleware.Converter.*;
+import static com.bitmark.apiservice.utils.Awaitility.await;
 
 /**
  * @author Hieu Pham
@@ -44,8 +46,21 @@ public class ApiService implements BitmarkApi {
 
     @Override
     public void issueBitmark(IssuanceParams params, Callback1<List<String>> callback) {
-        final String path = String.format("/%s/issue", VERSION);
-        client.postAsync(path, params, toIssueResponse(callback));
+        try {
+
+            String assetId = params.getAssetId();
+            GetBitmarksResponse bitmarksRes = await(bitmarkCallback -> listBitmarks(
+                    new BitmarkQueryBuilder().referencedAssetId(assetId).pending(true).limit(1)
+                                             .build(),
+                    bitmarkCallback));
+
+            params.setContainsGenesisBitmark(
+                    bitmarksRes.getBitmarks() != null && bitmarksRes.getBitmarks().isEmpty());
+            final String path = String.format("/%s/issue", VERSION);
+            client.postAsync(path, params, toIssueResponse(callback));
+        } catch (Throwable e) {
+            callback.onError(e);
+        }
     }
 
     @Override
@@ -105,7 +120,7 @@ public class ApiService implements BitmarkApi {
     public void getTransaction(String txId, boolean includeAsset,
                                Callback1<GetTransactionResponse> callback) {
         final String path = String.format("/%s/txs/%s?asset=%b", VERSION,
-                txId, includeAsset);
+                                          txId, includeAsset);
         client.getAsync(path, toGetTransactionResponse(callback));
     }
 

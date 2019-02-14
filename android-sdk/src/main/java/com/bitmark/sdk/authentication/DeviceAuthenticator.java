@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.bitmark.sdk.R;
+import android.support.annotation.RequiresApi;
 
 import javax.crypto.Cipher;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.KEYGUARD_SERVICE;
-import static com.bitmark.sdk.utils.DeviceUtils.isAboveM;
 
 /**
  * @author Hieu Pham
@@ -21,24 +21,33 @@ import static com.bitmark.sdk.utils.DeviceUtils.isAboveM;
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
-class DeviceAuthentication extends AbsAuthentication {
+class DeviceAuthenticator extends AbsAuthenticator {
 
-    DeviceAuthentication(Activity activity, AuthenticationCallback callback) {
+    private String title;
+
+    private String description;
+
+    DeviceAuthenticator(Activity activity, String title, String description,
+                        AuthenticationCallback callback) {
         super(activity, callback);
+        this.title = title;
+        this.description = description;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static boolean isDeviceSecured(Context context) {
         KeyguardManager keyguardManager =
                 (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
         if (keyguardManager == null) return false;
-        return isAboveM() ? keyguardManager.isDeviceSecure() : keyguardManager
-                .isKeyguardSecure();
+        return keyguardManager.isDeviceSecure();
     }
 
     @Override
-    public void authenticate(@NonNull Cipher cipher) {
-        new DeviceAuthenticationHandler(activity, callback).authenticate(cipher);
+    public void authenticate(Cipher cipher) {
+        new DeviceAuthenticationHandler(activity, title, description, callback)
+                .authenticate(cipher);
     }
+
 
     private static class DeviceAuthenticationHandler implements ActivityListener {
 
@@ -50,9 +59,15 @@ class DeviceAuthentication extends AbsAuthentication {
 
         private Cipher cipher;
 
-        DeviceAuthenticationHandler(@NonNull Activity activity,
+        private String title;
+
+        private String description;
+
+        DeviceAuthenticationHandler(@NonNull Activity activity, String title, String description,
                                     @NonNull AuthenticationCallback callback) {
             this.activity = activity;
+            this.title = title;
+            this.description = description;
             this.callback = callback;
             if (this.activity instanceof StatefulActivity) {
                 ((StatefulActivity) this.activity).setStateListener(this);
@@ -71,9 +86,7 @@ class DeviceAuthentication extends AbsAuthentication {
                 throw new UnsupportedOperationException(
                         "Not support this kind of service " + KEYGUARD_SERVICE);
             Intent intent = keyguardManager
-                    .createConfirmDeviceCredentialIntent(
-                            context.getString(R.string.identification),
-                            context.getString(R.string.application_need_to_authenticate_you));
+                    .createConfirmDeviceCredentialIntent(title, description);
             activity.startActivityForResult(intent, REQUEST_CODE, null);
         }
 

@@ -6,7 +6,6 @@ import com.bitmark.apiservice.utils.Address;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.StandardKeyPair;
 import com.bitmark.cryptography.error.ValidateException;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -40,31 +39,22 @@ public class TransferOfferParamsTest extends BaseTest {
     private static final Address ADDRESS = Address.fromAccountNumber(
             "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva");
 
-    @DisplayName("Verify function new TransferOfferParams(Address) works well with valid owner " +
-                         "address")
     @Test
     public void testConstructTransferOfferParamsWithoutLink_ValidOwnerAddress_CorrectInstanceIsReturn() {
         assertDoesNotThrow(() -> new TransferOfferParams(ADDRESS));
     }
 
-    @DisplayName("Verify function new TransferOfferParams(Address) throws exception with invalid " +
-                         "owner" +
-                         " address")
     @Test
     public void testConstructTransferOfferParamsWithoutLink_InvalidOwnerAddress_ErrorIsThrow() {
         assertThrows(ValidateException.class, () -> new TransferOfferParams(null));
     }
 
-    @DisplayName("Verify function new TransferOfferParams(Address, String) works well with valid " +
-                         "params")
     @ParameterizedTest
     @MethodSource("createValidAddressLink")
     public void testConstructTransferOfferParamsWithLink_ValidParams_CorrectInstanceIsReturn(Address owner, String link) {
         assertDoesNotThrow(() -> new TransferOfferParams(owner, link));
     }
 
-    @DisplayName("Verify function new TransferOfferParams(Address, String) throws exception with " +
-                         "invalid params")
     @ParameterizedTest
     @MethodSource("createInvalidAddressLink")
     public void testConstructTransferOfferParamsWithLink_InvalidParams_ErrorIsThrow(Address owner,
@@ -72,8 +62,6 @@ public class TransferOfferParamsTest extends BaseTest {
         assertThrows(ValidateException.class, () -> new TransferOfferParams(owner, link));
     }
 
-    @DisplayName("Verify function TransferOfferParams.toJson() works well with " +
-                         "TransferOfferParams is signed")
     @ParameterizedTest
     @MethodSource("createSignedParamsJson")
     public void testToJson_ParamsIsSigned_ValidJsonIsReturn(TransferOfferParams params,
@@ -81,17 +69,12 @@ public class TransferOfferParamsTest extends BaseTest {
         assertTrue(json.equalsIgnoreCase(params.toJson()));
     }
 
-    @DisplayName("Verify function TransferOfferParams.toJson() throw exception with " +
-                         "TransferParams is " +
-                         "not signed")
     @ParameterizedTest
     @MethodSource("createUnsignedParamsJson")
     public void testToJson_ParamsIsNotSigned_ErrorIsThrow(TransferOfferParams params) {
         assertThrows(UnsupportedOperationException.class, params::toJson);
     }
 
-    @DisplayName("Verify function TransferOfferParams.sign(KeyPair) works well with valid " +
-                         "TransferParams")
     @ParameterizedTest
     @MethodSource("createValidParamsSignature")
     public void testSignParams_ParamsIsValid_CorrectSignatureIsReturn(TransferOfferParams params,
@@ -100,8 +83,6 @@ public class TransferOfferParamsTest extends BaseTest {
         assertTrue(signature.equalsIgnoreCase(params.getSignature()));
     }
 
-    @DisplayName("Verify function TransferOfferParams.sign(KeyPair) throws exception with invalid" +
-                         " TransferOfferParams")
     @Test
     public void testSignParams_ParamsIsInvalid_ErrorIsThrow() {
         final TransferOfferParams params = new TransferOfferParams(ADDRESS);

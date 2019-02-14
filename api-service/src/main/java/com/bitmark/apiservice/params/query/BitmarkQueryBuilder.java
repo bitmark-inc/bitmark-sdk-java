@@ -91,7 +91,8 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
     }
 
     public BitmarkQueryBuilder limit(Integer limit) {
-        checkValid(() -> limit != null && limit > 0, "Invalid limit value. Must be greater 0");
+        checkValid(() -> limit != null && limit > 0 && limit <= 100,
+                   "Invalid limit value. Must be greater 0");
         this.limit = limit;
         return this;
     }
@@ -104,7 +105,7 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
 
     public BitmarkQueryBuilder to(String to) {
         checkValid(() -> to != null && (to.equals("earlier") || to.equals("later")), "Invalid " +
-                "value to. It must be 'later' or 'earlier'.");
+                                                                                     "value to. It must be 'later' or 'earlier'.");
         this.to = to;
         return this;
     }

@@ -1,6 +1,8 @@
 package com.bitmark.sdk.features;
 
 import android.app.Activity;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
@@ -11,6 +13,7 @@ import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.PublicKey;
 import com.bitmark.cryptography.error.ValidateException;
+import com.bitmark.sdk.authentication.KeyAuthenticationSpec;
 import com.bitmark.sdk.features.internal.RecoveryPhrase;
 import com.bitmark.sdk.features.internal.Seed;
 import com.bitmark.sdk.features.internal.SeedTwelve;
@@ -55,18 +58,25 @@ public class Account {
         return fromSeed(seed);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void loadFromKeyStore(Activity activity, String accountNumber,
+                                        KeyAuthenticationSpec spec,
                                         Callback1<Account> callback) {
         final KeyManager keyManager = new KeyManagerImpl(activity);
-        keyManager.getKey(accountNumber, new Callback1<byte[]>() {
+        keyManager.getKey(accountNumber, spec, new Callback1<byte[]>() {
             @Override
             public void onSuccess(byte[] seedBytes) {
                 try {
-                    Seed seed = seedBytes.length == SeedTwelve.SEED_BYTE_LENGTH ? new SeedTwelve(
-                            seedBytes) : new SeedTwentyFour(seedBytes,
-                                                            GlobalConfiguration.network());
-                    Account account = Account.fromSeed(seed);
-                    callback.onSuccess(account);
+                    if (seedBytes == null) callback.onSuccess(null);
+                    else {
+                        Seed seed =
+                                seedBytes.length == SeedTwelve.SEED_BYTE_LENGTH ? new SeedTwelve(
+                                        seedBytes) : new SeedTwentyFour(seedBytes,
+                                                                        GlobalConfiguration
+                                                                                .network());
+                        Account account = Account.fromSeed(seed);
+                        callback.onSuccess(account);
+                    }
                 } catch (Throwable e) {
                     callback.onError(e);
                 }
@@ -117,25 +127,31 @@ public class Account {
         return Address.fromAccountNumber(accountNumber);
     }
 
-    public void saveToKeyStore(Activity activity, String alias, boolean isAuthenticationRequired,
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void saveToKeyStore(Activity activity, String alias, KeyAuthenticationSpec spec,
                                Callback0 callback) {
         final String keyAlias = TextUtils.isEmpty(alias) ? accountNumber : alias;
         final KeyManager keyManager = new KeyManagerImpl(activity);
-        keyManager.saveKey(keyAlias, seed.getSeedBytes(), isAuthenticationRequired, callback);
+        keyManager.saveKey(keyAlias, spec, seed.getSeedBytes(), callback);
     }
 
-    public void saveToKeyStore(Activity activity, boolean isAuthenticationRequired,
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void saveToKeyStore(Activity activity, KeyAuthenticationSpec spec,
                                Callback0 callback) {
-        saveToKeyStore(activity, null, isAuthenticationRequired, callback);
+        saveToKeyStore(activity, accountNumber, spec, callback);
     }
 
-    public void removeFromKeyStore(Activity activity, Callback0 callback) {
-        removeFromKeyStore(activity, accountNumber, callback);
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void removeFromKeyStore(Activity activity, KeyAuthenticationSpec spec,
+                                   Callback0 callback) {
+        removeFromKeyStore(activity, accountNumber, spec, callback);
     }
 
-    public static void removeFromKeyStore(Activity activity, String alias, Callback0 callback) {
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public static void removeFromKeyStore(Activity activity, String alias,
+                                          KeyAuthenticationSpec spec, Callback0 callback) {
         final KeyManager keyManager = new KeyManagerImpl(activity);
-        keyManager.removeKey(alias, callback);
+        keyManager.removeKey(alias, spec, callback);
     }
 
     public static boolean isValidAccountNumber(String accountNumber) {

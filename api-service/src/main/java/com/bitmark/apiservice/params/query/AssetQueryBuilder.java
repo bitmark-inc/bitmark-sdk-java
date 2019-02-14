@@ -34,7 +34,7 @@ public class AssetQueryBuilder extends AbsQueryBuilder {
     }
 
     public AssetQueryBuilder limit(Integer limit) {
-        checkValid(() -> limit != null && limit > 0, "Invalid limit value");
+        checkValid(() -> limit != null && limit > 0 && limit <= 100, "Invalid limit value");
         this.limit = limit;
         return this;
     }

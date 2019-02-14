@@ -13,10 +13,6 @@ public class DeviceUtils {
     private DeviceUtils() {
     }
 
-    public static boolean isAboveM() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
-
     public static boolean isAboveP() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
     }

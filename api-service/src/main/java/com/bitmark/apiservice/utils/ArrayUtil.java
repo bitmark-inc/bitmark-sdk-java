@@ -173,6 +173,13 @@ public class ArrayUtil {
         return slice(data, i, data.length);
     }
 
+    public static boolean contains(int[] source, int examined) {
+        for (int item : source) {
+            if (item == examined) return true;
+        }
+        return false;
+    }
+
     public static <T> boolean contains(T[] source, T examined) {
         for (T item : source) {
             if (item.equals(examined)) return true;
@@ -241,7 +248,14 @@ public class ArrayUtil {
     }
 
     public static Float[] toFloatArray(float[] input) {
-        return IntStream.range(0, input.length).mapToDouble(i -> input[i]).boxed().toArray(Float[]::new);
+        return IntStream.range(0, input.length).mapToDouble(i -> input[i]).boxed()
+                        .toArray(Float[]::new);
+    }
+
+    public static <T> List<T> concat(List<T> first, List<T> second) {
+        List<T> copyFirst = new ArrayList<>(first);
+        copyFirst.addAll(new ArrayList<>(second));
+        return copyFirst;
     }
 
 }
