@@ -9,6 +9,7 @@ import android.security.keystore.KeyProperties;
 import android.security.keystore.UserNotAuthenticatedException;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callback0;
 import com.bitmark.apiservice.utils.callback.Callback1;
@@ -397,30 +398,66 @@ public class KeyManagerImpl implements KeyManager {
 
     @Override
     public void removeKey(String alias, KeyAuthenticationSpec keyAuthSpec, Callback0 callback) {
-        try {
-            triggerDeviceAuthentication(keyAuthSpec, getAuthCallback(new Callback1<Cipher>() {
-                @Override
-                public void onSuccess(Cipher cipher) {
-                    try {
-                        KeyStore keyStore = getLoadedAndroidKeyStore();
-                        keyStore.deleteEntry(keyAuthSpec.getKeyAlias());
-                        getEncryptedKeyFile(alias).delete();
-                        callback.onSuccess();
-                    } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                        callback.onError(e);
-                    }
-                }
 
-                @Override
-                public void onError(Throwable throwable) {
-                    callback.onError(throwable);
-                }
-            }));
-        } catch (AuthenticationRequiredException e) {
-            e.printStackTrace();
+        if (!isEncryptionKeyExisted(keyAuthSpec.getKeyAlias())) {
+            callback.onError(
+                    new IllegalArgumentException("Encryption key alias is not existing"));
+            return;
+        }
+
+        try {
+
+            final SecretKey encryptionKey =
+                    (SecretKey) getLoadedAndroidKeyStore()
+                            .getKey(keyAuthSpec.getKeyAlias(), null);
+
+            // Verify the key is valid on time frame
+            getDecryptCipher(alias, encryptionKey);
+
+            // The key is in time frame
+            removeKey(alias, keyAuthSpec);
+            callback.onSuccess();
+        } catch (UserNotAuthenticatedException e) {
+            // Key is now out of time frame, need to authenticate again
+            try {
+                triggerDeviceAuthentication(keyAuthSpec, getAuthCallback(new Callback1<Cipher>() {
+                    @Override
+                    public void onSuccess(Cipher cipher) {
+                        try {
+                            removeKey(alias, keyAuthSpec);
+                            callback.onSuccess();
+                        } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                            callback.onError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                }));
+            } catch (AuthenticationRequiredException e1) {
+                e1.printStackTrace();
+                callback.onError(e1);
+            }
+
+        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException
+                | UnrecoverableKeyException | NoSuchPaddingException | InvalidAlgorithmParameterException
+                | InvalidKeyException e) {
+            // Unexpected error
             callback.onError(e);
         }
+
+    }
+
+    private void removeKey(String alias, KeyAuthenticationSpec keyAuthSpec)
+            throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
+        if (TextUtils.isEmpty(alias) || TextUtils.isEmpty(keyAuthSpec.getKeyAlias()))
+            throw new IllegalArgumentException("Invalid key store alias or the key alias");
+        KeyStore keyStore = getLoadedAndroidKeyStore();
+        keyStore.deleteEntry(keyAuthSpec.getKeyAlias());
+        getEncryptedKeyFile(alias).delete();
     }
 
 
