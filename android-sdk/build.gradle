@@ -1,18 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven'
 apply from: '../configuration.gradle'
 
 def ext = project.ext
 def config = ext.configuration
-def root_publication = ext.publication
 def project_publication = ext.publicationProperties(project.name)
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-group = project_publication.GROUP_ID
-version = project_publication.VERSION
 
 buildscript {
     apply from: '../dependencies.gradle'
@@ -65,87 +56,7 @@ android {
     }
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-install {
-
-    repositories.mavenInstaller {
-        pom.project {
-            packaging 'jar'
-            groupId project_publication.GROUP_ID
-            artifactId project_publication.ARTIFACT_ID
-
-            name project_publication.LIB_NAME
-            description project_publication.LIB_DES
-            url project_publication.LIB_SITE_URL
-
-            licenses {
-                license {
-                    name root_publication.LICENSE_NAME
-                    url root_publication.LICENSE_URL
-                }
-            }
-            developers {
-                developer {
-                    id root_publication.DEV_ID
-                    name root_publication.DEV_NAME
-                    email root_publication.DEV_EMAIL
-                }
-            }
-            scm {
-                connection project_publication.LIB_GIT_URL
-                developerConnection project_publication.LIB_GIT_URL
-                url project_publication.LIB_SITE_URL
-            }
-        }
-    }
-}
-
-bintrayUpload.dependsOn(install)
-
-bintray {
-
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-    pkg {
-        repo = properties.getProperty("bintray.repo")
-        name = ext.publicationPackageName(project.name)
-        desc = project_publication.LIB_DES
-        websiteUrl = project_publication.LIB_SITE_URL
-        vcsUrl = project_publication.LIB_GIT_URL
-        licenses = root_publication.LICENSE_ALL
-        dryRun = false
-        publish = true
-        override = true
-        publicDownloadNumbers = true
-        version {
-            desc = project_publication.LIB_DES
-            gpg {
-                sign = true
-                passphrase = properties.getProperty("bintray.gpg.password")
-            }
-        }
-    }
-}
+apply from: '../publication_android.gradle'
 
 dependencies {
     implementation deps.bitmark_sdk.api_service
@@ -153,11 +64,11 @@ dependencies {
     implementation deps.android_support.annotation
     implementation deps.android_support.compat
     implementation deps.android_support.appcompat
-    implementation ("com.facebook.react:react-native:+"){
+    implementation("com.facebook.react:react-native:+") {
         exclude group: 'com.android.support'
         exclude module: 'support-v4'
     }
-    
+
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.junit_platform.suite_api
