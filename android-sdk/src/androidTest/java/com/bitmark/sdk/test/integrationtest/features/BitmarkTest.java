@@ -107,6 +107,32 @@ public class BitmarkTest extends BaseFeatureTest {
     }
 
     @Test
+    public void testIssueBitmark_OwnedSingleBitmarkWithoutMetadata_CorrectSuccessResponseIsReturn()
+            throws Throwable {
+        // Register asset
+        File asset = temporaryFolderRule.newFile();
+        Address owner = ACCOUNT1.toAddress();
+        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), null,
+                                                                       owner);
+        registrationParams.generateFingerprint(asset);
+        registrationParams.sign(KEY1);
+        RegistrationResponse registrationResponse =
+                await(callback -> Asset.register(registrationParams,
+                                                 callback));
+        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        String assetId = assets.get(0).getId();
+
+        // Issue bitmarks
+        IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
+        issuanceParams.sign(KEY1);
+        List<String> txIds =
+                await(callback -> Bitmark.issue(issuanceParams,
+                                                callback));
+        assertEquals(txIds.size(), 1);
+        assertFalse(txIds.get(0).isEmpty());
+    }
+
+    @Test
     public void testIssueBitmark_NotOwnedBitmark_CorrectErrorResponseIsReturn() throws Throwable {
         expectedException.expect(HttpException.class);
         expectedException.expectMessage(containsString("1000"));

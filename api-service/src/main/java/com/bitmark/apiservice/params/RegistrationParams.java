@@ -89,7 +89,7 @@ public class RegistrationParams extends AbsSingleParams {
         byte[] data = VarInt.writeUnsignedVarInt(0x02);
         data = BinaryPacking.concat(name, data);
         data = BinaryPacking.concat(fingerprint, data);
-        if (metadata != null) data = BinaryPacking.concat(getPackedMetadata(metadata), data);
+        data = BinaryPacking.concat(getPackedMetadata(metadata), data);
         data = BinaryPacking.concat(registrant.pack(), data);
         return data;
     }
@@ -101,6 +101,7 @@ public class RegistrationParams extends AbsSingleParams {
     }
 
     public static String getPackedMetadata(Map<String, String> metadata) {
+        if (metadata == null) return "";
         StringBuilder builder = new StringBuilder();
         int iteration = 0;
         for (Map.Entry<String, String> entry : metadata.entrySet()) {

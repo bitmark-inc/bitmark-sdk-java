@@ -22,7 +22,7 @@ public class BinaryPacking {
     }
 
     public static byte[] concat(String from, byte[] to) {
-        final byte[] fromBytes = RAW.decode(from);
+        final byte[] fromBytes = from.isEmpty() ? new byte[]{} : RAW.decode(from);
         return concat(fromBytes, to);
     }
 }
