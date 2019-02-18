@@ -337,7 +337,7 @@ public class KeyManagerImpl implements KeyManager {
 
                         @Override
                         public void onError(Throwable throwable) {
-
+                            callback.onError(throwable);
                         }
                     });
             Authenticator authenticator =
