@@ -1,9 +1,7 @@
 package com.bitmark.apiservice.utils;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Queue;
+import java.util.concurrent.*;
 
 /**
  * @author Hieu Pham
@@ -14,44 +12,59 @@ import java.util.concurrent.TimeUnit;
 
 public class BackgroundJobScheduler {
 
-    private static final int MAX_POOL_SIZE = 10;
+    private static int NUMBER_OF_CORES = 5;
 
-    private static final int ALIVE_TIME = 60;
+    private static final int KEEP_ALIVE_TIME = 30;
 
-    private static final TimeUnit ALIVE_TIME_UNIT = TimeUnit.SECONDS;
+    private static final TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
 
-    private static final ThreadFactory THREAD_FACTORY;
+    private final ThreadPoolExecutor executorService;
 
-    private static final ThreadPoolExecutor executor;
+    private static volatile BackgroundJobScheduler INSTANCE;
 
-    static {
-        THREAD_FACTORY = new PriorityThreadFactory(Thread.NORM_PRIORITY);
-        executor = new ThreadPoolExecutor(0, MAX_POOL_SIZE, ALIVE_TIME, ALIVE_TIME_UNIT,
-                new LinkedBlockingQueue<>(), THREAD_FACTORY);
+    public static BackgroundJobScheduler getInstance() {
+        if (INSTANCE == null) {
+            synchronized (BackgroundJobScheduler.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new BackgroundJobScheduler();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    private BackgroundJobScheduler() {
+        BlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<>();
+        executorService = new ThreadPoolExecutor(NUMBER_OF_CORES,
+                                                 NUMBER_OF_CORES * 2,
+                                                 KEEP_ALIVE_TIME,
+                                                 KEEP_ALIVE_TIME_UNIT,
+                                                 taskQueue,
+                                                 new BackgroundThreadFactory());
     }
 
     public void execute(Runnable runnable) {
-        executor.execute(runnable);
+        executorService.execute(runnable);
     }
 
     public void shutdown() {
-        if (executor.isShutdown() || executor.isTerminating() || executor.isTerminated()) return;
-        executor.shutdown();
+        if (executorService.isShutdown() || executorService.isTerminated()) return;
+        executorService.shutdown();
     }
 
-    static final class PriorityThreadFactory implements ThreadFactory {
+    public int getActiveTaskCount() {
+        return executorService.getActiveCount();
+    }
 
-        private final int priority;
+    public Queue<Runnable> getTaskQueue() {
+        return executorService.getQueue();
+    }
 
-        PriorityThreadFactory(int priority) {
-            this.priority = priority;
-        }
+    private static final class BackgroundThreadFactory implements ThreadFactory {
 
         @Override
         public Thread newThread(Runnable r) {
-            final Thread thread = new Thread(r);
-            thread.setPriority(priority);
-            return thread;
+            return new Thread(r);
         }
     }
 }

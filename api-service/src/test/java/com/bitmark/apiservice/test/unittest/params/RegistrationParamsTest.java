@@ -123,7 +123,7 @@ public class RegistrationParamsTest extends BaseTest {
         }}, ADDRESS), Arguments.of("Asset2", new HashMap<String, String>() {{
             put("name", "name");
             put("description", "description");
-        }}, null), Arguments.of("Asset3", new HashMap<String, String>(), ADDRESS));
+        }}, null));
     }
 
     private static Stream<Arguments> createFileFingerprint() {

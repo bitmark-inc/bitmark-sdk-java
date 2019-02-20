@@ -89,12 +89,12 @@ public class BitmarkQueryBuilderTest extends BaseTest {
         return Stream.of(Arguments.of(new AssetQueryBuilder().registrant("registrantId").limit(15), "limit=15&registrant=registrantId"),
                 Arguments.of(new AssetQueryBuilder().assetIds(new String[]{"abc", "def"}),
                         "asset_ids=abc&asset_ids=def&limit=100"),
-                Arguments.of(new AssetQueryBuilder().limit(999).assetIds(new String[]{"abc"}).registrant("registrantId"), "asset_ids=abc&limit=999&registrant=registrantId"));
+                Arguments.of(new AssetQueryBuilder().limit(23).assetIds(new String[]{"abc"}).registrant("registrantId"), "asset_ids=abc&limit=23&registrant=registrantId"));
     }
 
     private static Stream<Arguments> createBitmarkQueryBuilder() {
         return Stream.of(Arguments.of(new BitmarkQueryBuilder().issuedBy("issuedById").pending(true), "issued_by=issuedById&limit=100&pending=true"),
-                Arguments.of(new BitmarkQueryBuilder().limit(999).referencedAssetId("assetId").at(1234L).to("later"), "asset_id=assetId&at=1234&limit=999&to=later"));
+                Arguments.of(new BitmarkQueryBuilder().limit(23).referencedAssetId("assetId").at(1234L).to("later"), "asset_id=assetId&at=1234&limit=23&to=later"));
     }
 
     private static Stream<Arguments> createTxQueryBuilder() {
