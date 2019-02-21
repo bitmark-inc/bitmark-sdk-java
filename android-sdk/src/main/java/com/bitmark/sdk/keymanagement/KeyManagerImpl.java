@@ -245,7 +245,7 @@ public class KeyManagerImpl implements KeyManager {
                 Cipher cipher = getEncryptCipher(encryptionKey);
 
                 if (newKeyAuthSpec.isAuthenticationRequired() &&
-                    !keyAuthSpec.willInvalidateInTimeFrame()) {
+                    !newKeyAuthSpec.willInvalidateInTimeFrame()) {
                     // The key authentication is required and user didn't set the validity time frame for it
                     authForSaveKey(alias, keyAuthSpec, key, cipher, callback);
                 } else {
