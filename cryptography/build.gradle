@@ -51,7 +51,7 @@ android {
             minifyEnabled false
         }
     }
-    
+
 }
 
 [
@@ -97,7 +97,7 @@ android {
 apply from: '../publication_android.gradle'
 
 task unzipAAR(type: Copy) {
-    def aar = file("${buildDir}/outputs/aar/" + project_publication.ARTIFACT_ID + "-release.aar")
+    def aar = file("${buildDir}/outputs/aar/" + project_publication.ARTIFACT_ID + "-" + project_publication.VERSION + ".aar")
     from zipTree(aar)
     into "${buildDir}/outputs/aar/unzip"
 }
@@ -107,7 +107,7 @@ task copyNativeLib(type: Copy, dependsOn: 'deleteNativeLib') {
     into 'native-lib/lib'
 }
 
-task deleteNativeLib(type: Delete){
+task deleteNativeLib(type: Delete) {
     delete 'native-lib'
 }
 
@@ -205,6 +205,8 @@ task('generateSWIGsource') {
 artifacts {
     archives javadocJar, sourcesJar, libraryJar
 }
+
+ext.additionalArtifact = libraryJar
 
 dependencies {
 

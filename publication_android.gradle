@@ -96,88 +96,92 @@ bintray {
 
 task sonatypeUpload(dependsOn : ['bundleReleaseAar', 'publish'])
 
-publishing {
+project.afterEvaluate {
+    publishing {
 
-    publications {
-        mavenAndroid(MavenPublication) {
-            artifact sourcesJar
-            artifact javadocJar
-            artifact bundleReleaseAar
+        publications {
+            mavenAndroid(MavenPublication) {
+                artifact sourcesJar
+                artifact javadocJar
+                artifact bundleReleaseAar
+                
+                if (project.hasProperty('additionalArtifact')) artifact project.additionalArtifact
 
-            pom {
-                groupId project_publication.GROUP_ID
-                artifactId project_publication.ARTIFACT_ID
+                pom {
+                    groupId project_publication.GROUP_ID
+                    artifactId project_publication.ARTIFACT_ID
 
-                name = project_publication.LIB_NAME
-                description = project_publication.LIB_DES
-                url = project_publication.LIB_SITE_URL
-
-                licenses {
-                    license {
-                        name = root_publication.LICENSE_NAME
-                        url = root_publication.LICENSE_URL
-                    }
-                }
-                developers {
-                    developer {
-                        id = root_publication.DEV_ID
-                        name = root_publication.DEV_NAME
-                        email = root_publication.DEV_EMAIL
-                    }
-                }
-                scm {
-                    connection = project_publication.LIB_GIT_URL
-                    developerConnection = project_publication.LIB_GIT_URL
+                    name = project_publication.LIB_NAME
+                    description = project_publication.LIB_DES
                     url = project_publication.LIB_SITE_URL
-                }
-            }
 
-            pom.withXml {
-                final dependenciesNode = asNode().appendNode('dependencies')
-
-                ext.addDependency = { Dependency dep, String scope ->
-                    if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
-                        return // ignore invalid dependencies
-
-                    final dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', dep.group)
-                    dependencyNode.appendNode('artifactId', dep.name)
-                    dependencyNode.appendNode('version', dep.version)
-                    dependencyNode.appendNode('scope', scope)
-
-                    if (!dep.transitive) {
-                        // If this dependency is transitive, we should force exclude all its dependencies them from the POM
-                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                        exclusionNode.appendNode('groupId', '*')
-                        exclusionNode.appendNode('artifactId', '*')
-                    } else if (!dep.properties.excludeRules.empty) {
-                        // Otherwise add specified exclude rules
-                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                        dep.properties.excludeRules.each { ExcludeRule rule ->
-                            exclusionNode.appendNode('groupId', rule.group ?: '*')
-                            exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                    licenses {
+                        license {
+                            name = root_publication.LICENSE_NAME
+                            url = root_publication.LICENSE_URL
                         }
                     }
+                    developers {
+                        developer {
+                            id = root_publication.DEV_ID
+                            name = root_publication.DEV_NAME
+                            email = root_publication.DEV_EMAIL
+                        }
+                    }
+                    scm {
+                        connection = project_publication.LIB_GIT_URL
+                        developerConnection = project_publication.LIB_GIT_URL
+                        url = project_publication.LIB_SITE_URL
+                    }
                 }
 
-                // List all "compile" dependencies (for old Gradle)
-                configurations.compile.getDependencies().each { dep -> addDependency(dep, "compile") }
-                // List all "api" dependencies (for new Gradle) as "compile" dependencies
-                configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
-                // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
-                configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
+                pom.withXml {
+                    final dependenciesNode = asNode().appendNode('dependencies')
+
+                    ext.addDependency = { Dependency dep, String scope ->
+                        if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
+                            return // ignore invalid dependencies
+
+                        final dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dep.group)
+                        dependencyNode.appendNode('artifactId', dep.name)
+                        dependencyNode.appendNode('version', dep.version)
+                        dependencyNode.appendNode('scope', scope)
+
+                        if (!dep.transitive) {
+                            // If this dependency is transitive, we should force exclude all its dependencies them from the POM
+                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                            exclusionNode.appendNode('groupId', '*')
+                            exclusionNode.appendNode('artifactId', '*')
+                        } else if (!dep.properties.excludeRules.empty) {
+                            // Otherwise add specified exclude rules
+                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                            dep.properties.excludeRules.each { ExcludeRule rule ->
+                                exclusionNode.appendNode('groupId', rule.group ?: '*')
+                                exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                            }
+                        }
+                    }
+
+                    // List all "compile" dependencies (for old Gradle)
+                    configurations.compile.getDependencies().each { dep -> addDependency(dep, "compile") }
+                    // List all "api" dependencies (for new Gradle) as "compile" dependencies
+                    configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
+                    // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
+                    configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
+                }
             }
         }
-    }
 
-    repositories {
-        maven {
-            def releasesRepoUrl = 'https://oss.sonatype.org/content/repositories/releases/'
-            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-            url version.endsWith('-SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username properties.getProperty('oss.sonatype.username')
-                password properties.getProperty('oss.sonatype.password')
+        repositories {
+            maven {
+                def releasesRepoUrl = 'https://oss.sonatype.org/content/repositories/releases/'
+                def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+                url version.endsWith('-SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username properties.getProperty('oss.sonatype.username')
+                    password properties.getProperty('oss.sonatype.password')
+                }
             }
         }
     }
