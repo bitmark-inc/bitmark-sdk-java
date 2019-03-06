@@ -11,6 +11,7 @@
     "expires_at": null,
     "pay_id": "",
     "previous_id": null,
+    "countersign": false,
     "bitmark_id": "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a"
   }
 }

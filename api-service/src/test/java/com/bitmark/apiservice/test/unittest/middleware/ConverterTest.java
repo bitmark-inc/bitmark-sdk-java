@@ -38,8 +38,9 @@ public class ConverterTest extends BaseTest {
 
     @ParameterizedTest
     @MethodSource("createSuccessResponseListTxId")
-    public void testConvertIssueResponse_ValidResponse_CorrectIssueResponseIsReturn(Response response,
-                                                                                    List<String> expectedTxIds) {
+    public void testConvertIssueResponse_ValidResponse_CorrectIssueResponseIsReturn(
+            Response response,
+            List<String> expectedTxIds) {
         Callback1<Response> callback = Converter.toIssueResponse(new Callback1<List<String>>() {
             @Override
             public void onSuccess(List<String> txIds) {
@@ -56,8 +57,9 @@ public class ConverterTest extends BaseTest {
 
     @ParameterizedTest
     @MethodSource("createSuccessResponseRegistrationResponse")
-    public void testConvertRegistrationResponse_ValidResponse_CorrectRegistrationResponseIsReturn(Response response,
-                                                                                                  RegistrationResponse expectedResponse) {
+    public void testConvertRegistrationResponse_ValidResponse_CorrectRegistrationResponseIsReturn(
+            Response response,
+            RegistrationResponse expectedResponse) {
         Callback1<Response> callback =
                 Converter.toRegistrationResponse(new Callback1<RegistrationResponse>() {
                     @Override
@@ -94,10 +96,12 @@ public class ConverterTest extends BaseTest {
     @Test
     public void testConvertStatus_ValidResponse_CorrectStatusIsReturn() throws IOException {
         Response response = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                     "://dummy.com").build())
-                                                  .protocol(Protocol.HTTP_1_1).code(200).body(ResponseBody.create(JSON,
-                                                                                                                  loadResponse(
-                                                                                                                          "/transfer/transfer_response2.json")))
+                                                                                     "://dummy.com")
+                                                                                .build())
+                                                  .protocol(Protocol.HTTP_1_1).code(200)
+                                                  .body(ResponseBody.create(JSON,
+                                                                            loadResponse(
+                                                                                    "/transfer/transfer_response2.json")))
                                                   .message("dummy").build();
         Callback1<Response> callback = Converter.toStatus(new Callback1<String>() {
             @Override
@@ -133,7 +137,8 @@ public class ConverterTest extends BaseTest {
 
     @ParameterizedTest
     @MethodSource("createSuccessResponseGetBitmarkResponse")
-    public void testConvertGetBitmarkResponse_ValidResponse_CorrectGetBitmarkResponseIsReturn(Response response, GetBitmarkResponse expectedResponse) {
+    public void testConvertGetBitmarkResponse_ValidResponse_CorrectGetBitmarkResponseIsReturn(
+            Response response, GetBitmarkResponse expectedResponse) {
         Callback1<Response> callback =
                 Converter.toGetBitmarkResponse(new Callback1<GetBitmarkResponse>() {
                     @Override
@@ -151,8 +156,9 @@ public class ConverterTest extends BaseTest {
 
     @ParameterizedTest
     @MethodSource("createSuccessResponseGetBitmarksResponse")
-    public void testConvertGetBitmarksResponse_ValidResponse_CorrectGetBitmarkResponseIsReturn(Response response,
-                                                                                               GetBitmarksResponse expectedResponse) {
+    public void testConvertGetBitmarksResponse_ValidResponse_CorrectGetBitmarkResponseIsReturn(
+            Response response,
+            GetBitmarksResponse expectedResponse) {
         Callback1<Response> callback =
                 Converter.toGetBitmarksResponse(new Callback1<GetBitmarksResponse>() {
                     @Override
@@ -206,8 +212,9 @@ public class ConverterTest extends BaseTest {
 
     @ParameterizedTest
     @MethodSource("createValidResponseGetTransactionResponse")
-    public void testConvertGetTransactionResponse_ValidResponse_CorrectGetTransactionResponseIsReturn(Response response,
-                                                                                                      GetTransactionResponse expectedResponse) {
+    public void testConvertGetTransactionResponse_ValidResponse_CorrectGetTransactionResponseIsReturn(
+            Response response,
+            GetTransactionResponse expectedResponse) {
         Callback1<Response> callback =
                 Converter.toGetTransactionResponse(new Callback1<GetTransactionResponse>() {
                     @Override
@@ -260,14 +267,16 @@ public class ConverterTest extends BaseTest {
             add("e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f");
         }};
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/issue/multiple_issue.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -276,7 +285,8 @@ public class ConverterTest extends BaseTest {
         return Stream.of(Arguments.of(response1, txIds1), Arguments.of(response2, txIds2));
     }
 
-    private static Stream<Arguments> createSuccessResponseRegistrationResponse() throws IOException {
+    private static Stream<Arguments> createSuccessResponseRegistrationResponse()
+            throws IOException {
         final RegistrationResponse registrationResponse1 =
                 new RegistrationResponse(new ArrayList<RegistrationResponse.Asset>() {{
                     add(new RegistrationResponse.Asset(
@@ -291,14 +301,16 @@ public class ConverterTest extends BaseTest {
                             true));
                 }});
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/registration/registration1.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -310,14 +322,16 @@ public class ConverterTest extends BaseTest {
 
     private static Stream<Arguments> createSuccessResponseTxId() throws IOException {
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/transfer/transfer1.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -331,14 +345,16 @@ public class ConverterTest extends BaseTest {
 
     private static Stream<Arguments> createSuccessResponseOfferId() throws IOException {
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/transfer/transfer_offer1.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -352,14 +368,16 @@ public class ConverterTest extends BaseTest {
 
     private static Stream<Arguments> createSuccessResponseGetBitmarkResponse() throws IOException {
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/query/bitmark/bitmark1.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -388,8 +406,10 @@ public class ConverterTest extends BaseTest {
                                                    "013727524647e0d9c4132af6fe6a57ca77e815280dde494d75b140050e322554ad92e27d8ebdc0e39ff4a3fa6d105419c6455c66256faecb816e7b1e1b2804beea",
                                                    "7ffe70ce4383e81b26f7a5fd8c6532c8a50525696272677120f10f44f16e377edd75e1507acd6572978697bcada43d30fb496caef86a3c77fc1808b8de2cbda3",
                                                    new HashMap<String, String>() {{
-                                                       put("name", "JavaSDK_Test_1537068149724.txt");
-                                                       put("description", "Temporary File create from java sdk test");
+                                                       put("name",
+                                                           "JavaSDK_Test_1537068149724.txt");
+                                                       put("description",
+                                                           "Temporary File create from java sdk test");
                                                    }}, "JavaSDK_Test_1537068149724.txt", 9918,
                                                    "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                                                    AssetRecord.Status.CONFIRMED);
@@ -401,14 +421,16 @@ public class ConverterTest extends BaseTest {
 
     private static Stream<Arguments> createSuccessResponseGetBitmarksResponse() throws IOException {
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/query/bitmark/bitmarks1.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -437,7 +459,8 @@ public class ConverterTest extends BaseTest {
                                                    "01ea9198b08291a94b95db2c959c173db5c7cc48149c4cc455476e5ec925f630b0478c40b207eeb4b99825d412bfe19799a36c983c69bfdb715b6680ce1a562acd",
                                                    "dbca8f9d3f6d7a55f5ffa6f22abbccceafe599c2b0af99ccae8dbe8620c02c4facfc5748863d4236005d2fb66b1a078c694d8038fb5aaae0e08486c2c9512710",
                                                    new HashMap<String, String>() {{
-                                                       put("Saved Time", "2018-09-16T05:46:22.686Z");
+                                                       put("Saved Time",
+                                                           "2018-09-16T05:46:22.686Z");
                                                        put("Source", "HealthKit");
                                                    }}, "HK61158509", 9944,
                                                    "fVuED2jekRdEAoKKMw9xZvvtuLi1iyhgXkmLD1w7LLm7m2Pk4p",
@@ -461,7 +484,8 @@ public class ConverterTest extends BaseTest {
                                                    "01ea9198b08291a94b95db2c959c173db5c7cc48149c4cc455476e5ec925f630b0478c40b207eeb4b99825d412bfe19799a36c983c69bfdb715b6680ce1a562acd",
                                                    "dbca8f9d3f6d7a55f5ffa6f22abbccceafe599c2b0af99ccae8dbe8620c02c4facfc5748863d4236005d2fb66b1a078c694d8038fb5aaae0e08486c2c9512710",
                                                    new HashMap<String, String>() {{
-                                                       put("Saved Time", "2018-09-16T05:46:22.686Z");
+                                                       put("Saved Time",
+                                                           "2018-09-16T05:46:22.686Z");
                                                        put("Source", "HealthKit");
                                                    }}, "HK61158509", 9944,
                                                    "fVuED2jekRdEAoKKMw9xZvvtuLi1iyhgXkmLD1w7LLm7m2Pk4p",
@@ -470,20 +494,24 @@ public class ConverterTest extends BaseTest {
                                                    "011b1860a4cf9c0142248773c84f24f8db6e2b54b6c1803700fce2818dcd001f7a6b0134fe3cb7d7bf0310c749fd0bf977b9f5060c0c34c1d7a755c6f159ab5b1b",
                                                    "9ef1590645df106ce428ec9cfdb48cfae29e95ee543a42bc3dcf95969ff9d8285dd07a558abf540838c151a7b34dd8c443430c766e8b1c934bdffa23cc06aa04",
                                                    new HashMap<String, String>() {{
-                                                       put("name", "JavaSDK_Test_1537070880489.txt");
-                                                       put("description", "Temporary File create from java sdk test");
+                                                       put("name",
+                                                           "JavaSDK_Test_1537070880489.txt");
+                                                       put("description",
+                                                           "Temporary File create from java sdk test");
                                                    }}, "JavaSDK_Test_1537070880489.txt", 9942,
                                                    "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                                                    AssetRecord.Status.CONFIRMED);
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/query/asset/asset1.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -497,7 +525,8 @@ public class ConverterTest extends BaseTest {
                                                    "01ea9198b08291a94b95db2c959c173db5c7cc48149c4cc455476e5ec925f630b0478c40b207eeb4b99825d412bfe19799a36c983c69bfdb715b6680ce1a562acd",
                                                    "dbca8f9d3f6d7a55f5ffa6f22abbccceafe599c2b0af99ccae8dbe8620c02c4facfc5748863d4236005d2fb66b1a078c694d8038fb5aaae0e08486c2c9512710",
                                                    new HashMap<String, String>() {{
-                                                       put("Saved Time", "2018-09-16T05:46:22.686Z");
+                                                       put("Saved Time",
+                                                           "2018-09-16T05:46:22.686Z");
                                                        put("Source", "HealthKit");
                                                    }}, "HK61158509", 9944,
                                                    "fVuED2jekRdEAoKKMw9xZvvtuLi1iyhgXkmLD1w7LLm7m2Pk4p",
@@ -506,20 +535,24 @@ public class ConverterTest extends BaseTest {
                                                    "011b1860a4cf9c0142248773c84f24f8db6e2b54b6c1803700fce2818dcd001f7a6b0134fe3cb7d7bf0310c749fd0bf977b9f5060c0c34c1d7a755c6f159ab5b1b",
                                                    "9ef1590645df106ce428ec9cfdb48cfae29e95ee543a42bc3dcf95969ff9d8285dd07a558abf540838c151a7b34dd8c443430c766e8b1c934bdffa23cc06aa04",
                                                    new HashMap<String, String>() {{
-                                                       put("name", "JavaSDK_Test_1537070880489.txt");
-                                                       put("description", "Temporary File create from java sdk test");
+                                                       put("name",
+                                                           "JavaSDK_Test_1537070880489.txt");
+                                                       put("description",
+                                                           "Temporary File create from java sdk test");
                                                    }}, "JavaSDK_Test_1537070880489.txt", 9942,
                                                    "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                                                    AssetRecord.Status.CONFIRMED);
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/query/asset/assets1.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -533,16 +566,19 @@ public class ConverterTest extends BaseTest {
         }}));
     }
 
-    private static Stream<Arguments> createValidResponseGetTransactionResponse() throws IOException {
+    private static Stream<Arguments> createValidResponseGetTransactionResponse()
+            throws IOException {
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/query/transaction/transaction1.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -553,19 +589,20 @@ public class ConverterTest extends BaseTest {
                 "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
                 HEAD, CONFIRMED, 9093, 8, 744968, null, "", null,
-                "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a");
+                "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a", false);
         final TransactionRecord txRecord2 = new TransactionRecord(
                 "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e",
                 "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
                 HEAD, CONFIRMED, 9093, 7, 744967, null, "", null,
-                "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e");
+                "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e", true);
         final AssetRecord assetRecord = new AssetRecord(9093, 1, "2018-09-18T08:09:20.000000Z",
                                                         null,
                                                         "01beef7f85a4bae3bc8e46930a38f7f96812b67d43d2e2796e8cfa3cecea6d32d699f48d96366c51fa2aef7a0e0e9271c189dea51e3bc250dc1e4a53763baf80b3",
                                                         "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
                                                         new HashMap<String, String>() {{
-                                                            put("name", "JavaSDK_Test_1537258135324.txt");
+                                                            put("name",
+                                                                "JavaSDK_Test_1537258135324.txt");
                                                             put("description",
                                                                 "Temporary File create from java sdk test");
                                                         }}, "JavaSDK_Test_1537258135324.txt", 10086,
@@ -579,16 +616,19 @@ public class ConverterTest extends BaseTest {
                 , getTransactionResponse2));
     }
 
-    private static Stream<Arguments> createValidResponseGetTransactionsResponse() throws IOException {
+    private static Stream<Arguments> createValidResponseGetTransactionsResponse()
+            throws IOException {
         final Response response1 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
                                                                                            "/query/transaction/transactions1.json")))
                                                          .message("dummy").build();
         final Response response2 = new Response.Builder().request(new Request.Builder().url("http" +
-                                                                                            "://dummy.com").build())
+                                                                                            "://dummy.com")
+                                                                                       .build())
                                                          .protocol(Protocol.HTTP_1_1).code(200)
                                                          .body(ResponseBody.create(JSON,
                                                                                    loadResponse(
@@ -599,19 +639,20 @@ public class ConverterTest extends BaseTest {
                 "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
                 HEAD, CONFIRMED, 9093, 8, 744968, null, "", null,
-                "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a");
+                "fd645350320c9c0b1fbcab2b9678cb50719bff6d0f0d235d9565afdaa470ef4a", false);
         final TransactionRecord txRecord2 = new TransactionRecord(
                 "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e",
                 "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
                 "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
                 HEAD, CONFIRMED, 9093, 7, 744967, null, "", null,
-                "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e");
+                "441d7a04b3d75c3f0f55564331f4bfadecf0a5acc8c0c6a1f5cb9a0db6dca58e", true);
         final AssetRecord assetRecord = new AssetRecord(9093, 1, "2018-09-18T08:09:20.000000Z",
                                                         null,
                                                         "01beef7f85a4bae3bc8e46930a38f7f96812b67d43d2e2796e8cfa3cecea6d32d699f48d96366c51fa2aef7a0e0e9271c189dea51e3bc250dc1e4a53763baf80b3",
                                                         "86ec6f1fb9717ce9dd212e236d97495b1bdbbb146e316a6ada589eda1c86914854015f5bd92ad1701491e71ebab471cb1d45a31f9bd476bad4b12aeeeced8607",
                                                         new HashMap<String, String>() {{
-                                                            put("name", "JavaSDK_Test_1537258135324.txt");
+                                                            put("name",
+                                                                "JavaSDK_Test_1537258135324.txt");
                                                             put("description",
                                                                 "Temporary File create from java sdk test");
                                                         }}, "JavaSDK_Test_1537258135324.txt", 10086,
