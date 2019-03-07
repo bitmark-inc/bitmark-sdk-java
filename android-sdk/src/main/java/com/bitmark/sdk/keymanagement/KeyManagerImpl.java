@@ -3,10 +3,7 @@ package com.bitmark.sdk.keymanagement;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyInfo;
-import android.security.keystore.KeyProperties;
-import android.security.keystore.UserNotAuthenticatedException;
+import android.security.keystore.*;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
@@ -233,7 +230,7 @@ public class KeyManagerImpl implements KeyManager {
                             .getKey(keyAuthSpec.getKeyAlias(), null) : generateEncryptionKey(
                             keyAuthSpec.getKeyAlias(),
                             keyAuthSpec.isAuthenticationRequired(),
-                            keyAuthSpec.getAuthenticationValidityDuration());
+                            keyAuthSpec.getAuthenticationValidityDuration(), isAboveP());
 
             // Retrieve the key info of encryption key
             SecretKeyFactory factory =
@@ -501,7 +498,8 @@ public class KeyManagerImpl implements KeyManager {
 
     @SuppressLint("NewApi")
     private SecretKey generateEncryptionKey(String keyAlias, boolean isAuthenticationRequired,
-                                            int keyAuthValidityDuration)
+                                            int keyAuthValidityDuration,
+                                            boolean supportStrongBoxBacked)
             throws NoSuchProviderException, NoSuchAlgorithmException,
                    InvalidAlgorithmParameterException, AuthenticationRequiredException {
         try {
@@ -520,7 +518,8 @@ public class KeyManagerImpl implements KeyManager {
                     builder.setUserAuthenticationValidityDurationSeconds(
                             keyAuthValidityDuration);
             }
-            if (isAboveP()) builder.setIsStrongBoxBacked(true); // Enable hardware secure module
+            if (supportStrongBoxBacked)
+                builder.setIsStrongBoxBacked(true); // Enable hardware secure module
 
             keyGenerator.init(builder.build());
             return keyGenerator.generateKey();
@@ -529,6 +528,11 @@ public class KeyManagerImpl implements KeyManager {
                 throw new AuthenticationRequiredException(FINGERPRINT);
             }
             throw e;
+        } catch (StrongBoxUnavailableException e) {
+            // We do not know how to check the device supports strongbox key master or not
+            // So we need to catch StrongBoxUnavailableException to re-generate the key without strongbox support
+            return generateEncryptionKey(keyAlias, isAuthenticationRequired,
+                                         keyAuthValidityDuration, false);
         }
     }
 
