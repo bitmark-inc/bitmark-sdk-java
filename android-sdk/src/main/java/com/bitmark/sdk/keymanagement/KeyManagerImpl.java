@@ -387,19 +387,19 @@ public class KeyManagerImpl implements KeyManager {
                                                     AuthenticationCallback callback)
             throws AuthenticationRequiredException {
         return isAboveP() ? AuthenticatorFactory
-                .getBiometricAuthenticator(activity, spec.getAuthenticationTitleResId(),
-                                           spec.getAuthenticationDescriptionResId(),
+                .getBiometricAuthenticator(activity, spec.getAuthenticationTitle(),
+                                           spec.getAuthenticationDescription(),
                                            callback) : AuthenticatorFactory
-                .getFingerprintAuthenticator(activity, spec.getAuthenticationTitleResId(),
-                                             spec.getAuthenticationDescriptionResId(), callback);
+                .getFingerprintAuthenticator(activity, spec.getAuthenticationTitle(),
+                                             spec.getAuthenticationDescription(), callback);
     }
 
     private Authenticator getDeviceAuthenticator(KeyAuthenticationSpec spec,
                                                  AuthenticationCallback callback)
             throws AuthenticationRequiredException {
         return AuthenticatorFactory
-                .getDeviceAuthenticator(activity, spec.getAuthenticationTitleResId(),
-                                        spec.getAuthenticationDescriptionResId(), callback);
+                .getDeviceAuthenticator(activity, spec.getAuthenticationTitle(),
+                                        spec.getAuthenticationDescription(), callback);
     }
 
     @Override
