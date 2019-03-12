@@ -41,7 +41,7 @@ public class TransferResponseParams extends AbsSingleParams {
         }
     }
 
-    private com.bitmark.apiservice.utils.record.OfferRecord offer;
+    private OfferRecord offer;
 
     private Response response;
 
@@ -126,7 +126,7 @@ public class TransferResponseParams extends AbsSingleParams {
         return response == ACCEPT;
     }
 
-    private boolean isCancel() {
+    public boolean isCancel() {
         return response == Response.CANCEL;
     }
 }

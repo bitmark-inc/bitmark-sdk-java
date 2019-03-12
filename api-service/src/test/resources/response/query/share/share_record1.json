@@ -1,0 +1,16 @@
+{
+  "shares": [
+    {
+      "share_id": "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+      "owner": "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy",
+      "balance": 2,
+      "available": 2
+    },
+    {
+      "share_id": "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+      "owner": "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs",
+      "balance": 98,
+      "available": 98
+    }
+  ]
+}

@@ -48,22 +48,6 @@ public class AssetRecord implements Record {
 
     private Status status;
 
-    public AssetRecord(long blockNumber, long blockOffset, String createdAt, String expiredAt,
-                       String fingerprint, String id, Map<String, String> metadata, String name,
-                       long offset, String registrant, Status status) {
-        this.blockNumber = blockNumber;
-        this.blockOffset = blockOffset;
-        this.createdAt = createdAt;
-        this.expiredAt = expiredAt;
-        this.fingerprint = fingerprint;
-        this.id = id;
-        this.metadata = metadata;
-        this.name = name;
-        this.offset = offset;
-        this.registrant = registrant;
-        this.status = status;
-    }
-
     public long getBlockNumber() {
         return blockNumber;
     }

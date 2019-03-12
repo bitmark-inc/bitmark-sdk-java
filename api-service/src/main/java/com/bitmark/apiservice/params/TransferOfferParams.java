@@ -21,7 +21,7 @@ import static com.bitmark.cryptography.utils.Validator.checkValid;
 
 public class TransferOfferParams extends AbsSingleParams {
 
-    private com.bitmark.apiservice.utils.Address offeredOwner;
+    private Address offeredOwner;
 
     private String link;
 

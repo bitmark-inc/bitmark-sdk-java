@@ -55,25 +55,6 @@ public class TransactionRecord implements Record {
     @SerializedName("countersign")
     private boolean isCounterSignature;
 
-    public TransactionRecord(String id, String owner, String assetId, Head head, Status status,
-                             long blockNumber, long blockOffset, long offset, String expiredAt,
-                             String payId,
-                             String previousId, String bitmarkId, boolean isCounterSignature) {
-        this.id = id;
-        this.owner = owner;
-        this.assetId = assetId;
-        this.head = head;
-        this.status = status;
-        this.blockNumber = blockNumber;
-        this.blockOffset = blockOffset;
-        this.offset = offset;
-        this.expiredAt = expiredAt;
-        this.payId = payId;
-        this.previousId = previousId;
-        this.bitmarkId = bitmarkId;
-        this.isCounterSignature = isCounterSignature;
-    }
-
     public String getId() {
         return id;
     }

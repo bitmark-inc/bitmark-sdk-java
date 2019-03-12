@@ -1,0 +1,14 @@
+{
+  "record": {
+    "shareId": "03a70acb35ef1eca10634137967ea28b8f2ca90c5aaf77dbb53ee54ab04fc8b6",
+    "quantity": 1,
+    "owner": "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs",
+    "recipient": "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy",
+    "beforeBlock": 28929294,
+    "signature": "69b34a5a2d24ee634d525de3a39645709d1ef0ea511e7d743270b044060f4ff0008461fbb3aa16a36583a2aa36b8167a63779c3cecaf4a7c50b699345517e000"
+  },
+  "extra_info": {
+    "source": "HealthKit",
+    "quantity": "15"
+  }
+}
