@@ -1,7 +1,6 @@
 package com.bitmark.cryptography.test.encoder;
 
 import com.bitmark.cryptography.error.ValidateException;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -11,9 +10,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Hieu Pham
@@ -24,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HexTest extends BaseEncoderTest {
 
-    @DisplayName("Verify function Hex.encode(byte[]) works well with happy condition")
     @ParameterizedTest
     @MethodSource("createBytesHex")
     public void testEncode_ValidByteArrayInput_CorrectHexIsReturn(byte[] input,
@@ -33,15 +29,12 @@ public class HexTest extends BaseEncoderTest {
         assertEquals(output, expectedHex);
     }
 
-    @DisplayName("Verify function Hex.encode(byte[]) throws exception when byte array input is " +
-            "null or empty")
     @ParameterizedTest
     @MethodSource("createInvalidBytes")
     public void testEncode_InvalidByteArrayInput_ErrorIsThrow(byte[] input) {
         assertThrows(ValidateException.class, () -> HEX.encode(input));
     }
 
-    @DisplayName("Verify function Hex.decode(String) works well with happy condition")
     @ParameterizedTest
     @MethodSource("createHexBytes")
     public void testDecode_ValidHexString_CorrectByteArrayReturn(String hex, byte[] expectedBytes) {
@@ -49,8 +42,6 @@ public class HexTest extends BaseEncoderTest {
         assertTrue(Arrays.equals(output, expectedBytes));
     }
 
-    @DisplayName("Verify function Hex.decode(String) throws exception when the hex string is " +
-            "invalid")
     @ParameterizedTest
     @ValueSource(strings = {"@!#$@23ASAfFHFT", "1233453,./123//34.", " "})
     public void testDecode_HexIsInvalid_ErrorIsThrow(String hex) {

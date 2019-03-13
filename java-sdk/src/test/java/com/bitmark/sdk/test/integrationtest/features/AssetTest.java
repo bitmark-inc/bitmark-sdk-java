@@ -7,12 +7,11 @@ import com.bitmark.apiservice.utils.Address;
 import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import com.bitmark.sdk.features.Asset;
 import com.bitmark.sdk.test.utils.extensions.TemporaryFolderExtension;
 import com.bitmark.sdk.test.utils.extensions.annotations.TemporaryFile;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.File;
 import java.util.HashMap;
@@ -34,8 +33,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith({TemporaryFolderExtension.class})
 public class AssetTest extends BaseFeatureTest {
 
-    @DisplayName("Verify function Asset.register(RegistrationParams, Callback1<>) works well with" +
-                         " a new asset")
     @Test
     public void testRegisterAsset_NewAsset_CorrectResponseIsReturn(File asset) throws Throwable {
         Address registrant = ACCOUNT1.toAddress();
@@ -52,8 +49,6 @@ public class AssetTest extends BaseFeatureTest {
         assertFalse(assets.get(0).isDuplicate());
     }
 
-    @DisplayName("Verify function Asset.register(RegistrationParams, Callback1<>) works well with" +
-                         " an existed asset")
     @Test
     public void testRegisterAsset_ExistedAsset_CorrectResponseIsReturn(@TemporaryFile("This is an existed file on Bitmark Block chain") File asset) {
         Address registrant = ACCOUNT1.toAddress();
@@ -72,7 +67,6 @@ public class AssetTest extends BaseFeatureTest {
     }
 
 
-    @DisplayName("Verify function Asset.get(String, Callback1<>) works well with existed asset id")
     @Test
     public void testQueryAssetById_ExistedAssetId_CorrectResponseIsReturn() throws Throwable {
         // Query existed assets
@@ -88,8 +82,6 @@ public class AssetTest extends BaseFeatureTest {
         assertEquals(id, asset.getId());
     }
 
-    @DisplayName("Verify function Asset.get(String, Callback1<>) works well with not existed " +
-                         "asset id")
     @Test
     public void testQueryAssetById_NotExistedAssetId_ErrorIsThrow() {
         String id =
@@ -99,7 +91,6 @@ public class AssetTest extends BaseFeatureTest {
         assertEquals(HTTP_NOT_FOUND, exception.getStatusCode());
     }
 
-    @DisplayName("Verify function Asset.list(AssetQueryBuilder, Callback1<>) works well")
     @Test
     public void testQueryAssets_NoCondition_CorrectResponseIsReturn() throws Throwable {
         int limit = 1;

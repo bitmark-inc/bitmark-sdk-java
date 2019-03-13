@@ -1,9 +1,8 @@
 package com.bitmark.sdk.test.unittest.utils;
 
+import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.test.unittest.BaseTest;
 import com.bitmark.sdk.utils.SequenceIterateByteArray;
-import com.bitmark.cryptography.error.ValidateException;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -26,16 +25,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SequenceIterateByteArrayTest extends BaseTest {
 
-    @DisplayName("Verify construct new instance of SequenceIterateByteArray with a null byte " +
-                         "array, error is throw")
     @Test
     public void testConstructInstance_NullByteArray_ErrorIsThrow() {
         assertThrows(ValidateException.NullValueError.class,
                 () -> new SequenceIterateByteArray(null));
     }
 
-    @DisplayName("Verify construct new instance of SequenceIterateByteArray with non null byte " +
-                         "array, new instance is created")
     @ParameterizedTest
     @MethodSource("createNonNullByteArrays")
     public void testConstructInstance_NonNullByteArray_CorrectInstanceCreated(byte[] input) {
@@ -44,7 +39,6 @@ public class SequenceIterateByteArrayTest extends BaseTest {
         assertTrue(Arrays.equals(input, sequenceIterateByteArray.getBytes()));
     }
 
-    @DisplayName("Verify function SequenceIterateByteArray.next(int) works well with valid length")
     @ParameterizedTest
     @MethodSource("createByteArrayLengthByteArray")
     public void testNextByteArray_ValidLength_CorrectResultIsReturn(byte[] bytes, int[] lengths,
@@ -56,8 +50,6 @@ public class SequenceIterateByteArrayTest extends BaseTest {
         }
     }
 
-    @DisplayName("Verify function SequenceIterateByteArray.next(int) throws exception with " +
-                         "invalid length")
     @ParameterizedTest
     @MethodSource("createByteArrayLength")
     public void testNextByteArray_InvalidLength_ErrorIsThrow(byte[] bytes, int length) {
@@ -66,7 +58,6 @@ public class SequenceIterateByteArrayTest extends BaseTest {
         assertThrows(Exception.class, () -> byteArray.next(length));
     }
 
-    @DisplayName("Verify that function SequenceIterateByteArray.next() works well")
     @ParameterizedTest
     @MethodSource("createByteArrayByteArray")
     public void testNextByteArray_EmptyLength_RemainingByteArrayIsReturn(byte[] bytes,

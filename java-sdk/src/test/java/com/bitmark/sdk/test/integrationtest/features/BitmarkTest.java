@@ -16,7 +16,6 @@ import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.sdk.features.Asset;
 import com.bitmark.sdk.features.Bitmark;
 import com.bitmark.sdk.test.utils.extensions.TemporaryFolderExtension;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -43,8 +42,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith({TemporaryFolderExtension.class})
 public class BitmarkTest extends BaseFeatureTest {
 
-    @DisplayName("Verify function Bitmark.issue(IssuanceParams, Callback1<>) works well with " +
-                 "owned multiple bitmark ")
     @Test
     public void testIssueBitmark_OwnedMultipleBitmark_CorrectSuccessResponseIsReturn(File asset)
             throws Throwable {
@@ -75,8 +72,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertFalse(txIds.get(0).isEmpty());
     }
 
-    @DisplayName("Verify function Bitmark.issue(IssuanceParams, Callback1<>) works well with " +
-                 "owned single bitmark")
     @Test
     public void testIssueBitmark_OwnedSingleBitmark_CorrectSuccessResponseIsReturn(File asset)
             throws Throwable {
@@ -126,8 +121,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertFalse(txIds.get(0).isEmpty());
     }
 
-    @DisplayName("Verify function Bitmark.issue(IssuanceParams, Callback1<>) works well with " +
-                 "not owned bitmarks")
     @Test
     public void testIssueBitmark_NotOwnedBitmark_CorrectErrorResponseIsReturn() {
         Address issuer = Address.fromAccountNumber(ACCOUNT1.getAccountNumber());
@@ -172,8 +165,6 @@ public class BitmarkTest extends BaseFeatureTest {
         }
     }
 
-    @DisplayName("Verify function Bitmark.transfer(TransferParams, Callback1<>) works well with " +
-                 "owned bitmarks and TransferParams is build from link")
     @Test
     public void testTransferBitmarkFromLink_OwnedBitmark_CorrectSuccessResponseIsReturn()
             throws Throwable {
@@ -196,8 +187,6 @@ public class BitmarkTest extends BaseFeatureTest {
     }
 
 
-    @DisplayName("Verify function Bitmark.transfer(TransferParams, Callback1<>) works well with " +
-                 "not owned bitmarks")
     @Test
     public void testTransferBitmark_NotOwnedBitmark_CorrectErrorResponseIsReturn()
             throws Throwable {
@@ -221,8 +210,6 @@ public class BitmarkTest extends BaseFeatureTest {
 
     }
 
-    @DisplayName("Verify function Bitmark.offer(TransferOfferParams, Callback1<>) works well with" +
-                 " owned bitmarks")
     @Test
     public void testOfferBitmark_OwnedBitmark_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
@@ -243,8 +230,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertFalse(offerId.isEmpty());
     }
 
-    @DisplayName("Verify function Bitmark.offer(TransferOfferParams, Callback1<>) works well with" +
-                 " owned bitmarks")
     @Test
     public void testOfferBitmark_NotOwnedBitmark_CorrectErrorResponseIsReturn() throws Throwable {
         // Get not owned bitmarks
@@ -268,8 +253,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals(2013, exception.getErrorCode());
     }
 
-    @DisplayName("Verify function Bitmark.respond(TransferResponseParams, Callback1<>) works well" +
-                 " with accept response")
     @Test
     public void testReplyOffer_AcceptOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
@@ -299,8 +282,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals(Sha3256.HASH_BYTE_LENGTH, HEX.decode(txId).length);
     }
 
-    @DisplayName("Verify function Bitmark.respond(TransferResponseParams, Callback1<>) works well" +
-                 " with cancel response")
     @Test
     public void testReplyOffer_CancelOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
@@ -332,8 +313,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals("ok", status);
     }
 
-    @DisplayName("Verify function Bitmark.respond(TransferResponseParams, Callback1<>) works well" +
-                 " with reject response")
     @Test
     public void testReplyOffer_RejectOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
@@ -364,7 +343,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals("ok", status);
     }
 
-    @DisplayName("Verify function Bitmark.get(String, boolean, Callback1<>) works well")
     @Test
     public void testQueryBitmarkByIdWithAsset_ExistedBitmarkId_CorrectResponseIsReturn()
             throws Throwable {
@@ -385,7 +363,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals(bitmark.getAssetId(), asset.getId());
     }
 
-    @DisplayName("Verify function Bitmark.get(String, Callback1<>) works well")
     @Test
     public void testQueryBitmarkByIdWithoutAsset_ExistedBitmarkId_CorrectResponseIsReturn()
             throws Throwable {
@@ -405,8 +382,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals(id, bitmark.getId());
     }
 
-    @DisplayName("Verify function Bitmark.list(BitmarkQueryBuilder, Callback1<>) with list " +
-                 "bitmark id works well")
     @Test
     public void testQueryBitmarksByIds_ValidBitmarkIds_CorrectResponseIsReturn() throws Throwable {
         // Get owned bitmarks
@@ -432,8 +407,6 @@ public class BitmarkTest extends BaseFeatureTest {
                                  bitmarks.stream().map(BitmarkRecord::getId).toArray()));
     }
 
-    @DisplayName("Verify function Bitmark.list(BitmarkQueryBuilder, Callback1<>) with the limit " +
-                 "record and load asset works well")
     @Test
     public void testQueryBitmarkByLimitAndLoadAsset_ValidLimitValue_CorrectResponseIsReturn()
             throws Throwable {
