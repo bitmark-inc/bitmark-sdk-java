@@ -1,8 +1,7 @@
 package com.bitmark.cryptography.test.encoder;
 
-import com.bitmark.cryptography.test.crypto.BaseCryptoTest;
 import com.bitmark.cryptography.crypto.encoder.VarInt;
-import org.junit.jupiter.api.DisplayName;
+import com.bitmark.cryptography.test.crypto.BaseCryptoTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class VarIntTest extends BaseCryptoTest {
 
 
-    @DisplayName("Verify function VarInt.writeSignedVarInt(int) works well")
     @ParameterizedTest
     @MethodSource("createSignedIntByteArray")
     public void testWriteSignedVarInt_ValidInteger_CorrectResultIsReturn(int input,
@@ -32,7 +30,6 @@ public class VarIntTest extends BaseCryptoTest {
         assertTrue(Arrays.equals(expectedResult, output));
     }
 
-    @DisplayName("Verify function VarInt.writeUnsignedVarInt(int) works well")
     @ParameterizedTest
     @MethodSource("createUnsignedIntByteArray")
     public void testWriteUnsignedVarInt_ValidInteger_CorrectResultIsReturn(int input,
@@ -41,7 +38,6 @@ public class VarIntTest extends BaseCryptoTest {
         assertTrue(Arrays.equals(expectedResult, output));
     }
 
-    @DisplayName("Verify function VarInt.readSignedVarInt(byte[]) works well")
     @ParameterizedTest
     @MethodSource("createByteArraySignedInt")
     public void testReadSignedVarInt_ValidByteArray_CorrectResultIsReturn(byte[] input,
@@ -50,7 +46,6 @@ public class VarIntTest extends BaseCryptoTest {
         assertEquals(output, expectedResult);
     }
 
-    @DisplayName("Verify function VarInt.readUnsignedVarInt(byte[]) works well")
     @ParameterizedTest
     @MethodSource("createByteArrayUnsignedInt")
     public void testReadUnsignedVarInt_ValidByteArray_CorrectResultIsReturn(byte[] input,

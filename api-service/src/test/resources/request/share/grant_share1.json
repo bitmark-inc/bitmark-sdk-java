@@ -1,0 +1,11 @@
+{
+  "record": {
+    "shareId": "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+    "quantity": 1,
+    "owner": "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs",
+    "recipient": "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy",
+    "beforeBlock": 1460119645,
+    "signature": "9276781c373c8dd1f215d9c0b730ac174b3b79f5c2fced0ed5028ee94b283b6462fd3afdaae5989f0fa587a79e7b0a2787e5c240f02bde37044d45c631a61008"
+  },
+  "extra_info": {}
+}

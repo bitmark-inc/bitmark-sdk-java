@@ -1,7 +1,6 @@
 package com.bitmark.cryptography.test.encoder;
 
 import com.bitmark.cryptography.error.ValidateException;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -22,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Base58Test extends BaseEncoderTest {
 
-    @DisplayName("Verify Base58.encode(byte[]) works well with happy condition")
     @ParameterizedTest
     @MethodSource("createBytesBase58String")
     public void testEncode_ValidByteArrayInput_CorrectValueIsReturn(byte[] input,
@@ -31,14 +29,12 @@ public class Base58Test extends BaseEncoderTest {
         assertTrue(expectedResult.equalsIgnoreCase(output));
     }
 
-    @DisplayName("Verify Base58.encode(byte[]) throws exception when input byte array is invalid")
     @ParameterizedTest
     @MethodSource("createInvalidBytes")
     public void testEncode_InvalidByteArrayInput_ErrorIsThrow(byte[] input) {
         assertThrows(ValidateException.class, () -> BASE_58.encode(input));
     }
 
-    @DisplayName("Verify Base58.decode(String) works well with happy condition")
     @ParameterizedTest
     @MethodSource("createBase58StringBytes")
     public void testDecode_ValidStringInput_CorrectValueReturn(String input,
@@ -47,7 +43,6 @@ public class Base58Test extends BaseEncoderTest {
         assertTrue(Arrays.equals(expectedResult, output));
     }
 
-    @DisplayName("Verify Base58.decode(String) throws exception with invalid input string")
     @ParameterizedTest
     @MethodSource("createInvalidString")
     public void testDecode_InvalidStringInput_ErrorIsThrow(String input) {

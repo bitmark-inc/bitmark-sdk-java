@@ -52,23 +52,8 @@ public class TransactionRecord implements Record {
     @SerializedName("bitmark_id")
     private String bitmarkId;
 
-    public TransactionRecord(String id, String owner, String assetId, Head head, Status status,
-                             long blockNumber, long blockOffset, long offset, String expiredAt,
-                             String payId,
-                             String previousId, String bitmarkId) {
-        this.id = id;
-        this.owner = owner;
-        this.assetId = assetId;
-        this.head = head;
-        this.status = status;
-        this.blockNumber = blockNumber;
-        this.blockOffset = blockOffset;
-        this.offset = offset;
-        this.expiredAt = expiredAt;
-        this.payId = payId;
-        this.previousId = previousId;
-        this.bitmarkId = bitmarkId;
-    }
+    @SerializedName("countersign")
+    private boolean isCounterSignature;
 
     public String getId() {
         return id;
@@ -118,27 +103,34 @@ public class TransactionRecord implements Record {
         return bitmarkId;
     }
 
+    public boolean isCounterSignature() {
+        return isCounterSignature;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TransactionRecord that = (TransactionRecord) o;
         return blockNumber == that.blockNumber &&
-                blockOffset == that.blockOffset &&
-                offset == that.offset &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(owner, that.owner) &&
-                Objects.equals(assetId, that.assetId) &&
-                head == that.head &&
-                status == that.status &&
-                Objects.equals(expiredAt, that.expiredAt) &&
-                Objects.equals(payId, that.payId) &&
-                Objects.equals(previousId, that.previousId) &&
-                Objects.equals(bitmarkId, that.bitmarkId);
+               blockOffset == that.blockOffset &&
+               offset == that.offset &&
+               isCounterSignature == that.isCounterSignature &&
+               Objects.equals(id, that.id) &&
+               Objects.equals(owner, that.owner) &&
+               Objects.equals(assetId, that.assetId) &&
+               head == that.head &&
+               status == that.status &&
+               Objects.equals(expiredAt, that.expiredAt) &&
+               Objects.equals(payId, that.payId) &&
+               Objects.equals(previousId, that.previousId) &&
+               Objects.equals(bitmarkId, that.bitmarkId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, owner, assetId, head, status, blockNumber, blockOffset, offset, expiredAt, payId, previousId, bitmarkId);
+        return Objects
+                .hash(id, owner, assetId, head, status, blockNumber, blockOffset, offset, expiredAt,
+                      payId, previousId, bitmarkId, isCounterSignature);
     }
 }

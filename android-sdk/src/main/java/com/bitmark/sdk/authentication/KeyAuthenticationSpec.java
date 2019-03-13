@@ -28,8 +28,8 @@ public class KeyAuthenticationSpec {
                                    .setAuthenticationValidityDuration(
                                            getAuthenticationValidityDuration())
                                    .setAuthenticationDescription(
-                                           getAuthenticationDescriptionResId())
-                                   .setAuthenticationTitle(getAuthenticationTitleResId());
+                                           getAuthenticationDescription())
+                                   .setAuthenticationTitle(getAuthenticationTitle());
     }
 
     public boolean isAuthenticationRequired() {
@@ -40,11 +40,11 @@ public class KeyAuthenticationSpec {
         return builder.authenticationValidityDuration;
     }
 
-    public String getAuthenticationTitleResId() {
+    public String getAuthenticationTitle() {
         return builder.authenticationTitle;
     }
 
-    public String getAuthenticationDescriptionResId() {
+    public String getAuthenticationDescription() {
         return builder.authenticationDescription;
     }
 

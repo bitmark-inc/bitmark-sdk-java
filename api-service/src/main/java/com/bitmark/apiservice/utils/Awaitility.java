@@ -15,7 +15,7 @@ import java.util.concurrent.TimeoutException;
 
 public class Awaitility {
 
-    private static final int TIMEOUT = 10000;
+    private static final int TIMEOUT = 20000;
 
     private Awaitility() {
     }
@@ -32,7 +32,7 @@ public class Awaitility {
     public static <T> T await(Call<T> call) throws Throwable {
         final Data<T> data = new Data<>();
         final Data<Throwable> error = new Data<>();
-        final BackgroundJobScheduler scheduler = new BackgroundJobScheduler();
+        final BackgroundJobScheduler scheduler = BackgroundJobScheduler.getInstance();
         scheduler.execute(() -> {
             try {
                 data.setValue(call.call());

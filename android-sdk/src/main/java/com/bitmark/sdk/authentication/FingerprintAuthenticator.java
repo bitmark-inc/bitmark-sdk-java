@@ -25,6 +25,7 @@ import javax.crypto.Cipher;
 import static android.content.Context.FINGERPRINT_SERVICE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.bitmark.sdk.authentication.FingerprintAuthenticator.FingerprintDialog.State.*;
+import static com.bitmark.sdk.utils.CommonUtils.switchOnMain;
 
 /**
  * @author Hieu Pham
@@ -48,8 +49,9 @@ class FingerprintAuthenticator extends AbsAuthenticator {
 
     @Override
     public void authenticate(@NonNull Cipher cipher) {
-        new FingerprintAuthenticationHandler(activity, title, description, callback)
-                .authenticate(cipher);
+        switchOnMain(
+                () -> new FingerprintAuthenticationHandler(activity, title, description, callback)
+                        .authenticate(cipher));
     }
 
     private static FingerprintManager getFingerPrintManager(Context context) {

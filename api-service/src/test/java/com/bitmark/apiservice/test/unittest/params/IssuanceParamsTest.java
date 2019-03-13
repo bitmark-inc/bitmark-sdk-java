@@ -2,10 +2,7 @@ package com.bitmark.apiservice.test.unittest.params;
 
 import com.bitmark.apiservice.params.IssuanceParams;
 import com.bitmark.apiservice.test.BaseTest;
-import com.bitmark.apiservice.utils.Address;
 import com.bitmark.apiservice.utils.Pair;
-import com.bitmark.cryptography.crypto.key.KeyPair;
-import com.bitmark.cryptography.crypto.key.StandardKeyPair;
 import com.bitmark.cryptography.error.ValidateException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.bitmark.apiservice.test.unittest.DataProvider.*;
 import static com.bitmark.apiservice.test.utils.FileUtils.loadRequest;
 import static com.bitmark.apiservice.test.utils.TestUtils.reflectionSet;
 import static com.bitmark.apiservice.utils.ArrayUtil.isDuplicate;
@@ -34,21 +32,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class IssuanceParamsTest extends BaseTest {
 
-    private static final String PRIVATE_KEY =
-            "0246a917d422e596168185cea9943459c09751532c52fe4ddc27b06e2893ef2258760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f";
-
-    private static final String PUBLIC_KEY =
-            "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f";
-
-    private static final KeyPair KEY = StandardKeyPair.from(HEX.decode(PUBLIC_KEY),
-                                                            HEX.decode(PRIVATE_KEY));
-
-    private static final Address ADDRESS = Address.fromAccountNumber(
-            "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva");
-
-    private static final String ASSET_ID =
-            "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059";
-
     @ParameterizedTest
     @ValueSource(strings = {
             "f5ad8d9b58e122d2d229f86eaa5d276496a5a3da19d53c887a23f81955a3d07266b50a896d332abc1d1845850311e50570cb56ee507b89ec18bc91edc34c1059",
@@ -56,22 +39,22 @@ public class IssuanceParamsTest extends BaseTest {
             "c5c834efb58a5106dd601676bf606da91b752cababfbe223122f71be5b2963dc57d593f5f45b61f1abe2fcf80277fd4075ee561813bc69c0343b4c4e68516237"})
     public void testConstructIssuanceParamsWithoutNonce_ValidAssetId_ValidInstanceIsReturn(
             String assetId) {
-        assertDoesNotThrow(() -> new IssuanceParams(assetId, ADDRESS));
+        assertDoesNotThrow(() -> new IssuanceParams(assetId, ADDRESS1));
     }
 
     @ParameterizedTest
     @MethodSource("createInvalidAssetId")
     public void testConstructIssuanceParamsWithoutNonce_InvalidAssetId_ErrorIsThrow(
             String assetId) {
-        assertThrows(ValidateException.class, () -> new IssuanceParams(assetId, ADDRESS));
+        assertThrows(ValidateException.class, () -> new IssuanceParams(assetId, ADDRESS1));
     }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 100, 1000})
     public void testConstructIssuanceParamsWithQuantity_ValidQuantity_ValidInstanceIsReturn(
             int quantity) {
-        assertDoesNotThrow(() -> new IssuanceParams(ASSET_ID, ADDRESS, quantity));
-        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS, quantity);
+        assertDoesNotThrow(() -> new IssuanceParams(ASSET_ID, ADDRESS1, quantity));
+        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS1, quantity);
         assertEquals(quantity, params.getNoncesPair().first().length);
         assertEquals(quantity, params.getNoncesPair().second().length);
         assertFalse(isDuplicate(params.getNoncesPair().first()));
@@ -81,7 +64,7 @@ public class IssuanceParamsTest extends BaseTest {
     @ParameterizedTest
     @ValueSource(ints = {-1, -100, 0})
     public void testConstructIssuanceParamsWithQuantity_InvalidQuantity_ErrorIsThrow(int quantity) {
-        assertThrows(ValidateException.class, () -> new IssuanceParams(ASSET_ID, ADDRESS,
+        assertThrows(ValidateException.class, () -> new IssuanceParams(ASSET_ID, ADDRESS1,
                                                                        quantity));
     }
 
@@ -90,10 +73,10 @@ public class IssuanceParamsTest extends BaseTest {
     public void testSignOneNonce_NoCondition_ValidSignatureIsReturn(String assetId, int[] nonces,
                                                                     byte[] signature)
             throws NoSuchFieldException, IllegalAccessException {
-        final IssuanceParams params = new IssuanceParams(assetId, ADDRESS);
+        final IssuanceParams params = new IssuanceParams(assetId, ADDRESS1);
         reflectionSet(params,
                       new Pair<>("noncesPair", new Pair<>(nonces, nonces)));
-        params.sign(KEY);
+        params.sign(KEY_PAIR_1);
         params.setContainsGenesisBitmark(false);
         assertEquals(params.getSignatures().size(), 1);
         assertTrue(Arrays.equals(signature, params.getSignatures().get(0)));
@@ -105,10 +88,10 @@ public class IssuanceParamsTest extends BaseTest {
                                                                          int[] nonces,
                                                                          List<byte[]> expectedSignature)
             throws NoSuchFieldException, IllegalAccessException {
-        final IssuanceParams params = new IssuanceParams(assetId, ADDRESS);
+        final IssuanceParams params = new IssuanceParams(assetId, ADDRESS1);
         reflectionSet(params,
                       new Pair<>("noncesPair", new Pair<>(nonces, nonces)));
-        params.sign(KEY);
+        params.sign(KEY_PAIR_1);
         params.setContainsGenesisBitmark(false);
         final List<byte[]> signatures = params.getSignatures();
         assertEquals(expectedSignature.size(), signatures.size());
@@ -126,7 +109,7 @@ public class IssuanceParamsTest extends BaseTest {
 
     @Test
     public void testConstructIssuanceParams_ValidParams_CorrectNonceIsGenerated() {
-        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS);
+        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS1);
         final Pair<int[], int[]> noncesPair = params.getNoncesPair();
         assertNotNull(noncesPair.first());
         assertNotNull(noncesPair.second());
@@ -137,8 +120,8 @@ public class IssuanceParamsTest extends BaseTest {
     @Test
     public void testSignParams__CorrectSignatureReturn() {
         final int quantity = 2;
-        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS, quantity);
-        List<byte[]> concatenatedSignature = params.sign(KEY);
+        final IssuanceParams params = new IssuanceParams(ASSET_ID, ADDRESS1, quantity);
+        List<byte[]> concatenatedSignature = params.sign(KEY_PAIR_1);
         assertEquals(quantity * 2, concatenatedSignature.size());
     }
 
@@ -199,21 +182,21 @@ public class IssuanceParamsTest extends BaseTest {
 
     private static Stream<Arguments> createValidIssuanceParamsJson()
             throws IOException, NoSuchFieldException, IllegalAccessException {
-        final IssuanceParams params1 = new IssuanceParams(ASSET_ID, ADDRESS);
+        final IssuanceParams params1 = new IssuanceParams(ASSET_ID, ADDRESS1);
         reflectionSet(params1,
                       new Pair<>("noncesPair", new Pair<>(new int[]{1}, new int[]{1})));
         params1.setContainsGenesisBitmark(false);
-        final IssuanceParams params2 = new IssuanceParams(ASSET_ID, ADDRESS);
+        final IssuanceParams params2 = new IssuanceParams(ASSET_ID, ADDRESS1);
         reflectionSet(params2,
                       new Pair<>("noncesPair", new Pair<>(new int[]{3}, new int[]{3})));
         params2.setContainsGenesisBitmark(false);
-        final IssuanceParams params3 = new IssuanceParams(ASSET_ID, ADDRESS);
+        final IssuanceParams params3 = new IssuanceParams(ASSET_ID, ADDRESS1);
         reflectionSet(params3,
                       new Pair<>("noncesPair", new Pair<>(new int[]{1, 3}, new int[]{1, 3})));
         params3.setContainsGenesisBitmark(false);
-        params1.sign(KEY);
-        params2.sign(KEY);
-        params3.sign(KEY);
+        params1.sign(KEY_PAIR_1);
+        params2.sign(KEY_PAIR_1);
+        params3.sign(KEY_PAIR_1);
         final String json1 = loadRequest("/issue/single_issue1.json");
         final String json2 = loadRequest("/issue/single_issue2.json");
         final String json3 = loadRequest("/issue/multiple_issue1.json");

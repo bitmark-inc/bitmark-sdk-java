@@ -8,7 +8,6 @@ import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.apiservice.utils.record.TransactionRecord;
 import com.bitmark.sdk.features.Transaction;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -26,8 +25,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TransactionTest extends BaseFeatureTest {
 
-    @DisplayName("Verify function Transaction.get(String, Callback1<>) works well with existed " +
-                         "transaction id")
     @Test
     public void testQueryTransactionWithoutAsset_ExistedTxId_CorrectResponseIsReturn() throws Throwable {
         // Get existed tx
@@ -48,8 +45,6 @@ public class TransactionTest extends BaseFeatureTest {
         assertEquals(txId, transaction.getId());
     }
 
-    @DisplayName("Verify function Transaction.get(String, boolean, Callback1<>) works well with " +
-                         "existed transaction id")
     @Test
     public void testQueryTransactionWithAsset_ExistedTxId_CorrectResponseIsReturn() throws Throwable {
         // Get existed tx
@@ -73,8 +68,6 @@ public class TransactionTest extends BaseFeatureTest {
         assertEquals(transaction.getAssetId(), asset.getId());
     }
 
-    @DisplayName("Verify function Transaction.get(String, Callback1<>) works well with not " +
-                         "existed transaction id")
     @Test
     public void testQueryTransaction_NonExistedTxId_ErrorIsThrow() {
         String id =
@@ -85,8 +78,6 @@ public class TransactionTest extends BaseFeatureTest {
         assertEquals(HTTP_INTERNAL_ERROR, exception.getStatusCode());
     }
 
-    @DisplayName("Verify function Transaction.list(TransactionQueryBuilder, Callback1<>) works " +
-                         "well")
     @Test
     public void testQueryTransactions_NoCondition_CorrectResponseIsReturn() throws Throwable {
         // With limit and owner

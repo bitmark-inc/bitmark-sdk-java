@@ -1,5 +1,11 @@
 package com.bitmark.apiservice.utils;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.Map;
+
 /**
  * @author Hieu Pham
  * @since 9/17/18
@@ -44,5 +50,16 @@ public class HttpUtils {
             if (i < length - 1) builder.append("&");
         }
         return builder.toString();
+    }
+
+    public static <T> String mapToJson(Map<String, T> map) {
+        if (map == null) return "{}";
+        return new GsonBuilder().enableComplexMapKeySerialization().create().toJson(map, Map.class);
+    }
+
+    public static Map<String, Object> jsonToMap(String json) {
+        Type type = new TypeToken<Map<String, Object>>() {
+        }.getType();
+        return new GsonBuilder().create().fromJson(json, type);
     }
 }

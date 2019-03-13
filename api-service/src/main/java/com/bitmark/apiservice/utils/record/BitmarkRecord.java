@@ -1,6 +1,5 @@
 package com.bitmark.apiservice.utils.record;
 
-import com.bitmark.apiservice.utils.annotation.VisibleForTesting;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
@@ -59,25 +58,6 @@ public class BitmarkRecord implements Record {
     private Status status;
 
     private OfferRecord offer;
-
-    @VisibleForTesting
-    public BitmarkRecord(String assetId, long blockNumber, String confirmedAt, String createdAt,
-                         Head head, String headId, String id, String issuedAt, String issuer,
-                         long offset, String owner, Status status, OfferRecord offer) {
-        this.assetId = assetId;
-        this.blockNumber = blockNumber;
-        this.confirmedAt = confirmedAt;
-        this.createdAt = createdAt;
-        this.head = head;
-        this.headId = headId;
-        this.id = id;
-        this.issuedAt = issuedAt;
-        this.issuer = issuer;
-        this.offset = offset;
-        this.owner = owner;
-        this.status = status;
-        this.offer = offer;
-    }
 
     public String getAssetId() {
         return assetId;
@@ -141,23 +121,23 @@ public class BitmarkRecord implements Record {
         if (o == null || getClass() != o.getClass()) return false;
         BitmarkRecord bitmark = (BitmarkRecord) o;
         return blockNumber == bitmark.blockNumber &&
-                offset == bitmark.offset &&
-                Objects.equals(assetId, bitmark.assetId) &&
-                Objects.equals(confirmedAt, bitmark.confirmedAt) &&
-                Objects.equals(createdAt, bitmark.createdAt) &&
-                Objects.equals(head, bitmark.head) &&
-                Objects.equals(headId, bitmark.headId) &&
-                Objects.equals(id, bitmark.id) &&
-                Objects.equals(issuedAt, bitmark.issuedAt) &&
-                Objects.equals(issuer, bitmark.issuer) &&
-                Objects.equals(owner, bitmark.owner) &&
-                status == bitmark.status &&
-                Objects.equals(offer, bitmark.offer);
+               offset == bitmark.offset &&
+               Objects.equals(assetId, bitmark.assetId) &&
+               Objects.equals(confirmedAt, bitmark.confirmedAt) &&
+               Objects.equals(createdAt, bitmark.createdAt) &&
+               Objects.equals(head, bitmark.head) &&
+               Objects.equals(headId, bitmark.headId) &&
+               Objects.equals(id, bitmark.id) &&
+               Objects.equals(issuedAt, bitmark.issuedAt) &&
+               Objects.equals(issuer, bitmark.issuer) &&
+               Objects.equals(owner, bitmark.owner) &&
+               status == bitmark.status &&
+               Objects.equals(offer, bitmark.offer);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(assetId, blockNumber, confirmedAt, createdAt, head, headId, id,
-                issuedAt, issuer, offset, owner, status, offer);
+                            issuedAt, issuer, offset, owner, status, offer);
     }
 }

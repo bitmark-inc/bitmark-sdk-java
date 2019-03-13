@@ -3,8 +3,6 @@ package com.bitmark.apiservice.test.unittest.params;
 import com.bitmark.apiservice.params.TransferParams;
 import com.bitmark.apiservice.test.BaseTest;
 import com.bitmark.apiservice.utils.Address;
-import com.bitmark.cryptography.crypto.key.KeyPair;
-import com.bitmark.cryptography.crypto.key.StandardKeyPair;
 import com.bitmark.cryptography.error.ValidateException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,8 +12,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.IOException;
 import java.util.stream.Stream;
 
+import static com.bitmark.apiservice.test.unittest.DataProvider.ADDRESS1;
+import static com.bitmark.apiservice.test.unittest.DataProvider.KEY_PAIR_1;
 import static com.bitmark.apiservice.test.utils.FileUtils.loadRequest;
-import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -27,21 +26,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TransferParamsTest extends BaseTest {
 
-    private static final String PRIVATE_KEY =
-            "0246a917d422e596168185cea9943459c09751532c52fe4ddc27b06e2893ef2258760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f";
-
-    private static final String PUBLIC_KEY =
-            "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f";
-
-    private static final KeyPair KEY = StandardKeyPair.from(HEX.decode(PUBLIC_KEY),
-                                                            HEX.decode(PRIVATE_KEY));
-
-    private static final Address ADDRESS = Address.fromAccountNumber(
-            "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva");
-
     @Test
     public void testConstructTransferParamsWithoutLink_ValidOwnerAddress_CorrectInstanceIsReturn() {
-        assertDoesNotThrow(() -> new TransferParams(ADDRESS));
+        assertDoesNotThrow(() -> new TransferParams(ADDRESS1));
     }
 
     @Test
@@ -79,14 +66,14 @@ public class TransferParamsTest extends BaseTest {
     @MethodSource("createValidParamsSignature")
     public void testSignParams_ParamsIsValid_CorrectSignatureIsReturn(TransferParams params,
                                                                       String signature) {
-        params.sign(KEY);
+        params.sign(KEY_PAIR_1);
         assertTrue(signature.equalsIgnoreCase(params.getSignature()));
     }
 
     @Test
     public void testSignParams_ParamsIsInvalid_ErrorIsThrow() {
-        final TransferParams params = new TransferParams(ADDRESS);
-        assertThrows(ValidateException.class, () -> params.sign(KEY));
+        final TransferParams params = new TransferParams(ADDRESS1);
+        assertThrows(ValidateException.class, () -> params.sign(KEY_PAIR_1));
     }
 
     private static Stream<Arguments> createValidAddressLink() {
@@ -117,8 +104,8 @@ public class TransferParamsTest extends BaseTest {
                                                           "ad22ae9c46bdf53b7b8b6f520650e1aaa84960739cd7f7461cd3a8695e24cc96");
         final String json1 = loadRequest("/transfer/transfer1.json");
         final String json2 = loadRequest("/transfer/transfer2.json");
-        params1.sign(KEY);
-        params2.sign(KEY);
+        params1.sign(KEY_PAIR_1);
+        params2.sign(KEY_PAIR_1);
         return Stream.of(Arguments.of(params1, json1), Arguments.of(params2, json2));
     }
 

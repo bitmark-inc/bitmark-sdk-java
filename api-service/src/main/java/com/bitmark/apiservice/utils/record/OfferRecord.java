@@ -1,15 +1,9 @@
 package com.bitmark.apiservice.utils.record;
 
-import com.bitmark.apiservice.utils.Address;
-import com.bitmark.cryptography.crypto.Sha3256;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 import java.util.Objects;
-
-import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
-import static com.bitmark.cryptography.utils.Validator.checkValid;
-import static com.bitmark.cryptography.utils.Validator.checkValidHex;
 
 /**
  * @author Hieu Pham
@@ -36,18 +30,6 @@ public class OfferRecord implements Record {
 
     @SerializedName("open")
     private boolean isOpen;
-
-    public OfferRecord(String id, String owner, String link, String signature) {
-        checkValidHex(signature);
-        checkValid(() -> id != null && !id.isEmpty() && owner != null &&
-                         Address.fromAccountNumber(owner).isValid() && link != null &&
-                         HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH, "Invalid params");
-        this.id = id;
-        record = new Record();
-        record.link = link;
-        record.signature = signature;
-        record.owner = owner;
-    }
 
     public String getId() {
         return id;

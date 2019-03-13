@@ -1,14 +1,14 @@
 package com.bitmark.sdk.features;
 
 import com.bitmark.apiservice.ApiService;
-import com.bitmark.apiservice.params.IssuanceParams;
-import com.bitmark.apiservice.params.TransferOfferParams;
-import com.bitmark.apiservice.params.TransferParams;
-import com.bitmark.apiservice.params.TransferResponseParams;
+import com.bitmark.apiservice.params.*;
 import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;
 import com.bitmark.apiservice.response.GetBitmarkResponse;
 import com.bitmark.apiservice.response.GetBitmarksResponse;
+import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callback1;
+import com.bitmark.apiservice.utils.record.ShareGrantRecord;
+import com.bitmark.apiservice.utils.record.ShareRecord;
 
 import java.util.List;
 
@@ -50,6 +50,31 @@ public class Bitmark {
 
     public static void list(BitmarkQueryBuilder builder, Callback1<GetBitmarksResponse> callback) {
         ApiService.getInstance().listBitmarks(builder.build(), wrapCallbackOnMain(callback));
+    }
+
+    public static void createShare(ShareParams params, Callback1<Pair<String, String>> callback) {
+        ApiService.getInstance().createShare(params, callback);
+    }
+
+    public static void grantShare(ShareGrantingParams params, Callback1<String> callback) {
+        ApiService.getInstance().grantShare(params, callback);
+    }
+
+    public static void respondShareOffer(GrantResponseParams params, Callback1<String> callback) {
+        ApiService.getInstance().respondShareOffer(params, callback);
+    }
+
+    public static void getShare(String shareId, Callback1<ShareRecord> callback) {
+        ApiService.getInstance().getShare(shareId, callback);
+    }
+
+    public static void listShares(String owner, Callback1<List<ShareRecord>> callback) {
+        ApiService.getInstance().listShares(owner, callback);
+    }
+
+    public static void listShareOffer(String from, String to,
+                                      Callback1<List<ShareGrantRecord>> callback) {
+        ApiService.getInstance().listShareOffer(from, to, callback);
     }
 
 }

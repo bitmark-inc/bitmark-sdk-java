@@ -1,20 +1,11 @@
-apply plugin: 'maven'
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
 apply from: '../configuration.gradle'
 
 import org.gradle.internal.os.OperatingSystem
 
 def ext = project.ext
 def config = ext.configuration
-def root_publication = ext.publication
 def project_publication = ext.publicationProperties(project.name)
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-group = project_publication.GROUP_ID
-version = project_publication.VERSION
 
 buildscript {
     apply from: '../dependencies.gradle'
@@ -60,7 +51,7 @@ android {
             minifyEnabled false
         }
     }
-    
+
 }
 
 [
@@ -103,8 +94,10 @@ android {
 //    }
 //}
 
+apply from: '../publication_android.gradle'
+
 task unzipAAR(type: Copy) {
-    def aar = file("${buildDir}/outputs/aar/" + project_publication.ARTIFACT_ID + "-release.aar")
+    def aar = file("${buildDir}/outputs/aar/" + project_publication.ARTIFACT_ID + "-" + project_publication.VERSION + ".aar")
     from zipTree(aar)
     into "${buildDir}/outputs/aar/unzip"
 }
@@ -114,7 +107,7 @@ task copyNativeLib(type: Copy, dependsOn: 'deleteNativeLib') {
     into 'native-lib/lib'
 }
 
-task deleteNativeLib(type: Delete){
+task deleteNativeLib(type: Delete) {
     delete 'native-lib'
 }
 
@@ -209,87 +202,11 @@ task('generateSWIGsource') {
 //    generateJsonModelRelease.dependsOn 'generateSWIGsource'
 //}
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
-
 artifacts {
     archives javadocJar, sourcesJar, libraryJar
 }
 
-install {
-
-    repositories.mavenInstaller {
-        pom.project {
-            packaging 'jar'
-            groupId project_publication.GROUP_ID
-            artifactId project_publication.ARTIFACT_ID
-
-            name project_publication.LIB_NAME
-            description project_publication.LIB_DES
-            url project_publication.LIB_SITE_URL
-
-            licenses {
-                license {
-                    name root_publication.LICENSE_NAME
-                    url root_publication.LICENSE_URL
-                }
-            }
-            developers {
-                developer {
-                    id root_publication.DEV_ID
-                    name root_publication.DEV_NAME
-                    email root_publication.DEV_EMAIL
-                }
-            }
-            scm {
-                connection project_publication.LIB_GIT_URL
-                developerConnection project_publication.LIB_GIT_URL
-                url project_publication.LIB_SITE_URL
-            }
-        }
-    }
-}
-
-bintrayUpload.dependsOn(install)
-
-bintray {
-
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-    pkg {
-        repo = properties.getProperty("bintray.repo")
-        name = ext.publicationPackageName(project.name)
-        desc = project_publication.LIB_DES
-        websiteUrl = project_publication.LIB_SITE_URL
-        vcsUrl = project_publication.LIB_GIT_URL
-        licenses = root_publication.LICENSE_ALL
-        dryRun = false
-        publish = true
-        override = true
-        publicDownloadNumbers = true
-        version {
-            desc = project_publication.LIB_DES
-            gpg {
-                sign = true
-                passphrase = properties.getProperty("bintray.gpg.password")
-            }
-        }
-    }
-}
+ext.additionalArtifact = libraryJar
 
 dependencies {
 

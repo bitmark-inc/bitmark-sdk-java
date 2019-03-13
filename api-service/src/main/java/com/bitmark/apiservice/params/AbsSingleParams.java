@@ -1,6 +1,5 @@
 package com.bitmark.apiservice.params;
 
-import com.bitmark.apiservice.utils.annotation.VisibleForTesting;
 import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 
@@ -26,7 +25,6 @@ public abstract class AbsSingleParams implements SingleParams {
 
     abstract byte[] pack();
 
-    @VisibleForTesting
     public String getSignature() {
         return HEX.encode(signature);
     }

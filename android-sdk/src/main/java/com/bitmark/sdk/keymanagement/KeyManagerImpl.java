@@ -3,12 +3,10 @@ package com.bitmark.sdk.keymanagement;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyInfo;
-import android.security.keystore.KeyProperties;
-import android.security.keystore.UserNotAuthenticatedException;
+import android.security.keystore.*;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callback0;
 import com.bitmark.apiservice.utils.callback.Callback1;
@@ -64,6 +62,8 @@ public class KeyManagerImpl implements KeyManager {
     public void getKey(String alias, KeyAuthenticationSpec keyAuthSpec,
                        Callback1<byte[]> callback) {
 
+        KeyAuthenticationSpec newKeyAuthSpec;
+
         try {
 
             if (!isEncryptionKeyExisted(keyAuthSpec.getKeyAlias())) {
@@ -81,12 +81,12 @@ public class KeyManagerImpl implements KeyManager {
                             .getInstance(encryptionKey.getAlgorithm(), ANDROID_KEYSTORE);
             KeyInfo info = (KeyInfo) factory.getKeySpec(encryptionKey, KeyInfo.class);
 
-            KeyAuthenticationSpec newKeyAuthSpec = keyAuthSpec.newBuilder(activity)
-                                                              .setAuthenticationRequired(
-                                                                      info.isUserAuthenticationRequired())
-                                                              .setAuthenticationValidityDuration(
-                                                                      info.getUserAuthenticationValidityDurationSeconds())
-                                                              .build();
+            newKeyAuthSpec = keyAuthSpec.newBuilder(activity)
+                                        .setAuthenticationRequired(
+                                                info.isUserAuthenticationRequired())
+                                        .setAuthenticationValidityDuration(
+                                                info.getUserAuthenticationValidityDurationSeconds())
+                                        .build();
 
             try {
                 Cipher cipher = getDecryptCipher(alias, encryptionKey);
@@ -104,25 +104,28 @@ public class KeyManagerImpl implements KeyManager {
             } catch (UserNotAuthenticatedException e) {
 
                 // The user has not authenticated within the specified time frame
-                triggerDeviceAuthentication(keyAuthSpec, getAuthCallback(new Callback1<Cipher>() {
-                    @Override
-                    public void onSuccess(Cipher cipher) {
-                        try {
-                            callback.onSuccess(
-                                    getKey(alias, getDecryptCipher(alias, encryptionKey)));
-                        } catch (IOException | BadPaddingException | IllegalBlockSizeException
-                                | NoSuchPaddingException | NoSuchAlgorithmException
-                                | InvalidAlgorithmParameterException | InvalidKeyException e1) {
-                            e1.printStackTrace();
-                            callback.onError(e1);
-                        }
-                    }
+                triggerDeviceAuthentication(newKeyAuthSpec,
+                                            getAuthCallback(new Callback1<Cipher>() {
+                                                @Override
+                                                public void onSuccess(Cipher cipher) {
+                                                    try {
+                                                        callback.onSuccess(
+                                                                getKey(alias,
+                                                                       getDecryptCipher(alias,
+                                                                                        encryptionKey)));
+                                                    } catch (IOException | BadPaddingException | IllegalBlockSizeException
+                                                            | NoSuchPaddingException | NoSuchAlgorithmException
+                                                            | InvalidAlgorithmParameterException | InvalidKeyException e1) {
+                                                        e1.printStackTrace();
+                                                        callback.onError(e1);
+                                                    }
+                                                }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                }));
+                                                @Override
+                                                public void onError(Throwable throwable) {
+                                                    callback.onError(throwable);
+                                                }
+                                            }));
             }
 
         } catch (KeyStoreException | InvalidAlgorithmParameterException | CertificateException
@@ -217,6 +220,8 @@ public class KeyManagerImpl implements KeyManager {
     public void saveKey(String alias, KeyAuthenticationSpec keyAuthSpec, byte[] key,
                         Callback0 callback) {
 
+        KeyAuthenticationSpec newKeyAuthSpec;
+
         try {
 
             final SecretKey encryptionKey =
@@ -225,7 +230,7 @@ public class KeyManagerImpl implements KeyManager {
                             .getKey(keyAuthSpec.getKeyAlias(), null) : generateEncryptionKey(
                             keyAuthSpec.getKeyAlias(),
                             keyAuthSpec.isAuthenticationRequired(),
-                            keyAuthSpec.getAuthenticationValidityDuration());
+                            keyAuthSpec.getAuthenticationValidityDuration(), isAboveP());
 
             // Retrieve the key info of encryption key
             SecretKeyFactory factory =
@@ -233,20 +238,20 @@ public class KeyManagerImpl implements KeyManager {
             KeyInfo info = (KeyInfo) factory.getKeySpec(encryptionKey, KeyInfo.class);
 
             // Regenerate key spec
-            KeyAuthenticationSpec newKeyAuthSpec = keyAuthSpec.newBuilder(activity)
-                                                              .setAuthenticationRequired(
-                                                                      info.isUserAuthenticationRequired())
-                                                              .setAuthenticationValidityDuration(
-                                                                      info.getUserAuthenticationValidityDurationSeconds())
-                                                              .build();
+            newKeyAuthSpec = keyAuthSpec.newBuilder(activity)
+                                        .setAuthenticationRequired(
+                                                info.isUserAuthenticationRequired())
+                                        .setAuthenticationValidityDuration(
+                                                info.getUserAuthenticationValidityDurationSeconds())
+                                        .build();
 
             try {
                 Cipher cipher = getEncryptCipher(encryptionKey);
 
                 if (newKeyAuthSpec.isAuthenticationRequired() &&
-                    !keyAuthSpec.willInvalidateInTimeFrame()) {
+                    !newKeyAuthSpec.willInvalidateInTimeFrame()) {
                     // The key authentication is required and user didn't set the validity time frame for it
-                    authForSaveKey(alias, keyAuthSpec, key, cipher, callback);
+                    authForSaveKey(alias, newKeyAuthSpec, key, cipher, callback);
                 } else {
                     // Do not require for authentication
                     saveKey(alias, key, cipher);
@@ -256,24 +261,26 @@ public class KeyManagerImpl implements KeyManager {
             } catch (UserNotAuthenticatedException e) {
 
                 // The user has not authenticated within the specified time frame
-                triggerDeviceAuthentication(keyAuthSpec, getAuthCallback(new Callback1<Cipher>() {
-                    @Override
-                    public void onSuccess(Cipher cipher) {
-                        try {
-                            saveKey(alias, key, getEncryptCipher(encryptionKey));
-                            callback.onSuccess();
-                        } catch (BadPaddingException | IllegalBlockSizeException | IOException
-                                | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e1) {
-                            e1.printStackTrace();
-                            callback.onError(e1);
-                        }
-                    }
+                triggerDeviceAuthentication(newKeyAuthSpec,
+                                            getAuthCallback(new Callback1<Cipher>() {
+                                                @Override
+                                                public void onSuccess(Cipher cipher) {
+                                                    try {
+                                                        saveKey(alias, key,
+                                                                getEncryptCipher(encryptionKey));
+                                                        callback.onSuccess();
+                                                    } catch (BadPaddingException | IllegalBlockSizeException | IOException
+                                                            | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e1) {
+                                                        e1.printStackTrace();
+                                                        callback.onError(e1);
+                                                    }
+                                                }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                }));
+                                                @Override
+                                                public void onError(Throwable throwable) {
+                                                    callback.onError(throwable);
+                                                }
+                                            }));
             }
 
         } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException
@@ -336,7 +343,7 @@ public class KeyManagerImpl implements KeyManager {
 
                         @Override
                         public void onError(Throwable throwable) {
-
+                            callback.onError(throwable);
                         }
                     });
             Authenticator authenticator =
@@ -380,31 +387,87 @@ public class KeyManagerImpl implements KeyManager {
                                                     AuthenticationCallback callback)
             throws AuthenticationRequiredException {
         return isAboveP() ? AuthenticatorFactory
-                .getBiometricAuthenticator(activity, spec.getAuthenticationTitleResId(),
-                                           spec.getAuthenticationDescriptionResId(),
+                .getBiometricAuthenticator(activity, spec.getAuthenticationTitle(),
+                                           spec.getAuthenticationDescription(),
                                            callback) : AuthenticatorFactory
-                .getFingerprintAuthenticator(activity, spec.getAuthenticationTitleResId(),
-                                             spec.getAuthenticationDescriptionResId(), callback);
+                .getFingerprintAuthenticator(activity, spec.getAuthenticationTitle(),
+                                             spec.getAuthenticationDescription(), callback);
     }
 
     private Authenticator getDeviceAuthenticator(KeyAuthenticationSpec spec,
                                                  AuthenticationCallback callback)
             throws AuthenticationRequiredException {
         return AuthenticatorFactory
-                .getDeviceAuthenticator(activity, spec.getAuthenticationTitleResId(),
-                                        spec.getAuthenticationDescriptionResId(), callback);
+                .getDeviceAuthenticator(activity, spec.getAuthenticationTitle(),
+                                        spec.getAuthenticationDescription(), callback);
     }
 
     @Override
     public void removeKey(String alias, KeyAuthenticationSpec keyAuthSpec, Callback0 callback) {
+
+        if (!isEncryptionKeyExisted(keyAuthSpec.getKeyAlias())) {
+            callback.onError(
+                    new IllegalArgumentException("Encryption key alias is not existing"));
+            return;
+        }
+
+        KeyAuthenticationSpec newKeyAuthSpec = null;
+
+        try {
+
+            final SecretKey encryptionKey =
+                    (SecretKey) getLoadedAndroidKeyStore()
+                            .getKey(keyAuthSpec.getKeyAlias(), null);
+
+            // Retrieve the key info of encryption key
+            SecretKeyFactory factory =
+                    SecretKeyFactory.getInstance(encryptionKey.getAlgorithm(), ANDROID_KEYSTORE);
+            KeyInfo info = (KeyInfo) factory.getKeySpec(encryptionKey, KeyInfo.class);
+
+            // Regenerate key spec
+            newKeyAuthSpec = keyAuthSpec.newBuilder(activity)
+                                        .setAuthenticationRequired(
+                                                info.isUserAuthenticationRequired())
+                                        .setAuthenticationValidityDuration(
+                                                info.getUserAuthenticationValidityDurationSeconds())
+                                        .build();
+
+            if (newKeyAuthSpec.isAuthenticationRequired() &&
+                !newKeyAuthSpec.willInvalidateInTimeFrame()) {
+                // The key in keystore is required to be authenticated each time using it
+                // Always need to authenticate user before remove the key
+                authForRemoveKey(alias, newKeyAuthSpec, callback);
+            } else {
+                // Verify the key is valid on time frame
+                getDecryptCipher(alias, encryptionKey);
+
+                // The key is in time frame
+                removeKey(alias, keyAuthSpec);
+                callback.onSuccess();
+            }
+
+        } catch (UserNotAuthenticatedException e) {
+            // Key is now out of time frame, need to authenticate again
+            authForRemoveKey(alias, newKeyAuthSpec, callback);
+
+        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException
+                | IOException | UnrecoverableKeyException | NoSuchPaddingException
+                | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchProviderException
+                | InvalidKeySpecException e) {
+            // Unexpected error
+            callback.onError(e);
+        }
+
+    }
+
+    private void authForRemoveKey(String alias, KeyAuthenticationSpec keyAuthSpec,
+                                  Callback0 callback) {
         try {
             triggerDeviceAuthentication(keyAuthSpec, getAuthCallback(new Callback1<Cipher>() {
                 @Override
                 public void onSuccess(Cipher cipher) {
                     try {
-                        KeyStore keyStore = getLoadedAndroidKeyStore();
-                        keyStore.deleteEntry(keyAuthSpec.getKeyAlias());
-                        getEncryptedKeyFile(alias).delete();
+                        removeKey(alias, keyAuthSpec);
                         callback.onSuccess();
                     } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
                         e.printStackTrace();
@@ -417,16 +480,26 @@ public class KeyManagerImpl implements KeyManager {
                     callback.onError(throwable);
                 }
             }));
-        } catch (AuthenticationRequiredException e) {
-            e.printStackTrace();
-            callback.onError(e);
+        } catch (AuthenticationRequiredException e1) {
+            e1.printStackTrace();
+            callback.onError(e1);
         }
+    }
+
+    private void removeKey(String alias, KeyAuthenticationSpec keyAuthSpec)
+            throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
+        if (TextUtils.isEmpty(alias) || TextUtils.isEmpty(keyAuthSpec.getKeyAlias()))
+            throw new IllegalArgumentException("Invalid key store alias or the key alias");
+        KeyStore keyStore = getLoadedAndroidKeyStore();
+        keyStore.deleteEntry(keyAuthSpec.getKeyAlias());
+        getEncryptedKeyFile(alias).delete();
     }
 
 
     @SuppressLint("NewApi")
     private SecretKey generateEncryptionKey(String keyAlias, boolean isAuthenticationRequired,
-                                            int keyAuthValidityDuration)
+                                            int keyAuthValidityDuration,
+                                            boolean supportStrongBoxBacked)
             throws NoSuchProviderException, NoSuchAlgorithmException,
                    InvalidAlgorithmParameterException, AuthenticationRequiredException {
         try {
@@ -445,7 +518,8 @@ public class KeyManagerImpl implements KeyManager {
                     builder.setUserAuthenticationValidityDurationSeconds(
                             keyAuthValidityDuration);
             }
-            if (isAboveP()) builder.setIsStrongBoxBacked(true); // Enable hardware secure module
+            if (supportStrongBoxBacked)
+                builder.setIsStrongBoxBacked(true); // Enable hardware secure module
 
             keyGenerator.init(builder.build());
             return keyGenerator.generateKey();
@@ -454,6 +528,11 @@ public class KeyManagerImpl implements KeyManager {
                 throw new AuthenticationRequiredException(FINGERPRINT);
             }
             throw e;
+        } catch (StrongBoxUnavailableException e) {
+            // We do not know how to check the device supports strongbox key master or not
+            // So we need to catch StrongBoxUnavailableException to re-generate the key without strongbox support
+            return generateEncryptionKey(keyAlias, isAuthenticationRequired,
+                                         keyAuthValidityDuration, false);
         }
     }
 

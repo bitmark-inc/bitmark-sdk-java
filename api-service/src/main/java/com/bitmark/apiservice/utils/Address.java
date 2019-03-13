@@ -39,17 +39,21 @@ public class Address implements Validation {
         // Verify address length
         int addressLength = keyVariantLength + Ed25519.PUBLIC_KEY_LENGTH + CHECKSUM_LENGTH;
         if (addressLength != addressBytes.length) throw new InvalidAddressException("Address " +
-                "length is invalid. The expected is " + addressLength + " but actual is " + addressBytes.length);
+                                                                                    "length is invalid. The expected is " +
+                                                                                    addressLength +
+                                                                                    " but actual is " +
+                                                                                    addressBytes.length);
 
         // Verify checksum
         final byte[] checksumData = ArrayUtil.slice(addressBytes, 0,
-                keyVariantLength + Ed25519.PUBLIC_KEY_LENGTH);
+                                                    keyVariantLength + Ed25519.PUBLIC_KEY_LENGTH);
         final byte[] checksum = ArrayUtil.slice(Sha3256.hash(checksumData), 0, CHECKSUM_LENGTH);
         final byte[] checksumFromAddress = ArrayUtil.slice(addressBytes,
-                addressLength - CHECKSUM_LENGTH, addressLength);
+                                                           addressLength - CHECKSUM_LENGTH,
+                                                           addressLength);
         if (!ArrayUtil.equals(checksumFromAddress, checksum)) throw new InvalidAddressException(
                 "Invalid checksum. The expected is " + Arrays.toString(checksum) + " but actual " +
-                        "is " + Arrays.toString(checksumFromAddress));
+                "is " + Arrays.toString(checksumFromAddress));
 
         // Check for whether it's an address
         if ((keyVariant & 0x01) != PUBLIC_KEY.value())
@@ -62,9 +66,18 @@ public class Address implements Validation {
             throw new InvalidNetworkException(networkValue);
 
         final byte[] publicKey = ArrayUtil.slice(addressBytes, keyVariantLength,
-                addressLength - CHECKSUM_LENGTH);
+                                                 addressLength - CHECKSUM_LENGTH);
         return new Address(PublicKey.from(publicKey), network);
 
+    }
+
+    public static boolean isValidAccountNumber(String accountNumber) {
+        try {
+            fromAccountNumber(accountNumber);
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
     }
 
     public static Address getDefault(PublicKey key, Network network) throws ValidateException {

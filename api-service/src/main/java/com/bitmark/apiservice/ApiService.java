@@ -5,8 +5,11 @@ import com.bitmark.apiservice.params.*;
 import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;
 import com.bitmark.apiservice.params.query.QueryParams;
 import com.bitmark.apiservice.response.*;
+import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.apiservice.utils.record.AssetRecord;
+import com.bitmark.apiservice.utils.record.ShareGrantRecord;
+import com.bitmark.apiservice.utils.record.ShareRecord;
 import okhttp3.Headers;
 
 import java.util.List;
@@ -23,7 +26,7 @@ import static com.bitmark.apiservice.utils.Awaitility.await;
 
 public class ApiService implements BitmarkApi {
 
-    private static final String VERSION = "v3";
+    private static final String V3 = "v3";
 
     private static volatile ApiService INSTANCE;
 
@@ -56,7 +59,7 @@ public class ApiService implements BitmarkApi {
 
             params.setContainsGenesisBitmark(
                     bitmarksRes.getBitmarks() != null && bitmarksRes.getBitmarks().isEmpty());
-            final String path = String.format("/%s/issue", VERSION);
+            final String path = String.format("/%s/issue", V3);
             client.postAsync(path, params, toIssueResponse(callback));
         } catch (Throwable e) {
             callback.onError(e);
@@ -65,34 +68,34 @@ public class ApiService implements BitmarkApi {
 
     @Override
     public void registerAsset(RegistrationParams params, Callback1<RegistrationResponse> callback) {
-        final String path = String.format("/%s/register-asset", VERSION);
+        final String path = String.format("/%s/register-asset", V3);
         client.postAsync(path, params, toRegistrationResponse(callback));
     }
 
     @Override
     public void transferBitmark(TransferParams params, Callback1<String> callback) {
-        final String path = String.format("/%s/transfer", VERSION);
+        final String path = String.format("/%s/transfer", V3);
         client.postAsync(path, params, toTxId(callback));
     }
 
     @Override
     public void offerBitmark(TransferOfferParams params, Callback1<String> callback) {
-        final String path = String.format("/%s/transfer", VERSION);
+        final String path = String.format("/%s/transfer", V3);
         client.postAsync(path, params, toOfferId(callback));
     }
 
     @Override
     public void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback) {
-        final String path = String.format("/%s/transfer", VERSION);
+        final String path = String.format("/%s/transfer", V3);
         Headers headers = Headers.of(params.buildHeaders());
-        if (params.isAccept()) client.patchAsync(path, headers, params, toTxId(callback));
-        else client.patchAsync(path, headers, params, toStatus(callback));
+        client.patchAsync(path, headers, params,
+                          params.isAccept() ? toTxId(callback) : toStatus(callback));
     }
 
     @Override
     public void getBitmark(String bitmarkId, boolean includeAsset,
                            Callback1<GetBitmarkResponse> callback) {
-        final String path = String.format("/%s/bitmarks/%s?asset=%b", VERSION
+        final String path = String.format("/%s/bitmarks/%s?asset=%b", V3
                 , bitmarkId, includeAsset);
         client.getAsync(path, toGetBitmarkResponse(callback));
 
@@ -100,33 +103,71 @@ public class ApiService implements BitmarkApi {
 
     @Override
     public void listBitmarks(QueryParams params, Callback1<GetBitmarksResponse> callback) {
-        final String path = String.format("/%s/bitmarks", VERSION);
+        final String path = String.format("/%s/bitmarks", V3);
         client.getAsync(path, params, toGetBitmarksResponse(callback));
     }
 
     @Override
     public void getAsset(String assetId, Callback1<AssetRecord> callback) {
-        final String path = String.format("/%s/assets/%s", VERSION, assetId);
+        final String path = String.format("/%s/assets/%s", V3, assetId);
         client.getAsync(path, toAssetRecord(callback));
     }
 
     @Override
     public void listAssets(QueryParams params, Callback1<List<AssetRecord>> callback) {
-        final String path = String.format("/%s/assets", VERSION);
+        final String path = String.format("/%s/assets", V3);
         client.getAsync(path, params, toAssetRecords(callback));
     }
 
     @Override
     public void getTransaction(String txId, boolean includeAsset,
                                Callback1<GetTransactionResponse> callback) {
-        final String path = String.format("/%s/txs/%s?asset=%b", VERSION,
+        final String path = String.format("/%s/txs/%s?asset=%b", V3,
                                           txId, includeAsset);
         client.getAsync(path, toGetTransactionResponse(callback));
     }
 
     @Override
     public void listTransactions(QueryParams params, Callback1<GetTransactionsResponse> callback) {
-        final String path = String.format("/%s/txs", VERSION);
+        final String path = String.format("/%s/txs", V3);
         client.getAsync(path, params, toGetTransactionsResponse(callback));
+    }
+
+    @Override
+    public void createShare(ShareParams params, Callback1<Pair<String, String>> callback) {
+        final String path = String.format("/%s/shares", V3);
+        client.postAsync(path, params, toCreateShareResponse(callback));
+    }
+
+    @Override
+    public void grantShare(ShareGrantingParams params, Callback1<String> callback) {
+        final String path = String.format("/%s/share-offer", V3);
+        client.postAsync(path, params, toGrantShareResponse(callback));
+    }
+
+    @Override
+    public void respondShareOffer(GrantResponseParams params, Callback1<String> callback) {
+        final String path = String.format("/%s/share-offer", V3);
+        Headers headers = Headers.of(params.buildHeaders());
+        client.patchAsync(path, headers, params,
+                          params.isAccept() ? toTxId(callback) : toStatus(callback));
+    }
+
+    @Override
+    public void getShare(String shareId, Callback1<ShareRecord> callback) {
+        final String path = String.format("/%s/shares?share_id=%s", V3, shareId);
+        client.getAsync(path, toGetShareResponse(callback));
+    }
+
+    @Override
+    public void listShares(String owner, Callback1<List<ShareRecord>> callback) {
+        final String path = String.format("/%s/shares?owner=%s", V3, owner);
+        client.getAsync(path, toListSharesResponse(callback));
+    }
+
+    @Override
+    public void listShareOffer(String from, String to, Callback1<List<ShareGrantRecord>> callback) {
+        final String path = String.format("/%s/share-offer?from=%s&to=%s", V3, from, to);
+        client.getAsync(path, toListShareOffersResponse(callback));
     }
 }

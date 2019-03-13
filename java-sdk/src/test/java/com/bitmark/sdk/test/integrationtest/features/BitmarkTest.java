@@ -7,22 +7,23 @@ import com.bitmark.apiservice.response.GetBitmarksResponse;
 import com.bitmark.apiservice.response.RegistrationResponse;
 import com.bitmark.apiservice.utils.Address;
 import com.bitmark.apiservice.utils.Data;
+import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.error.HttpException;
-import com.bitmark.apiservice.utils.record.AssetRecord;
-import com.bitmark.apiservice.utils.record.BitmarkRecord;
-import com.bitmark.apiservice.utils.record.OfferRecord;
+import com.bitmark.apiservice.utils.record.*;
+import com.bitmark.cryptography.crypto.Random;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.sdk.features.Asset;
 import com.bitmark.sdk.features.Bitmark;
 import com.bitmark.sdk.test.utils.extensions.TemporaryFolderExtension;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.File;
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static com.bitmark.apiservice.utils.record.BitmarkRecord.Status.SETTLED;
@@ -41,8 +42,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith({TemporaryFolderExtension.class})
 public class BitmarkTest extends BaseFeatureTest {
 
-    @DisplayName("Verify function Bitmark.issue(IssuanceParams, Callback1<>) works well with " +
-                 "owned multiple bitmark ")
     @Test
     public void testIssueBitmark_OwnedMultipleBitmark_CorrectSuccessResponseIsReturn(File asset)
             throws Throwable {
@@ -73,8 +72,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertFalse(txIds.get(0).isEmpty());
     }
 
-    @DisplayName("Verify function Bitmark.issue(IssuanceParams, Callback1<>) works well with " +
-                 "owned single bitmark")
     @Test
     public void testIssueBitmark_OwnedSingleBitmark_CorrectSuccessResponseIsReturn(File asset)
             throws Throwable {
@@ -101,8 +98,29 @@ public class BitmarkTest extends BaseFeatureTest {
         assertFalse(txIds.get(0).isEmpty());
     }
 
-    @DisplayName("Verify function Bitmark.issue(IssuanceParams, Callback1<>) works well with " +
-                 "not owned bitmarks")
+    @Test
+    public void testIssueBitmark_OwnedSingleBitmarkWithoutMetadata_CorrectSuccessResponseIsReturn(
+            File asset)
+            throws Throwable {
+        // Register asset
+        Address owner = ACCOUNT1.toAddress();
+        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), null,
+                                                                       owner);
+        registrationParams.generateFingerprint(asset);
+        registrationParams.sign(KEY1);
+        RegistrationResponse registrationResponse =
+                await(callback -> Asset.register(registrationParams, callback));
+        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        String assetId = assets.get(0).getId();
+
+        // Issue bitmarks
+        IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
+        issuanceParams.sign(KEY1);
+        List<String> txIds = await(callback -> Bitmark.issue(issuanceParams, callback));
+        assertEquals(txIds.size(), 1);
+        assertFalse(txIds.get(0).isEmpty());
+    }
+
     @Test
     public void testIssueBitmark_NotOwnedBitmark_CorrectErrorResponseIsReturn() {
         Address issuer = Address.fromAccountNumber(ACCOUNT1.getAccountNumber());
@@ -147,8 +165,6 @@ public class BitmarkTest extends BaseFeatureTest {
         }
     }
 
-    @DisplayName("Verify function Bitmark.transfer(TransferParams, Callback1<>) works well with " +
-                 "owned bitmarks and TransferParams is build from link")
     @Test
     public void testTransferBitmarkFromLink_OwnedBitmark_CorrectSuccessResponseIsReturn()
             throws Throwable {
@@ -171,8 +187,6 @@ public class BitmarkTest extends BaseFeatureTest {
     }
 
 
-    @DisplayName("Verify function Bitmark.transfer(TransferParams, Callback1<>) works well with " +
-                 "not owned bitmarks")
     @Test
     public void testTransferBitmark_NotOwnedBitmark_CorrectErrorResponseIsReturn()
             throws Throwable {
@@ -196,15 +210,14 @@ public class BitmarkTest extends BaseFeatureTest {
 
     }
 
-    @DisplayName("Verify function Bitmark.offer(TransferOfferParams, Callback1<>) works well with" +
-                 " owned bitmarks")
     @Test
     public void testOfferBitmark_OwnedBitmark_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                                          b.getHead() != MOVED);
+        BitmarkRecord bitmark =
+                findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                          b.getHead() != MOVED);
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
@@ -217,15 +230,14 @@ public class BitmarkTest extends BaseFeatureTest {
         assertFalse(offerId.isEmpty());
     }
 
-    @DisplayName("Verify function Bitmark.offer(TransferOfferParams, Callback1<>) works well with" +
-                 " owned bitmarks")
     @Test
     public void testOfferBitmark_NotOwnedBitmark_CorrectErrorResponseIsReturn() throws Throwable {
         // Get not owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT2.getAccountNumber()).pending(true);
-        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                                          b.getHead() != MOVED);
+        BitmarkRecord bitmark =
+                findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                          b.getHead() != MOVED);
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
@@ -241,15 +253,14 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals(2013, exception.getErrorCode());
     }
 
-    @DisplayName("Verify function Bitmark.respond(TransferResponseParams, Callback1<>) works well" +
-                 " with accept response")
     @Test
     public void testReplyOffer_AcceptOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                                          b.getHead() != MOVED);
+        BitmarkRecord bitmark =
+                findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                          b.getHead() != MOVED);
 
         assertNotNull(bitmark, "No bitmark matches the specification");
         String link = bitmark.getHeadId();
@@ -271,16 +282,15 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals(Sha3256.HASH_BYTE_LENGTH, HEX.decode(txId).length);
     }
 
-    @DisplayName("Verify function Bitmark.respond(TransferResponseParams, Callback1<>) works well" +
-                 " with cancel response")
     @Test
     public void testReplyOffer_CancelOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true)
                                          .limit(100);
-        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                                          b.getHead() != MOVED);
+        BitmarkRecord bitmark =
+                findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                          b.getHead() != MOVED);
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
@@ -303,15 +313,14 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals("ok", status);
     }
 
-    @DisplayName("Verify function Bitmark.respond(TransferResponseParams, Callback1<>) works well" +
-                 " with reject response")
     @Test
     public void testReplyOffer_RejectOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
                 new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
-        BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
-                                                          b.getHead() != MOVED);
+        BitmarkRecord bitmark =
+                findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                          b.getHead() != MOVED);
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
@@ -334,7 +343,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals("ok", status);
     }
 
-    @DisplayName("Verify function Bitmark.get(String, boolean, Callback1<>) works well")
     @Test
     public void testQueryBitmarkByIdWithAsset_ExistedBitmarkId_CorrectResponseIsReturn()
             throws Throwable {
@@ -355,7 +363,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals(bitmark.getAssetId(), asset.getId());
     }
 
-    @DisplayName("Verify function Bitmark.get(String, Callback1<>) works well")
     @Test
     public void testQueryBitmarkByIdWithoutAsset_ExistedBitmarkId_CorrectResponseIsReturn()
             throws Throwable {
@@ -375,8 +382,6 @@ public class BitmarkTest extends BaseFeatureTest {
         assertEquals(id, bitmark.getId());
     }
 
-    @DisplayName("Verify function Bitmark.list(BitmarkQueryBuilder, Callback1<>) with list " +
-                 "bitmark id works well")
     @Test
     public void testQueryBitmarksByIds_ValidBitmarkIds_CorrectResponseIsReturn() throws Throwable {
         // Get owned bitmarks
@@ -402,8 +407,6 @@ public class BitmarkTest extends BaseFeatureTest {
                                  bitmarks.stream().map(BitmarkRecord::getId).toArray()));
     }
 
-    @DisplayName("Verify function Bitmark.list(BitmarkQueryBuilder, Callback1<>) with the limit " +
-                 "record and load asset works well")
     @Test
     public void testQueryBitmarkByLimitAndLoadAsset_ValidLimitValue_CorrectResponseIsReturn()
             throws Throwable {
@@ -419,11 +422,437 @@ public class BitmarkTest extends BaseFeatureTest {
         assertNotNull(assets);
     }
 
+    @Test
+    public void testCreateShare_OwnedBitmark_CorrectResReturn() throws Throwable {
+        // Get owned bitmarks
+        BitmarkQueryBuilder builder =
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+        List<BitmarkRecord> bitmarks = findBitmarks(builder,
+                                                    b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                                         b.getHead() != MOVED);
+        assertTrue(bitmarks != null && !bitmarks.isEmpty(),
+                   "No bitmarks matches the specification");
+
+        // Get all shares
+        List<ShareRecord> shareRecords;
+        try {
+            shareRecords =
+                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+
+            // Remove all bitmark has already created share
+            shareRecords.forEach(share -> {
+                for (BitmarkRecord bitmark : bitmarks) {
+                    if (bitmark.getId().equals(share.getId())) {
+                        bitmarks.remove(bitmark);
+                        break;
+                    }
+                }
+            });
+        } catch (HttpException e) {
+            if (e.getErrorCode() != 1001) throw e;
+        }
+
+        SecureRandom random = new SecureRandom();
+        BitmarkRecord bitmark = bitmarks.get(random.nextInt(bitmarks.size()));
+
+        // Create share
+        ShareParams params = new ShareParams(100, bitmark.getHeadId());
+        params.sign(ACCOUNT1.getKeyPair());
+        Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+        assertNotNull(res);
+        assertNotNull(res.first());
+        assertNotNull(res.second());
+    }
+
+    @Test
+    public void testCreateShare_NotOwnedBitmark_CorrectResReturn() throws Throwable {
+        // Get owned bitmarks
+        BitmarkQueryBuilder builder =
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+        List<BitmarkRecord> bitmarks = findBitmarks(builder,
+                                                    b -> !b.isOffer() && b.getStatus() == SETTLED &&
+                                                         b.getHead() != MOVED);
+        assertTrue(bitmarks != null && !bitmarks.isEmpty(),
+                   "No bitmarks matches the specification");
+
+        // Get all shares
+        List<ShareRecord> shareRecords;
+        try {
+            shareRecords =
+                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+
+            // Remove all bitmark has already created share
+            shareRecords.forEach(share -> {
+                for (BitmarkRecord bitmark : bitmarks) {
+                    if (bitmark.getId().equals(share.getId())) {
+                        bitmarks.remove(bitmark);
+                        break;
+                    }
+                }
+            });
+        } catch (HttpException e) {
+            if (e.getErrorCode() != 1001) throw e;
+        }
+
+        SecureRandom random = new SecureRandom();
+        BitmarkRecord bitmark = bitmarks.get(random.nextInt(bitmarks.size()));
+
+        // Create share
+        ShareParams params = new ShareParams(100, bitmark.getHeadId());
+        params.sign(ACCOUNT2.getKeyPair());
+        HttpException exception = assertThrows(HttpException.class,
+                                               () -> await(
+                                                       (Callable1<Pair<String, String>>) callback -> Bitmark
+                                                               .createShare(params, callback)));
+        assertEquals(HTTP_INTERNAL_ERROR, exception.getStatusCode());
+        assertEquals(7000, exception.getErrorCode());
+
+    }
+
+    @Test
+    public void testGrantShare_OwnedShare_CorrectResReturn() throws Throwable {
+        // Get all shares
+        List<ShareRecord> shareRecords =
+                await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+        assertTrue(shareRecords != null && !shareRecords.isEmpty(),
+                   "This guy does not have any shares");
+
+        ShareRecord shareRecord =
+                shareRecords.stream().filter(share -> share.getAvailable() > 0).findFirst()
+                            .orElse(null);
+        String shareId;
+
+        if (shareRecord == null) {
+            // Get owned bitmarks
+            BitmarkQueryBuilder builder =
+                    new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+            List<BitmarkRecord> bitmarks = findBitmarks(builder,
+                                                        b -> !b.isOffer() &&
+                                                             b.getStatus() == SETTLED &&
+                                                             b.getHead() != MOVED);
+            assertTrue(bitmarks != null && !bitmarks.isEmpty(),
+                       "No bitmarks matches the specification");
+
+            SecureRandom random = new SecureRandom();
+            BitmarkRecord bitmark = bitmarks.get(random.nextInt(bitmarks.size()));
+
+            // Create share
+            ShareParams params = new ShareParams(100, bitmark.getHeadId());
+            params.sign(ACCOUNT1.getKeyPair());
+            Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+            shareId = res.second();
+        } else shareId = shareRecord.getId();
+
+        // Grant share
+        ShareGrantingParams grantingParams =
+                new ShareGrantingParams(shareId, 1, ACCOUNT1.toAddress(),
+                                        ACCOUNT2.toAddress(),
+                                        Random.secureRandomInt());
+        grantingParams.sign(ACCOUNT1.getKeyPair());
+        String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
+        assertNotNull(offerId);
+        assertFalse(offerId.isEmpty());
+    }
+
+    @Test
+    public void testGrantShare_NotOwnedShare_CorrectResReturn() throws Throwable {
+        // Get all shares
+        List<ShareRecord> shareRecords =
+                await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+        assertTrue(shareRecords != null && !shareRecords.isEmpty(),
+                   "This guy does not have any shares");
+
+        ShareRecord shareRecord =
+                shareRecords.stream().filter(share -> share.getAvailable() > 0).findFirst()
+                            .orElse(null);
+
+        String shareId;
+
+        if (shareRecord == null) {
+            // Get owned bitmarks
+            BitmarkQueryBuilder builder =
+                    new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+            List<BitmarkRecord> bitmarks = findBitmarks(builder,
+                                                        b -> !b.isOffer() &&
+                                                             b.getStatus() == SETTLED &&
+                                                             b.getHead() != MOVED);
+            assertTrue(bitmarks != null && !bitmarks.isEmpty(),
+                       "No bitmarks matches the specification");
+
+            SecureRandom random = new SecureRandom();
+            BitmarkRecord bitmark = bitmarks.get(random.nextInt(bitmarks.size()));
+
+            // Create share
+            ShareParams params = new ShareParams(100, bitmark.getHeadId());
+            params.sign(ACCOUNT1.getKeyPair());
+            Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+            shareId = res.second();
+        } else shareId = shareRecord.getId();
+
+        // Grant share
+        ShareGrantingParams grantingParams =
+                new ShareGrantingParams(shareId, 1, ACCOUNT3.toAddress(),
+                                        ACCOUNT2.toAddress(),
+                                        Random.secureRandomInt());
+        grantingParams.sign(ACCOUNT3.getKeyPair());
+        HttpException exception = assertThrows(HttpException.class,
+                                               () -> await(
+                                                       (Callable1<String>) callback -> Bitmark
+                                                               .grantShare(grantingParams,
+                                                                           callback)));
+        assertEquals(HTTP_INTERNAL_ERROR, exception.getStatusCode());
+        assertEquals(7000, exception.getErrorCode());
+    }
+
+    @Test
+    public void testRespondGrantShare_AcceptGrant_CorrectResReturn() throws Throwable {
+        // Query offer shares
+        List<ShareGrantRecord> grantRecords = await(callback -> Bitmark
+                .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
+                                callback));
+
+        if (grantRecords == null || grantRecords.isEmpty()) {
+            // Get all shares
+            List<ShareRecord> shareRecords =
+                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+            assertTrue(shareRecords != null && !shareRecords.isEmpty(),
+                       "This guy does not have any shares");
+
+            ShareRecord shareRecord =
+                    shareRecords.stream().filter(share -> share.getAvailable() > 0).findFirst()
+                                .orElse(null);
+
+            assertNotNull(shareRecord, "There are no ShareRecord for granting");
+
+            // Grant share
+            ShareGrantingParams grantingParams =
+                    new ShareGrantingParams(shareRecord.getId(), 1, ACCOUNT1.toAddress(),
+                                            ACCOUNT2.toAddress(),
+                                            Random.secureRandomInt());
+            grantingParams.sign(ACCOUNT1.getKeyPair());
+            String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
+            grantRecords = await(callback -> Bitmark
+                    .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
+                                    callback));
+
+            assertFalse(grantRecords.isEmpty(), "There are not GrantRecord for respond");
+        }
+
+        // Respond offer
+        GrantResponseParams responseParams = GrantResponseParams.accept(grantRecords.get(0));
+        responseParams.sign(ACCOUNT2.getKeyPair());
+        String txId = await(callback -> Bitmark.respondShareOffer(responseParams, callback));
+        assertNotNull(txId);
+        assertFalse(txId.isEmpty());
+    }
+
+    @Test
+    public void testRespondGrantShare_RejectGrant_CorrectResReturn() throws Throwable {
+        // Query offer shares
+        List<ShareGrantRecord> grantRecords = await(callback -> Bitmark
+                .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
+                                callback));
+
+        if (grantRecords == null || grantRecords.isEmpty()) {
+            // Get all shares
+            List<ShareRecord> shareRecords =
+                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+            assertTrue(shareRecords != null && !shareRecords.isEmpty(),
+                       "This guy does not have any shares");
+
+            ShareRecord shareRecord =
+                    shareRecords.stream().filter(share -> share.getAvailable() > 0).findFirst()
+                                .orElse(null);
+
+            assertNotNull(shareRecord, "There are no ShareRecord for granting");
+
+            // Grant share
+            ShareGrantingParams grantingParams =
+                    new ShareGrantingParams(shareRecord.getId(), 1, ACCOUNT1.toAddress(),
+                                            ACCOUNT2.toAddress(),
+                                            Random.secureRandomInt());
+            grantingParams.sign(ACCOUNT1.getKeyPair());
+            String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
+            grantRecords = await(callback -> Bitmark
+                    .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
+                                    callback));
+
+            assertFalse(grantRecords.isEmpty(), "There are not GrantRecord for respond");
+        }
+
+        // Respond offer
+        GrantResponseParams responseParams = GrantResponseParams.reject(grantRecords.get(0));
+        responseParams.sign(ACCOUNT2.getKeyPair());
+        String txId = await(callback -> Bitmark.respondShareOffer(responseParams, callback));
+        assertNotNull(txId);
+        assertFalse(txId.isEmpty());
+    }
+
+    @Test
+    public void testRespondGrantShare_CancelGrant_CorrectResReturn() throws Throwable {
+        // Query offer shares
+        List<ShareGrantRecord> grantRecords = await(callback -> Bitmark
+                .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
+                                callback));
+
+        if (grantRecords == null || grantRecords.isEmpty()) {
+            // Get all shares
+            List<ShareRecord> shareRecords =
+                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+            assertTrue(shareRecords != null && !shareRecords.isEmpty(),
+                       "This guy does not have any shares");
+
+            ShareRecord shareRecord =
+                    shareRecords.stream().filter(share -> share.getAvailable() > 0).findFirst()
+                                .orElse(null);
+
+            assertNotNull(shareRecord, "There are no ShareRecord for granting");
+
+            // Grant share
+            ShareGrantingParams grantingParams =
+                    new ShareGrantingParams(shareRecord.getId(), 1, ACCOUNT1.toAddress(),
+                                            ACCOUNT2.toAddress(),
+                                            Random.secureRandomInt());
+            grantingParams.sign(ACCOUNT1.getKeyPair());
+            String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
+            grantRecords = await(callback -> Bitmark
+                    .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
+                                    callback));
+
+            assertFalse(grantRecords.isEmpty(), "There are not GrantRecord for respond");
+        }
+
+        // Respond offer
+        GrantResponseParams responseParams = GrantResponseParams.cancel(grantRecords.get(0));
+        responseParams.sign(ACCOUNT1.getKeyPair());
+        String txId = await(callback -> Bitmark.respondShareOffer(responseParams, callback));
+        assertNotNull(txId);
+        assertFalse(txId.isEmpty());
+    }
+
+    @Test
+    public void testGetShare__CorrectResReturn() throws Throwable {
+
+        String shareId;
+
+        // Get all shares
+        List<ShareRecord> shareRecords =
+                await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+
+        if (shareRecords == null || shareRecords.isEmpty()) {
+            // Get owned bitmarks
+            BitmarkQueryBuilder builder =
+                    new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+            List<BitmarkRecord> bitmarks = findBitmarks(builder,
+                                                        b -> !b.isOffer() &&
+                                                             b.getStatus() == SETTLED &&
+                                                             b.getHead() != MOVED);
+            assertTrue(bitmarks != null && !bitmarks.isEmpty(),
+                       "No bitmarks matches the specification");
+
+            SecureRandom random = new SecureRandom();
+            BitmarkRecord bitmark = bitmarks.get(random.nextInt(bitmarks.size()));
+
+            // Create share
+            ShareParams params = new ShareParams(100, bitmark.getHeadId());
+            params.sign(ACCOUNT1.getKeyPair());
+            Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+            shareId = res.second();
+        } else shareId = shareRecords.get(0).getId();
+
+        ShareRecord shareRecord = await(callback -> Bitmark
+                .getShare(shareId, callback));
+        assertNotNull(shareRecord);
+        assertEquals(shareId, shareRecord.getId());
+    }
+
+    @Test
+    public void testListShares__CorrectResReturn() throws Throwable {
+        // Get owned bitmarks
+        BitmarkQueryBuilder builder =
+                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+        List<BitmarkRecord> bitmarks = findBitmarks(builder,
+                                                    b -> !b.isOffer() &&
+                                                         b.getStatus() == SETTLED &&
+                                                         b.getHead() != MOVED);
+        assertTrue(bitmarks != null && !bitmarks.isEmpty(),
+                   "No bitmarks matches the specification");
+
+        SecureRandom random = new SecureRandom();
+        BitmarkRecord bitmark = bitmarks.get(random.nextInt(bitmarks.size()));
+
+        // Create share
+        ShareParams params = new ShareParams(100, bitmark.getHeadId());
+        params.sign(ACCOUNT1.getKeyPair());
+        Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+
+        // Query shares
+        List<ShareRecord> shareRecords =
+                await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+        assertNotNull(shareRecords);
+        assertFalse(shareRecords.isEmpty());
+    }
+
+    @Test
+    public void testQueryShareOffer__CorrectResReturn() throws Throwable {
+        List<ShareGrantRecord> grantRecords = await(callback -> Bitmark
+                .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
+                                callback));
+        if (grantRecords == null || grantRecords.isEmpty()) {
+            // Get all shares
+            List<ShareRecord> shareRecords =
+                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+            assertTrue(shareRecords != null && !shareRecords.isEmpty(),
+                       "This guy does not have any shares");
+
+            ShareRecord shareRecord =
+                    shareRecords.stream().filter(share -> share.getAvailable() > 0).findFirst()
+                                .orElse(null);
+            String shareId;
+
+            if (shareRecord == null) {
+                // Get owned bitmarks
+                BitmarkQueryBuilder builder =
+                        new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+                List<BitmarkRecord> bitmarks = findBitmarks(builder,
+                                                            b -> !b.isOffer() &&
+                                                                 b.getStatus() == SETTLED &&
+                                                                 b.getHead() != MOVED);
+                assertTrue(bitmarks != null && !bitmarks.isEmpty(),
+                           "No bitmarks matches the specification");
+
+                SecureRandom random = new SecureRandom();
+                BitmarkRecord bitmark = bitmarks.get(random.nextInt(bitmarks.size()));
+
+                // Create share
+                ShareParams params = new ShareParams(100, bitmark.getHeadId());
+                params.sign(ACCOUNT1.getKeyPair());
+                Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+                shareId = res.second();
+            } else shareId = shareRecord.getId();
+
+            // Grant share
+            ShareGrantingParams grantingParams =
+                    new ShareGrantingParams(shareId, 1, ACCOUNT1.toAddress(),
+                                            ACCOUNT2.toAddress(),
+                                            Random.secureRandomInt());
+            grantingParams.sign(ACCOUNT1.getKeyPair());
+            String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
+            grantRecords = await(callback -> Bitmark
+                    .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
+                                    callback));
+        }
+        assertNotNull(grantRecords);
+        assertFalse(grantRecords.isEmpty());
+    }
+
     private BitmarkRecord findBitmark(BitmarkQueryBuilder queryBuilder,
                                       Predicate<? super BitmarkRecord> predicate)
             throws Throwable {
         final Data<Long> minOffset = new Data<>();
-        while (true) {
+        int retryCount = 50; // Try 50 times in maximum
+        while (retryCount > 0) {
+            retryCount--;
             GetBitmarksResponse bitmarksResponse =
                     await(callback -> Bitmark
                             .list(minOffset.getValue() == null ? queryBuilder : queryBuilder
@@ -431,7 +860,7 @@ public class BitmarkTest extends BaseFeatureTest {
                                           .to("earlier"),
                                   callback));
             assertFalse(bitmarksResponse.getBitmarks().isEmpty(),
-                        "This guy has not owned bitmarks");
+                        "This guy has not owned bitmarks or cannot find the bitmark match specification");
             Optional<BitmarkRecord> maxOffsetOpt = bitmarksResponse.getBitmarks().stream().min(
                     Comparator.comparingLong(BitmarkRecord::getOffset));
             if (maxOffsetOpt.isPresent()) minOffset.setValue(maxOffsetOpt.get().getOffset());
@@ -442,7 +871,35 @@ public class BitmarkTest extends BaseFeatureTest {
                                     .orElse(null);
             if (bitmark != null) return bitmark;
         }
+        return null;
+    }
 
+    private List<BitmarkRecord> findBitmarks(BitmarkQueryBuilder queryBuilder,
+                                             Predicate<? super BitmarkRecord> predicate)
+            throws Throwable {
+        final Data<Long> minOffset = new Data<>();
+        int retryCount = 50; // Try 50 times in maximum
+        while (retryCount > 0) {
+            retryCount--;
+            GetBitmarksResponse bitmarksResponse =
+                    await(callback -> Bitmark
+                            .list(minOffset.getValue() == null ? queryBuilder : queryBuilder
+                                          .at(minOffset.getValue())
+                                          .to("earlier"),
+                                  callback));
+            assertFalse(bitmarksResponse.getBitmarks().isEmpty(),
+                        "This guy has not owned bitmarks or cannot find the bitmarks match specification");
+            Optional<BitmarkRecord> maxOffsetOpt = bitmarksResponse.getBitmarks().stream().min(
+                    Comparator.comparingLong(BitmarkRecord::getOffset));
+            if (maxOffsetOpt.isPresent()) minOffset.setValue(maxOffsetOpt.get().getOffset());
+            else throw new RuntimeException("Cannot get max offset");
+
+            List<BitmarkRecord> bitmarks =
+                    bitmarksResponse.getBitmarks().stream().filter(predicate).collect(
+                            Collectors.toList());
+            if (!bitmarks.isEmpty()) return bitmarks;
+        }
+        return null;
     }
 
 

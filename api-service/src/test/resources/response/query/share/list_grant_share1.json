@@ -1,0 +1,24 @@
+{
+  "offers": [
+    {
+      "id": "73781d92-6352-4b79-a404-cb8e88f96a85",
+      "share_id": "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+      "from": "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs",
+      "to": "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy",
+      "status": "open",
+      "txId": "",
+      "record": {
+        "shareId": "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+        "quantity": 1,
+        "owner": "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs",
+        "recipient": "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy",
+        "beforeBlock": 150212348,
+        "signature": "63d0492088db46296f8fc220234be211a678dd6de576350250f79c716d9a5c920b4bbd3f1ce1c112365fa496f41e63fddd4899abfa9c1bf94a572e052ba50a0f",
+        "countersignature": ""
+      },
+      "extra_info": {},
+      "created_at": "2019-03-11T15:35:23.456511Z"
+    }
+  ]
+}
+
