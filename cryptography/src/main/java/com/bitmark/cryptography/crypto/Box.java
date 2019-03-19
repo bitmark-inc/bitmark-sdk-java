@@ -80,7 +80,7 @@ public class Box {
         return removeZeros(32, message);
     }
 
-    public static byte[] boxCurve25519Chacha20Poly1305(byte[] message, byte[] nonce,
+    public static byte[] boxCurve25519XSalsa20Poly1305(byte[] message, byte[] nonce,
                                                        byte[] publicKey, byte[] privateKey)
             throws ValidateException {
 
@@ -101,7 +101,7 @@ public class Box {
         return removeZeros(16, cipher);
     }
 
-    public static byte[] unboxCurve25519Chacha20Poly1305(byte[] cipher, byte[] nonce,
+    public static byte[] unboxCurve25519XSalsa20Poly1305(byte[] cipher, byte[] nonce,
                                                          byte[] publicKey, byte[] privateKey)
             throws ValidateException {
 

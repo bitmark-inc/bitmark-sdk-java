@@ -17,7 +17,7 @@ public class SecretBox {
     private SecretBox() {
     }
 
-    public static byte[] generateSecretBox(byte[] msg, byte[] nonce, byte[] key) {
+    public static byte[] box(byte[] msg, byte[] nonce, byte[] key) {
 
         final int msgLength = msg.length;
         final byte[] m = new byte[key.length + msgLength];

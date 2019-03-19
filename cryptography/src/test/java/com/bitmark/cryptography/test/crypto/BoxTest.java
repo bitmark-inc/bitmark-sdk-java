@@ -89,13 +89,13 @@ public class BoxTest extends BaseCryptoTest {
         byte[] message = RAW.decode(MESSAGE);
 
         byte[] cipher =
-                Box.boxCurve25519Chacha20Poly1305(message, nonce, HEX.decode(ALICE_PUBLIC_KEY),
+                Box.boxCurve25519XSalsa20Poly1305(message, nonce, HEX.decode(ALICE_PUBLIC_KEY),
                                                   HEX.decode(BOB_PRIVATE_KEY));
         assertNotNull(cipher);
         assertNotZeroBytes(cipher);
 
         byte[] actualMessage =
-                Box.unboxCurve25519Chacha20Poly1305(cipher, nonce, HEX.decode(BOB_PUBLIC_KEY),
+                Box.unboxCurve25519XSalsa20Poly1305(cipher, nonce, HEX.decode(BOB_PUBLIC_KEY),
                                                     HEX.decode(ALICE_PRIVATE_KEY));
         assertNotNull(actualMessage);
         assertNotZeroBytes(actualMessage);
@@ -109,7 +109,7 @@ public class BoxTest extends BaseCryptoTest {
                                                             byte[] publicKey,
                                                             byte[] privateKey) {
         assertThrows(ValidateException.class, () -> Box
-                .boxCurve25519Chacha20Poly1305(message, nonce, publicKey, privateKey));
+                .boxCurve25519XSalsa20Poly1305(message, nonce, publicKey, privateKey));
     }
 
     @ParameterizedTest
@@ -118,7 +118,7 @@ public class BoxTest extends BaseCryptoTest {
                                                               byte[] publicKey,
                                                               byte[] privateKey) {
         assertThrows(ValidateException.class, () -> Box
-                .unboxCurve25519Chacha20Poly1305(cipher, nonce, publicKey, privateKey));
+                .unboxCurve25519XSalsa20Poly1305(cipher, nonce, publicKey, privateKey));
     }
 
     private static Stream<byte[]> createInvalidKey() {
