@@ -18,7 +18,7 @@ import java.util.Arrays;
 import static com.bitmark.apiservice.utils.ArrayUtil.concat;
 import static com.bitmark.apiservice.utils.ArrayUtil.slice;
 import static com.bitmark.cryptography.crypto.Random.randomBytes;
-import static com.bitmark.cryptography.crypto.SecretBox.generateSecretBox;
+import static com.bitmark.cryptography.crypto.SecretBox.box;
 import static com.bitmark.cryptography.crypto.encoder.Base58.BASE_58;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
@@ -115,15 +115,12 @@ public class SeedTwentyFour extends AbsSeed {
 
     @Override
     public KeyPair getAuthKeyPair() {
-        return Ed25519.generateKeyPairFromSeed(
-                generateSecretBox(KEY_INDEX, new byte[NONCE_LENGTH], seedBytes));
+        return Ed25519.generateKeyPairFromSeed(box(KEY_INDEX, new byte[NONCE_LENGTH], seedBytes));
     }
 
     @Override
     public KeyPair getEncKeyPair() {
-        byte[] privateKey = generateSecretBox(ENC_KEY_INDEX,
-                                              new byte[NONCE_LENGTH],
-                                              seedBytes);
+        byte[] privateKey = box(ENC_KEY_INDEX, new byte[NONCE_LENGTH], seedBytes);
         return Box.generateKeyPair(privateKey);
     }
 
