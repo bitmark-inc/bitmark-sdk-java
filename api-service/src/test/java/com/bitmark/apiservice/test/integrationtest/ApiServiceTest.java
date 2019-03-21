@@ -1,10 +1,13 @@
-package com.bitmark.sdk.test.integrationtest.features;
+package com.bitmark.apiservice.test.integrationtest;
 
+import com.bitmark.apiservice.ApiService;
 import com.bitmark.apiservice.params.*;
+import com.bitmark.apiservice.params.query.AssetQueryBuilder;
 import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;
-import com.bitmark.apiservice.response.GetBitmarkResponse;
-import com.bitmark.apiservice.response.GetBitmarksResponse;
-import com.bitmark.apiservice.response.RegistrationResponse;
+import com.bitmark.apiservice.params.query.TransactionQueryBuilder;
+import com.bitmark.apiservice.response.*;
+import com.bitmark.apiservice.test.utils.extensions.TemporaryFolderExtension;
+import com.bitmark.apiservice.test.utils.extensions.annotations.TemporaryFile;
 import com.bitmark.apiservice.utils.Address;
 import com.bitmark.apiservice.utils.Data;
 import com.bitmark.apiservice.utils.Pair;
@@ -13,10 +16,6 @@ import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.*;
 import com.bitmark.cryptography.crypto.Random;
 import com.bitmark.cryptography.crypto.Sha3256;
-import com.bitmark.sdk.features.Asset;
-import com.bitmark.sdk.features.Bitmark;
-import com.bitmark.sdk.test.integrationtest.BaseTest;
-import com.bitmark.sdk.test.utils.extensions.TemporaryFolderExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -26,40 +25,124 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.bitmark.apiservice.test.integrationtest.DataProvider.*;
+import static com.bitmark.apiservice.test.integrationtest.DataProvider.ADDRESS2;
+import static com.bitmark.apiservice.test.integrationtest.DataProvider.KEY2;
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static com.bitmark.apiservice.utils.record.BitmarkRecord.Status.SETTLED;
 import static com.bitmark.apiservice.utils.record.Head.MOVED;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
-import static com.bitmark.sdk.test.integrationtest.DataProvider.*;
 import static java.net.HttpURLConnection.*;
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Hieu Pham
- * @since 9/13/18
+ * @since 3/21/19
  * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
+ * Copyright © 2019 Bitmark. All rights reserved.
  */
-
 @ExtendWith({TemporaryFolderExtension.class})
-public class BitmarkTest extends BaseTest {
+public class ApiServiceTest extends BaseTest {
 
+    //region ============= ASSET TESTS ===============
+    @Test
+    public void testRegisterAsset_NewAsset_CorrectResponseIsReturn(File asset) throws Throwable {
+        Map<String, String> metadata = new HashMap<String, String>() {{
+            put("name", asset.getName());
+            put("description", "Temporary File create from java api service test");
+        }};
+        RegistrationParams params = new RegistrationParams(asset.getName(), metadata, ADDRESS1);
+        params.generateFingerprint(asset);
+        params.sign(KEY1);
+        RegistrationResponse response =
+                await(callback -> ApiService.getInstance().registerAsset(params, callback));
+        List<RegistrationResponse.Asset> assets = response.getAssets();
+        assertNotNull(assets.get(0).getId());
+        assertFalse(assets.get(0).isDuplicate());
+    }
+
+    @Test
+    public void testRegisterAsset_ExistedAsset_CorrectResponseIsReturn(
+            @TemporaryFile("This is an existed file on Bitmark Block chain") File asset) {
+        Map<String, String> metadata = new HashMap<String, String>() {{
+            put("name", asset.getName());
+            put("description", "Temporary File create from java api service test");
+        }};
+        RegistrationParams params = new RegistrationParams(asset.getName(), metadata, ADDRESS1);
+        params.generateFingerprint(asset);
+        params.sign(KEY1);
+        HttpException exception = assertThrows(HttpException.class,
+                                               () -> await(
+                                                       (Callable1<RegistrationResponse>) callback -> ApiService
+                                                               .getInstance().registerAsset(params,
+                                                                                            callback)));
+        assertEquals(HTTP_FORBIDDEN, exception.getStatusCode());
+        assertEquals(2009, exception.getErrorCode());
+    }
+
+
+    @Test
+    public void testQueryAssetById_ExistedAssetId_CorrectResponseIsReturn() throws Throwable {
+        // Query existed assets
+        AssetQueryBuilder builder =
+                new AssetQueryBuilder().registrant(ADDRESS1.getAddress()).limit(1);
+        List<AssetRecord> assets =
+                await(callback -> ApiService.getInstance().listAssets(builder.build(), callback));
+        assertFalse(assets.isEmpty(), "This guy has not registered any assets");
+
+        // Get asset by id
+        String id = assets.get(0).getId();
+        AssetRecord asset =
+                await(callback -> ApiService.getInstance().getAsset(id, callback));
+        assertNotNull(asset);
+        assertEquals(id, asset.getId());
+    }
+
+    @Test
+    public void testQueryAssetById_NotExistedAssetId_ErrorIsThrow() {
+        String id =
+                "12345678901234567890123456789012345678901234567890123456789012341234567890123456789012345678901234567890123456789012345678901234";
+        HttpException exception = assertThrows(HttpException.class,
+                                               () -> await(
+                                                       (Callable1<AssetRecord>) callback -> ApiService
+                                                               .getInstance()
+                                                               .getAsset(id, callback)));
+        assertEquals(HTTP_NOT_FOUND, exception.getStatusCode());
+    }
+
+    @Test
+    public void testQueryAssets_NoCondition_CorrectResponseIsReturn() throws Throwable {
+        int limit = 1;
+        String registrant = ADDRESS1.getAddress();
+        AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registrant(registrant);
+        List<AssetRecord> assets =
+                await(callback -> ApiService.getInstance().listAssets(builder.build(), callback));
+        assertEquals(limit, assets.size());
+        assets.forEach(asset -> assertEquals(registrant, asset.getRegistrant()));
+    }
+
+    //endregion ============= ASSET TESTS ===============
+
+    //region ============= BITMARK TESTS ===============
     @Test
     public void testIssueBitmark_OwnedMultipleBitmark_CorrectSuccessResponseIsReturn(File asset)
             throws Throwable {
         // Register asset
-        Address owner = ACCOUNT1.toAddress();
+        Address owner = ADDRESS1;
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
-            put("description", "Temporary File create from java sdk test");
+            put("description", "Temporary File create from java api service test");
         }};
         RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata,
                                                                        owner);
         registrationParams.generateFingerprint(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
-                await(callback -> Asset.register(registrationParams,
-                                                 callback));
+                await(callback -> ApiService.getInstance().registerAsset(registrationParams,
+                                                                         callback));
         List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
@@ -68,8 +151,8 @@ public class BitmarkTest extends BaseTest {
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner, quantity);
         issuanceParams.sign(KEY1);
         List<String> txIds =
-                await(callback -> Bitmark.issue(issuanceParams,
-                                                callback));
+                await(callback -> ApiService.getInstance().issueBitmark(issuanceParams,
+                                                                        callback));
         assertEquals(txIds.size(), quantity);
         assertFalse(txIds.get(0).isEmpty());
     }
@@ -78,24 +161,26 @@ public class BitmarkTest extends BaseTest {
     public void testIssueBitmark_OwnedSingleBitmark_CorrectSuccessResponseIsReturn(File asset)
             throws Throwable {
         // Register asset
-        Address owner = ACCOUNT1.toAddress();
+        Address owner = ADDRESS1;
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
-            put("description", "Temporary File create from java sdk test");
+            put("description", "Temporary File create from java api service test");
         }};
         RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata,
                                                                        owner);
         registrationParams.generateFingerprint(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
-                await(callback -> Asset.register(registrationParams, callback));
+                await(callback -> ApiService.getInstance()
+                                            .registerAsset(registrationParams, callback));
         List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
         issuanceParams.sign(KEY1);
-        List<String> txIds = await(callback -> Bitmark.issue(issuanceParams, callback));
+        List<String> txIds =
+                await(callback -> ApiService.getInstance().issueBitmark(issuanceParams, callback));
         assertEquals(txIds.size(), 1);
         assertFalse(txIds.get(0).isEmpty());
     }
@@ -105,33 +190,36 @@ public class BitmarkTest extends BaseTest {
             File asset)
             throws Throwable {
         // Register asset
-        Address owner = ACCOUNT1.toAddress();
+        Address owner = ADDRESS1;
         RegistrationParams registrationParams = new RegistrationParams(asset.getName(), null,
                                                                        owner);
         registrationParams.generateFingerprint(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
-                await(callback -> Asset.register(registrationParams, callback));
+                await(callback -> ApiService.getInstance()
+                                            .registerAsset(registrationParams, callback));
         List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
         issuanceParams.sign(KEY1);
-        List<String> txIds = await(callback -> Bitmark.issue(issuanceParams, callback));
+        List<String> txIds =
+                await(callback -> ApiService.getInstance().issueBitmark(issuanceParams, callback));
         assertEquals(txIds.size(), 1);
         assertFalse(txIds.get(0).isEmpty());
     }
 
     @Test
     public void testIssueBitmark_NotOwnedBitmark_CorrectErrorResponseIsReturn() {
-        Address issuer = Address.fromAccountNumber(ACCOUNT1.getAccountNumber());
+        Address issuer = Address.fromAccountNumber(ADDRESS1.getAddress());
         IssuanceParams issuanceParams = new IssuanceParams(
                 "bda050d2235402751ed09e73486c2cced34424c35d4d799eaa37ab73c3dba663", issuer);
         issuanceParams.sign(KEY1);
         HttpException exception = assertThrows(HttpException.class, () ->
-                await((Callable1<List<String>>) callback -> Bitmark.issue(issuanceParams,
-                                                                          callback)));
+                await((Callable1<List<String>>) callback -> ApiService.getInstance()
+                                                                      .issueBitmark(issuanceParams,
+                                                                                    callback)));
         assertEquals(1000, exception.getErrorCode());
         assertEquals(HTTP_BAD_REQUEST, exception.getStatusCode());
     }
@@ -140,11 +228,12 @@ public class BitmarkTest extends BaseTest {
     public void testIssueMoreBitmark_OwnedBitmark_CorrectSuccessResponseReturn() throws Throwable {
         final String assetId =
                 "1d32321120c0725b4ef88732588164748393edb697ca1ef5fdafb29b933d3267af6b503e12d7c454ed7fbf7ec5cf1c864f502e5d688c9bac76f723f13109ba96";
-        Address owner = ACCOUNT1.toAddress();
+        Address owner = ADDRESS1;
         int quantity = 100;
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner, 100);
         issuanceParams.sign(KEY1);
-        List<String> txIds = await(callback -> Bitmark.issue(issuanceParams, callback));
+        List<String> txIds =
+                await(callback -> ApiService.getInstance().issueBitmark(issuanceParams, callback));
         assertEquals(txIds.size(), quantity);
         assertFalse(txIds.get(0).isEmpty());
     }
@@ -154,14 +243,16 @@ public class BitmarkTest extends BaseTest {
             throws Throwable {
         final String assetId =
                 "1d32321120c0725b4ef88732588164748393edb697ca1ef5fdafb29b933d3267af6b503e12d7c454ed7fbf7ec5cf1c864f502e5d688c9bac76f723f13109ba96";
-        Address owner = ACCOUNT1.toAddress();
+        Address owner = ADDRESS1;
         int quantity = 100;
 
         // Issue 100 bitmarks in 5 times
         for (int i = 0; i < 5; i++) {
             IssuanceParams issuanceParams = new IssuanceParams(assetId, owner, 100);
             issuanceParams.sign(KEY1);
-            List<String> txIds = await(callback -> Bitmark.issue(issuanceParams, callback));
+            List<String> txIds = await(callback -> ApiService.getInstance()
+                                                             .issueBitmark(issuanceParams,
+                                                                           callback));
             assertEquals(txIds.size(), quantity);
             assertFalse(txIds.get(0).isEmpty());
         }
@@ -172,17 +263,17 @@ public class BitmarkTest extends BaseTest {
             throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true)
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).pending(true)
                                          .limit(100);
         BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED);
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Transfer bitmark
-        TransferParams params = new TransferParams(ACCOUNT2.toAddress());
+        TransferParams params = new TransferParams(ADDRESS2);
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
-        String txId = await(callback -> Bitmark.transfer(params, callback));
+        String txId = await(callback -> ApiService.getInstance().transferBitmark(params, callback));
         assertNotNull(txId);
         assertEquals(Sha3256.HASH_BYTE_LENGTH, HEX.decode(txId).length);
 
@@ -194,19 +285,20 @@ public class BitmarkTest extends BaseTest {
             throws Throwable {
         // Get not owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT2.getAccountNumber()).pending(true);
+                new BitmarkQueryBuilder().ownedBy(ADDRESS2.getAddress()).pending(true);
         BitmarkRecord bitmark = findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED);
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Transfer bitmark
-        TransferParams params = new TransferParams(ACCOUNT3.toAddress());
+        TransferParams params = new TransferParams(ADDRESS3);
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
         HttpException exception = assertThrows(HttpException.class,
-                                               () -> await((Callable1<String>) callback -> Bitmark
-                                                       .transfer(params,
-                                                                 callback)));
+                                               () -> await(
+                                                       (Callable1<String>) callback -> ApiService
+                                                               .getInstance()
+                                                               .transferBitmark(params, callback)));
         assertEquals(HTTP_INTERNAL_ERROR, exception.getStatusCode());
         assertEquals(7000, exception.getErrorCode());
 
@@ -216,18 +308,18 @@ public class BitmarkTest extends BaseTest {
     public void testOfferBitmark_OwnedBitmark_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).pending(true);
         BitmarkRecord bitmark =
                 findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
                                           b.getHead() != MOVED);
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
-        TransferOfferParams params = new TransferOfferParams(ACCOUNT2.toAddress());
+        TransferOfferParams params = new TransferOfferParams(ADDRESS2);
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
-        String offerId = await(callback -> Bitmark.offer(params, callback));
+        String offerId = await(callback -> ApiService.getInstance().offerBitmark(params, callback));
         assertNotNull(offerId);
         assertFalse(offerId.isEmpty());
     }
@@ -236,21 +328,22 @@ public class BitmarkTest extends BaseTest {
     public void testOfferBitmark_NotOwnedBitmark_CorrectErrorResponseIsReturn() throws Throwable {
         // Get not owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT2.getAccountNumber()).pending(true);
+                new BitmarkQueryBuilder().ownedBy(ADDRESS2.getAddress()).pending(true);
         BitmarkRecord bitmark =
                 findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
                                           b.getHead() != MOVED);
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
-        TransferOfferParams params = new TransferOfferParams(ACCOUNT3.toAddress());
+        TransferOfferParams params = new TransferOfferParams(ADDRESS3);
         String link = bitmark.getHeadId();
         params.setLink(link);
         params.sign(KEY1);
         HttpException exception = assertThrows(HttpException.class,
-                                               () -> await((Callable1<String>) callback -> Bitmark
-                                                       .offer(params,
-                                                              callback)));
+                                               () -> await(
+                                                       (Callable1<String>) callback -> ApiService
+                                                               .getInstance()
+                                                               .offerBitmark(params, callback)));
         assertEquals(HTTP_FORBIDDEN, exception.getStatusCode());
         assertEquals(2013, exception.getErrorCode());
     }
@@ -259,27 +352,30 @@ public class BitmarkTest extends BaseTest {
     public void testReplyOffer_AcceptOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).pending(true);
         BitmarkRecord bitmark =
                 findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
                                           b.getHead() != MOVED);
 
         assertNotNull(bitmark, "No bitmark matches the specification");
         String link = bitmark.getHeadId();
-        TransferOfferParams offerParams = new TransferOfferParams(ACCOUNT2.toAddress());
+        TransferOfferParams offerParams = new TransferOfferParams(ADDRESS2);
         offerParams.setLink(link);
         offerParams.sign(KEY1);
-        String offerId = await(callback -> Bitmark.offer(offerParams, callback));
+        String offerId =
+                await(callback -> ApiService.getInstance().offerBitmark(offerParams, callback));
         assertNotNull(offerId, "Offer is not successful");
         assertFalse(offerId.isEmpty(), "Offer is not successful");
 
         // Respond offer
-        GetBitmarkResponse response = await(callback -> Bitmark.get(bitmark.getId(), false,
-                                                                    callback));
+        GetBitmarkResponse response =
+                await(callback -> ApiService.getInstance().getBitmark(bitmark.getId(), false,
+                                                                      callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.accept(offerRecord);
         responseParams.sign(KEY2);
-        String txId = await(callback -> Bitmark.respond(responseParams, callback));
+        String txId = await(callback -> ApiService.getInstance()
+                                                  .respondBitmarkOffer(responseParams, callback));
         assertNotNull(txId);
         assertEquals(Sha3256.HASH_BYTE_LENGTH, HEX.decode(txId).length);
     }
@@ -288,7 +384,7 @@ public class BitmarkTest extends BaseTest {
     public void testReplyOffer_CancelOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true)
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).pending(true)
                                          .limit(100);
         BitmarkRecord bitmark =
                 findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
@@ -296,21 +392,25 @@ public class BitmarkTest extends BaseTest {
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
-        TransferOfferParams offerParams = new TransferOfferParams(ACCOUNT2.toAddress());
+        TransferOfferParams offerParams = new TransferOfferParams(ADDRESS2);
         String link = bitmark.getHeadId();
         offerParams.setLink(link);
         offerParams.sign(KEY1);
-        String offerId = await(callback -> Bitmark.offer(offerParams, callback));
+        String offerId =
+                await(callback -> ApiService.getInstance().offerBitmark(offerParams, callback));
         assertNotNull(offerId, "Offer is not successful");
         assertFalse(offerId.isEmpty(), "Offer is not successful");
 
         // Respond offer
-        GetBitmarkResponse response = await(callback -> Bitmark.get(bitmark.getId(), callback));
+        GetBitmarkResponse response = await(callback -> ApiService.getInstance()
+                                                                  .getBitmark(bitmark.getId(),
+                                                                              false, callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.cancel(offerRecord,
                                                                               bitmark.getOwner());
         responseParams.setSigningKey(KEY1);
-        String status = await(callback -> Bitmark.respond(responseParams, callback));
+        String status = await(callback -> ApiService.getInstance()
+                                                    .respondBitmarkOffer(responseParams, callback));
         assertNotNull(status);
         assertEquals("ok", status);
     }
@@ -319,28 +419,32 @@ public class BitmarkTest extends BaseTest {
     public void testReplyOffer_RejectOffer_CorrectSuccessResponseIsReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).pending(true);
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).pending(true);
         BitmarkRecord bitmark =
                 findBitmark(builder, b -> !b.isOffer() && b.getStatus() == SETTLED &&
                                           b.getHead() != MOVED);
         assertNotNull(bitmark, "No bitmark matches the specification");
 
         // Offer bitmark
-        TransferOfferParams offerParams = new TransferOfferParams(ACCOUNT2.toAddress());
+        TransferOfferParams offerParams = new TransferOfferParams(ADDRESS2);
         String link = bitmark.getHeadId();
         offerParams.setLink(link);
         offerParams.sign(KEY1);
-        String offerId = await(callback -> Bitmark.offer(offerParams, callback));
+        String offerId =
+                await(callback -> ApiService.getInstance().offerBitmark(offerParams, callback));
         assertNotNull(offerId, "Offer is not successful");
         assertFalse(offerId.isEmpty(), "Offer is not successful");
 
         // Respond offer
-        GetBitmarkResponse response = await(callback -> Bitmark.get(bitmark.getId(), callback));
+        GetBitmarkResponse response = await(callback -> ApiService.getInstance()
+                                                                  .getBitmark(bitmark.getId(),
+                                                                              false, callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.reject(offerRecord);
         responseParams.setSigningKey(KEY2);
-        String status = await(callback -> Bitmark.respond(responseParams,
-                                                          callback));
+        String status =
+                await(callback -> ApiService.getInstance().respondBitmarkOffer(responseParams,
+                                                                               callback));
         assertNotNull(status);
         assertEquals("ok", status);
     }
@@ -350,13 +454,15 @@ public class BitmarkTest extends BaseTest {
             throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(1);
+        GetBitmarksResponse bitmarksResponse =
+                await(callback -> ApiService.getInstance().listBitmarks(builder.build(), callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Get bitmark by id
         String id = bitmarksResponse.getBitmarks().get(0).getId();
-        GetBitmarkResponse bitmarkResponse = await(callback -> Bitmark.get(id, true, callback));
+        GetBitmarkResponse bitmarkResponse =
+                await(callback -> ApiService.getInstance().getBitmark(id, true, callback));
         BitmarkRecord bitmark = bitmarkResponse.getBitmark();
         AssetRecord asset = bitmarkResponse.getAsset();
         assertNotNull(bitmark);
@@ -370,13 +476,15 @@ public class BitmarkTest extends BaseTest {
             throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(1);
+        GetBitmarksResponse bitmarksResponse =
+                await(callback -> ApiService.getInstance().listBitmarks(builder.build(), callback));
         assertFalse(bitmarksResponse.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
 
         // Get bitmark by id
         String id = bitmarksResponse.getBitmarks().get(0).getId();
-        GetBitmarkResponse bitmarkResponse = await(callback -> Bitmark.get(id, callback));
+        GetBitmarkResponse bitmarkResponse =
+                await(callback -> ApiService.getInstance().getBitmark(id, false, callback));
         BitmarkRecord bitmark = bitmarkResponse.getBitmark();
         AssetRecord asset = bitmarkResponse.getAsset();
         assertNotNull(bitmark);
@@ -389,17 +497,23 @@ public class BitmarkTest extends BaseTest {
         // Get owned bitmarks
         int limit = 1;
         BitmarkQueryBuilder builder1 =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(limit);
-        GetBitmarksResponse bitmarksResponse1 = await(callback -> Bitmark.list(builder1, callback));
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(limit);
+        GetBitmarksResponse bitmarksResponse1 = await(callback -> ApiService.getInstance()
+                                                                            .listBitmarks(
+                                                                                    builder1.build(),
+                                                                                    callback));
         assertFalse(bitmarksResponse1.getBitmarks().isEmpty(), "This guy has not owned bitmarks");
         String[] bitmarkIds =
                 bitmarksResponse1.getBitmarks().stream().map(BitmarkRecord::getId)
                                  .toArray(String[]::new);
 
         BitmarkQueryBuilder builder2 =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber())
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress())
                                          .bitmarkIds(bitmarkIds);
-        GetBitmarksResponse bitmarksResponse2 = await(callback -> Bitmark.list(builder2, callback));
+        GetBitmarksResponse bitmarksResponse2 = await(callback -> ApiService.getInstance()
+                                                                            .listBitmarks(
+                                                                                    builder2.build(),
+                                                                                    callback));
         List<BitmarkRecord> bitmarks = bitmarksResponse2.getBitmarks();
         List<AssetRecord> assets = bitmarksResponse2.getAssets();
         assertFalse(bitmarks.isEmpty());
@@ -414,9 +528,10 @@ public class BitmarkTest extends BaseTest {
             throws Throwable {
         int limit = 1;
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(limit)
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(limit)
                                          .loadAsset(true);
-        GetBitmarksResponse bitmarksResponse = await(callback -> Bitmark.list(builder, callback));
+        GetBitmarksResponse bitmarksResponse =
+                await(callback -> ApiService.getInstance().listBitmarks(builder.build(), callback));
         List<BitmarkRecord> bitmarks = bitmarksResponse.getBitmarks();
         List<AssetRecord> assets = bitmarksResponse.getAssets();
         assertFalse(bitmarks.isEmpty());
@@ -428,7 +543,7 @@ public class BitmarkTest extends BaseTest {
     public void testCreateShare_OwnedBitmark_CorrectResReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(100);
         List<BitmarkRecord> bitmarks = findBitmarks(builder,
                                                     b -> !b.isOffer() && b.getStatus() == SETTLED &&
                                                          b.getHead() != MOVED);
@@ -439,7 +554,8 @@ public class BitmarkTest extends BaseTest {
         List<ShareRecord> shareRecords;
         try {
             shareRecords =
-                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                    await(callback -> ApiService.getInstance()
+                                                .listShares(ADDRESS1.getAddress(), callback));
 
             // Remove all bitmark has already created share
             shareRecords.forEach(share -> {
@@ -459,8 +575,9 @@ public class BitmarkTest extends BaseTest {
 
         // Create share
         ShareParams params = new ShareParams(100, bitmark.getHeadId());
-        params.sign(ACCOUNT1.getKeyPair());
-        Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+        params.sign(KEY1);
+        Pair<String, String> res =
+                await(callback -> ApiService.getInstance().createShare(params, callback));
         assertNotNull(res);
         assertNotNull(res.first());
         assertNotNull(res.second());
@@ -470,7 +587,7 @@ public class BitmarkTest extends BaseTest {
     public void testCreateShare_NotOwnedBitmark_CorrectResReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(100);
         List<BitmarkRecord> bitmarks = findBitmarks(builder,
                                                     b -> !b.isOffer() && b.getStatus() == SETTLED &&
                                                          b.getHead() != MOVED);
@@ -481,7 +598,8 @@ public class BitmarkTest extends BaseTest {
         List<ShareRecord> shareRecords;
         try {
             shareRecords =
-                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                    await(callback -> ApiService.getInstance()
+                                                .listShares(ADDRESS1.getAddress(), callback));
 
             // Remove all bitmark has already created share
             shareRecords.forEach(share -> {
@@ -501,10 +619,11 @@ public class BitmarkTest extends BaseTest {
 
         // Create share
         ShareParams params = new ShareParams(100, bitmark.getHeadId());
-        params.sign(ACCOUNT2.getKeyPair());
+        params.sign(KEY2);
         HttpException exception = assertThrows(HttpException.class,
                                                () -> await(
-                                                       (Callable1<Pair<String, String>>) callback -> Bitmark
+                                                       (Callable1<Pair<String, String>>) callback -> ApiService
+                                                               .getInstance()
                                                                .createShare(params, callback)));
         assertEquals(HTTP_INTERNAL_ERROR, exception.getStatusCode());
         assertEquals(7000, exception.getErrorCode());
@@ -515,7 +634,8 @@ public class BitmarkTest extends BaseTest {
     public void testGrantShare_OwnedShare_CorrectResReturn() throws Throwable {
         // Get all shares
         List<ShareRecord> shareRecords =
-                await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                await(callback -> ApiService.getInstance()
+                                            .listShares(ADDRESS1.getAddress(), callback));
         assertTrue(shareRecords != null && !shareRecords.isEmpty(),
                    "This guy does not have any shares");
 
@@ -527,7 +647,7 @@ public class BitmarkTest extends BaseTest {
         if (shareRecord == null) {
             // Get owned bitmarks
             BitmarkQueryBuilder builder =
-                    new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+                    new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(100);
             List<BitmarkRecord> bitmarks = findBitmarks(builder,
                                                         b -> !b.isOffer() &&
                                                              b.getStatus() == SETTLED &&
@@ -540,18 +660,18 @@ public class BitmarkTest extends BaseTest {
 
             // Create share
             ShareParams params = new ShareParams(100, bitmark.getHeadId());
-            params.sign(ACCOUNT1.getKeyPair());
-            Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+            params.sign(KEY1);
+            Pair<String, String> res =
+                    await(callback -> ApiService.getInstance().createShare(params, callback));
             shareId = res.second();
         } else shareId = shareRecord.getId();
 
         // Grant share
         ShareGrantingParams grantingParams =
-                new ShareGrantingParams(shareId, 1, ACCOUNT1.toAddress(),
-                                        ACCOUNT2.toAddress(),
-                                        Random.secureRandomInt());
-        grantingParams.sign(ACCOUNT1.getKeyPair());
-        String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
+                new ShareGrantingParams(shareId, 1, ADDRESS1, ADDRESS2, Random.secureRandomInt());
+        grantingParams.sign(KEY1);
+        String offerId =
+                await(callback -> ApiService.getInstance().grantShare(grantingParams, callback));
         assertNotNull(offerId);
         assertFalse(offerId.isEmpty());
     }
@@ -560,7 +680,8 @@ public class BitmarkTest extends BaseTest {
     public void testGrantShare_NotOwnedShare_CorrectResReturn() throws Throwable {
         // Get all shares
         List<ShareRecord> shareRecords =
-                await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                await(callback -> ApiService.getInstance()
+                                            .listShares(ADDRESS1.getAddress(), callback));
         assertTrue(shareRecords != null && !shareRecords.isEmpty(),
                    "This guy does not have any shares");
 
@@ -573,7 +694,7 @@ public class BitmarkTest extends BaseTest {
         if (shareRecord == null) {
             // Get owned bitmarks
             BitmarkQueryBuilder builder =
-                    new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+                    new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(100);
             List<BitmarkRecord> bitmarks = findBitmarks(builder,
                                                         b -> !b.isOffer() &&
                                                              b.getStatus() == SETTLED &&
@@ -586,20 +707,20 @@ public class BitmarkTest extends BaseTest {
 
             // Create share
             ShareParams params = new ShareParams(100, bitmark.getHeadId());
-            params.sign(ACCOUNT1.getKeyPair());
-            Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+            params.sign(KEY1);
+            Pair<String, String> res =
+                    await(callback -> ApiService.getInstance().createShare(params, callback));
             shareId = res.second();
         } else shareId = shareRecord.getId();
 
         // Grant share
         ShareGrantingParams grantingParams =
-                new ShareGrantingParams(shareId, 1, ACCOUNT3.toAddress(),
-                                        ACCOUNT2.toAddress(),
-                                        Random.secureRandomInt());
-        grantingParams.sign(ACCOUNT3.getKeyPair());
+                new ShareGrantingParams(shareId, 1, ADDRESS3, ADDRESS2, Random.secureRandomInt());
+        grantingParams.sign(KEY3);
         HttpException exception = assertThrows(HttpException.class,
                                                () -> await(
-                                                       (Callable1<String>) callback -> Bitmark
+                                                       (Callable1<String>) callback -> ApiService
+                                                               .getInstance()
                                                                .grantShare(grantingParams,
                                                                            callback)));
         assertEquals(HTTP_INTERNAL_ERROR, exception.getStatusCode());
@@ -609,14 +730,17 @@ public class BitmarkTest extends BaseTest {
     @Test
     public void testRespondGrantShare_AcceptGrant_CorrectResReturn() throws Throwable {
         // Query offer shares
-        List<ShareGrantRecord> grantRecords = await(callback -> Bitmark
-                .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
-                                callback));
+        List<ShareGrantRecord> grantRecords = await(callback -> ApiService.getInstance()
+                                                                          .listShareOffer(
+                                                                                  ADDRESS1.getAddress(),
+                                                                                  ADDRESS2.getAddress(),
+                                                                                  callback));
 
         if (grantRecords == null || grantRecords.isEmpty()) {
             // Get all shares
             List<ShareRecord> shareRecords =
-                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                    await(callback -> ApiService.getInstance()
+                                                .listShares(ADDRESS1.getAddress(), callback));
             assertTrue(shareRecords != null && !shareRecords.isEmpty(),
                        "This guy does not have any shares");
 
@@ -628,22 +752,24 @@ public class BitmarkTest extends BaseTest {
 
             // Grant share
             ShareGrantingParams grantingParams =
-                    new ShareGrantingParams(shareRecord.getId(), 1, ACCOUNT1.toAddress(),
-                                            ACCOUNT2.toAddress(),
+                    new ShareGrantingParams(shareRecord.getId(), 1, ADDRESS1, ADDRESS2,
                                             Random.secureRandomInt());
-            grantingParams.sign(ACCOUNT1.getKeyPair());
-            String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
-            grantRecords = await(callback -> Bitmark
-                    .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
-                                    callback));
+            grantingParams.sign(KEY1);
+            String offerId = await(callback -> ApiService.getInstance()
+                                                         .grantShare(grantingParams, callback));
+            grantRecords = await(callback -> ApiService.getInstance()
+                                                       .listShareOffer(ADDRESS1.getAddress(),
+                                                                       ADDRESS2.getAddress(),
+                                                                       callback));
 
             assertFalse(grantRecords.isEmpty(), "There are not GrantRecord for respond");
         }
 
         // Respond offer
         GrantResponseParams responseParams = GrantResponseParams.accept(grantRecords.get(0));
-        responseParams.sign(ACCOUNT2.getKeyPair());
-        String txId = await(callback -> Bitmark.respondShareOffer(responseParams, callback));
+        responseParams.sign(KEY2);
+        String txId = await(callback -> ApiService.getInstance()
+                                                  .respondShareOffer(responseParams, callback));
         assertNotNull(txId);
         assertFalse(txId.isEmpty());
     }
@@ -651,14 +777,17 @@ public class BitmarkTest extends BaseTest {
     @Test
     public void testRespondGrantShare_RejectGrant_CorrectResReturn() throws Throwable {
         // Query offer shares
-        List<ShareGrantRecord> grantRecords = await(callback -> Bitmark
-                .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
-                                callback));
+        List<ShareGrantRecord> grantRecords = await(callback -> ApiService.getInstance()
+                                                                          .listShareOffer(
+                                                                                  ADDRESS1.getAddress(),
+                                                                                  ADDRESS2.getAddress(),
+                                                                                  callback));
 
         if (grantRecords == null || grantRecords.isEmpty()) {
             // Get all shares
             List<ShareRecord> shareRecords =
-                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                    await(callback -> ApiService.getInstance()
+                                                .listShares(ADDRESS1.getAddress(), callback));
             assertTrue(shareRecords != null && !shareRecords.isEmpty(),
                        "This guy does not have any shares");
 
@@ -670,22 +799,24 @@ public class BitmarkTest extends BaseTest {
 
             // Grant share
             ShareGrantingParams grantingParams =
-                    new ShareGrantingParams(shareRecord.getId(), 1, ACCOUNT1.toAddress(),
-                                            ACCOUNT2.toAddress(),
+                    new ShareGrantingParams(shareRecord.getId(), 1, ADDRESS1, ADDRESS2,
                                             Random.secureRandomInt());
-            grantingParams.sign(ACCOUNT1.getKeyPair());
-            String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
-            grantRecords = await(callback -> Bitmark
-                    .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
-                                    callback));
+            grantingParams.sign(KEY1);
+            String offerId = await(callback -> ApiService.getInstance()
+                                                         .grantShare(grantingParams, callback));
+            grantRecords = await(callback -> ApiService.getInstance()
+                                                       .listShareOffer(ADDRESS1.getAddress(),
+                                                                       ADDRESS2.getAddress(),
+                                                                       callback));
 
             assertFalse(grantRecords.isEmpty(), "There are not GrantRecord for respond");
         }
 
         // Respond offer
         GrantResponseParams responseParams = GrantResponseParams.reject(grantRecords.get(0));
-        responseParams.sign(ACCOUNT2.getKeyPair());
-        String txId = await(callback -> Bitmark.respondShareOffer(responseParams, callback));
+        responseParams.sign(KEY2);
+        String txId = await(callback -> ApiService.getInstance()
+                                                  .respondShareOffer(responseParams, callback));
         assertNotNull(txId);
         assertFalse(txId.isEmpty());
     }
@@ -693,14 +824,17 @@ public class BitmarkTest extends BaseTest {
     @Test
     public void testRespondGrantShare_CancelGrant_CorrectResReturn() throws Throwable {
         // Query offer shares
-        List<ShareGrantRecord> grantRecords = await(callback -> Bitmark
-                .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
-                                callback));
+        List<ShareGrantRecord> grantRecords = await(callback -> ApiService.getInstance()
+                                                                          .listShareOffer(
+                                                                                  ADDRESS1.getAddress(),
+                                                                                  ADDRESS2.getAddress(),
+                                                                                  callback));
 
         if (grantRecords == null || grantRecords.isEmpty()) {
             // Get all shares
             List<ShareRecord> shareRecords =
-                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                    await(callback -> ApiService.getInstance()
+                                                .listShares(ADDRESS1.getAddress(), callback));
             assertTrue(shareRecords != null && !shareRecords.isEmpty(),
                        "This guy does not have any shares");
 
@@ -712,22 +846,24 @@ public class BitmarkTest extends BaseTest {
 
             // Grant share
             ShareGrantingParams grantingParams =
-                    new ShareGrantingParams(shareRecord.getId(), 1, ACCOUNT1.toAddress(),
-                                            ACCOUNT2.toAddress(),
+                    new ShareGrantingParams(shareRecord.getId(), 1, ADDRESS1, ADDRESS2,
                                             Random.secureRandomInt());
-            grantingParams.sign(ACCOUNT1.getKeyPair());
-            String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
-            grantRecords = await(callback -> Bitmark
-                    .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
-                                    callback));
+            grantingParams.sign(KEY1);
+            String offerId = await(callback -> ApiService.getInstance()
+                                                         .grantShare(grantingParams, callback));
+            grantRecords = await(callback -> ApiService.getInstance()
+                                                       .listShareOffer(ADDRESS1.getAddress(),
+                                                                       ADDRESS2.getAddress(),
+                                                                       callback));
 
             assertFalse(grantRecords.isEmpty(), "There are not GrantRecord for respond");
         }
 
         // Respond offer
         GrantResponseParams responseParams = GrantResponseParams.cancel(grantRecords.get(0));
-        responseParams.sign(ACCOUNT1.getKeyPair());
-        String txId = await(callback -> Bitmark.respondShareOffer(responseParams, callback));
+        responseParams.sign(KEY1);
+        String txId = await(callback -> ApiService.getInstance()
+                                                  .respondShareOffer(responseParams, callback));
         assertNotNull(txId);
         assertFalse(txId.isEmpty());
     }
@@ -739,12 +875,13 @@ public class BitmarkTest extends BaseTest {
 
         // Get all shares
         List<ShareRecord> shareRecords =
-                await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                await(callback -> ApiService.getInstance()
+                                            .listShares(ADDRESS1.getAddress(), callback));
 
         if (shareRecords == null || shareRecords.isEmpty()) {
             // Get owned bitmarks
             BitmarkQueryBuilder builder =
-                    new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+                    new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(100);
             List<BitmarkRecord> bitmarks = findBitmarks(builder,
                                                         b -> !b.isOffer() &&
                                                              b.getStatus() == SETTLED &&
@@ -757,13 +894,14 @@ public class BitmarkTest extends BaseTest {
 
             // Create share
             ShareParams params = new ShareParams(100, bitmark.getHeadId());
-            params.sign(ACCOUNT1.getKeyPair());
-            Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+            params.sign(KEY1);
+            Pair<String, String> res =
+                    await(callback -> ApiService.getInstance().createShare(params, callback));
             shareId = res.second();
         } else shareId = shareRecords.get(0).getId();
 
-        ShareRecord shareRecord = await(callback -> Bitmark
-                .getShare(shareId, callback));
+        ShareRecord shareRecord = await(callback -> ApiService.getInstance()
+                                                              .getShare(shareId, callback));
         assertNotNull(shareRecord);
         assertEquals(shareId, shareRecord.getId());
     }
@@ -772,7 +910,7 @@ public class BitmarkTest extends BaseTest {
     public void testListShares__CorrectResReturn() throws Throwable {
         // Get owned bitmarks
         BitmarkQueryBuilder builder =
-                new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+                new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(100);
         List<BitmarkRecord> bitmarks = findBitmarks(builder,
                                                     b -> !b.isOffer() &&
                                                          b.getStatus() == SETTLED &&
@@ -785,25 +923,30 @@ public class BitmarkTest extends BaseTest {
 
         // Create share
         ShareParams params = new ShareParams(100, bitmark.getHeadId());
-        params.sign(ACCOUNT1.getKeyPair());
-        Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+        params.sign(KEY1);
+        Pair<String, String> res =
+                await(callback -> ApiService.getInstance().createShare(params, callback));
 
         // Query shares
         List<ShareRecord> shareRecords =
-                await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                await(callback -> ApiService.getInstance()
+                                            .listShares(ADDRESS1.getAddress(), callback));
         assertNotNull(shareRecords);
         assertFalse(shareRecords.isEmpty());
     }
 
     @Test
     public void testQueryShareOffer__CorrectResReturn() throws Throwable {
-        List<ShareGrantRecord> grantRecords = await(callback -> Bitmark
-                .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
-                                callback));
+        List<ShareGrantRecord> grantRecords = await(callback -> ApiService.getInstance()
+                                                                          .listShareOffer(
+                                                                                  ADDRESS1.getAddress(),
+                                                                                  ADDRESS2.getAddress(),
+                                                                                  callback));
         if (grantRecords == null || grantRecords.isEmpty()) {
             // Get all shares
             List<ShareRecord> shareRecords =
-                    await(callback -> Bitmark.listShares(ACCOUNT1.getAccountNumber(), callback));
+                    await(callback -> ApiService.getInstance()
+                                                .listShares(ADDRESS1.getAddress(), callback));
             assertTrue(shareRecords != null && !shareRecords.isEmpty(),
                        "This guy does not have any shares");
 
@@ -815,7 +958,7 @@ public class BitmarkTest extends BaseTest {
             if (shareRecord == null) {
                 // Get owned bitmarks
                 BitmarkQueryBuilder builder =
-                        new BitmarkQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(100);
+                        new BitmarkQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(100);
                 List<BitmarkRecord> bitmarks = findBitmarks(builder,
                                                             b -> !b.isOffer() &&
                                                                  b.getStatus() == SETTLED &&
@@ -828,21 +971,23 @@ public class BitmarkTest extends BaseTest {
 
                 // Create share
                 ShareParams params = new ShareParams(100, bitmark.getHeadId());
-                params.sign(ACCOUNT1.getKeyPair());
-                Pair<String, String> res = await(callback -> Bitmark.createShare(params, callback));
+                params.sign(KEY1);
+                Pair<String, String> res =
+                        await(callback -> ApiService.getInstance().createShare(params, callback));
                 shareId = res.second();
             } else shareId = shareRecord.getId();
 
             // Grant share
             ShareGrantingParams grantingParams =
-                    new ShareGrantingParams(shareId, 1, ACCOUNT1.toAddress(),
-                                            ACCOUNT2.toAddress(),
+                    new ShareGrantingParams(shareId, 1, ADDRESS1, ADDRESS2,
                                             Random.secureRandomInt());
-            grantingParams.sign(ACCOUNT1.getKeyPair());
-            String offerId = await(callback -> Bitmark.grantShare(grantingParams, callback));
-            grantRecords = await(callback -> Bitmark
-                    .listShareOffer(ACCOUNT1.getAccountNumber(), ACCOUNT2.getAccountNumber(),
-                                    callback));
+            grantingParams.sign(KEY1);
+            String offerId = await(callback -> ApiService.getInstance()
+                                                         .grantShare(grantingParams, callback));
+            grantRecords = await(callback -> ApiService.getInstance()
+                                                       .listShareOffer(ADDRESS1.getAddress(),
+                                                                       ADDRESS2.getAddress(),
+                                                                       callback));
         }
         assertNotNull(grantRecords);
         assertFalse(grantRecords.isEmpty());
@@ -856,11 +1001,13 @@ public class BitmarkTest extends BaseTest {
         while (retryCount > 0) {
             retryCount--;
             GetBitmarksResponse bitmarksResponse =
-                    await(callback -> Bitmark
-                            .list(minOffset.getValue() == null ? queryBuilder : queryBuilder
-                                          .at(minOffset.getValue())
-                                          .to("earlier"),
-                                  callback));
+                    await(callback -> ApiService.getInstance()
+                                                .listBitmarks(
+                                                        minOffset.getValue() == null ? queryBuilder
+                                                                .build() : queryBuilder
+                                                                .at(minOffset.getValue())
+                                                                .to("earlier").build(),
+                                                        callback));
             assertFalse(bitmarksResponse.getBitmarks().isEmpty(),
                         "This guy has not owned bitmarks or cannot find the bitmark match specification");
             Optional<BitmarkRecord> maxOffsetOpt = bitmarksResponse.getBitmarks().stream().min(
@@ -884,11 +1031,13 @@ public class BitmarkTest extends BaseTest {
         while (retryCount > 0) {
             retryCount--;
             GetBitmarksResponse bitmarksResponse =
-                    await(callback -> Bitmark
-                            .list(minOffset.getValue() == null ? queryBuilder : queryBuilder
-                                          .at(minOffset.getValue())
-                                          .to("earlier"),
-                                  callback));
+                    await(callback -> ApiService.getInstance()
+                                                .listBitmarks(
+                                                        minOffset.getValue() == null ? queryBuilder
+                                                                .build() : queryBuilder
+                                                                .at(minOffset.getValue())
+                                                                .to("earlier").build(),
+                                                        callback));
             assertFalse(bitmarksResponse.getBitmarks().isEmpty(),
                         "This guy has not owned bitmarks or cannot find the bitmarks match specification");
             Optional<BitmarkRecord> maxOffsetOpt = bitmarksResponse.getBitmarks().stream().min(
@@ -903,6 +1052,90 @@ public class BitmarkTest extends BaseTest {
         }
         return null;
     }
+
+    //endregion ============= BITMARK TESTS ===============
+
+    //region ============= TXS TESTS ===============
+
+    @Test
+    public void testQueryTransactionWithoutAsset_ExistedTxId_CorrectResponseIsReturn()
+            throws Throwable {
+        // Get existed tx
+        TransactionQueryBuilder builder =
+                new TransactionQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(1);
+        GetTransactionsResponse getTransactionsResponse =
+                await(callback -> ApiService.getInstance()
+                                            .listTransactions(builder.build(), callback));
+        List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
+        assertNotNull(transactions, "This guy does not have any transaction");
+        assertFalse(transactions.isEmpty(), "This guy does not have any transaction");
+        String txId = transactions.get(0).getId();
+
+        // Get tx by id
+        GetTransactionResponse getTransactionResponse =
+                await(callback -> ApiService.getInstance().getTransaction(txId, false,
+                                                                          callback));
+        TransactionRecord transaction = getTransactionResponse.getTransaction();
+        assertNotNull(transaction);
+        assertEquals(txId, transaction.getId());
+    }
+
+    @Test
+    public void testQueryTransactionWithAsset_ExistedTxId_CorrectResponseIsReturn()
+            throws Throwable {
+        // Get existed tx
+        TransactionQueryBuilder builder =
+                new TransactionQueryBuilder().ownedBy(ADDRESS1.getAddress()).limit(1);
+        GetTransactionsResponse getTransactionsResponse =
+                await(callback -> ApiService.getInstance()
+                                            .listTransactions(builder.build(), callback));
+        List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
+        assertNotNull(transactions, "This guy does not have any transaction");
+        assertFalse(transactions.isEmpty(), "This guy does not have any transaction");
+        String txId = transactions.get(0).getId();
+
+        // Get tx by id
+        GetTransactionResponse getTransactionResponse =
+                await(callback -> ApiService.getInstance().getTransaction(txId,
+                                                                          true,
+                                                                          callback));
+        TransactionRecord transaction = getTransactionResponse.getTransaction();
+        AssetRecord asset = getTransactionResponse.getAsset();
+        assertNotNull(transaction);
+        assertNotNull(asset);
+        assertEquals(txId, transaction.getId());
+        assertEquals(transaction.getAssetId(), asset.getId());
+    }
+
+    @Test
+    public void testQueryTransaction_NonExistedTxId_ErrorIsThrow() {
+        String id =
+                "1234567890123456789012345678901234567890123456789012345678901234";
+        HttpException exception = assertThrows(HttpException.class,
+                                               () -> await(
+                                                       (Callable1<GetTransactionResponse>) callback -> ApiService
+                                                               .getInstance()
+                                                               .getTransaction(id, false,
+                                                                               callback)));
+        assertEquals(HTTP_INTERNAL_ERROR, exception.getStatusCode());
+    }
+
+    @Test
+    public void testQueryTransactions_NoCondition_CorrectResponseIsReturn() throws Throwable {
+        // With limit and owner
+        int limit = 1;
+        String owner = ADDRESS1.getAddress();
+        TransactionQueryBuilder builder =
+                new TransactionQueryBuilder().ownedBy(owner).limit(limit);
+        GetTransactionsResponse getTransactionsResponse =
+                await(callback -> ApiService.getInstance()
+                                            .listTransactions(builder.build(), callback));
+        List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
+        assertEquals(limit, transactions.size());
+        transactions.forEach(transaction -> assertEquals(owner, transaction.getOwner()));
+    }
+
+    //endregion ============= TXS TESTS ===============
 
 
 }

@@ -2,8 +2,10 @@ package com.bitmark.sdk.test.integrationtest;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
-import org.junit.BeforeClass;
 import com.bitmark.sdk.features.BitmarkSDK;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 /**
  * @author Hieu Pham
@@ -14,10 +16,14 @@ import com.bitmark.sdk.features.BitmarkSDK;
 
 public abstract class BaseTest {
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     @BeforeClass
     public static void beforeAll() {
         if (!BitmarkSDK.isInitialized())
-            BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg").withNetwork(Network.TEST_NET));
+            BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg")
+                                               .withNetwork(Network.TEST_NET));
 
     }
 }

@@ -9,11 +9,13 @@ import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.apiservice.utils.record.TransactionRecord;
 import com.bitmark.sdk.features.Transaction;
+import com.bitmark.sdk.test.integrationtest.BaseTest;
 import org.junit.Test;
 
 import java.util.List;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
+import static com.bitmark.sdk.test.integrationtest.DataProvider.ACCOUNT1;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static org.junit.Assert.*;
 
@@ -24,7 +26,7 @@ import static org.junit.Assert.*;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class TransactionTest extends BaseFeatureTest {
+public class TransactionTest extends BaseTest {
 
     @Test
     public void testQueryTransactionWithoutAsset_ExistedTxId_CorrectResponseIsReturn()

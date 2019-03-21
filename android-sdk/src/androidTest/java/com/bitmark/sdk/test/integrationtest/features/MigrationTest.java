@@ -3,9 +3,10 @@ package com.bitmark.sdk.test.integrationtest.features;
 import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.cryptography.error.ValidateException;
-import org.junit.Test;
 import com.bitmark.sdk.features.Account;
 import com.bitmark.sdk.features.Migration;
+import com.bitmark.sdk.test.integrationtest.BaseTest;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import static org.junit.Assert.*;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class MigrationTest extends BaseFeatureTest {
+public class MigrationTest extends BaseTest {
 
     private static final long TIMEOUT = 50000;
 

@@ -8,6 +8,7 @@ import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.annimon.stream.Stream;
+import com.bitmark.sdk.test.integrationtest.BaseTest;
 import org.junit.Rule;
 import org.junit.Test;
 import com.bitmark.sdk.features.Asset;
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
+import static com.bitmark.sdk.test.integrationtest.DataProvider.ACCOUNT1;
+import static com.bitmark.sdk.test.integrationtest.DataProvider.KEY1;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
@@ -30,7 +33,7 @@ import static org.junit.Assert.*;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class AssetTest extends BaseFeatureTest {
+public class AssetTest extends BaseTest {
 
     @Rule
     public TemporaryFolderRule temporaryFolderRule = new TemporaryFolderRule();
