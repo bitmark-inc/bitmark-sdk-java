@@ -210,7 +210,7 @@ ext.additionalArtifact = libraryJar
 
 dependencies {
 
-    compile fileTree(include: '*.jar', dir: 'lib')
+    implementation fileTree(include: '*.jar', dir: 'lib')
     implementation deps.bouncycastle
 
     testImplementation deps.junit_jupiter.api
