@@ -3,4 +3,5 @@ include 'cryptography'
 include 'api-service'
 include 'java-sdk'
 include 'android-sdk'
+include 'sample:java-sdk-sample'
 
