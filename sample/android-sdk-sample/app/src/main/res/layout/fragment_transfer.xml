@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/progress_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <!--Transfer Information-->
+            <TextView
+                android:id="@+id/fileContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Your Bitmark Id" />
+
+            <EditText
+                android:id="@+id/transferBitmarkId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textLongMessage"
+                android:text="" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Receiver Account Number" />
+
+            <EditText
+                android:id="@+id/receiverAccountNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textLongMessage"
+                android:text="f38EmgX4fH7E76nGEmdp3nEfyhnLTYMN3Y1GAP7JKssTv3EVF8" />
+
+            <!--Transfer-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="#303F9F"
+                android:textAlignment="center"
+                android:text="Transfer"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#fff"/>
+
+            <Button
+                android:id="@+id/transferOneSignatureBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Transfer" />
+
+            <TextView
+                android:id="@+id/transferMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Please use [Query] tab and query by [Receiver Account Number] to check if the bitmark was transfered successfully or not"
+                android:visibility="gone" />
+
+            <!--Transfer 2 Signatures-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="#303F9F"
+                android:textAlignment="center"
+                android:text="Transfer 2 Signatures"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#fff"/>
+
+            <Button
+                android:id="@+id/sendTransferOfferBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Send Transfer Offer" />
+
+            <Button
+                android:id="@+id/cancelTransferOfferBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Cancel Transfer Offer"
+                android:visibility="gone" />
+
+            <!--Receiver Account-->
+            <LinearLayout
+                android:id="@+id/receiverContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="#D6D7D7"
+                    android:textAlignment="center"
+                    android:text="Receiver Account"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#fff"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Recovery Phrase" />
+
+                <EditText
+                    android:id="@+id/receiverRecoveryPhrase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textLongMessage"
+                    android:text="soda friend wish rocket rural flag seed debris unknown layer struggle sugar" />
+
+                <Button
+                    android:id="@+id/acceptTransferOfferBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accept Transfer Offer" />
+
+                <TextView
+                    android:id="@+id/transfer2SignaturesMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Please use [Query] tab and query by [Receiver Account Number] to check if the bitmark was transfered successfully or not"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/progress_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <!--Asset Registration Area-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#303F9F"
+                android:textAlignment="center"
+                android:text="Asset Registration"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#fff"/>
+
+            <Button
+                android:id="@+id/generateRandomFileBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Generate Random File" />
+
+            <TextView
+                android:id="@+id/fileContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="File Content:" />
+
+            <TextView
+                android:id="@+id/filePath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="File Path:" />
+
+            <Button
+                android:id="@+id/registerAssetBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register Asset" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Asset Id" />
+
+            <EditText
+                android:id="@+id/assetId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textShortMessage"
+                android:text="" />
+
+            <!--Bitmark Issuance Area-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="#303F9F"
+                android:textAlignment="center"
+                android:text="Bitmark Issuance"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#fff"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Quantity" />
+
+            <EditText
+                android:id="@+id/quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:text="10" />
+
+            <Button
+                android:id="@+id/issueBitmarksBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Issue Bitmarks" />
+
+            <!--Bitmarks List-->
+            <LinearLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/bitmarksListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </ListView>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

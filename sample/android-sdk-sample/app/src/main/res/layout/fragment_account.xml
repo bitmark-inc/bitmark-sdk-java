@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <!--Create Account Area-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#303F9F"
+            android:textAlignment="center"
+            android:text="Create Account"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#fff"/>
+
+        <Button
+            android:id="@+id/createNewAccountBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Create New Account" />
+
+        <TextView
+            android:id="@+id/accountNumberLbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Account Number" />
+
+        <TextView
+            android:id="@+id/accountNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#303F9F" />
+
+        <TextView
+            android:id="@+id/recoveryPhraseLbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Recovery Phrase" />
+
+        <TextView
+            android:id="@+id/recoveryPhrase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#303F9F" />
+
+        <!--Recover Account Area-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="#303F9F"
+            android:textAlignment="center"
+            android:text="Recover Account"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#fff"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Recovery Phrase" />
+
+        <EditText
+            android:id="@+id/recoveryPhraseInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textLongMessage"
+            android:text="" />
+
+        <Button
+            android:id="@+id/recoverAccountBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recover Account" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
