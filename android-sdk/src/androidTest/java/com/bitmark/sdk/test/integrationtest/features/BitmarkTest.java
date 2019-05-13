@@ -16,6 +16,7 @@ import com.bitmark.apiservice.utils.record.*;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.sdk.features.Asset;
 import com.bitmark.sdk.features.Bitmark;
+import com.bitmark.sdk.test.integrationtest.BaseTest;
 import com.bitmark.sdk.test.integrationtest.utils.extensions.TemporaryFolderRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import static com.bitmark.apiservice.utils.record.BitmarkRecord.Status.SETTLED;
 import static com.bitmark.apiservice.utils.record.Head.MOVED;
 import static com.bitmark.cryptography.crypto.Random.secureRandomInt;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
+import static com.bitmark.sdk.test.integrationtest.DataProvider.*;
 import static java.net.HttpURLConnection.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
@@ -41,7 +43,7 @@ import static org.junit.Assert.*;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class BitmarkTest extends BaseFeatureTest {
+public class BitmarkTest extends BaseTest {
 
     @Rule
     public TemporaryFolderRule temporaryFolderRule = new TemporaryFolderRule();

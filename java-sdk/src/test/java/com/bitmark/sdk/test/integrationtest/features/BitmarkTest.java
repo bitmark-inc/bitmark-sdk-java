@@ -15,6 +15,7 @@ import com.bitmark.cryptography.crypto.Random;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.sdk.features.Asset;
 import com.bitmark.sdk.features.Bitmark;
+import com.bitmark.sdk.test.integrationtest.BaseTest;
 import com.bitmark.sdk.test.utils.extensions.TemporaryFolderExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,7 @@ import static com.bitmark.apiservice.utils.Awaitility.await;
 import static com.bitmark.apiservice.utils.record.BitmarkRecord.Status.SETTLED;
 import static com.bitmark.apiservice.utils.record.Head.MOVED;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
+import static com.bitmark.sdk.test.integrationtest.DataProvider.*;
 import static java.net.HttpURLConnection.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 
 @ExtendWith({TemporaryFolderExtension.class})
-public class BitmarkTest extends BaseFeatureTest {
+public class BitmarkTest extends BaseTest {
 
     @Test
     public void testIssueBitmark_OwnedMultipleBitmark_CorrectSuccessResponseIsReturn(File asset)

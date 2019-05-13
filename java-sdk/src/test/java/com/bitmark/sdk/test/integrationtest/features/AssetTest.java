@@ -8,6 +8,7 @@ import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.sdk.features.Asset;
+import com.bitmark.sdk.test.integrationtest.BaseTest;
 import com.bitmark.sdk.test.utils.extensions.TemporaryFolderExtension;
 import com.bitmark.sdk.test.utils.extensions.annotations.TemporaryFile;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
+import static com.bitmark.sdk.test.integrationtest.DataProvider.ACCOUNT1;
+import static com.bitmark.sdk.test.integrationtest.DataProvider.KEY1;
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 
 @ExtendWith({TemporaryFolderExtension.class})
-public class AssetTest extends BaseFeatureTest {
+public class AssetTest extends BaseTest {
 
     @Test
     public void testRegisterAsset_NewAsset_CorrectResponseIsReturn(File asset) throws Throwable {
@@ -50,7 +53,8 @@ public class AssetTest extends BaseFeatureTest {
     }
 
     @Test
-    public void testRegisterAsset_ExistedAsset_CorrectResponseIsReturn(@TemporaryFile("This is an existed file on Bitmark Block chain") File asset) {
+    public void testRegisterAsset_ExistedAsset_CorrectResponseIsReturn(
+            @TemporaryFile("This is an existed file on Bitmark Block chain") File asset) {
         Address registrant = ACCOUNT1.toAddress();
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
@@ -60,8 +64,10 @@ public class AssetTest extends BaseFeatureTest {
         params.generateFingerprint(asset);
         params.sign(KEY1);
         HttpException exception = assertThrows(HttpException.class,
-                () -> await((Callable1<RegistrationResponse>) callback -> Asset.register(params,
-                        callback)));
+                                               () -> await(
+                                                       (Callable1<RegistrationResponse>) callback -> Asset
+                                                               .register(params,
+                                                                         callback)));
         assertEquals(HTTP_FORBIDDEN, exception.getStatusCode());
         assertEquals(2009, exception.getErrorCode());
     }
@@ -87,7 +93,9 @@ public class AssetTest extends BaseFeatureTest {
         String id =
                 "12345678901234567890123456789012345678901234567890123456789012341234567890123456789012345678901234567890123456789012345678901234";
         HttpException exception = assertThrows(HttpException.class,
-                () -> await((Callable1<AssetRecord>) callback -> Asset.get(id, callback)));
+                                               () -> await(
+                                                       (Callable1<AssetRecord>) callback -> Asset
+                                                               .get(id, callback)));
         assertEquals(HTTP_NOT_FOUND, exception.getStatusCode());
     }
 

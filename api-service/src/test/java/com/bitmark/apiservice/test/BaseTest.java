@@ -16,7 +16,7 @@ public abstract class BaseTest {
     @BeforeAll
     public static void beforeAll() {
         if (!GlobalConfiguration.isInitialized())
-            GlobalConfiguration.createInstance(GlobalConfiguration.builder().withNetwork(Network.TEST_NET).withApiToken("DummyApiToken"));
+            GlobalConfiguration.createInstance(GlobalConfiguration.builder().withNetwork(Network.TEST_NET).withApiToken("bmk-lljpzkhqdkzmblhg"));
 
     }
 

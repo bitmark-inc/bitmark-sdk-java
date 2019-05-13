@@ -8,11 +8,13 @@ import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.apiservice.utils.record.TransactionRecord;
 import com.bitmark.sdk.features.Transaction;
+import com.bitmark.sdk.test.integrationtest.BaseTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
+import static com.bitmark.sdk.test.integrationtest.DataProvider.ACCOUNT1;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,10 +25,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class TransactionTest extends BaseFeatureTest {
+public class TransactionTest extends BaseTest {
 
     @Test
-    public void testQueryTransactionWithoutAsset_ExistedTxId_CorrectResponseIsReturn() throws Throwable {
+    public void testQueryTransactionWithoutAsset_ExistedTxId_CorrectResponseIsReturn()
+            throws Throwable {
         // Get existed tx
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
@@ -39,14 +42,15 @@ public class TransactionTest extends BaseFeatureTest {
 
         // Get tx by id
         GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
-                callback));
+                                                                                          callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         assertNotNull(transaction);
         assertEquals(txId, transaction.getId());
     }
 
     @Test
-    public void testQueryTransactionWithAsset_ExistedTxId_CorrectResponseIsReturn() throws Throwable {
+    public void testQueryTransactionWithAsset_ExistedTxId_CorrectResponseIsReturn()
+            throws Throwable {
         // Get existed tx
         TransactionQueryBuilder builder =
                 new TransactionQueryBuilder().ownedBy(ACCOUNT1.getAccountNumber()).limit(1);
@@ -59,7 +63,8 @@ public class TransactionTest extends BaseFeatureTest {
 
         // Get tx by id
         GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
-                true, callback));
+                                                                                          true,
+                                                                                          callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         AssetRecord asset = getTransactionResponse.getAsset();
         assertNotNull(transaction);
@@ -73,8 +78,10 @@ public class TransactionTest extends BaseFeatureTest {
         String id =
                 "1234567890123456789012345678901234567890123456789012345678901234";
         HttpException exception = assertThrows(HttpException.class,
-                () -> await((Callable1<GetTransactionResponse>) callback -> Transaction.get(id,
-                        callback)));
+                                               () -> await(
+                                                       (Callable1<GetTransactionResponse>) callback -> Transaction
+                                                               .get(id,
+                                                                    callback)));
         assertEquals(HTTP_INTERNAL_ERROR, exception.getStatusCode());
     }
 

@@ -17,6 +17,9 @@ import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
  */
 public class DataProvider {
 
+    private DataProvider() {
+    }
+
     public static final String PRIVATE_KEY_1 =
             "0246a917d422e596168185cea9943459c09751532c52fe4ddc27b06e2893ef2258760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f";
 

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bitmark Android SDK Sample</string>
+    <string name="title_account">Account</string>
+    <string name="title_register_issue">Register/Issue</string>
+    <string name="title_query">Query</string>
+    <string name="title_transfer">Transfer</string>
+</resources>

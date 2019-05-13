@@ -97,7 +97,7 @@ android {
 apply from: '../publication_android.gradle'
 
 task unzipAAR(type: Copy) {
-    def aar = file("${buildDir}/outputs/aar/" + project_publication.ARTIFACT_ID + "-" + project_publication.VERSION + ".aar")
+    def aar = file("${buildDir}/outputs/aar/" + project_publication.ARTIFACT_ID + "-release.aar")
     from zipTree(aar)
     into "${buildDir}/outputs/aar/unzip"
 }
@@ -210,7 +210,7 @@ ext.additionalArtifact = libraryJar
 
 dependencies {
 
-    compile fileTree(include: '*.jar', dir: 'lib')
+    implementation fileTree(include: '*.jar', dir: 'lib')
     implementation deps.bouncycastle
 
     testImplementation deps.junit_jupiter.api
