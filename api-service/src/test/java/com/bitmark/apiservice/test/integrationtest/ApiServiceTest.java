@@ -66,7 +66,7 @@ public class ApiServiceTest extends BaseTest {
 
     @Test
     public void testRegisterAsset_ExistedAsset_CorrectResponseIsReturn(
-            @TemporaryFile("This is an existed file on Bitmark Block chain") File asset) {
+            @TemporaryFile("This is an existing file on Bitmark Block chain") File asset) throws Throwable {
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
             put("description", "Temporary File create from java api service test");
@@ -74,13 +74,11 @@ public class ApiServiceTest extends BaseTest {
         RegistrationParams params = new RegistrationParams(asset.getName(), metadata, ADDRESS1);
         params.generateFingerprint(asset);
         params.sign(KEY1);
-        HttpException exception = assertThrows(HttpException.class,
-                                               () -> await(
-                                                       (Callable1<RegistrationResponse>) callback -> ApiService
-                                                               .getInstance().registerAsset(params,
-                                                                                            callback)));
-        assertEquals(HTTP_FORBIDDEN, exception.getStatusCode());
-        assertEquals(2009, exception.getErrorCode());
+        RegistrationResponse response =
+                await(callback -> ApiService.getInstance().registerAsset(params, callback));
+        List<RegistrationResponse.Asset> assets = response.getAssets();
+        assertNotNull(assets.get(0).getId());
+        assertTrue(assets.get(0).isDuplicate());
     }
 
 
