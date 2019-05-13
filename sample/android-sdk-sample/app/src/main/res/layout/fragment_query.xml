@@ -25,7 +25,7 @@
             android:text="Account Number" />
 
         <EditText
-            android:id="@+id/accountNumber"
+            android:id="@+id/tvAccountNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -33,14 +33,14 @@
             android:text="" />
 
         <CheckBox
-            android:id="@+id/pending"
+            android:id="@+id/cbPending"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Pending" />
 
         <Button
-            android:id="@+id/queryBitmarksBtn"
+            android:id="@+id/btnQueryBitmarks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -54,7 +54,7 @@
             android:orientation="vertical">
 
             <ListView
-                android:id="@+id/bitmarksListView"
+                android:id="@+id/lvBitmarks"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             </ListView>

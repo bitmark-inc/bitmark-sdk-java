@@ -23,14 +23,14 @@
 
             <!--Transfer Information-->
             <TextView
-                android:id="@+id/fileContent"
+                android:id="@+id/tvFileContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Your Bitmark Id" />
 
             <EditText
-                android:id="@+id/transferBitmarkId"
+                android:id="@+id/edtTransferBitmarkId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -44,7 +44,7 @@
                 android:text="Receiver Account Number" />
 
             <EditText
-                android:id="@+id/receiverAccountNumber"
+                android:id="@+id/edtReceiverAccountNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -64,14 +64,14 @@
                 android:textColor="#fff"/>
 
             <Button
-                android:id="@+id/transferOneSignatureBtn"
+                android:id="@+id/btnTransferOneSignature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Transfer" />
 
             <TextView
-                android:id="@+id/transferMessage"
+                android:id="@+id/tvTransferMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -91,14 +91,14 @@
                 android:textColor="#fff"/>
 
             <Button
-                android:id="@+id/sendTransferOfferBtn"
+                android:id="@+id/btnSendTransferOffer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Send Transfer Offer" />
 
             <Button
-                android:id="@+id/cancelTransferOfferBtn"
+                android:id="@+id/btnCancelTransferOffer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -132,7 +132,7 @@
                     android:text="Recovery Phrase" />
 
                 <EditText
-                    android:id="@+id/receiverRecoveryPhrase"
+                    android:id="@+id/edtReceiverRecoveryPhrase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -140,13 +140,13 @@
                     android:text="soda friend wish rocket rural flag seed debris unknown layer struggle sugar" />
 
                 <Button
-                    android:id="@+id/acceptTransferOfferBtn"
+                    android:id="@+id/btnAcceptTransferOffer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accept Transfer Offer" />
 
                 <TextView
-                    android:id="@+id/transfer2SignaturesMessage"
+                    android:id="@+id/tvTransfer2SignaturesMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"

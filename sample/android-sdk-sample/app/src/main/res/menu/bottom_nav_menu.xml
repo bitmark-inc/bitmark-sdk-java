@@ -17,7 +17,7 @@
         android:title="@string/title_query" />
 
     <item
-        android:id="@+id/navigation_transsfer"
+        android:id="@+id/navigation_transfer"
         android:icon="@drawable/ic_baseline_compare_arrows_24px"
         android:title="@string/title_transfer" />
 

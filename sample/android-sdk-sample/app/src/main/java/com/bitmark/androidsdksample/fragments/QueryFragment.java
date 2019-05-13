@@ -54,12 +54,12 @@ public class QueryFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Button generateRandomFileBtn = view.findViewById(R.id.queryBitmarksBtn);
-        generateRandomFileBtn.setOnClickListener(onClickListener);
+        Button btnQueryBitmarks = view.findViewById(R.id.btnQueryBitmarks);
+        btnQueryBitmarks.setOnClickListener(onClickListener);
 
-        edtAccountNumber = view.findViewById(R.id.accountNumber);
-        cbPending = view.findViewById(R.id.pending);
-        lvBitmarks = view.findViewById(R.id.bitmarksListView);
+        edtAccountNumber = view.findViewById(R.id.tvAccountNumber);
+        cbPending = view.findViewById(R.id.cbPending);
+        lvBitmarks = view.findViewById(R.id.lvBitmarks);
         View header = view.inflate(getContext(), R.layout.listview_header, null);
         lvBitmarks.addHeaderView(header);
         lvBitmarks.setOnItemLongClickListener(onItemLongClickListener);
@@ -79,7 +79,7 @@ public class QueryFragment extends Fragment {
 
     private View.OnClickListener onClickListener = v -> {
         switch (v.getId()) {
-            case R.id.queryBitmarksBtn:
+            case R.id.btnQueryBitmarks:
                 queryBitmarksHandler();
                 break;
         }

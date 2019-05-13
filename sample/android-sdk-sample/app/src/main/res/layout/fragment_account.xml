@@ -23,35 +23,33 @@
             android:textColor="#fff"/>
 
         <Button
-            android:id="@+id/createNewAccountBtn"
+            android:id="@+id/btnCreateNewAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="Create New Account" />
 
         <TextView
-            android:id="@+id/accountNumberLbl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Account Number" />
 
         <TextView
-            android:id="@+id/accountNumber"
+            android:id="@+id/tvAccountNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="#303F9F" />
 
         <TextView
-            android:id="@+id/recoveryPhraseLbl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Recovery Phrase" />
 
         <TextView
-            android:id="@+id/recoveryPhrase"
+            android:id="@+id/tvRecoveryPhrase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""

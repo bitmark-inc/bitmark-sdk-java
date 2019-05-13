@@ -2,7 +2,6 @@ package com.bitmark.androidsdksample.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -45,16 +44,16 @@ public class AccountFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Button createNewAccountBtn = view.findViewById(R.id.createNewAccountBtn);
-        createNewAccountBtn.setOnClickListener(onClickListener);
+        Button btnCreateNewAccount = view.findViewById(R.id.btnCreateNewAccount);
+        btnCreateNewAccount.setOnClickListener(onClickListener);
 
-        Button recoverAccountBtn = view.findViewById(R.id.recoverAccountBtn);
-        recoverAccountBtn.setOnClickListener(onClickListener);
+        Button btnRecoverAccount = view.findViewById(R.id.recoverAccountBtn);
+        btnRecoverAccount.setOnClickListener(onClickListener);
 
-        tvAccountNumber = view.findViewById(R.id.accountNumber);
+        tvAccountNumber = view.findViewById(R.id.tvAccountNumber);
         tvAccountNumber.setOnClickListener(onClickListener);
 
-        tvRecoveryPhrase = view.findViewById(R.id.recoveryPhrase);
+        tvRecoveryPhrase = view.findViewById(R.id.tvRecoveryPhrase);
         tvRecoveryPhrase.setOnClickListener(onClickListener);
 
         edtRecoveryPhrase = view.findViewById(R.id.recoveryPhraseInput);
@@ -64,16 +63,16 @@ public class AccountFragment extends Fragment {
 
     private View.OnClickListener onClickListener = v -> {
         switch (v.getId()) {
-            case R.id.createNewAccountBtn:
+            case R.id.btnCreateNewAccount:
                 createNewAccountHandler();
                 break;
             case R.id.recoverAccountBtn:
                 recoverAccountHandler();
                 break;
-            case R.id.accountNumber:
+            case R.id.tvAccountNumber:
                 setClipboard(v.getContext(), tvAccountNumber.getText().toString());
                 break;
-            case R.id.recoveryPhrase:
+            case R.id.tvRecoveryPhrase:
                 setClipboard(v.getContext(), tvRecoveryPhrase.getText().toString());
                 break;
         }

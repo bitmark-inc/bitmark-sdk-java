@@ -61,20 +61,20 @@ public class RegistrationIssuanceFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Button generateRandomFileBtn = view.findViewById(R.id.generateRandomFileBtn);
-        generateRandomFileBtn.setOnClickListener(onClickListener);
+        Button btnGenerateRandomFile = view.findViewById(R.id.btnGenerateRandomFile);
+        btnGenerateRandomFile.setOnClickListener(onClickListener);
 
-        Button registerAssetBtn = view.findViewById(R.id.registerAssetBtn);
-        registerAssetBtn.setOnClickListener(onClickListener);
+        Button btnRegisterAsset = view.findViewById(R.id.btnRegisterAsset);
+        btnRegisterAsset.setOnClickListener(onClickListener);
 
-        Button issueBitmarksBtn = view.findViewById(R.id.issueBitmarksBtn);
-        issueBitmarksBtn.setOnClickListener(onClickListener);
+        Button btnIssueBitmarks = view.findViewById(R.id.btnIssueBitmarks);
+        btnIssueBitmarks.setOnClickListener(onClickListener);
 
-        tvFileContent = view.findViewById(R.id.fileContent);
-        tvFilePath = view.findViewById(R.id.filePath);
-        edtAssetId = view.findViewById(R.id.assetId);
-        edtQuantity = view.findViewById(R.id.quantity);
-        lvBitmarks = view.findViewById(R.id.bitmarksListView);
+        tvFileContent = view.findViewById(R.id.tvFileContent);
+        tvFilePath = view.findViewById(R.id.tvFilePath);
+        edtAssetId = view.findViewById(R.id.edtAssetId);
+        edtQuantity = view.findViewById(R.id.edtQuantity);
+        lvBitmarks = view.findViewById(R.id.lvBitmarks);
         View header = view.inflate(getContext(), R.layout.listview_header, null);
         lvBitmarks.addHeaderView(header);
         progressBar = view.findViewById(R.id.progressBar);
@@ -88,13 +88,13 @@ public class RegistrationIssuanceFragment extends Fragment {
 
     private View.OnClickListener onClickListener = v -> {
         switch (v.getId()) {
-            case R.id.generateRandomFileBtn:
+            case R.id.btnGenerateRandomFile:
                 generateRandomFileHandler();
                 break;
-            case R.id.registerAssetBtn:
+            case R.id.btnRegisterAsset:
                 registerAssetHandler();
                 break;
-            case R.id.issueBitmarksBtn:
+            case R.id.btnIssueBitmarks:
                 issueBitmarksHandler();
                 break;
         }

@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_query:
                     replaceByQueryFragment();
                     return true;
-                case R.id.navigation_transsfer:
+                case R.id.navigation_transfer:
                     replaceByTransferFragment();
                     return true;
                 default:

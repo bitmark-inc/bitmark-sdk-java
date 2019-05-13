@@ -56,24 +56,24 @@ public class TransferFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Button transferOneSignatureBtn = view.findViewById(R.id.transferOneSignatureBtn);
-        transferOneSignatureBtn.setOnClickListener(onClickListener);
+        Button btnTransferOneSignature = view.findViewById(R.id.btnTransferOneSignature);
+        btnTransferOneSignature.setOnClickListener(onClickListener);
 
-        Button sendTransferOfferBtn = view.findViewById(R.id.sendTransferOfferBtn);
-        sendTransferOfferBtn.setOnClickListener(onClickListener);
+        Button btnSendTransferOffer = view.findViewById(R.id.btnSendTransferOffer);
+        btnSendTransferOffer.setOnClickListener(onClickListener);
 
-        btnCancelTransferOffer = view.findViewById(R.id.cancelTransferOfferBtn);
+        btnCancelTransferOffer = view.findViewById(R.id.btnCancelTransferOffer);
         btnCancelTransferOffer.setOnClickListener(onClickListener);
 
-        Button acceptTransferOfferBtn = view.findViewById(R.id.acceptTransferOfferBtn);
-        acceptTransferOfferBtn.setOnClickListener(onClickListener);
+        Button btnAcceptTransferOffer = view.findViewById(R.id.btnAcceptTransferOffer);
+        btnAcceptTransferOffer.setOnClickListener(onClickListener);
 
-        edtTransferBitmark = view.findViewById(R.id.transferBitmarkId);
-        edtReceiverAccountNumber = view.findViewById(R.id.receiverAccountNumber);
-        tvTransferMessage = view.findViewById(R.id.transferMessage);
+        edtTransferBitmark = view.findViewById(R.id.edtTransferBitmarkId);
+        edtReceiverAccountNumber = view.findViewById(R.id.edtReceiverAccountNumber);
+        tvTransferMessage = view.findViewById(R.id.tvTransferMessage);
         receiverContainer = view.findViewById(R.id.receiverContainer);
-        edtReceiverRecoveryPhrase = view.findViewById(R.id.receiverRecoveryPhrase);
-        tvTransfer2SignaturesMessage = view.findViewById(R.id.transfer2SignaturesMessage);
+        edtReceiverRecoveryPhrase = view.findViewById(R.id.edtReceiverRecoveryPhrase);
+        tvTransfer2SignaturesMessage = view.findViewById(R.id.tvTransfer2SignaturesMessage);
 
         progressBar = view.findViewById(R.id.progressBar);
     }
@@ -86,16 +86,16 @@ public class TransferFragment extends Fragment {
 
     private View.OnClickListener onClickListener = v -> {
         switch (v.getId()) {
-            case R.id.transferOneSignatureBtn:
+            case R.id.btnTransferOneSignature:
                 transferOneSignatureHandler();
                 break;
-            case R.id.sendTransferOfferBtn:
+            case R.id.btnSendTransferOffer:
                 sendTransferOfferHandler();
                 break;
-            case R.id.cancelTransferOfferBtn:
+            case R.id.btnCancelTransferOffer:
                 cancelTransferOfferHandler();
                 break;
-            case R.id.acceptTransferOfferBtn:
+            case R.id.btnAcceptTransferOffer:
                 acceptTransferOfferHandler();
                 break;
         }
@@ -152,7 +152,7 @@ public class TransferFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
         Single<String> single = sendTransferOffer(Global.currentAccount, bitmarkId, receiverAccountNumber);
-        single.subscribeOn(Schedulers.io())
+        Disposable disposable = single.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> progressBar.setVisibility(View.INVISIBLE))
                 .subscribe(txId -> {
@@ -162,7 +162,9 @@ public class TransferFragment extends Fragment {
                 }, error -> {
                     Toast.makeText(getContext(), "Can not send transfer offer", Toast.LENGTH_LONG).show();
                     error.printStackTrace();
-                }).toString();
+                });
+
+        compositeDisposable.add(disposable);
     }
 
     private void cancelTransferOfferHandler() {
@@ -177,7 +179,7 @@ public class TransferFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
         Single<String> single = cancelTransferOffer(Global.currentAccount, bitmarkId);
-        single.subscribeOn(Schedulers.io())
+        Disposable disposable = single.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> progressBar.setVisibility(View.INVISIBLE))
                 .subscribe(txId -> {
@@ -187,7 +189,9 @@ public class TransferFragment extends Fragment {
                 }, error -> {
                     Toast.makeText(getContext(), "Can not cancel transfer offer", Toast.LENGTH_LONG).show();
                     error.printStackTrace();
-                }).toString();
+                });
+
+        compositeDisposable.add(disposable);
     }
 
     private void acceptTransferOfferHandler() {
@@ -215,7 +219,7 @@ public class TransferFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         tvTransfer2SignaturesMessage.setVisibility(View.GONE);
         Single<String> single = acceptTransferOffer(receiverAccount, bitmarkId);
-        single.subscribeOn(Schedulers.io())
+        Disposable disposable = single.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> progressBar.setVisibility(View.INVISIBLE))
                 .subscribe(txId -> {
@@ -225,6 +229,8 @@ public class TransferFragment extends Fragment {
                 }, error -> {
                     Toast.makeText(getContext(), "Can not accept transfer offer", Toast.LENGTH_LONG).show();
                     error.printStackTrace();
-                }).toString();
+                });
+
+        compositeDisposable.add(disposable);
     }
 }
