@@ -1,4 +1,4 @@
-package com.bitmark.androidsdksample;
+package com.bitmark.androidsdksample.view;
 
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -6,12 +6,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
+import com.bitmark.androidsdksample.R;
 import com.bitmark.androidsdksample.constants.AppConstants;
-import com.bitmark.androidsdksample.fragments.AccountFragment;
-import com.bitmark.androidsdksample.fragments.QueryFragment;
-import com.bitmark.androidsdksample.fragments.RegistrationIssuanceFragment;
-import com.bitmark.androidsdksample.fragments.TransferFragment;
-import com.bitmark.androidsdksample.samples.SDKSample;
+import com.bitmark.androidsdksample.view.AccountFragment;
+import com.bitmark.androidsdksample.view.QueryFragment;
+import com.bitmark.androidsdksample.view.RegistrationIssuanceFragment;
+import com.bitmark.androidsdksample.view.TransferFragment;
+import com.bitmark.androidsdksample.sdksamples.SDKSample;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navView;

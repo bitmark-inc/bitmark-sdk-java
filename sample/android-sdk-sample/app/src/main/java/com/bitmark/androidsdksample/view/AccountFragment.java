@@ -1,4 +1,4 @@
-package com.bitmark.androidsdksample.fragments;
+package com.bitmark.androidsdksample.view;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -21,11 +21,11 @@ import com.bitmark.sdk.features.Account;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.bitmark.androidsdksample.samples.AccountSample.createNewAccount;
-import static com.bitmark.androidsdksample.samples.AccountSample.getAccountFromRecoveryPhrase;
-import static com.bitmark.androidsdksample.samples.AccountSample.getRecoveryPhraseFromAccount;
-import static com.bitmark.androidsdksample.samples.StoreKeySample.getAccountFromKeyStore;
-import static com.bitmark.androidsdksample.samples.StoreKeySample.storeAccountToKeystore;
+import static com.bitmark.androidsdksample.sdksamples.AccountSample.createNewAccount;
+import static com.bitmark.androidsdksample.sdksamples.AccountSample.getAccountFromRecoveryPhrase;
+import static com.bitmark.androidsdksample.sdksamples.AccountSample.getRecoveryPhraseFromAccount;
+import static com.bitmark.androidsdksample.sdksamples.StoreKeySample.getAccountFromKeyStore;
+import static com.bitmark.androidsdksample.sdksamples.StoreKeySample.storeAccountToKeystore;
 import static com.bitmark.androidsdksample.utils.CommonUtil.setClipboard;
 import static com.bitmark.androidsdksample.utils.KeyUtil.getAccountNumber;
 

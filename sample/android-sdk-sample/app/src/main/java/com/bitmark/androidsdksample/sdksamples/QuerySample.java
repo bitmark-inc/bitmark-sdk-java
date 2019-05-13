@@ -1,4 +1,4 @@
-package com.bitmark.androidsdksample.samples;
+package com.bitmark.androidsdksample.sdksamples;
 
 import com.bitmark.apiservice.params.query.AssetQueryBuilder;
 import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;

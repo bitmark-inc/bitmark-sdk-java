@@ -1,4 +1,4 @@
-package com.bitmark.androidsdksample.samples;
+package com.bitmark.androidsdksample.sdksamples;
 
 import com.bitmark.apiservice.params.TransferOfferParams;
 import com.bitmark.apiservice.params.TransferParams;
@@ -12,7 +12,7 @@ import com.bitmark.sdk.features.Bitmark;
 
 import io.reactivex.Single;
 
-import static com.bitmark.androidsdksample.samples.QuerySample.queryBitmarkById;
+import static com.bitmark.androidsdksample.sdksamples.QuerySample.queryBitmarkById;
 
 public class BitmarkTransferSample {
     public static Single<String> transferOneSignature(Account sender, String bitmarkId, String receiverAccountNumber) {

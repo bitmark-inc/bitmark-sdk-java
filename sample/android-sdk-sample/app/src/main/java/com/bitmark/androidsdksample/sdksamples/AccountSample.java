@@ -1,4 +1,4 @@
-package com.bitmark.androidsdksample.samples;
+package com.bitmark.androidsdksample.sdksamples;
 
 import android.text.TextUtils;
 

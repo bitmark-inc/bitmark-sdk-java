@@ -1,4 +1,4 @@
-package com.bitmark.androidsdksample.fragments;
+package com.bitmark.androidsdksample.view;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -32,7 +32,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.bitmark.androidsdksample.samples.QuerySample.queryBitmarks;
+import static com.bitmark.androidsdksample.sdksamples.QuerySample.queryBitmarks;
 import static com.bitmark.androidsdksample.utils.CommonUtil.setClipboard;
 
 public class QueryFragment extends Fragment {

@@ -1,4 +1,4 @@
-package com.bitmark.androidsdksample.fragments;
+package com.bitmark.androidsdksample.view;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -25,11 +25,11 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.bitmark.androidsdksample.samples.AccountSample.getAccountFromRecoveryPhrase;
-import static com.bitmark.androidsdksample.samples.BitmarkTransferSample.acceptTransferOffer;
-import static com.bitmark.androidsdksample.samples.BitmarkTransferSample.cancelTransferOffer;
-import static com.bitmark.androidsdksample.samples.BitmarkTransferSample.sendTransferOffer;
-import static com.bitmark.androidsdksample.samples.BitmarkTransferSample.transferOneSignature;
+import static com.bitmark.androidsdksample.sdksamples.AccountSample.getAccountFromRecoveryPhrase;
+import static com.bitmark.androidsdksample.sdksamples.BitmarkTransferSample.acceptTransferOffer;
+import static com.bitmark.androidsdksample.sdksamples.BitmarkTransferSample.cancelTransferOffer;
+import static com.bitmark.androidsdksample.sdksamples.BitmarkTransferSample.sendTransferOffer;
+import static com.bitmark.androidsdksample.sdksamples.BitmarkTransferSample.transferOneSignature;
 import static com.bitmark.androidsdksample.utils.Global.hasCurrentAccount;
 
 public class TransferFragment extends Fragment {
