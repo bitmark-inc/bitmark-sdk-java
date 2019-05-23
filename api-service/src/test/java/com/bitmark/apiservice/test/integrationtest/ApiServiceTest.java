@@ -74,11 +74,13 @@ public class ApiServiceTest extends BaseTest {
         RegistrationParams params = new RegistrationParams(asset.getName(), metadata, ADDRESS1);
         params.generateFingerprint(asset);
         params.sign(KEY1);
-        RegistrationResponse response =
-                await(callback -> ApiService.getInstance().registerAsset(params, callback));
-        List<RegistrationResponse.Asset> assets = response.getAssets();
-        assertNotNull(assets.get(0).getId());
-        assertTrue(assets.get(0).isDuplicate());
+
+        HttpException exception = assertThrows(HttpException.class,
+                () -> await((Callable1<RegistrationResponse>) callback -> ApiService.getInstance().registerAsset(params, callback)));
+
+        assertEquals(HTTP_BAD_REQUEST, exception.getStatusCode());
+        assertEquals(1000, exception.getErrorCode());
+        assertEquals("asset already registered", exception.getReason());
     }
 
 
