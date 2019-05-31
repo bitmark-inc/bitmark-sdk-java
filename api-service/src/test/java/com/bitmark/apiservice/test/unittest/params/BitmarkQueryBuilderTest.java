@@ -46,7 +46,7 @@ public class BitmarkQueryBuilderTest extends BaseTest {
     public void testBuildAssetQueryBuilder_InvalidQueryValues_CorrectParamsIsReturn() {
         assertThrows(ValidateException.class, () -> new AssetQueryBuilder().assetIds(null));
         assertThrows(ValidateException.class, () -> new AssetQueryBuilder().limit(-1));
-        assertThrows(ValidateException.class, () -> new AssetQueryBuilder().registrant(""));
+        assertThrows(ValidateException.class, () -> new AssetQueryBuilder().registeredBy(""));
     }
 
     @Test
@@ -66,10 +66,8 @@ public class BitmarkQueryBuilderTest extends BaseTest {
         assertThrows(ValidateException.class, () -> new BitmarkQueryBuilder().pending(null));
         assertThrows(ValidateException.class, () -> new BitmarkQueryBuilder().offerTo(null));
         assertThrows(ValidateException.class, () -> new BitmarkQueryBuilder().offerTo(""));
-        assertThrows(ValidateException.class, () -> new BitmarkQueryBuilder().referencedAssetId(
-                ""));
-        assertThrows(ValidateException.class,
-                () -> new BitmarkQueryBuilder().referencedAssetId(null));
+        assertThrows(ValidateException.class, () -> new BitmarkQueryBuilder().referencedAsset(""));
+        assertThrows(ValidateException.class, () -> new BitmarkQueryBuilder().referencedAsset(null));
     }
 
     @Test
@@ -79,28 +77,28 @@ public class BitmarkQueryBuilderTest extends BaseTest {
         assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().loadAsset(null));
         assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().ownedBy(null));
         assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().ownedBy(""));
-        assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().referenceAsset(null));
-        assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().referenceAsset(""));
-        assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().referenceBitmark(null));
-        assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().referenceBitmark(""));
+        assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().referencedAsset(null));
+        assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().referencedAsset(""));
+        assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().referencedBitmark(null));
+        assertThrows(ValidateException.class, () -> new TransactionQueryBuilder().referencedBitmark(""));
     }
 
     private static Stream<Arguments> createAssetQueryBuilder() {
-        return Stream.of(Arguments.of(new AssetQueryBuilder().registrant("registrantId").limit(15), "limit=15&registrant=registrantId"),
+        return Stream.of(Arguments.of(new AssetQueryBuilder().registeredBy("registrantId").limit(15), "limit=15&pending=true&registrant=registrantId"),
                 Arguments.of(new AssetQueryBuilder().assetIds(new String[]{"abc", "def"}),
-                        "asset_ids=abc&asset_ids=def&limit=100"),
-                Arguments.of(new AssetQueryBuilder().limit(23).assetIds(new String[]{"abc"}).registrant("registrantId"), "asset_ids=abc&limit=23&registrant=registrantId"));
+                        "asset_ids=abc&asset_ids=def&limit=100&pending=true"),
+                Arguments.of(new AssetQueryBuilder().limit(23).assetIds(new String[]{"abc"}).registeredBy("registrantId"), "asset_ids=abc&limit=23&pending=true&registrant=registrantId"));
     }
 
     private static Stream<Arguments> createBitmarkQueryBuilder() {
         return Stream.of(Arguments.of(new BitmarkQueryBuilder().issuedBy("issuedById").pending(true), "issued_by=issuedById&limit=100&pending=true"),
-                Arguments.of(new BitmarkQueryBuilder().limit(23).referencedAssetId("assetId").at(1234L).to("later"), "asset_id=assetId&at=1234&limit=23&to=later"));
+                Arguments.of(new BitmarkQueryBuilder().limit(23).referencedAsset("assetId").at(1234L).to("later"), "asset_id=assetId&at=1234&limit=23&pending=true&to=later"));
     }
 
     private static Stream<Arguments> createTxQueryBuilder() {
         return Stream.of(Arguments.of(new TransactionQueryBuilder().loadAsset(true).limit(10),
-                "asset=true&limit=10"),
-                Arguments.of(new TransactionQueryBuilder().referenceAsset("assetId").ownedBy(
-                        "ownedById"), "asset_id=assetId&limit=100&owner=ownedById"));
+                "asset=true&limit=10&pending=true>"),
+                Arguments.of(new TransactionQueryBuilder().referencedAsset("assetId").ownedBy(
+                        "ownedById"), "asset_id=assetId&limit=100&owner=ownedById&pending=true>"));
     }
 }

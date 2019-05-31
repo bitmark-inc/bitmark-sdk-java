@@ -53,7 +53,7 @@ public class ApiService implements BitmarkApi {
 
             String assetId = params.getAssetId();
             GetBitmarksResponse bitmarksRes = await(bitmarkCallback -> listBitmarks(
-                    new BitmarkQueryBuilder().referencedAssetId(assetId).pending(true).limit(1)
+                    new BitmarkQueryBuilder().referencedAsset(assetId).pending(true).limit(1)
                                              .build(),
                     bitmarkCallback));
 
@@ -95,7 +95,7 @@ public class ApiService implements BitmarkApi {
     @Override
     public void getBitmark(String bitmarkId, boolean includeAsset,
                            Callback1<GetBitmarkResponse> callback) {
-        final String path = String.format("/%s/bitmarks/%s?asset=%b", V3
+        final String path = String.format("/%s/bitmarks/%s?asset=%b&pending=true", V3
                 , bitmarkId, includeAsset);
         client.getAsync(path, toGetBitmarkResponse(callback));
 
@@ -122,7 +122,7 @@ public class ApiService implements BitmarkApi {
     @Override
     public void getTransaction(String txId, boolean includeAsset,
                                Callback1<GetTransactionResponse> callback) {
-        final String path = String.format("/%s/txs/%s?asset=%b", V3,
+        final String path = String.format("/%s/txs/%s?asset=%b&pending=true", V3,
                                           txId, includeAsset);
         client.getAsync(path, toGetTransactionResponse(callback));
     }
