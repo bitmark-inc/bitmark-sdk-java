@@ -37,13 +37,17 @@ public class Bitmark {
         ApiService.getInstance().respondBitmarkOffer(params, callback);
     }
 
-    public static void get(String bitmarkId, boolean includeAsset,
+    public static void get(String bitmarkId, boolean loadAsset,
                            Callback1<GetBitmarkResponse> callback) {
-        ApiService.getInstance().getBitmark(bitmarkId, includeAsset, callback);
+        ApiService.getInstance().getBitmark(bitmarkId, loadAsset, callback);
     }
 
     public static void get(String bitmarkId, Callback1<GetBitmarkResponse> callback) {
         get(bitmarkId, false, callback);
+    }
+
+    public static void getWithAsset(String bitmarkId, Callback1<GetBitmarkResponse> callback) {
+        get(bitmarkId, true, callback);
     }
 
     public static void list(BitmarkQueryBuilder builder, Callback1<GetBitmarksResponse> callback) {

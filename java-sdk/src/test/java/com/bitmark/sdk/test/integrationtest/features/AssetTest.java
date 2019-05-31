@@ -22,8 +22,7 @@ import java.util.Map;
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static com.bitmark.sdk.test.integrationtest.DataProvider.ACCOUNT1;
 import static com.bitmark.sdk.test.integrationtest.DataProvider.KEY1;
-import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -68,8 +67,8 @@ public class AssetTest extends BaseTest {
                                                        (Callable1<RegistrationResponse>) callback -> Asset
                                                                .register(params,
                                                                          callback)));
-        assertEquals(HTTP_FORBIDDEN, exception.getStatusCode());
-        assertEquals(2009, exception.getErrorCode());
+        assertEquals(HTTP_BAD_REQUEST, exception.getStatusCode());
+        assertEquals(1000, exception.getErrorCode());
     }
 
 
