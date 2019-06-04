@@ -41,7 +41,7 @@ public class Bitmark {
 
     public static void get(String bitmarkId, boolean loadAsset,
                            Callback1<GetBitmarkResponse> callback) {
-        ApiService.getInstance().getBitmark(bitmarkId, loadAsset, callback);
+        ApiService.getInstance().getBitmark(bitmarkId, loadAsset, wrapCallbackOnMain(callback));
     }
 
     public static void get(String bitmarkId, Callback1<GetBitmarkResponse> callback) {
