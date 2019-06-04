@@ -2,8 +2,7 @@ package com.bitmark.apiservice.params.query;
 
 import com.google.gson.annotations.SerializedName;
 
-import static com.bitmark.cryptography.utils.Validator.checkValid;
-import static com.bitmark.cryptography.utils.Validator.checkValidString;
+import static com.bitmark.cryptography.utils.Validator.*;
 
 /**
  * @author Hieu Pham
@@ -19,9 +18,16 @@ public class AssetQueryBuilder extends AbsQueryBuilder {
     @SerializedName("asset_ids")
     private String[] assetIds;
 
+    @SerializedName("pending")
+    private Boolean isPending = true;
+
+    private Long at;
+
+    private String to;
+
     private Integer limit = 100;
 
-    public AssetQueryBuilder registrant(String registrant) {
+    public AssetQueryBuilder registeredBy(String registrant) {
         checkValidString(registrant);
         this.registrant = registrant;
         return this;
@@ -33,9 +39,28 @@ public class AssetQueryBuilder extends AbsQueryBuilder {
         return this;
     }
 
+    public AssetQueryBuilder pending(Boolean pending) {
+        checkNonNull(pending);
+        isPending = pending;
+        return this;
+    }
+
     public AssetQueryBuilder limit(Integer limit) {
         checkValid(() -> limit != null && limit > 0 && limit <= 100, "Invalid limit value");
         this.limit = limit;
+        return this;
+    }
+
+    public AssetQueryBuilder at(Long at) {
+        checkValid(() -> at != null && at > 0, "Invalid at value. Must greater than 0");
+        this.at = at;
+        return this;
+    }
+
+    public AssetQueryBuilder to(String to) {
+        checkValid(() -> to != null && (to.equals("earlier") || to.equals("later")), "Invalid " +
+                "value to. It must be 'later' or 'earlier'.");
+        this.to = to;
         return this;
     }
 }

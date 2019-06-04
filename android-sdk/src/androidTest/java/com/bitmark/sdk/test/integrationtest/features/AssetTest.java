@@ -59,7 +59,7 @@ public class AssetTest extends BaseTest {
     @Test
     public void testRegisterAsset_ExistedAsset_CorrectResponseIsReturn() throws Throwable {
         expectedException.expect(HttpException.class);
-        expectedException.expectMessage(containsString("2009"));
+        expectedException.expectMessage(containsString("1000"));
 
         File asset = temporaryFolderRule.newFile("This is an existed file on Bitmark Block chain");
         Address registrant = ACCOUNT1.toAddress();

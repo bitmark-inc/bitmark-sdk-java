@@ -19,7 +19,7 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
     private String issuedBy;
 
     @SerializedName("pending")
-    private Boolean isPending;
+    private Boolean isPending = true;
 
     @SerializedName("offer_to")
     private String offerTo;
@@ -36,6 +36,8 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
     @SerializedName("asset")
     private Boolean loadAsset;
 
+    private Boolean sent;
+
     private Long at;
 
     private String to;
@@ -45,6 +47,13 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
     public BitmarkQueryBuilder ownedBy(String owner) {
         checkValidString(owner);
         this.owner = owner;
+        return this;
+    }
+
+    public BitmarkQueryBuilder ownedByWithTransient(String owner) {
+        checkValidString(owner);
+        this.owner = owner;
+        this.sent = true;
         return this;
     }
 
@@ -78,7 +87,7 @@ public class BitmarkQueryBuilder extends AbsQueryBuilder {
         return this;
     }
 
-    public BitmarkQueryBuilder referencedAssetId(String referencedAssetId) {
+    public BitmarkQueryBuilder referencedAsset(String referencedAssetId) {
         checkValidString(referencedAssetId);
         this.referencedAssetId = referencedAssetId;
         return this;
