@@ -38,11 +38,11 @@ public class HttpClientImpl implements HttpClient {
     private OkHttpClient buildClient(String apiToken) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        // Add Logging
-        builder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
-
         // Add Request Interceptor
         builder.addInterceptor(new BitmarkApiInterceptor(apiToken));
+
+        // Add Logging
+        builder.addInterceptor(new HttpLoggingInterceptor(GlobalConfiguration.logger()).setLevel(GlobalConfiguration.logLevel()));
 
         // Configure the timeout
         int timeout = GlobalConfiguration.connectionTimeout();
