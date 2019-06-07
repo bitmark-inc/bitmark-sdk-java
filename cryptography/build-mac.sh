@@ -14,7 +14,7 @@ export C_INCLUDE_PATH
 # Un-comment when you want to generate swig source
 #gradle :cryptography:generateSWIGsource --full-stacktrace
 
-gradle clean bundleReleaseAar build -p cryptography --stacktrace
+gradle clean bundleReleaseAar build --stacktrace
 
 # Un-comment when you want to distribute/deploy
 #gradle :cryptography:bintrayUpload
