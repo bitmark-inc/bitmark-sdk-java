@@ -83,10 +83,6 @@ public class LibraryLoader {
          */
         LINUX,
         /**
-         * Android
-         */
-        ANDROID,
-        /**
          * The evil borg operating system
          */
         WINDOWS,
@@ -102,19 +98,10 @@ public class LibraryLoader {
 
         static OS getOS() {
             String osName = System.getProperty("os.name").split(" ")[0];
-
             if (osName.equalsIgnoreCase("mac") || osName.equalsIgnoreCase("darwin")) {
                 return OS.DARWIN;
             } else if (osName.equalsIgnoreCase("linux")) {
-                String javaVM = System.getProperty("java.vm.name");
-                String javaVendor = System.getProperty("java.vendor");
-
-                if (javaVendor.contains("Android") || javaVM.equalsIgnoreCase("dalvik")
-                        || javaVM.equalsIgnoreCase("art")) {
-                    return OS.ANDROID;
-                } else {
-                    return OS.LINUX;
-                }
+                return OS.LINUX;
             } else if (osName.equalsIgnoreCase("windows")) {
                 return OS.WINDOWS;
             } else {
@@ -201,8 +188,8 @@ public class LibraryLoader {
         OS os = OS.getOS();
         if (cpu == CPU.UNKNOWN || os == OS.UNKNOWN)
             throw new LibraryLoaderException("Not support platform");
-        if (os == OS.DARWIN || os == OS.LINUX) return "lib";
-        else if (os == OS.ANDROID) {
+        if (os == OS.DARWIN) return "lib";
+        else if (os == OS.LINUX) {
             switch (cpu) {
                 case ARM:
                     return "lib/armeabi-v7a";
@@ -227,8 +214,6 @@ public class LibraryLoader {
                 return "libsodiumjni.dylib";
             case LINUX:
                 return "libsodiumjni.so";
-            case ANDROID:
-                return "libsodiumjni.so";
             default:
                 throw new LibraryLoaderException("Unknown or does not support OS");
         }
@@ -238,8 +223,6 @@ public class LibraryLoader {
         switch (OS.getOS()) {
             case WINDOWS:
                 return "dll";
-            case ANDROID:
-                return "so";
             case LINUX:
                 return "so";
             case DARWIN:
