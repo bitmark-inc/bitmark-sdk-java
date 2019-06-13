@@ -52,5 +52,6 @@ branches:
   only:
   - devel
   - master
+  - standardization
 env:
 - ANDROID_NDK_HOME=$ANDROID_HOME/ndk-bundle
