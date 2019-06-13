@@ -48,7 +48,7 @@ before_script:
 - chmod +x .travis/deploy.sh
 script:
 # Build & test
-- ./gradlew clean build
+- ./gradlew clean check
 #- ./gradlew clean test connectAndroidTest -p cryptography --info
 #- ./gradlew clean test connectAndroidTest -p android-sdk --info
 #- ./gradlew clean test connectAndroidTest -p cryptography --info
