@@ -76,7 +76,7 @@ public class AssetTest extends BaseTest {
     public void testQueryAssetById_ExistedAssetId_CorrectResponseIsReturn() throws Throwable {
         // Query existed assets
         AssetQueryBuilder builder =
-                new AssetQueryBuilder().registrant(ACCOUNT1.getAccountNumber()).limit(1);
+                new AssetQueryBuilder().registeredBy(ACCOUNT1.getAccountNumber()).limit(1);
         List<AssetRecord> assets = await(callback -> Asset.list(builder, callback));
         assertFalse(assets.isEmpty(), "This guy has not registered any assets");
 
@@ -102,7 +102,7 @@ public class AssetTest extends BaseTest {
     public void testQueryAssets_NoCondition_CorrectResponseIsReturn() throws Throwable {
         int limit = 1;
         String registrant = ACCOUNT1.getAccountNumber();
-        AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registrant(registrant);
+        AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registeredBy(registrant);
         List<AssetRecord> assets = await(callback -> Asset.list(builder, callback));
         assertEquals(limit, assets.size());
         assets.forEach(asset -> assertEquals(registrant, asset.getRegistrant()));
