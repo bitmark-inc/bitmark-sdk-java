@@ -39,6 +39,9 @@ before_install:
   - unzip android-ndk-r20-linux-x86_64.zip -d $HOME
   - export ANDROID_NDK_HOME=$HOME/android-ndk-20
   - export PATH=$PATH:$ANDROID_NDK_HOME
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 install:
 
 before_script:
