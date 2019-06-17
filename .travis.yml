@@ -35,8 +35,8 @@ before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
   - chmod +x gradlew
-  - wget https://dl.google.com/android/repository/android-ndk-r20-linux-x86_64.zip
-  - unzip android-ndk-r20-linux-x86_64.zip -d $HOME
+  - wget https://dl.google.com/android/repository/android-ndk-r20-linux-x86_64.zip --quiet
+  - unzip -q android-ndk-r20-linux-x86_64.zip -d $HOME
   - export ANDROID_NDK_HOME=$HOME/android-ndk-20
   - export PATH=$PATH:$ANDROID_NDK_HOME
   - mkdir "$ANDROID_HOME/licenses" || true
@@ -49,8 +49,14 @@ before_script:
   - NDK_HOME=$ANDROID_NDK_HOME && SDK_HOME=$ANDROID_HOME && BINTRAY_USER=$BINTRAY_USER && BINTRAY_API_KEY=$BINTRAY_API_KEY && BINTRAY_GPG_PASS=$BINTRAY_GPG_PASS && BINTRAY_REPO=$BINTRAY_REPO
   - echo -n >local.properties && echo "ndk.dir=$NDK_HOME"$'\n'"sdk.dir=$SDK_HOME"$'\n'"bintray.user=$BINTRAY_USER"$'\n'"bintray.apikey=$BINTRAY_API_KEY"$'\n'"bintray.gpg.password=$BINTRAY_GPG_PASS"$'\n'"bintray.repo=$BINTRAY_REPO" >local.properties
 script:
+  - echo $PWD
+  - pushd cryptography
+  - pushd jni
+  - ./installswig.sh
+  - popd
+  - ./build-linux.sh || travis_terminate 1
+  - popd
   - ./gradlew clean build -p api-service --info
-  - ./gradlew clean build -p cryptography --info
   - ./gradlew clean build -p java-sdk --info
 
 branches:
