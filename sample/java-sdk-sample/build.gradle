@@ -8,5 +8,5 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.bitmark.sdk:java-sdk:1.5'
+    implementation 'com.bitmark.sdk:java-sdk:2.1.0'
 }
