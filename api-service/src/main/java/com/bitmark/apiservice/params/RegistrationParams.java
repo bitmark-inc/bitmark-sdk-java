@@ -24,6 +24,8 @@ import static com.bitmark.cryptography.utils.Validator.checkValid;
  */
 
 public class RegistrationParams extends AbsSingleParams {
+    private static final int ASSET_NAME_MAX_LENGTH = 64;
+    private static final int METADATA_MAX_LENGTH = 2048;
 
     private String name;
 
@@ -36,8 +38,15 @@ public class RegistrationParams extends AbsSingleParams {
     public RegistrationParams(String name, Map<String, String> metadata, Address registrant)
             throws ValidateException {
         checkValid(
-                () -> name != null && registrant != null && !name.isEmpty() && registrant.isValid(),
+                () -> name != null && registrant != null && !name.isEmpty() && metadata != null && registrant.isValid(),
                 "Invalid RegistrationParams");
+        checkValid(
+                () -> name.length() <= ASSET_NAME_MAX_LENGTH,
+                String.format("Name is too long, must be maximum of %s", ASSET_NAME_MAX_LENGTH));
+        checkValid(
+                () -> getJsonMetadata(metadata).length() <= METADATA_MAX_LENGTH,
+                String.format("Metadata is too long, must be maximum of %s", METADATA_MAX_LENGTH));
+
         this.name = name;
         this.metadata = metadata;
         this.registrant = registrant;
@@ -78,10 +87,10 @@ public class RegistrationParams extends AbsSingleParams {
     public String toJson() {
         checkSigned();
         return "{\"assets\":[{\"fingerprint\":\"" + fingerprint + "\",\"name\":\"" + name + "\"," +
-               "\"metadata\":\"" + (metadata != null ? getJsonMetadata(metadata) : "") +
-               "\",\"registrant\":\"" +
-               registrant.getAddress() +
-               "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
+                "\"metadata\":\"" + (metadata != null ? getJsonMetadata(metadata) : "") +
+                "\",\"registrant\":\"" +
+                registrant.getAddress() +
+                "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
     }
 
     @Override
