@@ -201,7 +201,7 @@ public class ApiServiceTest extends BaseTest {
             throws Throwable {
         // Register asset
         Address owner = ADDRESS1;
-        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), null,
+        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), new HashMap<>(),
                                                                        owner);
         registrationParams.generateFingerprint(asset);
         registrationParams.sign(KEY1);
