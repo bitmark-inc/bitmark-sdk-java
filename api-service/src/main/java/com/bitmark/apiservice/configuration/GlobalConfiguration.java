@@ -1,5 +1,7 @@
 package com.bitmark.apiservice.configuration;
 
+import okhttp3.logging.HttpLoggingInterceptor;
+
 import static com.bitmark.cryptography.utils.Validator.checkNonNull;
 
 /**
@@ -59,6 +61,16 @@ public class GlobalConfiguration {
         return INSTANCE.builder.connectionTimeout;
     }
 
+    public static HttpLoggingInterceptor.Logger logger() {
+        validate();
+        return INSTANCE.builder.logger != null ? INSTANCE.builder.logger : HttpLoggingInterceptor.Logger.DEFAULT;
+    }
+
+    public static HttpLoggingInterceptor.Level logLevel() {
+        validate();
+        return INSTANCE.builder.logLevel != null ? INSTANCE.builder.logLevel : HttpLoggingInterceptor.Level.BASIC;
+    }
+
     private static void validate() {
         if (INSTANCE == null) throw new UnsupportedOperationException("You must init " +
                 "Configuration before");
@@ -72,6 +84,10 @@ public class GlobalConfiguration {
         private String apiToken;
 
         private int connectionTimeout = 30; // 30 seconds
+
+        private HttpLoggingInterceptor.Logger logger;
+
+        private HttpLoggingInterceptor.Level logLevel;
 
         Builder() {
         }
@@ -93,6 +109,16 @@ public class GlobalConfiguration {
 
         public Builder withConnectionTimeout(int connectionTimeout) {
             this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public Builder withLogger(HttpLoggingInterceptor.Logger logger) {
+            this.logger = logger;
+            return this;
+        }
+
+        public Builder withLogLevel(HttpLoggingInterceptor.Level logLevel) {
+            this.logLevel = logLevel;
             return this;
         }
 

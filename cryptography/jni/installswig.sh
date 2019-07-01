@@ -11,7 +11,7 @@ else
     tar -xf swig-${VERSION}.tar.gz
     cd swig-${VERSION}
     ./configure --quiet
-    make --quiet -j 5
-    sudo make --quiet install
+    make --silent -j 5
+    sudo make --silent install
 fi
 

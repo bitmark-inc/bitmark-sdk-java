@@ -97,8 +97,8 @@ public class BitmarkQueryBuilderTest extends BaseTest {
 
     private static Stream<Arguments> createTxQueryBuilder() {
         return Stream.of(Arguments.of(new TransactionQueryBuilder().loadAsset(true).limit(10),
-                "asset=true&limit=10&pending=true>"),
+                "asset=true&limit=10&pending=true"),
                 Arguments.of(new TransactionQueryBuilder().referencedAsset("assetId").ownedBy(
-                        "ownedById"), "asset_id=assetId&limit=100&owner=ownedById&pending=true>"));
+                        "ownedById"), "asset_id=assetId&limit=100&owner=ownedById&pending=true"));
     }
 }

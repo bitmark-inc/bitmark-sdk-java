@@ -18,6 +18,10 @@ buildscript {
     }
 }
 
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
 android {
     compileSdkVersion 27
 
@@ -97,7 +101,7 @@ android {
 apply from: '../publication_android.gradle'
 
 task unzipAAR(type: Copy) {
-    def aar = file("${buildDir}/outputs/aar/" + project_publication.ARTIFACT_ID + "-" + project_publication.VERSION + ".aar")
+    def aar = file("${buildDir}/outputs/aar/" + project_publication.ARTIFACT_ID + "-release.aar")
     from zipTree(aar)
     into "${buildDir}/outputs/aar/unzip"
 }
