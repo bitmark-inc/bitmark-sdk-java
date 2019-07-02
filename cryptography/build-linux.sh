@@ -7,11 +7,11 @@
 
 ./build-libsodium-host.sh
 
-gradle :cryptography:tasks --all
+../gradlew :cryptography:tasks --all
 
-gradle generateSWIGsource --full-stacktrace
+../gradlew generateSWIGsource --full-stacktrace
 
-gradle build --full-stacktrace
+../gradlew build --full-stacktrace
 
 # Un-comment when you want to distribute/deploy
 #gradle :cryptography:bintrayUpload

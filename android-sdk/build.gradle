@@ -16,6 +16,11 @@ buildscript {
     }
 }
 
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
+
 android {
     compileSdkVersion 28
 
@@ -53,6 +58,12 @@ android {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/LICENSE-notice.md'
         exclude 'META-INF/ASL2.0'
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
     }
 }
 

@@ -41,8 +41,7 @@ public class TransactionTest extends BaseTest {
         String txId = transactions.get(0).getId();
 
         // Get tx by id
-        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
-                                                                                          callback));
+        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId, callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         assertNotNull(transaction);
         assertEquals(txId, transaction.getId());
@@ -62,9 +61,7 @@ public class TransactionTest extends BaseTest {
         String txId = transactions.get(0).getId();
 
         // Get tx by id
-        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.get(txId,
-                                                                                          true,
-                                                                                          callback));
+        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.getWithAsset(txId, callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         AssetRecord asset = getTransactionResponse.getAsset();
         assertNotNull(transaction);

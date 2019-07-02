@@ -74,11 +74,13 @@ public class ApiServiceTest extends BaseTest {
         RegistrationParams params = new RegistrationParams(asset.getName(), metadata, ADDRESS1);
         params.generateFingerprint(asset);
         params.sign(KEY1);
-        RegistrationResponse response =
-                await(callback -> ApiService.getInstance().registerAsset(params, callback));
-        List<RegistrationResponse.Asset> assets = response.getAssets();
-        assertNotNull(assets.get(0).getId());
-        assertTrue(assets.get(0).isDuplicate());
+
+        HttpException exception = assertThrows(HttpException.class,
+                () -> await((Callable1<RegistrationResponse>) callback -> ApiService.getInstance().registerAsset(params, callback)));
+
+        assertEquals(HTTP_BAD_REQUEST, exception.getStatusCode());
+        assertEquals(1000, exception.getErrorCode());
+        assertEquals("asset already registered", exception.getReason());
     }
 
 
@@ -86,7 +88,7 @@ public class ApiServiceTest extends BaseTest {
     public void testQueryAssetById_ExistedAssetId_CorrectResponseIsReturn() throws Throwable {
         // Query existed assets
         AssetQueryBuilder builder =
-                new AssetQueryBuilder().registrant(ADDRESS1.getAddress()).limit(1);
+                new AssetQueryBuilder().registeredBy(ADDRESS1.getAddress()).limit(1);
         List<AssetRecord> assets =
                 await(callback -> ApiService.getInstance().listAssets(builder.build(), callback));
         assertFalse(assets.isEmpty(), "This guy has not registered any assets");
@@ -115,11 +117,21 @@ public class ApiServiceTest extends BaseTest {
     public void testQueryAssets_NoCondition_CorrectResponseIsReturn() throws Throwable {
         int limit = 1;
         String registrant = ADDRESS1.getAddress();
-        AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registrant(registrant);
+        AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).registeredBy(registrant);
         List<AssetRecord> assets =
                 await(callback -> ApiService.getInstance().listAssets(builder.build(), callback));
         assertEquals(limit, assets.size());
         assets.forEach(asset -> assertEquals(registrant, asset.getRegistrant()));
+    }
+
+    @Test
+    public void testQueryAssets_ByAtAndTo_CorrectResponseIsReturn() throws Throwable {
+        int limit = 10;
+        long at = 5;
+        AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).at(at).to("earlier").pending(true);
+        List<AssetRecord> assets =
+                await(callback -> ApiService.getInstance().listAssets(builder.build(), callback));
+        assets.forEach(asset -> assertTrue(asset.getOffset() <= at));
     }
 
     //endregion ============= ASSET TESTS ===============
@@ -189,7 +201,7 @@ public class ApiServiceTest extends BaseTest {
             throws Throwable {
         // Register asset
         Address owner = ADDRESS1;
-        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), null,
+        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), new HashMap<>(),
                                                                        owner);
         registrationParams.generateFingerprint(asset);
         registrationParams.sign(KEY1);
@@ -1131,6 +1143,31 @@ public class ApiServiceTest extends BaseTest {
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
         assertEquals(limit, transactions.size());
         transactions.forEach(transaction -> assertEquals(owner, transaction.getOwner()));
+    }
+
+    @Test
+    public void testQueryTransactions_ByAtAndTo_CorrectResponseIsReturn() throws Throwable {
+        int limit = 10;
+        long at = 5;
+        TransactionQueryBuilder builder =
+                new TransactionQueryBuilder().at(at).to("earlier").limit(limit);
+        GetTransactionsResponse getTransactionsResponse =
+                await(callback -> ApiService.getInstance()
+                        .listTransactions(builder.build(), callback));
+        List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
+        transactions.forEach(transaction -> assertTrue(transaction.getBlockOffset() <= at));
+    }
+
+    @Test
+    public void testQueryTransactions_ByBlockNumber_CorrectResponseIsReturn() throws Throwable {
+        long blockNumber = 10;
+        TransactionQueryBuilder builder =
+                new TransactionQueryBuilder().referencedBlockNumber(blockNumber).pending(true);
+        GetTransactionsResponse getTransactionsResponse =
+                await(callback -> ApiService.getInstance()
+                        .listTransactions(builder.build(), callback));
+        List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
+        transactions.forEach(transaction -> assertTrue(transaction.getBlockNumber() == blockNumber));
     }
 
     //endregion ============= TXS TESTS ===============

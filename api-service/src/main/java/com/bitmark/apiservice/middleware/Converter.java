@@ -84,7 +84,8 @@ public class Converter {
                 try {
                     String raw = response.body().string();
                     Map<String, Object> json = jsonToMap(raw);
-                    callback.onSuccess(json.get("txid").toString());
+                    String txId = json.get("txid") != null ? json.get("txid").toString() : json.get("txId").toString();
+                    callback.onSuccess(txId);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }

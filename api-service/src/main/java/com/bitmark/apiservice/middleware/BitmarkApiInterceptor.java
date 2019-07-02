@@ -31,6 +31,7 @@ public class BitmarkApiInterceptor implements Interceptor {
                 .addHeader("Cache-Control", "no-cache")
                 .addHeader("Cache-Control", "no-store")
                 .addHeader("Accept-Encoding","*")
+                .addHeader("User-Agent", String.format("%s, %s, %s", "bitmark-sdk-java", System.getProperty("os.name"), System.getProperty("java.version")))
                 .build();
         return chain.proceed(request);
     }

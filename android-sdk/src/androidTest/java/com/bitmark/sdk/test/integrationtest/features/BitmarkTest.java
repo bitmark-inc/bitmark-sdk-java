@@ -288,9 +288,7 @@ public class BitmarkTest extends BaseTest {
 
         // Respond offer
         GetBitmarkResponse response =
-                await(callback -> Bitmark.get(bitmark.getId(),
-                                              false,
-                                              callback));
+                await(callback -> Bitmark.get(bitmark.getId(), callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.accept(offerRecord);
         responseParams.sign(KEY2);
@@ -323,8 +321,7 @@ public class BitmarkTest extends BaseTest {
 
         // Respond offer
         GetBitmarkResponse response =
-                await(callback -> Bitmark.get(bitmark.getId(),
-                                              callback));
+                await(callback -> Bitmark.get(bitmark.getId(), callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.cancel(offerRecord,
                                                                               bitmark.getOwner());
@@ -357,8 +354,7 @@ public class BitmarkTest extends BaseTest {
 
         // Respond offer
         GetBitmarkResponse response =
-                await(callback -> Bitmark.get(bitmark.getId(),
-                                              callback));
+                await(callback -> Bitmark.get(bitmark.getId(), callback));
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.reject(offerRecord);
         responseParams.setSigningKey(KEY2);
@@ -381,7 +377,7 @@ public class BitmarkTest extends BaseTest {
         // Get bitmark by id
         String id = bitmarksResponse.getBitmarks().get(0).getId();
         GetBitmarkResponse bitmarkResponse =
-                await(callback -> Bitmark.get(id, true, callback));
+                await(callback -> Bitmark.getWithAsset(id, callback));
         BitmarkRecord bitmark = bitmarkResponse.getBitmark();
         AssetRecord asset = bitmarkResponse.getAsset();
         assertNotNull(bitmark);

@@ -2,6 +2,7 @@ package com.bitmark.sdk.test.unittest;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.junit.jupiter.api.BeforeAll;
 import com.bitmark.sdk.features.BitmarkSDK;
 
@@ -19,7 +20,7 @@ public abstract class BaseTest {
     @BeforeAll
     public static void beforeAll() {
         if (!BitmarkSDK.isInitialized())
-            BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg").withNetwork(NETWORK));
+            BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg").withNetwork(NETWORK).withLogLevel(HttpLoggingInterceptor.Level.NONE));
 
     }
 
