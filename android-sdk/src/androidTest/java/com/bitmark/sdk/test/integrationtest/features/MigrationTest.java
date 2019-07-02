@@ -6,7 +6,6 @@ import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.Account;
 import com.bitmark.sdk.features.Migration;
 import com.bitmark.sdk.test.integrationtest.BaseTest;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class MigrationTest extends BaseTest {
 
     private static final long TIMEOUT = 50000;
 
-    @Test
+    //@Test
     public void testMigration_Valid24Words_CorrectValuesReturn() throws Throwable {
         List<String[]> twentyFourWords = new ArrayList<String[]>() {{
             add(("abuse tooth riot whale dance dawn armor patch tube sugar edit clean guilt " +
@@ -54,7 +53,7 @@ public class MigrationTest extends BaseTest {
 
     }
 
-    @Test
+    //@Test
     public void testMigration_Invalid24Words_ErrorIsThrow() throws Throwable {
 
         List<String[]> twentyFourWords = new ArrayList<String[]>() {{

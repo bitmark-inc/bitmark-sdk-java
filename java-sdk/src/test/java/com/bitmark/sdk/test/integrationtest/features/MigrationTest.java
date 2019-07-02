@@ -3,19 +3,18 @@ package com.bitmark.sdk.test.integrationtest.features;
 import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.cryptography.error.ValidateException;
-import com.bitmark.sdk.test.integrationtest.BaseTest;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import com.bitmark.sdk.features.Account;
 import com.bitmark.sdk.features.Migration;
+import com.bitmark.sdk.test.integrationtest.BaseTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static com.bitmark.sdk.features.internal.Version.TWELVE;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Hieu Pham
@@ -28,7 +27,7 @@ public class MigrationTest extends BaseTest {
 
     private static final long TIMEOUT = 50000;
 
-    @ParameterizedTest
+    //@ParameterizedTest
     @MethodSource("createValid24Words")
     public void testMigration_Valid24Words_CorrectValuesReturn(String[] twentyFourWords)
             throws Throwable {
@@ -43,7 +42,7 @@ public class MigrationTest extends BaseTest {
         assertFalse(bitmarksId.isEmpty());
     }
 
-    @ParameterizedTest
+    //@ParameterizedTest
     @MethodSource("createInvalid24Words")
     public void testMigration_Invalid24Words_ErrorIsThrow(String[] words) {
         assertThrows(ValidateException.class,
