@@ -65,7 +65,7 @@ before_script:
   - adb shell input keyevent 82 &
 script:
   - echo $PWD
-  - ./gradlew clean build -p cryptography --info
+  - ./gradlew clean build -x compileSodiumjniSharedLibrarySodiumjniC -x compileSodiumjniStaticLibrarySodiumjniC -x linkSodiumjniSharedLibrary -p cryptography --info
   - ./gradlew clean build -p api-service --info
   - ./gradlew clean build -p java-sdk --info
   - ./gradlew clean build connectedCheck -p android-sdk --info
