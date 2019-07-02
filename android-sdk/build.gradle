@@ -59,6 +59,12 @@ android {
         exclude 'META-INF/LICENSE-notice.md'
         exclude 'META-INF/ASL2.0'
     }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 apply from: '../publication_android.gradle'

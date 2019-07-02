@@ -55,7 +55,12 @@ android {
             minifyEnabled false
         }
     }
-
+    
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 [
