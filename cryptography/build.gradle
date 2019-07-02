@@ -18,6 +18,10 @@ buildscript {
     }
 }
 
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
 android {
     compileSdkVersion 27
 
@@ -51,7 +55,12 @@ android {
             minifyEnabled false
         }
     }
-
+    
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 [

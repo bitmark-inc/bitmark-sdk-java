@@ -113,7 +113,7 @@ public class Main {
          * 3.3.1 Query assets
          * Ex: Query assets which you registered
          */
-        AssetQueryBuilder assetQueryBuilder = new AssetQueryBuilder().registrant(account.getAccountNumber());
+        AssetQueryBuilder assetQueryBuilder = new AssetQueryBuilder().registeredBy(account.getAccountNumber());
         List<AssetRecord> assetRecords = queryAssets(assetQueryBuilder);
 
         // 3.3.2 Query asset

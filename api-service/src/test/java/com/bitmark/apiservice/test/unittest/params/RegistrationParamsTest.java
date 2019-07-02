@@ -92,19 +92,40 @@ public class RegistrationParamsTest extends BaseTest {
         }}, ADDRESS1), Arguments.of("Asset2", new HashMap<String, String>() {{
             put("name", "name");
             put("description", "description");
-        }}, ADDRESS1), Arguments.of("Asset3", new HashMap<String, String>() {{
-            put("name", "name");
-        }}, ADDRESS1));
+        }}, ADDRESS1), Arguments.of("Asset3", null, ADDRESS1));
     }
 
     private static Stream<Arguments> createInvalidNameMetadataAddress() {
         return Stream.of(Arguments.of("", new HashMap<String, String>() {{
-            put("name", "name");
-            put("description", "description");
-        }}, ADDRESS1), Arguments.of("Asset2", new HashMap<String, String>() {{
-            put("name", "name");
-            put("description", "description");
-        }}, null));
+                             put("name", "name");
+                             put("description", "description");
+                         }}, ADDRESS1),
+                         Arguments
+                                 .of("This is too longggggggggggggggggggggggggggggggggggggggggggggggggggggggg name",
+                                     new HashMap<String, String>() {{
+                                         put("name", "name");
+                                         put("description", "description");
+                                     }}, ADDRESS1),
+                         Arguments.of("Asset1", new HashMap<String, String>() {{
+                             put("name",
+                                 "Tarketios and his two older companions were skilled metalworkers from a region some two hundred miles to the north, where the hills were rich with iron, copper, and lead." +
+                                 " They had been on a trading journey to the south and were returning home. Just as the river path carried Larth’s people from the seashore to the hills, so another path," +
+                                 " perpendicular to the river, traversed the long coastal plain. Because the island provided an easy place to ford the river, it was here that the two paths intersected." +
+                                 " On this occasion, the salt traders and the metal traders happened to arrive at the island on the same day. Now they met for the first time.The two groups made separate" +
+                                 " camps at opposite ends of the island. As a gesture of friendship, speaking with his hands, Larth invited Tarketios and the others to share the venison that night." +
+                                 " As the hosts and their guests feasted around the roasting fire, Tarketios tried to explain something of his craft. Firelight glittered in Lara’s eyes as she watched" +
+                                 " Tarketios point at the flames and mime the act of hammering. Firelight danced across the flexing muscles of his arms and shoulders. When he smiled at her, his grin was like a boast." +
+                                 " She had never seen teeth so white and so perfect.Po saw the looks the two exchanged and frowned. Lara’s father saw the same looks and smiled.The meal was over." +
+                                 " The metal traders, after many gestures of gratitude for the venison, withdrew to their camp at the far side of the island. Before he disappeared into the shadows," +
+                                 " Tarketios looked over his shoulder and gave Lara a parting grin.While the others settled down to sleep, Larth stayed awake a while longer, as was his habit." +
+                                 " He liked to watch the fire. Like all other things, fire possessed a numen that sometimes communicated with him, showing him visions." +
+                                 " As the last of the embers faded into darkness, Larth fell asleep.Larth blinked. The flames, which had dwindled to almost nothing, suddenly shot up again." +
+                                 " Hot air rushed over his face. His eyes were seared by white flames brighter than the sun.");
+                         }}, ADDRESS1),
+                         Arguments.of("Asset2", new HashMap<String, String>() {{
+                             put("name", "name");
+                             put("description", "description");
+                         }}, null));
     }
 
     private static Stream<Arguments> createFileFingerprint() {

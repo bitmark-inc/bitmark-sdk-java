@@ -32,8 +32,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 
-    implementation 'com.bitmark.sdk:cryptography:1.5'
-    implementation 'com.bitmark.sdk:api-service:1.10'
-    implementation 'com.bitmark.sdk:android-sdk:1.5'
+    implementation 'com.bitmark.sdk:cryptography:1.5.0'
+    implementation 'com.bitmark.sdk:api-service:1.11.0'
+    implementation 'com.bitmark.sdk:android-sdk:2.1.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 }

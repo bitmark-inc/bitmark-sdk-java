@@ -18,6 +18,10 @@ public class Transaction {
         get(txId, false, callback);
     }
 
+    public static void getWithAsset(String txId, Callback1<GetTransactionResponse> callback) {
+        get(txId, true, callback);
+    }
+
     public static void get(String txId, boolean loadAsset,
                            Callback1<GetTransactionResponse> callback) {
         ApiService.getInstance().getTransaction(txId, loadAsset, callback);
