@@ -65,12 +65,7 @@ before_script:
   - adb shell input keyevent 82 &
 script:
   - echo $PWD
-  - pushd cryptography
-  - pushd jni
-  - ./installswig.sh
-  - popd
-  - ./build-linux.sh || travis_terminate 1
-  - popd
+  - ./gradlew clean build -p cryptography --info
   - ./gradlew clean build -p api-service --info
   - ./gradlew clean build -p java-sdk --info
   - ./gradlew clean build connectedCheck -p android-sdk --info
@@ -79,4 +74,3 @@ branches:
   only:
     - devel
     - master
-    - standardization
