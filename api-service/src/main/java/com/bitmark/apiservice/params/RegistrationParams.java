@@ -38,7 +38,8 @@ public class RegistrationParams extends AbsSingleParams {
     public RegistrationParams(String name, Map<String, String> metadata, Address registrant)
             throws ValidateException {
         checkValid(
-                () -> name != null && registrant != null && !name.isEmpty() && metadata != null && registrant.isValid(),
+                () -> name != null && registrant != null && !name.isEmpty() &&
+                      registrant.isValid(),
                 "Invalid RegistrationParams");
         checkValid(
                 () -> name.length() <= ASSET_NAME_MAX_LENGTH,
@@ -87,10 +88,10 @@ public class RegistrationParams extends AbsSingleParams {
     public String toJson() {
         checkSigned();
         return "{\"assets\":[{\"fingerprint\":\"" + fingerprint + "\",\"name\":\"" + name + "\"," +
-                "\"metadata\":\"" + (metadata != null ? getJsonMetadata(metadata) : "") +
-                "\",\"registrant\":\"" +
-                registrant.getAddress() +
-                "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
+               "\"metadata\":\"" + getJsonMetadata(metadata) +
+               "\",\"registrant\":\"" +
+               registrant.getAddress() +
+               "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
     }
 
     @Override
@@ -123,6 +124,7 @@ public class RegistrationParams extends AbsSingleParams {
     }
 
     public static String getJsonMetadata(Map<String, String> metadata) {
+        if (metadata == null) return "";
         StringBuilder builder = new StringBuilder();
         int iteration = 0;
         for (Map.Entry<String, String> entry : metadata.entrySet()) {
