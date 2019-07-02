@@ -66,8 +66,10 @@ before_script:
 script:
   - echo $PWD
   - ./gradlew clean build -x compileSodiumjniSharedLibrarySodiumjniC -x compileSodiumjniStaticLibrarySodiumjniC -x linkSodiumjniSharedLibrary -p cryptography --info
-  - ./gradlew clean build -p api-service --info
-  - ./gradlew clean build -p java-sdk --info
+  - ./gradlew clean build -x test -p api-service --info
+  - ./gradlew test --tests com.bitmark.apiservice.test.unittest.* -p api-service --info
+  - ./gradlew clean build -x test -p java-sdk --info
+  - ./gradlew test --tests com.bitmark.apiservice.test.unittest.* -p java-sdk --info
   - ./gradlew clean build connectedCheck -p android-sdk --info
 
 branches:
