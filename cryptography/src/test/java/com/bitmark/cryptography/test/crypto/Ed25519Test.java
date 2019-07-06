@@ -35,6 +35,7 @@ public class Ed25519Test extends BaseCryptoTest {
             "731ea25f9b40fe5ff88c8a35061ecc35e8f9958098c97e9eb523cda97485277b"})
     public void testGenerateKeyPairFromSeed_ValidSeed_ValidKeyPairIsReturn(String seedHex) {
         KeyPair pair = Ed25519.generateKeyPairFromSeed(HEX.decode(seedHex));
+        assertTrue(pair::isValid);
         assertEquals(pair.privateKey().size(), Ed25519.PRIVATE_KEY_LENGTH);
         assertEquals(pair.publicKey().size(), Ed25519.PUBLIC_KEY_LENGTH);
     }

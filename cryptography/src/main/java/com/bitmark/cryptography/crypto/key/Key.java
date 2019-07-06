@@ -1,7 +1,5 @@
 package com.bitmark.cryptography.crypto.key;
 
-import com.bitmark.cryptography.utils.Validation;
-
 /**
  * @author Hieu Pham
  * @since 8/23/18
@@ -9,7 +7,7 @@ import com.bitmark.cryptography.utils.Validation;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public interface Key extends Validation {
+public interface Key {
 
     byte[] toBytes();
 

@@ -1,10 +1,7 @@
 package com.bitmark.cryptography.crypto.key;
 
 
-import com.bitmark.cryptography.error.ValidateException;
-
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
-import static com.bitmark.cryptography.utils.Validator.checkValid;
 import static com.bitmark.cryptography.utils.Validator.checkValidHex;
 
 /**
@@ -22,14 +19,13 @@ public class PrivateKey implements Key {
         return new PrivateKey(key);
     }
 
-    public static PrivateKey from(String hexKey) throws ValidateException.InvalidHex {
+    public static PrivateKey from(String hexKey) {
         checkValidHex(hexKey);
         return new PrivateKey(hexKey);
     }
 
     protected PrivateKey(byte[] key) {
         this.key = key;
-        checkValid(this::isValid);
     }
 
     protected PrivateKey(String hexKey) {
@@ -39,11 +35,6 @@ public class PrivateKey implements Key {
     @Override
     public byte[] toBytes() {
         return key;
-    }
-
-    @Override
-    public boolean isValid() {
-        return key != null && key.length % 32 == 0;
     }
 
     @Override

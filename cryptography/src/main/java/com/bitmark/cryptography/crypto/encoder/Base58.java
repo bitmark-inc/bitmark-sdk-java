@@ -17,7 +17,8 @@ public class Base58 implements Encoder {
 
     public static final Base58 BASE_58 = new Base58();
 
-    private static final char[] ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
+    private static final char[] ALPHABET =
+            "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
 
     private static final char ENCODED_ZERO = ALPHABET[0];
 
@@ -64,7 +65,7 @@ public class Base58 implements Encoder {
     }
 
     @Override
-    public byte[] decode(String input) throws ValidateException {
+    public byte[] decode(String input) {
         checkValid(() -> input != null && !input.isEmpty());
         // Convert the base58-encoded ASCII chars to a base58 byte sequence (base58 digits).
         byte[] input58 = new byte[input.length()];

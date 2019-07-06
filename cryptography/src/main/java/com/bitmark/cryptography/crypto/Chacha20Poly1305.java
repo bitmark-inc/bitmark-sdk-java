@@ -1,9 +1,8 @@
 package com.bitmark.cryptography.crypto;
 
 import com.bitmark.cryptography.crypto.sodium.Sodium;
-import com.bitmark.cryptography.error.ValidateException;
 
-import static com.bitmark.cryptography.utils.NativeUtils.call;
+import static com.bitmark.cryptography.utils.JniUtils.call;
 import static com.bitmark.cryptography.utils.Validator.checkNonNull;
 import static com.bitmark.cryptography.utils.Validator.checkValidLength;
 
@@ -33,7 +32,7 @@ public class Chacha20Poly1305 {
     }
 
     public static byte[] aeadIetfEncrypt(byte[] message, byte[] additionalData, byte[] nonce,
-                                         byte[] key) throws ValidateException {
+                                         byte[] key) {
 
         checkValidLength(key, IETF_KEY_BYTE_LENGTH);
         checkNonNull(nonce);
@@ -59,7 +58,7 @@ public class Chacha20Poly1305 {
     }
 
     public static byte[] aeadIetfDecrypt(byte[] cipherBytes, byte[] additionalData, byte[] nonce,
-                                         byte[] key) throws ValidateException {
+                                         byte[] key) {
 
         checkValidLength(key, IETF_KEY_BYTE_LENGTH);
         checkNonNull(nonce);

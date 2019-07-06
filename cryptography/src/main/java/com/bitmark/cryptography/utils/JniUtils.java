@@ -1,6 +1,6 @@
 package com.bitmark.cryptography.utils;
 
-import com.bitmark.cryptography.error.UnexpectedException;
+import com.bitmark.cryptography.error.JniCallException;
 
 /**
  * @author Hieu Pham
@@ -8,12 +8,12 @@ import com.bitmark.cryptography.error.UnexpectedException;
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
-public class NativeUtils {
+public class JniUtils {
 
-    private NativeUtils() {
+    private JniUtils() {
     }
 
     public static void call(Callable<Integer> callable, String errorMessage) {
-        if (callable.call() != 0) throw new UnexpectedException(errorMessage);
+        if (callable.call() != 0) throw new JniCallException(errorMessage);
     }
 }
