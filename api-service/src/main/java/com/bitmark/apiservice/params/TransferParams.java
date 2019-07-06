@@ -24,7 +24,7 @@ public class TransferParams extends AbsSingleParams {
     private String link;
 
     public TransferParams(Address owner) {
-        checkValid(() -> owner != null && owner.isValid(), "Invalid owner address");
+        checkValid(() -> owner != null, "invalid owner address");
         this.owner = owner;
     }
 
@@ -50,7 +50,7 @@ public class TransferParams extends AbsSingleParams {
     public String toJson() {
         checkSigned();
         return "{\"transfer\":{\"link\":\"" + link + "\",\"owner\":\"" + owner.getAddress() +
-                "\",\"signature\":\"" + HEX.encode(signature) + "\"}}";
+               "\",\"signature\":\"" + HEX.encode(signature) + "\"}}";
     }
 
     @Override
@@ -69,7 +69,7 @@ public class TransferParams extends AbsSingleParams {
     }
 
     private void checkValidLink(String link) {
-        checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH, "Invalid" +
-                " link");
+        checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH,
+                   "invalid link");
     }
 }

@@ -28,8 +28,7 @@ public class TransferOfferParams extends AbsSingleParams {
     private Map<String, String> extraInfo;
 
     public TransferOfferParams(Address offeredOwner) {
-        checkValid(() -> offeredOwner != null && offeredOwner.isValid(), "Invalid offer owner " +
-                "address");
+        checkValid(() -> offeredOwner != null, "invalid offer owner address");
         this.offeredOwner = offeredOwner;
     }
 
@@ -62,8 +61,10 @@ public class TransferOfferParams extends AbsSingleParams {
     @Override
     public String toJson() {
         checkSigned();
-        return "{\"offer\":{\"extra_info\":{" + getExtraInfoJson() + "},\"record\":{\"link\":\"" + link
-                + "\",\"owner\":\"" + offeredOwner.getAddress() + "\",\"signature\":\"" + HEX.encode(signature) + "\"}}}";
+        return "{\"offer\":{\"extra_info\":{" + getExtraInfoJson() + "},\"record\":{\"link\":\"" +
+               link
+               + "\",\"owner\":\"" + offeredOwner.getAddress() + "\",\"signature\":\"" +
+               HEX.encode(signature) + "\"}}}";
     }
 
     @Override
@@ -82,8 +83,8 @@ public class TransferOfferParams extends AbsSingleParams {
     }
 
     private void checkValidLink(String link) {
-        checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH, "Invalid" +
-                " link");
+        checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH,
+                   "invalid link");
     }
 
     private String getExtraInfoJson() {

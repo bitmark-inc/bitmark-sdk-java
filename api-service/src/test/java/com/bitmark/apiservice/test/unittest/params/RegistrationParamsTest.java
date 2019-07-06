@@ -86,21 +86,17 @@ public class RegistrationParamsTest extends BaseTest {
     }
 
     private static Stream<Arguments> createValidNameMetadataAddress() {
-        return Stream.of(Arguments.of("Asset1", new HashMap<String, String>() {{
+        return Stream.of(Arguments.of("", new HashMap<String, String>() {{
             put("name", "name");
             put("description", "description");
         }}, ADDRESS1), Arguments.of("Asset2", new HashMap<String, String>() {{
             put("name", "name");
             put("description", "description");
-        }}, ADDRESS1), Arguments.of("Asset3", null, ADDRESS1));
+        }}, ADDRESS1), Arguments.of(null, null, ADDRESS1));
     }
 
     private static Stream<Arguments> createInvalidNameMetadataAddress() {
-        return Stream.of(Arguments.of("", new HashMap<String, String>() {{
-                             put("name", "name");
-                             put("description", "description");
-                         }}, ADDRESS1),
-                         Arguments
+        return Stream.of(Arguments
                                  .of("This is too longggggggggggggggggggggggggggggggggggggggggggggggggggggggg name",
                                      new HashMap<String, String>() {{
                                          put("name", "name");

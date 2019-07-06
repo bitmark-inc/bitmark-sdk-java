@@ -55,4 +55,6 @@ public interface BitmarkApi {
 
     void listShareOffer(String from, String to, Callback1<List<ShareGrantRecord>> callback);
 
+    void registerWsToken(RegisterWsTokenParams params, Callback1<String> callback);
+
 }

@@ -347,6 +347,28 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
+    @Test
+    public void testConvertRegisterWsResponse__CorrectValueReturn() throws IOException {
+        String expectedToken = "58582819-09f6-4948-a03d-fde9256e0354";
+        Response response = new Response.Builder()
+                .request(new Request.Builder().url("http://dummy.com").build())
+                .protocol(Protocol.HTTP_1_1).code(200)
+                .body(ResponseBody.create(JSON, loadResponse("/ws/register.json"))).message("dummy")
+                .build();
+        Callback1<Response> callback = Converter.toWsToken(new Callback1<String>() {
+            @Override
+            public void onSuccess(String token) {
+                assertEquals(expectedToken, token);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                assertNull(throwable, throwable.getMessage());
+            }
+        });
+        callback.onSuccess(response);
+    }
+
     private static Stream<Arguments> createSuccessResponseListTxId() throws IOException {
         final List<String> txIds1 = new ArrayList<String>() {{
             add("e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f");

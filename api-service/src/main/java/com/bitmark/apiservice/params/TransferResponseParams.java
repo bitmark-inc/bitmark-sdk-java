@@ -95,7 +95,8 @@ public class TransferResponseParams extends AbsSingleParams {
     public String toJson() {
         if (isAccept()) checkSigned();
         return "{\"action\":\"" + response.value + (isAccept() ? "\",\"countersignature\":\""
-                + HEX.encode(signature) : "") + "\",\"id\":\"" + offer.getId() + "\"}";
+                                                                 + HEX.encode(signature) : "") +
+               "\",\"id\":\"" + offer.getId() + "\"}";
     }
 
     public Map<String, String> buildHeaders() {
@@ -108,9 +109,9 @@ public class TransferResponseParams extends AbsSingleParams {
         Map<String, String> headers = new HashMap<>();
         String requester = isCancel() ? currentOwner : offer.getOwner();
         String message = String.format("updateOffer|%s|%s|%s", offer.getId(),
-                requester, String.valueOf(time));
+                                       requester, String.valueOf(time));
         byte[] signature = Ed25519.sign(RAW.decode(message),
-                key.privateKey().toBytes());
+                                        key.privateKey().toBytes());
         headers.put("requester", requester);
         headers.put("timestamp", String.valueOf(time));
         headers.put("signature", HEX.encode(signature));

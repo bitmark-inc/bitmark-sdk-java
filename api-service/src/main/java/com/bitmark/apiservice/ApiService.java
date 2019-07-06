@@ -170,4 +170,11 @@ public class ApiService implements BitmarkApi {
         final String path = String.format("/%s/share-offer?from=%s&to=%s", V3, from, to);
         client.getAsync(path, toListShareOffersResponse(callback));
     }
+
+    @Override
+    public void registerWsToken(RegisterWsTokenParams params, Callback1<String> callback) {
+        final String path = String.format("/%s/ws-auth", V3);
+        final Headers header = Headers.of(params.buildHeader());
+        client.postAsync(path, header, params, toWsToken(callback));
+    }
 }

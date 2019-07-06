@@ -48,9 +48,9 @@ public class IssuanceParams extends AbsMultipleParams {
 
     public IssuanceParams(String assetId, Address owner, int quantity) throws ValidateException {
         checkValidHex(assetId);
-        checkValid(() -> HEX.decode(assetId).length <= ASSET_ID_LENGTH);
-        checkValid(() -> owner != null && owner.isValid(), "Invalid Address");
-        checkValid(() -> quantity > 0);
+        checkValid(() -> HEX.decode(assetId).length <= ASSET_ID_LENGTH, "invalid asset id");
+        checkValid(() -> owner != null, "invalid owner");
+        checkValid(() -> quantity > 0, "quantity must be greater than zero");
         this.assetId = assetId;
         this.owner = owner;
         generateNonces(quantity);
@@ -58,7 +58,6 @@ public class IssuanceParams extends AbsMultipleParams {
 
     private void generateNonces(int quantity)
             throws ValidateException {
-        checkValid(() -> quantity > 0, "Invalid params");
         final int[] genesisNonces = quantity == 1 ? new int[]{0} : concat(new int[]{0},
                                                                           secureRandomInts(
                                                                                   quantity - 1));

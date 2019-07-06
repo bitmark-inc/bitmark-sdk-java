@@ -41,13 +41,11 @@ public class ShareGrantingParams extends AbsSingleParams {
     public ShareGrantingParams(String shareId, int quantity, Address owner, Address receiver,
                                int beforeBlock, Map<String, String> extraInfo)
             throws ValidateException {
-        checkValid(() -> isValidShareId(shareId), "Invalid share id");
-        checkValid(() -> quantity > 0, "Invalid quantity");
-        checkValid(() -> owner != null && owner.isValid(),
-                   "Invalid owner address");
-        checkValid(() -> receiver != null && receiver.isValid(),
-                   "Invalid receiver address");
-        checkValid(() -> beforeBlock >= 0, "Invalid before block");
+        checkValid(() -> isValidShareId(shareId), "invalid share id");
+        checkValid(() -> quantity > 0, "invalid quantity. must be greater than zero");
+        checkValid(() -> owner != null, "invalid owner address");
+        checkValid(() -> receiver != null, "invalid receiver address");
+        checkValid(() -> beforeBlock >= 0, "invalid before block, must be greater or equal zero");
         this.shareId = shareId;
         this.owner = owner;
         this.receiver = receiver;
@@ -57,7 +55,7 @@ public class ShareGrantingParams extends AbsSingleParams {
     }
 
     public void setBeforeBlock(Integer beforeBlock) {
-        checkValid(() -> beforeBlock >= 0, "Invalid before block");
+        checkValid(() -> beforeBlock >= 0, "invalid before block, must be greater or equal zero");
         this.beforeBlock = beforeBlock;
     }
 

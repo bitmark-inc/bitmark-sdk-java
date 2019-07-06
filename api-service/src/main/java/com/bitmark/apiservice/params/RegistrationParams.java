@@ -24,7 +24,9 @@ import static com.bitmark.cryptography.utils.Validator.checkValid;
  */
 
 public class RegistrationParams extends AbsSingleParams {
+
     private static final int ASSET_NAME_MAX_LENGTH = 64;
+
     private static final int METADATA_MAX_LENGTH = 2048;
 
     private String name;
@@ -38,23 +40,22 @@ public class RegistrationParams extends AbsSingleParams {
     public RegistrationParams(String name, Map<String, String> metadata, Address registrant)
             throws ValidateException {
         checkValid(
-                () -> name != null && registrant != null && !name.isEmpty() &&
-                      registrant.isValid(),
-                "Invalid RegistrationParams");
+                () -> registrant != null, "invalid registrant");
         checkValid(
-                () -> name.length() <= ASSET_NAME_MAX_LENGTH,
-                String.format("Name is too long, must be maximum of %s", ASSET_NAME_MAX_LENGTH));
+                () -> name == null || name.length() <= ASSET_NAME_MAX_LENGTH,
+                String.format("asset name is invalid, must be maximum of %s or abort",
+                              ASSET_NAME_MAX_LENGTH));
         checkValid(
                 () -> getJsonMetadata(metadata).length() <= METADATA_MAX_LENGTH,
-                String.format("Metadata is too long, must be maximum of %s", METADATA_MAX_LENGTH));
+                String.format("metadata is too long, must be maximum of %s", METADATA_MAX_LENGTH));
 
-        this.name = name;
+        this.name = name == null ? "" : name;
         this.metadata = metadata;
         this.registrant = registrant;
     }
 
     public String generateFingerprint(File file) {
-        checkValid(() -> file != null && !file.isDirectory(), "Invalid file");
+        checkValid(() -> file != null && !file.isDirectory(), "invalid file");
         try {
             fingerprint = Awaitility.await(() -> {
                 try {
@@ -68,7 +69,7 @@ public class RegistrationParams extends AbsSingleParams {
             throwable.printStackTrace();
             throw new UnexpectedException(throwable);
         }
-        if (fingerprint == null) throw new UnexpectedException("Cannot generate fingerprint");
+        if (fingerprint == null) throw new UnexpectedException("cannot generate fingerprint");
         return fingerprint;
     }
 

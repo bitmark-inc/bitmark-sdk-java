@@ -59,8 +59,8 @@ public class GrantResponseParams extends AbsSingleParams {
 
     private GrantResponseParams(ShareGrantRecord shareGrantRecord, Response response) {
         checkValid(() -> shareGrantRecord != null && shareGrantRecord.isValid(),
-                   "Invalid ShareGrantRecord");
-        checkValid(() -> response != null, "Invalid Response");
+                   "invalid ShareGrantRecord");
+        checkValid(() -> response != null, "invalid Response");
         this.shareGrantRecord = shareGrantRecord;
         this.response = response;
     }

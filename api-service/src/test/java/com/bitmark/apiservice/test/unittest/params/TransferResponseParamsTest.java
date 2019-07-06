@@ -4,7 +4,7 @@ import com.bitmark.apiservice.params.TransferResponseParams;
 import com.bitmark.apiservice.test.BaseTest;
 import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.record.OfferRecord;
-import com.bitmark.cryptography.crypto.key.StandardKeyPair;
+import com.bitmark.cryptography.crypto.key.Ed25519KeyPair;
 import com.bitmark.cryptography.error.ValidateException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -300,7 +300,7 @@ public class TransferResponseParamsTest extends BaseTest {
         final TransferResponseParams params2 = TransferResponseParams.accept(offer2);
         final TransferResponseParams params3 = TransferResponseParams.cancel(offer3,
                                                                              "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva");
-        params3.setSigningKey(StandardKeyPair.from(HEX.decode(
+        params3.setSigningKey(Ed25519KeyPair.from(HEX.decode(
                 "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f"), HEX.decode(
                 "0246a917d422e596168185cea9943459c09751532c52fe4ddc27b06e2893ef2258760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f")));
         params1.sign(KEY_PAIR_2);

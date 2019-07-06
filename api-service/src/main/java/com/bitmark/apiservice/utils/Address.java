@@ -15,6 +15,7 @@ import java.util.Arrays;
 import static com.bitmark.apiservice.configuration.KeyPart.PUBLIC_KEY;
 import static com.bitmark.cryptography.crypto.encoder.Base58.BASE_58;
 import static com.bitmark.cryptography.utils.Validator.checkNonNull;
+import static com.bitmark.cryptography.utils.Validator.checkValid;
 
 /**
  * @author Hieu Pham
@@ -23,7 +24,7 @@ import static com.bitmark.cryptography.utils.Validator.checkNonNull;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class Address implements Validation {
+public class Address {
 
     public static final int CHECKSUM_LENGTH = 4;
 
@@ -81,7 +82,8 @@ public class Address implements Validation {
     }
 
     public static Address getDefault(PublicKey key, Network network) throws ValidateException {
-        checkNonNull(key);
+        checkValid(() -> null != key && Ed25519.PUBLIC_KEY_LENGTH == key.size(),
+                   "invalid public key");
         checkNonNull(network);
         return new Address(key, network);
     }
@@ -97,11 +99,6 @@ public class Address implements Validation {
 
     public byte[] pack() {
         return ArrayUtil.concat(getPrefix(), key.toBytes());
-    }
-
-    @Override
-    public boolean isValid() {
-        return key != null && key.size() == Ed25519.PUBLIC_KEY_LENGTH && network != null;
     }
 
     public Network getNetwork() {

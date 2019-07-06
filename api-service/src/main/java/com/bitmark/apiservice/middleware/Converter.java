@@ -84,7 +84,8 @@ public class Converter {
                 try {
                     String raw = response.body().string();
                     Map<String, Object> json = jsonToMap(raw);
-                    String txId = json.get("txid") != null ? json.get("txid").toString() : json.get("txId").toString();
+                    String txId = json.get("txid") != null ? json.get("txid").toString() : json
+                            .get("txId").toString();
                     callback.onSuccess(txId);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
@@ -379,6 +380,26 @@ public class Converter {
                                                                              new TypeToken<List<ShareGrantRecord>>() {
                                                                              }.getType());
                     callback.onSuccess(shareGrantRecords);
+                } catch (Throwable e) {
+                    callback.onError(new UnexpectedException(e));
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
+    public static Callback1<Response> toWsToken(Callback1<String> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response res) {
+                try {
+                    String raw = res.body().string();
+                    Map<String, Object> jsonMap = jsonToMap(raw);
+                    callback.onSuccess(jsonMap.get("token").toString());
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }

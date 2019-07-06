@@ -66,7 +66,8 @@ public class ApiServiceTest extends BaseTest {
 
     @Test
     public void testRegisterAsset_ExistedAsset_CorrectResponseIsReturn(
-            @TemporaryFile("This is an existing file on Bitmark Block chain") File asset) throws Throwable {
+            @TemporaryFile("This is an existing file on Bitmark Block chain") File asset)
+            throws Throwable {
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
             put("description", "Temporary File create from java api service test");
@@ -76,7 +77,10 @@ public class ApiServiceTest extends BaseTest {
         params.sign(KEY1);
 
         HttpException exception = assertThrows(HttpException.class,
-                () -> await((Callable1<RegistrationResponse>) callback -> ApiService.getInstance().registerAsset(params, callback)));
+                                               () -> await(
+                                                       (Callable1<RegistrationResponse>) callback -> ApiService
+                                                               .getInstance()
+                                                               .registerAsset(params, callback)));
 
         assertEquals(HTTP_BAD_REQUEST, exception.getStatusCode());
         assertEquals(1000, exception.getErrorCode());
@@ -128,7 +132,8 @@ public class ApiServiceTest extends BaseTest {
     public void testQueryAssets_ByAtAndTo_CorrectResponseIsReturn() throws Throwable {
         int limit = 10;
         long at = 5;
-        AssetQueryBuilder builder = new AssetQueryBuilder().limit(limit).at(at).to("earlier").pending(true);
+        AssetQueryBuilder builder =
+                new AssetQueryBuilder().limit(limit).at(at).to("earlier").pending(true);
         List<AssetRecord> assets =
                 await(callback -> ApiService.getInstance().listAssets(builder.build(), callback));
         assets.forEach(asset -> assertTrue(asset.getOffset() <= at));
@@ -201,8 +206,9 @@ public class ApiServiceTest extends BaseTest {
             throws Throwable {
         // Register asset
         Address owner = ADDRESS1;
-        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), new HashMap<>(),
-                                                                       owner);
+        RegistrationParams registrationParams =
+                new RegistrationParams(asset.getName(), new HashMap<>(),
+                                       owner);
         registrationParams.generateFingerprint(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
@@ -1153,7 +1159,7 @@ public class ApiServiceTest extends BaseTest {
                 new TransactionQueryBuilder().at(at).to("earlier").limit(limit);
         GetTransactionsResponse getTransactionsResponse =
                 await(callback -> ApiService.getInstance()
-                        .listTransactions(builder.build(), callback));
+                                            .listTransactions(builder.build(), callback));
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
         transactions.forEach(transaction -> assertTrue(transaction.getBlockOffset() <= at));
     }
@@ -1165,12 +1171,26 @@ public class ApiServiceTest extends BaseTest {
                 new TransactionQueryBuilder().referencedBlockNumber(blockNumber).pending(true);
         GetTransactionsResponse getTransactionsResponse =
                 await(callback -> ApiService.getInstance()
-                        .listTransactions(builder.build(), callback));
+                                            .listTransactions(builder.build(), callback));
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
-        transactions.forEach(transaction -> assertTrue(transaction.getBlockNumber() == blockNumber));
+        transactions
+                .forEach(transaction -> assertTrue(transaction.getBlockNumber() == blockNumber));
     }
 
     //endregion ============= TXS TESTS ===============
+
+    //region =============== WS TESTS ===============
+
+    @Test
+    public void testRegisterWsToken__ValidTokenReturn() throws Throwable {
+        RegisterWsTokenParams params = new RegisterWsTokenParams(ADDRESS1);
+        params.sign(KEY1);
+        String token =
+                await(callback -> ApiService.getInstance().registerWsToken(params, callback));
+        assertNotNull(token);
+    }
+
+    // endregion ================== WS TESTS ==================
 
 
 }

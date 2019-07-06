@@ -23,9 +23,9 @@ public class ShareParams extends AbsSingleParams {
     private int quantity;
 
     public ShareParams(int quantity, String link) throws ValidateException {
-        checkValid(() -> quantity > 0, "Invalid quantity");
+        checkValid(() -> quantity > 0, "invalid quantity, must be greater than zero");
         checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH,
-                   "Invalid link");
+                   "invalid link");
         this.quantity = quantity;
         this.link = link;
     }
