@@ -28,23 +28,10 @@ public class ApiService implements BitmarkApi {
 
     private static final String V3 = "v3";
 
-    private static volatile ApiService INSTANCE;
-
     private HttpClient client;
 
-    public static ApiService getInstance() {
-        if (INSTANCE == null) {
-            synchronized (ApiService.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new ApiService(GlobalConfiguration.apiToken());
-                }
-            }
-        }
-        return INSTANCE;
-    }
-
-    private ApiService(String apiToken) {
-        this.client = new HttpClientImpl(apiToken);
+    public ApiService() {
+        this.client = new HttpClientImpl(GlobalConfiguration.apiToken());
     }
 
     @Override
