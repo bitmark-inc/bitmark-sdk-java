@@ -133,6 +133,25 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
         if (null == client) return;
         String channel = String.format("bitmark_changed:\\%s", requester.getAddress());
         client.subscribe(channel, new SubscriptionEventListener() {
+
+            @Override
+            public void onSubscribeError(Subscription sub, SubscribeErrorEvent ev) {
+                super.onSubscribeError(sub, ev);
+                event.onSubscribeError(ev);
+            }
+
+            @Override
+            public void onSubscribeSuccess(Subscription sub, SubscribeSuccessEvent ev) {
+                super.onSubscribeSuccess(sub, ev);
+                event.onSubscribeSuccess(ev);
+            }
+
+            @Override
+            public void onUnsubscribe(Subscription sub, UnsubscribeEvent ev) {
+                super.onUnsubscribe(sub, ev);
+                event.onUnsubscribe(ev);
+            }
+
             @Override
             public void onPublish(Subscription sub, PublishEvent ev) {
                 super.onPublish(sub, ev);
@@ -143,12 +162,6 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
                                     Boolean.parseBoolean(String.valueOf(data.get("presence"))));
                 } catch (Throwable ignore) {
                 }
-            }
-
-            @Override
-            public void onSubscribeError(Subscription sub, SubscribeErrorEvent ev) {
-                super.onSubscribeError(sub, ev);
-                event.onSubscribeError(ev);
             }
         });
     }
@@ -165,6 +178,25 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
         if (null == client) return;
         String channel = String.format("bitmark_changed:#%s", requester.getAddress());
         client.subscribe(channel, new SubscriptionEventListener() {
+
+            @Override
+            public void onSubscribeError(Subscription sub, SubscribeErrorEvent ev) {
+                super.onSubscribeError(sub, ev);
+                event.onSubscribeError(ev);
+            }
+
+            @Override
+            public void onSubscribeSuccess(Subscription sub, SubscribeSuccessEvent ev) {
+                super.onSubscribeSuccess(sub, ev);
+                event.onSubscribeSuccess(ev);
+            }
+
+            @Override
+            public void onUnsubscribe(Subscription sub, UnsubscribeEvent ev) {
+                super.onUnsubscribe(sub, ev);
+                event.onUnsubscribe(ev);
+            }
+
             @Override
             public void onPublish(Subscription sub, PublishEvent ev) {
                 super.onPublish(sub, ev);
@@ -175,11 +207,6 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
                 }
             }
 
-            @Override
-            public void onSubscribeError(Subscription sub, SubscribeErrorEvent ev) {
-                super.onSubscribeError(sub, ev);
-                event.onSubscribeError(ev);
-            }
         });
     }
 
