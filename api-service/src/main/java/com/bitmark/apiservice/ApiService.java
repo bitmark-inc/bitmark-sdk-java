@@ -1,6 +1,7 @@
 package com.bitmark.apiservice;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
+import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.params.*;
 import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;
 import com.bitmark.apiservice.params.query.QueryParams;
@@ -26,12 +27,18 @@ import static com.bitmark.apiservice.utils.Awaitility.await;
 
 public class ApiService implements BitmarkApi {
 
+    private static final String LIVE_NET_ENDPOINT = "https://api.bitmark.com";
+
+    private static final String TEST_NET_ENDPOINT = "https://api.test.bitmark.com";
+
     private static final String V3 = "v3";
 
     private HttpClient client;
 
     public ApiService() {
-        this.client = new HttpClientImpl(GlobalConfiguration.apiToken());
+        final String endpoint = GlobalConfiguration.network() ==
+                                Network.TEST_NET ? TEST_NET_ENDPOINT : LIVE_NET_ENDPOINT;
+        this.client = new HttpClientImpl(endpoint, GlobalConfiguration.apiToken());
     }
 
     @Override

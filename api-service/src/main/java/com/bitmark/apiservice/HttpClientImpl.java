@@ -1,7 +1,6 @@
 package com.bitmark.apiservice;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
-import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.middleware.BitmarkApiInterceptor;
 import com.bitmark.apiservice.params.Params;
 import com.bitmark.apiservice.params.query.QueryParams;
@@ -21,17 +20,16 @@ import java.util.concurrent.TimeUnit;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class HttpClientImpl implements HttpClient {
+class HttpClientImpl implements HttpClient {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public static final String LIVE_NET_ENDPOINT = "https://api.bitmark.com";
-
-    public static final String TEST_NET_ENDPOINT = "https://api.test.bitmark.com";
-
     private OkHttpClient client;
 
-    HttpClientImpl(String apiToken) {
+    private String endpoint;
+
+    HttpClientImpl(String endpoint, String apiToken) {
+        this.endpoint = endpoint;
         client = buildClient(apiToken);
     }
 
@@ -42,7 +40,8 @@ public class HttpClientImpl implements HttpClient {
         builder.addInterceptor(new BitmarkApiInterceptor(apiToken));
 
         // Add Logging
-        builder.addInterceptor(new HttpLoggingInterceptor(GlobalConfiguration.logger()).setLevel(GlobalConfiguration.logLevel()));
+        builder.addInterceptor(new HttpLoggingInterceptor(GlobalConfiguration.logger())
+                                       .setLevel(GlobalConfiguration.logLevel()));
 
         // Configure the timeout
         int timeout = GlobalConfiguration.connectionTimeout();
@@ -52,8 +51,7 @@ public class HttpClientImpl implements HttpClient {
     }
 
     private String getRequestUrl(String path) {
-        return (GlobalConfiguration.network() == Network.TEST_NET ? TEST_NET_ENDPOINT :
-                LIVE_NET_ENDPOINT) + path;
+        return endpoint + path;
     }
 
     private String getRequestUrl(String path, QueryParams params) {
@@ -99,7 +97,7 @@ public class HttpClientImpl implements HttpClient {
         String requestUrl = getRequestUrl(path);
         Request.Builder builder =
                 new Request.Builder().url(requestUrl).patch(RequestBody.create(JSON,
-                        params.toJson()));
+                                                                               params.toJson()));
         if (headers != null) builder.headers(headers);
         client.newCall(builder.build()).enqueue(wrapCallback(callback));
     }
