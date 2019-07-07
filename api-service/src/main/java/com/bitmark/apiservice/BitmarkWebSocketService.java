@@ -114,7 +114,8 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
 
                 try {
                     Map<String, Object> data = processPublishEvent(ev);
-                    event.onNewBlock(Long.parseLong(String.valueOf(data.get("block_number"))));
+                    event.onNewBlock(
+                            (long) Double.parseDouble(String.valueOf(data.get("block_number"))));
                 } catch (Throwable ignore) {
                 }
 
