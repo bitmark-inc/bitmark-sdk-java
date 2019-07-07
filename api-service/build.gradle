@@ -30,6 +30,8 @@ dependencies {
     implementation deps.okhttp.okhttp3
     implementation deps.okhttp.logging
     implementation deps.gson
+    implementation deps.centrifuge
+    
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.okhttp.okhttp3_mockserver

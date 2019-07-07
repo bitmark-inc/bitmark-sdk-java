@@ -17,6 +17,7 @@ versions.android_test_runner = "1.0.2"
 versions.rxjava = "2.2.3"
 versions.android_support = "28.0.0"
 versions.java_stream = "1.2.1"
+versions.centrifuge = "0.0.2"
 
 def okhttp = [:]
 okhttp.okhttp3 = "com.squareup.okhttp3:okhttp:$versions.okhttp"
@@ -58,6 +59,7 @@ def android_plugin = "com.android.tools.build:gradle:$versions.android_plugin"
 def android_maven_plugin = "com.github.dcendents:android-maven-gradle-plugin:$versions.android_maven_plugin"
 def android_test_runner = "com.android.support.test:runner:$versions.android_test_runner"
 def java_stream = "com.annimon:stream:$versions.java_stream"
+def centrifuge = "io.github.centrifugal:centrifuge-java:$versions.centrifuge"
 
 def dependencies = [:]
 dependencies.okhttp = okhttp
@@ -76,6 +78,7 @@ dependencies.android_test_runner = android_test_runner
 dependencies.rx = rx
 dependencies.android_support = android_support
 dependencies.java_stream = java_stream
+dependencies.centrifuge = centrifuge
 ext.deps = dependencies
 
 
