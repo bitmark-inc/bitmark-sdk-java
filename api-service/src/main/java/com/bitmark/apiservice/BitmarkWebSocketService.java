@@ -130,9 +130,9 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
     }
 
     @Override
-    public void subscribeBitmarkChanged(Address requester, BitmarkChangedEvent event) {
+    public void subscribeBitmarkChanged(Address owner, BitmarkChangedEvent event) {
         if (null == client) return;
-        String channel = String.format("bitmark_changed:\\%s", requester.getAddress());
+        String channel = String.format("bitmark_changed:%s", owner.getAddress());
         client.subscribe(channel, new SubscriptionEventListener() {
 
             @Override
@@ -168,16 +168,16 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
     }
 
     @Override
-    public void unsubscribeBitmarkChanged(Address requester) {
+    public void unsubscribeBitmarkChanged(Address owner) {
         if (null == client) return;
-        String channel = String.format("bitmark_changed:\\%s", requester.getAddress());
+        String channel = String.format("bitmark_changed:%s", owner.getAddress());
         client.unsubscribe(channel);
     }
 
     @Override
     public void subscribeTransferOffer(Address requester, TransferOfferEvent event) {
         if (null == client) return;
-        String channel = String.format("bitmark_changed:#%s", requester.getAddress());
+        String channel = String.format("tx_offer#%s", requester.getAddress());
         client.subscribe(channel, new SubscriptionEventListener() {
 
             @Override
@@ -214,7 +214,99 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
     @Override
     public void unsubscribeTransferOffer(Address requester) {
         if (null == client) return;
-        String channel = String.format("bitmark_changed:#%s", requester.getAddress());
+        String channel = String.format("tx_offer#%s", requester.getAddress());
+        client.unsubscribe(channel);
+    }
+
+    @Override
+    public void subscribeNewPendingIssuance(Address owner, NewPendingIssuanceEvent event) {
+        if (null == client) return;
+
+        String channel = String.format("bitmark_pending_change:%s", owner.getAddress());
+        client.subscribe(channel, new SubscriptionEventListener() {
+            @Override
+            public void onPublish(Subscription sub, PublishEvent ev) {
+                super.onPublish(sub, ev);
+                try {
+                    Map<String, Object> data = processPublishEvent(ev);
+                    event.onNewPendingIssuance(String.valueOf(data.get("bitmark_id")));
+                } catch (Throwable ignore) {
+                }
+            }
+
+            @Override
+            public void onSubscribeSuccess(Subscription sub, SubscribeSuccessEvent ev) {
+                super.onSubscribeSuccess(sub, ev);
+                event.onSubscribeSuccess(ev);
+            }
+
+            @Override
+            public void onSubscribeError(Subscription sub, SubscribeErrorEvent ev) {
+                super.onSubscribeError(sub, ev);
+                event.onSubscribeError(ev);
+            }
+
+            @Override
+            public void onUnsubscribe(Subscription sub, UnsubscribeEvent ev) {
+                super.onUnsubscribe(sub, ev);
+                event.onUnsubscribe(ev);
+            }
+        });
+    }
+
+    @Override
+    public void unsubscribeNewPendingIssuance(Address owner) {
+        if (null == client) return;
+
+        String channel = String.format("bitmark_pending_change:%s", owner.getAddress());
+        client.unsubscribe(channel);
+    }
+
+    @Override
+    public void subscribeNewPendingTx(Address stakeHolder, NewPendingTxEvent event) {
+        if (null == client) return;
+
+        String channel = String.format("tx_pending_change:%s", stakeHolder.getAddress());
+        client.subscribe(channel, new SubscriptionEventListener() {
+            @Override
+            public void onPublish(Subscription sub, PublishEvent ev) {
+                super.onPublish(sub, ev);
+                try {
+                    Map<String, Object> data = processPublishEvent(ev);
+                    String txId = String.valueOf(data.get("tx_id"));
+                    String owner = String.valueOf(data.get("owner"));
+                    String prevTxId = String.valueOf(data.get("previous_tx_id"));
+                    String prevOwner = String.valueOf(data.get("previous_owner"));
+                    event.onNewPendingIx(txId, owner, prevTxId, prevOwner);
+                } catch (Throwable ignore) {
+                }
+            }
+
+            @Override
+            public void onSubscribeSuccess(Subscription sub, SubscribeSuccessEvent ev) {
+                super.onSubscribeSuccess(sub, ev);
+                event.onSubscribeSuccess(ev);
+            }
+
+            @Override
+            public void onSubscribeError(Subscription sub, SubscribeErrorEvent ev) {
+                super.onSubscribeError(sub, ev);
+                event.onSubscribeError(ev);
+            }
+
+            @Override
+            public void onUnsubscribe(Subscription sub, UnsubscribeEvent ev) {
+                super.onUnsubscribe(sub, ev);
+                event.onUnsubscribe(ev);
+            }
+        });
+    }
+
+    @Override
+    public void unsubscribeNewPendingTx(Address stakeHolder) {
+        if (null == client) return;
+
+        String channel = String.format("tx_pending_change:%s", stakeHolder.getAddress());
         client.unsubscribe(channel);
     }
 
