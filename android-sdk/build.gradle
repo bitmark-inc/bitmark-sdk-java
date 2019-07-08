@@ -1,9 +1,12 @@
 apply plugin: 'com.android.library'
 apply from: '../configuration.gradle'
+apply plugin: 'com.kezong.fat-aar'
 
 def ext = project.ext
 def config = ext.configuration
 def project_publication = ext.publicationProperties(project.name)
+
+def fatAar = false
 
 buildscript {
     apply from: '../dependencies.gradle'
@@ -13,6 +16,7 @@ buildscript {
         classpath deps.android_plugin
         classpath deps.android_maven_plugin
         classpath deps.bintray_plugin
+        classpath deps.fat_aar
     }
 }
 
@@ -70,14 +74,38 @@ android {
 apply from: '../publication_android.gradle'
 
 dependencies {
-    implementation deps.bitmark_sdk.api_service
-    implementation deps.rx.java
-    implementation deps.android_support.annotation
-    implementation deps.android_support.compat
-    implementation deps.android_support.appcompat
-    implementation("com.facebook.react:react-native:+") {
-        exclude group: 'com.android.support', module: 'support-v4'
+
+    if (fatAar) {
+        embed deps.bitmark_sdk.api_service
+        embed deps.rx.java
+        embed deps.android_support.annotation
+        embed deps.android_support.compat
+        embed deps.android_support.appcompat
+        embed("com.facebook.react:react-native:+") {
+            exclude group: 'com.android.support', module: 'support-v4'
+        }
+
+        compileOnly deps.bitmark_sdk.api_service
+        compileOnly deps.rx.java
+        compileOnly deps.android_support.annotation
+        compileOnly deps.android_support.compat
+        compileOnly deps.android_support.appcompat
+        compileOnly("com.facebook.react:react-native:+") {
+            exclude group: 'com.android.support', module: 'support-v4'
+        }
+    } else {
+        implementation deps.bitmark_sdk.api_service
+        implementation deps.rx.java
+        implementation deps.android_support.annotation
+        implementation deps.android_support.compat
+        implementation deps.android_support.appcompat
+        implementation("com.facebook.react:react-native:+") {
+            exclude group: 'com.android.support', module: 'support-v4'
+        }
     }
+
+
+
 
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params

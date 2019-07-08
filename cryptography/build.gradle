@@ -1,11 +1,14 @@
 apply plugin: 'com.android.library'
 apply from: '../configuration.gradle'
+apply plugin: 'com.kezong.fat-aar'
 
 import org.gradle.internal.os.OperatingSystem
 
 def ext = project.ext
 def config = ext.configuration
 def project_publication = ext.publicationProperties(project.name)
+
+def fatAar = false
 
 buildscript {
     apply from: '../dependencies.gradle'
@@ -15,6 +18,7 @@ buildscript {
         classpath deps.android_plugin
         classpath deps.android_maven_plugin
         classpath deps.bintray_plugin
+        classpath deps.fat_aar
     }
 }
 
@@ -218,10 +222,18 @@ artifacts {
 ext.additionalArtifact = libraryJar
 
 dependencies {
+    
+    if (fatAar) {
+        embed fileTree(include: '*.jar', dir: 'lib')
+        embed deps.bouncycastle
 
-    implementation fileTree(include: '*.jar', dir: 'lib')
-    implementation deps.bouncycastle
-
+        compileOnly fileTree(include: '*.jar', dir: 'lib')
+        compileOnly deps.bouncycastle
+    } else {
+        implementation fileTree(include: '*.jar', dir: 'lib')
+        implementation deps.bouncycastle
+    }
+    
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.junit_jupiter.engine
