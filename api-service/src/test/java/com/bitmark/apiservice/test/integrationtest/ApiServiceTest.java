@@ -54,8 +54,8 @@ public class ApiServiceTest extends BaseTest {
             put("name", asset.getName());
             put("description", "Temporary File create from java api service test");
         }};
-        RegistrationParams params = new RegistrationParams(asset.getName(), metadata, ADDRESS1);
-        params.generateFingerprint(asset);
+        RegistrationParams params = new RegistrationParams(asset.getName(), metadata);
+        params.setFingerprintFromFile(asset);
         params.sign(KEY1);
         RegistrationResponse response =
                 await(callback -> new ApiService().registerAsset(params, callback));
@@ -72,8 +72,8 @@ public class ApiServiceTest extends BaseTest {
             put("name", asset.getName());
             put("description", "Temporary File create from java api service test");
         }};
-        RegistrationParams params = new RegistrationParams(asset.getName(), metadata, ADDRESS1);
-        params.generateFingerprint(asset);
+        RegistrationParams params = new RegistrationParams(asset.getName(), metadata);
+        params.setFingerprintFromFile(asset);
         params.sign(KEY1);
 
         HttpException exception = assertThrows(HttpException.class,
@@ -144,14 +144,12 @@ public class ApiServiceTest extends BaseTest {
     public void testIssueBitmark_OwnedMultipleBitmark_CorrectSuccessResponseIsReturn(File asset)
             throws Throwable {
         // Register asset
-        Address owner = ADDRESS1;
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
             put("description", "Temporary File create from java api service test");
         }};
-        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata,
-                                                                       owner);
-        registrationParams.generateFingerprint(asset);
+        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata);
+        registrationParams.setFingerprintFromFile(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
                 await(callback -> new ApiService().registerAsset(registrationParams,
@@ -161,7 +159,7 @@ public class ApiServiceTest extends BaseTest {
 
         // Issue bitmarks
         final int quantity = 5;
-        IssuanceParams issuanceParams = new IssuanceParams(assetId, owner, quantity);
+        IssuanceParams issuanceParams = new IssuanceParams(assetId, ADDRESS1, quantity);
         issuanceParams.sign(KEY1);
         List<String> txIds =
                 await(callback -> new ApiService().issueBitmark(issuanceParams,
@@ -174,14 +172,12 @@ public class ApiServiceTest extends BaseTest {
     public void testIssueBitmark_OwnedSingleBitmark_CorrectSuccessResponseIsReturn(File asset)
             throws Throwable {
         // Register asset
-        Address owner = ADDRESS1;
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
             put("description", "Temporary File create from java api service test");
         }};
-        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata,
-                                                                       owner);
-        registrationParams.generateFingerprint(asset);
+        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata);
+        registrationParams.setFingerprintFromFile(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
                 await(callback -> new ApiService()
@@ -190,7 +186,7 @@ public class ApiServiceTest extends BaseTest {
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
-        IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
+        IssuanceParams issuanceParams = new IssuanceParams(assetId, ADDRESS1);
         issuanceParams.sign(KEY1);
         List<String> txIds =
                 await(callback -> new ApiService().issueBitmark(issuanceParams, callback));
@@ -205,9 +201,8 @@ public class ApiServiceTest extends BaseTest {
         // Register asset
         Address owner = ADDRESS1;
         RegistrationParams registrationParams =
-                new RegistrationParams(asset.getName(), new HashMap<>(),
-                                       owner);
-        registrationParams.generateFingerprint(asset);
+                new RegistrationParams(asset.getName(), new HashMap<>());
+        registrationParams.setFingerprintFromFile(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
                 await(callback -> new ApiService()

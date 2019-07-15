@@ -1,12 +1,12 @@
 package com.bitmark.apiservice.params;
 
+import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.utils.Address;
-import com.bitmark.apiservice.utils.Awaitility;
 import com.bitmark.apiservice.utils.BinaryPacking;
 import com.bitmark.apiservice.utils.FileUtils;
-import com.bitmark.apiservice.utils.error.UnexpectedException;
 import com.bitmark.cryptography.crypto.Sha3512;
 import com.bitmark.cryptography.crypto.encoder.VarInt;
+import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.error.ValidateException;
 
 import java.io.File;
@@ -37,10 +37,8 @@ public class RegistrationParams extends AbsSingleParams {
 
     private Address registrant;
 
-    public RegistrationParams(String name, Map<String, String> metadata, Address registrant)
+    public RegistrationParams(String name, Map<String, String> metadata)
             throws ValidateException {
-        checkValid(
-                () -> registrant != null, "invalid registrant");
         checkValid(
                 () -> name == null || name.length() <= ASSET_NAME_MAX_LENGTH,
                 String.format("asset name is invalid, must be maximum of %s or abort",
@@ -51,26 +49,17 @@ public class RegistrationParams extends AbsSingleParams {
 
         this.name = name == null ? "" : name;
         this.metadata = metadata;
-        this.registrant = registrant;
     }
 
-    public String generateFingerprint(File file) {
-        checkValid(() -> file != null && !file.isDirectory(), "invalid file");
-        try {
-            fingerprint = Awaitility.await(() -> {
-                try {
-                    return computeFingerprint(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new UnexpectedException(e);
-                }
-            });
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            throw new UnexpectedException(throwable);
-        }
-        if (fingerprint == null) throw new UnexpectedException("cannot generate fingerprint");
-        return fingerprint;
+    public String setFingerprintFromFile(File file) throws IOException {
+        checkValid(() -> file != null && file.exists() && !file.isDirectory(), "invalid file");
+        byte[] data = FileUtils.getBytes(file);
+        return fingerprint = computeFingerprint(data, "01");
+    }
+
+    public String setFingerprintFromData(byte[] data) {
+        checkValid(() -> data != null, "invalid data");
+        return fingerprint = computeFingerprint(data, "01");
     }
 
     public Address getRegistrant() {
@@ -83,6 +72,13 @@ public class RegistrationParams extends AbsSingleParams {
 
     public Map<String, String> getMetadata() {
         return metadata;
+    }
+
+    @Override
+    public byte[] sign(KeyPair key) {
+        registrant = Address.getDefault(key.publicKey(), GlobalConfiguration.network());
+        checkValid(() -> null != fingerprint, "missing fingerprint");
+        return super.sign(key);
     }
 
     @Override
@@ -105,10 +101,9 @@ public class RegistrationParams extends AbsSingleParams {
         return data;
     }
 
-    public static String computeFingerprint(File file) throws IOException {
-        final byte[] bytes = FileUtils.getBytes(file);
-        final byte[] hashedBytes = Sha3512.hash(bytes);
-        return "01" + HEX.encode(hashedBytes);
+    private static String computeFingerprint(byte[] data, String hexPrefix) {
+        final byte[] hashedBytes = Sha3512.hash(data);
+        return hexPrefix + HEX.encode(hashedBytes);
     }
 
     public static String getPackedMetadata(Map<String, String> metadata) {

@@ -57,6 +57,10 @@ public class FileUtils {
         return new File(FileUtils.class.getResource("/" + name).getFile());
     }
 
+    public static byte[] getResourceAsBytes(String name) throws IOException {
+        return getBytes(getResourceFile(name));
+    }
+
     public static File createFile(String absolutePath, String content) throws IOException {
         final byte[] data = RAW.decode(content);
         File file = new File(absolutePath);
@@ -69,5 +73,19 @@ public class FileUtils {
     public static File createTempFile(String name, Path directory, String content)
             throws IOException {
         return createFile(new File(directory.toFile(), name).getAbsolutePath(), content);
+    }
+
+    public static byte[] getBytes(File file) throws IOException {
+        if (!file.exists())
+            throw new FileNotFoundException("File with path " + file.getAbsolutePath() + " is not" +
+                                            " found");
+        byte[] bytes = new byte[(int) file.length()];
+        FileInputStream stream = new FileInputStream(file);
+        try {
+            stream.read(bytes);
+        } finally {
+            stream.close();
+        }
+        return bytes;
     }
 }
