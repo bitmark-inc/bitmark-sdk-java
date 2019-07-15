@@ -26,17 +26,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.bitmark.apiservice.test.integrationtest.DataProvider.*;
-import static com.bitmark.apiservice.test.integrationtest.DataProvider.ADDRESS2;
-import static com.bitmark.apiservice.test.integrationtest.DataProvider.KEY2;
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static com.bitmark.apiservice.utils.record.BitmarkRecord.Status.SETTLED;
 import static com.bitmark.apiservice.utils.record.Head.MOVED;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static java.net.HttpURLConnection.*;
-import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Hieu Pham
@@ -416,10 +411,9 @@ public class ApiServiceTest extends BaseTest {
         TransferResponseParams responseParams = TransferResponseParams.cancel(offerRecord,
                                                                               bitmark.getOwner());
         responseParams.setSigningKey(KEY1);
-        String status = await(callback -> new ApiService()
-                .respondBitmarkOffer(responseParams, callback));
-        assertNotNull(status);
-        assertEquals("ok", status);
+        String txId = assertDoesNotThrow(() -> await(
+                callback -> new ApiService().respondBitmarkOffer(responseParams, callback)));
+        assertEquals("", txId);
     }
 
     @Test
@@ -449,11 +443,9 @@ public class ApiServiceTest extends BaseTest {
         OfferRecord offerRecord = response.getBitmark().getOffer();
         TransferResponseParams responseParams = TransferResponseParams.reject(offerRecord);
         responseParams.setSigningKey(KEY2);
-        String status =
-                await(callback -> new ApiService().respondBitmarkOffer(responseParams,
-                                                                       callback));
-        assertNotNull(status);
-        assertEquals("ok", status);
+        String txId = assertDoesNotThrow(() -> await(
+                callback -> new ApiService().respondBitmarkOffer(responseParams, callback)));
+        assertEquals("", txId);
     }
 
     @Test

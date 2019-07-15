@@ -82,8 +82,7 @@ public class ApiService implements BitmarkApi {
     public void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback) {
         final String path = String.format("/%s/transfer", V3);
         Headers headers = Headers.of(params.buildHeaders());
-        client.patchAsync(path, headers, params,
-                          params.isAccept() ? toTxId(callback) : toStatus(callback));
+        client.patchAsync(path, headers, params, toTxId(callback));
     }
 
     @Override

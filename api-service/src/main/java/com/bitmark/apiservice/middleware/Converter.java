@@ -84,9 +84,15 @@ public class Converter {
                 try {
                     String raw = response.body().string();
                     Map<String, Object> json = jsonToMap(raw);
-                    String txId = json.get("txid") != null ? json.get("txid").toString() : json
-                            .get("txId").toString();
-                    callback.onSuccess(txId);
+                    if (json.containsKey("status")) {
+                        String status = json.get("status").toString();
+                        if (status.equals("ok")) callback.onSuccess("");
+                        else callback.onError(new UnexpectedException("response status is not ok"));
+                    } else if (json.containsKey("txid")) {
+                        callback.onSuccess(json.get("txid").toString());
+                    } else if (json.containsKey("txId")) {
+                        callback.onSuccess(json.get("txId").toString());
+                    }
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }
