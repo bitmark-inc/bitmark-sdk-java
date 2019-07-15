@@ -58,9 +58,8 @@ public class BitmarkTest extends BaseTest {
             put("name", asset.getName());
             put("description", "Temporary File create from android sdk test");
         }};
-        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata,
-                                                                       owner);
-        registrationParams.generateFingerprint(asset);
+        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata);
+        registrationParams.setFingerprintFromFile(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
                 await(callback -> Asset.register(registrationParams,
@@ -89,9 +88,8 @@ public class BitmarkTest extends BaseTest {
             put("name", asset.getName());
             put("description", "Temporary File create from android sdk test");
         }};
-        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata,
-                                                                       owner);
-        registrationParams.generateFingerprint(asset);
+        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), metadata);
+        registrationParams.setFingerprintFromFile(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
                 await(callback -> Asset.register(registrationParams,
@@ -115,9 +113,8 @@ public class BitmarkTest extends BaseTest {
         // Register asset
         File asset = temporaryFolderRule.newFile();
         Address owner = ACCOUNT1.toAddress();
-        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), null,
-                                                                       owner);
-        registrationParams.generateFingerprint(asset);
+        RegistrationParams registrationParams = new RegistrationParams(asset.getName(), null);
+        registrationParams.setFingerprintFromFile(asset);
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
                 await(callback -> Asset.register(registrationParams,

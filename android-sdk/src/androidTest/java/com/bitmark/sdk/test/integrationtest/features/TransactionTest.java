@@ -64,7 +64,8 @@ public class TransactionTest extends BaseTest {
         String txId = transactions.get(0).getId();
 
         // Get tx by id
-        GetTransactionResponse getTransactionResponse = await(callback -> Transaction.getWithAsset(txId, callback));
+        GetTransactionResponse getTransactionResponse =
+                await(callback -> Transaction.getWithAsset(txId, callback));
         TransactionRecord transaction = getTransactionResponse.getTransaction();
         AssetRecord asset = getTransactionResponse.getAsset();
         assertNotNull(transaction);
@@ -92,6 +93,22 @@ public class TransactionTest extends BaseTest {
                 new TransactionQueryBuilder().ownedBy(owner).limit(limit);
         GetTransactionsResponse getTransactionsResponse =
                 await(callback -> Transaction.list(builder, callback));
+        List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
+        assertEquals(limit, transactions.size());
+        Stream.of(transactions).forEach(transaction -> assertEquals(owner, transaction.getOwner()));
+    }
+
+    @Test
+    public void testQueryTransactionsByBlock_NoCondition_CorrectResponseIsReturn()
+            throws Throwable {
+        // With limit and owner
+        int limit = 1;
+        String owner = ACCOUNT1.getAccountNumber();
+        TransactionQueryBuilder builder =
+                new TransactionQueryBuilder().ownedBy(owner).loadBlock(true).limit(limit);
+        GetTransactionsResponse getTransactionsResponse =
+                await(callback -> Transaction.list(builder, callback));
+        assertFalse(getTransactionsResponse.getBlocks().isEmpty());
         List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
         assertEquals(limit, transactions.size());
         Stream.of(transactions).forEach(transaction -> assertEquals(owner, transaction.getOwner()));

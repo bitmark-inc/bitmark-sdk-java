@@ -3,7 +3,6 @@ package com.bitmark.sdk.test.integrationtest.features;
 import com.bitmark.apiservice.params.RegistrationParams;
 import com.bitmark.apiservice.params.query.AssetQueryBuilder;
 import com.bitmark.apiservice.response.RegistrationResponse;
-import com.bitmark.apiservice.utils.Address;
 import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,8 @@ import java.util.Map;
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static com.bitmark.sdk.test.integrationtest.DataProvider.ACCOUNT1;
 import static com.bitmark.sdk.test.integrationtest.DataProvider.KEY1;
-import static java.net.HttpURLConnection.*;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -37,13 +38,12 @@ public class AssetTest extends BaseTest {
 
     @Test
     public void testRegisterAsset_NewAsset_CorrectResponseIsReturn(File asset) throws Throwable {
-        Address registrant = ACCOUNT1.toAddress();
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
             put("description", "Temporary File create from java sdk test");
         }};
-        RegistrationParams params = new RegistrationParams(asset.getName(), metadata, registrant);
-        params.generateFingerprint(asset);
+        RegistrationParams params = new RegistrationParams(asset.getName(), metadata);
+        params.setFingerprintFromFile(asset);
         params.sign(KEY1);
         RegistrationResponse response = await(callback -> Asset.register(params, callback));
         List<RegistrationResponse.Asset> assets = response.getAssets();
@@ -53,14 +53,14 @@ public class AssetTest extends BaseTest {
 
     @Test
     public void testRegisterAsset_ExistedAsset_CorrectResponseIsReturn(
-            @TemporaryFile("This is an existed file on Bitmark Block chain") File asset) {
-        Address registrant = ACCOUNT1.toAddress();
+            @TemporaryFile("This is an existed file on Bitmark Block chain") File asset)
+            throws IOException {
         Map<String, String> metadata = new HashMap<String, String>() {{
             put("name", asset.getName());
             put("description", "Temporary File create from java sdk test");
         }};
-        RegistrationParams params = new RegistrationParams(asset.getName(), metadata, registrant);
-        params.generateFingerprint(asset);
+        RegistrationParams params = new RegistrationParams(asset.getName(), metadata);
+        params.setFingerprintFromFile(asset);
         params.sign(KEY1);
         HttpException exception = assertThrows(HttpException.class,
                                                () -> await(
