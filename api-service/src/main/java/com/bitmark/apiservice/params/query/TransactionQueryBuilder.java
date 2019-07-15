@@ -38,6 +38,9 @@ public class TransactionQueryBuilder extends AbsQueryBuilder {
 
     private Integer limit = 100;
 
+    @SerializedName("block")
+    private Boolean loadBlock = false;
+
     public TransactionQueryBuilder ownedBy(String owner) {
         checkValidString(owner);
         this.owner = owner;
@@ -64,7 +67,8 @@ public class TransactionQueryBuilder extends AbsQueryBuilder {
     }
 
     public TransactionQueryBuilder referencedBlockNumber(Long blockNumber) {
-        checkValid(() -> blockNumber != null && blockNumber > 0, "Invalid at value. Must greater than 0");
+        checkValid(() -> blockNumber != null && blockNumber > 0,
+                   "Invalid at value. Must greater than 0");
         this.blockNumber = blockNumber;
         return this;
     }
@@ -95,8 +99,14 @@ public class TransactionQueryBuilder extends AbsQueryBuilder {
 
     public TransactionQueryBuilder to(String to) {
         checkValid(() -> to != null && (to.equals("earlier") || to.equals("later")), "Invalid " +
-                "value to. It must be 'later' or 'earlier'.");
+                                                                                     "value to. It must be 'later' or 'earlier'.");
         this.to = to;
+        return this;
+    }
+
+    public TransactionQueryBuilder loadBlock(Boolean loadBlock) {
+        checkNonNull(loadBlock);
+        this.loadBlock = loadBlock;
         return this;
     }
 }

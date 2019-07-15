@@ -1158,6 +1158,23 @@ public class ApiServiceTest extends BaseTest {
                 .forEach(transaction -> assertTrue(transaction.getBlockNumber() == blockNumber));
     }
 
+    @Test
+    public void testQueryTransactionsByBlock_NoCondition_CorrectResponseIsReturn()
+            throws Throwable {
+        // With limit and owner
+        int limit = 1;
+        String owner = ADDRESS1.getAddress();
+        TransactionQueryBuilder builder =
+                new TransactionQueryBuilder().ownedBy(owner).loadBlock(true).limit(limit);
+        GetTransactionsResponse getTransactionsResponse =
+                await(callback -> new ApiService()
+                        .listTransactions(builder.build(), callback));
+        List<TransactionRecord> transactions = getTransactionsResponse.getTransactions();
+        assertEquals(limit, transactions.size());
+        assertFalse(getTransactionsResponse.getBlocks().isEmpty());
+        transactions.forEach(transaction -> assertEquals(owner, transaction.getOwner()));
+    }
+
     //endregion ============= TXS TESTS ===============
 
     //region =============== WS TESTS ===============
