@@ -10,7 +10,6 @@ import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.internal.RecoveryPhrase;
 import com.bitmark.sdk.features.internal.Seed;
 import com.bitmark.sdk.features.internal.SeedTwelve;
-import com.bitmark.sdk.utils.AccountNumberData;
 
 import java.util.Locale;
 
@@ -87,17 +86,7 @@ public class Account {
     }
 
     public static boolean isValidAccountNumber(String accountNumber) {
-        try {
-            parseAccountNumber(accountNumber);
-            return true;
-        } catch (ValidateException ex) {
-            return false;
-        }
-    }
-
-    public static AccountNumberData parseAccountNumber(String accountNumber) {
-        Address address = Address.fromAccountNumber(accountNumber);
-        return AccountNumberData.from(address.getKey(), address.getNetwork());
+        return Address.isValidAccountNumber(accountNumber);
     }
 
     private static String generateAccountNumber(PublicKey key) {

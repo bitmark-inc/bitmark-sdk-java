@@ -8,7 +8,6 @@ import com.bitmark.sdk.features.internal.Seed;
 import com.bitmark.sdk.features.internal.SeedTwelve;
 import com.bitmark.sdk.features.internal.SeedTwentyFour;
 import com.bitmark.sdk.test.unittest.BaseTest;
-import com.bitmark.sdk.utils.AccountNumberData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -125,22 +124,6 @@ public class AccountTest extends BaseTest {
         assertEquals(Account.isValidAccountNumber(accountNumber), expectedResult);
     }
 
-    @ParameterizedTest
-    @MethodSource("createAccountNumberPublicKeyNetwork")
-    public void testParseAccountNumber_ValidAccountNumber_CorrectResultIsReturn(
-            String accountNumber, String publicKey, Network network) {
-        final AccountNumberData data = Account.parseAccountNumber(accountNumber);
-        assertEquals(data.getNetwork(), network);
-        assertEquals(HEX.encode(data.getPublicKey().toBytes()), publicKey);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54N",
-                            "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f", ""})
-    public void testParseAccountNumber_InvalidAccountNumber_ErrorIsThrow(String accountNumber) {
-        assertThrows(ValidateException.class, () -> Account.parseAccountNumber(accountNumber));
-    }
-
     private static Stream<Arguments> createRecoveryPhraseAccountNumberPublicKey() {
         return Stream.of(Arguments.of("name gaze apart lamp lift zone believe steak session " +
                                       "laptop crowd hill",
@@ -162,12 +145,6 @@ public class AccountTest extends BaseTest {
                                      "artist account",
                                      "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
                                      "807f4d123c944e0c3ecc95d9bde89916ced6341a8c8cedeb8caafef8f35654e7"));
-    }
-
-    private static Stream<Arguments> createAccountNumberPublicKeyNetwork() {
-        return Stream.of(Arguments.of("ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
-                                      "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f",
-                                      Network.TEST_NET));
     }
 
     private static Stream<Seed> createInvalidSeedBecauseOfNetwork() {
