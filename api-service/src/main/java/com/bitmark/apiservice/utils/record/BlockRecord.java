@@ -19,7 +19,7 @@ public class BlockRecord implements Record {
     @SerializedName("bitmark_id")
     private String bitmarkId;
 
-    @SerializedName("createdAt")
+    @SerializedName("created_at")
     private String createdAt;
 
     public long getNumber() {
