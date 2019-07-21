@@ -27,6 +27,7 @@ import static com.bitmark.apiservice.utils.Address.CHECKSUM_LENGTH;
 import static com.bitmark.apiservice.utils.ArrayUtil.concat;
 import static com.bitmark.apiservice.utils.ArrayUtil.slice;
 import static com.bitmark.cryptography.crypto.encoder.Base58.BASE_58;
+import static com.bitmark.cryptography.utils.Validator.checkNonNull;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
 
 /**
@@ -42,9 +43,34 @@ public class Account {
 
     private Seed seed;
 
+    /**
+     * This is deprecated.
+     *
+     * @see Account#fromSeed(String)
+     */
+    @Deprecated
     public static Account fromSeed(Seed seed) throws ValidateException {
         checkValid(() -> seed.getNetwork() == GlobalConfiguration.network(), "Incorrect network " +
                                                                              "from Seed");
+
+        final String accountNumber =
+                generateAccountNumber(seed.getAuthKeyPair().publicKey(), seed.getNetwork());
+        return new Account(seed, accountNumber);
+    }
+
+    public static Account fromSeed(String encodedSeed) throws ValidateException {
+        checkNonNull(encodedSeed);
+
+        byte[] encodedSeedBytes = BASE_58.decode(encodedSeed);
+        checkValid(() -> (encodedSeedBytes.length == SeedTwelve.ENCODED_SEED_LENGTH ||
+                          encodedSeedBytes.length == SeedTwentyFour.ENCODED_SEED_LENGTH),
+                   "invalid encoded seed");
+        Seed seed;
+        if (encodedSeedBytes.length == SeedTwelve.ENCODED_SEED_LENGTH) {
+            seed = SeedTwelve.fromEncodedSeed(encodedSeed);
+        } else {
+            seed = SeedTwentyFour.fromEncodedSeed(encodedSeed);
+        }
 
         final String accountNumber =
                 generateAccountNumber(seed.getAuthKeyPair().publicKey(), seed.getNetwork());

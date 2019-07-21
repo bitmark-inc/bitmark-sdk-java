@@ -51,6 +51,16 @@ public class AccountTest extends BaseTest {
     }
 
     @ParameterizedTest
+    @MethodSource("createEncodedSeedAccountNumberPubKeyString")
+    public void testNewAccountFromEncodedSeed_ValidSeed_ValidAccountIsCreated(String seed,
+                                                                              String accountNumber,
+                                                                              String publicKey) {
+        final Account account = Account.fromSeed(seed);
+        assertEquals(account.getAccountNumber(), accountNumber);
+        assertEquals(HEX.encode(account.getKeyPair().publicKey().toBytes()), publicKey);
+    }
+
+    @ParameterizedTest
     @MethodSource("createInvalidSeedBecauseOfNetwork")
     public void testNewAccountFromSeed_InvalidSeed_ErrorIsThrow(Seed seed) {
         ValidateException exception = assertThrows(ValidateException.class,
@@ -187,6 +197,19 @@ public class AccountTest extends BaseTest {
                                       "807f4d123c944e0c3ecc95d9bde89916ced6341a8c8cedeb8caafef8f35654e7"),
                          Arguments.of(SeedTwelve
                                               .fromEncodedSeed("9J87CAsHdFdoEu6N1unZk3sqhVBkVL8Z8"),
+                                      "eMCcmw1SKoohNUf3LeioTFKaYNYfp2bzFYpjm3EddwxBSWYVCb",
+                                      "369f6ceb1c23dbccc61b75e7990d0b2db8e1ee8da1c44db32280e63ca5804f38"));
+    }
+
+    private static Stream<Arguments> createEncodedSeedAccountNumberPubKeyString() {
+
+        return Stream.of(Arguments.of("5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD",
+                                      "ec6yMcJATX6gjNwvqp8rbc4jNEasoUgbfBBGGyV5NvoJ54NXva",
+                                      "58760a01edf5ed4f95bfe977d77a27627cd57a25df5dea885972212c2b1c0e2f"),
+                         Arguments.of("5XEECsXPYA9wDVXMtRMAVrtaWx7WSc5tG2hqj6b8iiz9rARjg2BgA9w",
+                                      "eujeF5ZBDV3qJyKeHxNqnmJsrc9iN7eHJGECsRuSXvLmnNjsWX",
+                                      "807f4d123c944e0c3ecc95d9bde89916ced6341a8c8cedeb8caafef8f35654e7"),
+                         Arguments.of("9J87CAsHdFdoEu6N1unZk3sqhVBkVL8Z8",
                                       "eMCcmw1SKoohNUf3LeioTFKaYNYfp2bzFYpjm3EddwxBSWYVCb",
                                       "369f6ceb1c23dbccc61b75e7990d0b2db8e1ee8da1c44db32280e63ca5804f38"));
     }
