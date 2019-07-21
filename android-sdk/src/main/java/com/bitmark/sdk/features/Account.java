@@ -65,19 +65,20 @@ public class Account {
         keyManager.getKey(accountNumber, spec, new Callback1<byte[]>() {
             @Override
             public void onSuccess(byte[] seedBytes) {
+                Account account = null;
                 try {
-                    if (seedBytes == null) callback.onSuccess(null);
-                    else {
-                        Seed seed =
-                                seedBytes.length == SeedTwelve.SEED_BYTE_LENGTH ? new SeedTwelve(
-                                        seedBytes) : new SeedTwentyFour(seedBytes,
-                                                                        GlobalConfiguration
-                                                                                .network());
-                        Account account = Account.fromSeed(seed);
-                        callback.onSuccess(account);
-                    }
+                    Seed seed =
+                            seedBytes.length == SeedTwelve.SEED_BYTE_LENGTH ? new SeedTwelve(
+                                    seedBytes) : new SeedTwentyFour(seedBytes,
+                                                                    GlobalConfiguration
+                                                                            .network());
+                    account = Account.fromSeed(seed);
                 } catch (Throwable e) {
                     callback.onError(e);
+                }
+
+                if (account != null) {
+                    callback.onSuccess(account);
                 }
             }
 
