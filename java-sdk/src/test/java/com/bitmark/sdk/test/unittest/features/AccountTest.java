@@ -174,7 +174,7 @@ public class AccountTest extends BaseTest {
                 ,
                          Arguments.of(SeedTwelve
                                               .fromEncodedSeed("9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2"),
-                                      Locale.CHINESE, "專 青 辦 增 孔 咱 " +
+                                      Locale.TRADITIONAL_CHINESE, "專 青 辦 增 孔 咱 " +
                                                       "裡 耕 窮 節 撲 易"),
                          Arguments.of(
                                  SeedTwentyFour.fromEncodedSeed(

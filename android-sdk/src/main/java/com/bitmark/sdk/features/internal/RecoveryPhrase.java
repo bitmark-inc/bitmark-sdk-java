@@ -35,10 +35,10 @@ public class RecoveryPhrase {
     private static final int[] MASKS = new int[]{0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023};
 
     private static String[] getWords(Locale locale) {
-        checkValid(() -> locale == Locale.ENGLISH || locale == Locale.CHINESE, "Does not support " +
-                                                                               "this locale");
+        checkValid(() -> locale == Locale.ENGLISH || locale == Locale.TRADITIONAL_CHINESE,
+                   "Does not support this locale");
         if (locale == Locale.ENGLISH && EN_WORDS != null) return EN_WORDS;
-        if (locale == Locale.CHINESE && CN_WORDS != null) return CN_WORDS;
+        if (locale == Locale.TRADITIONAL_CHINESE && CN_WORDS != null) return CN_WORDS;
 
         try {
             final int size = 2048;
@@ -161,11 +161,12 @@ public class RecoveryPhrase {
     private static void validate(String... mnemonicWords) {
         checkValid(() -> mnemonicWords != null && Version.matchesMnemonicWords(mnemonicWords)
                          && (contains(getWords(Locale.ENGLISH), mnemonicWords) ||
-                             contains(getWords(Locale.CHINESE), mnemonicWords)));
+                             contains(getWords(Locale.TRADITIONAL_CHINESE), mnemonicWords)));
     }
 
     private static Locale detectLocale(String examined) {
         return contains(getWords(Locale.ENGLISH), examined) ? Locale.ENGLISH :
-                contains(getWords(Locale.CHINESE), examined) ? Locale.CHINESE : null;
+                contains(getWords(Locale.TRADITIONAL_CHINESE),
+                         examined) ? Locale.TRADITIONAL_CHINESE : null;
     }
 }

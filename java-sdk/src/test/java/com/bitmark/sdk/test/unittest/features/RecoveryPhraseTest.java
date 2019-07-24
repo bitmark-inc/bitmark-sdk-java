@@ -157,7 +157,7 @@ public class RecoveryPhraseTest extends BaseTest {
                                               "during kingdom crew atom practice brisk weird document eager artwork ride then")
                                               .split(" ")),
                          Arguments.of(new SeedTwelve(
-                                              HEX.decode("3ae670cd91c5e15d0254a2abc57ba29d00")), Locale.CHINESE,
+                                              HEX.decode("3ae670cd91c5e15d0254a2abc57ba29d00")), Locale.TRADITIONAL_CHINESE,
                                       ("專 青 辦 增 孔 咱 裡 耕 窮 節 撲 易").split(" ")),
                          Arguments.of(new SeedTwentyFour(HEX.decode(
                                  "33f1fbe8e8e5c7fd592de351059a19434b99082cfaf9f71f6cbe216173690317"),
@@ -214,7 +214,7 @@ public class RecoveryPhraseTest extends BaseTest {
                                                                  "practice brisk weird " +
                                                                  "document eager artwork ride then")
                                  .split(" ")), Arguments.of(entropy2,
-                                                            Locale.CHINESE, ("專 青 辦 增 孔 咱 裡 耕 窮 節 撲 易").split(" ")),
+                                                            Locale.TRADITIONAL_CHINESE, ("專 青 辦 增 孔 咱 裡 耕 窮 節 撲 易").split(" ")),
                          Arguments.of(entropy3, Locale.ENGLISH,
                                       ("accident syrup inquiry you clutch liquid" +
                                        " fame upset joke glow best school repeat birth library combine access " +
