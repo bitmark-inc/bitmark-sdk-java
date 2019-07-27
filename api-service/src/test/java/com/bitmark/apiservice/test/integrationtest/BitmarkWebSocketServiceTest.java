@@ -29,12 +29,12 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
 
     @BeforeEach
     public void setup() {
-        ws = new BitmarkWebSocketService();
+
     }
 
     @AfterEach
     public void teardown() {
-        ws.disconnect();
+        if (ws != null) ws.disconnect();
         ws = null;
     }
 
@@ -43,7 +43,7 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final boolean expectedConnected = true;
         final AtomicBoolean actualConnected = new AtomicBoolean();
         final AtomicBoolean done = new AtomicBoolean();
-        ws.connect(KEY1, new WebSocket.ConnectionEvent() {
+        ws = new BitmarkWebSocketService(new WebSocket.ConnectionEvent() {
             @Override
             public void onConnected() {
                 actualConnected.set(true);
@@ -62,6 +62,7 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
                 done.set(true);
             }
         });
+        ws.connect(KEY1);
 
         while (!done.get()) {
             Thread.sleep(200);
@@ -74,7 +75,7 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final boolean expectedConnected = false;
         final AtomicBoolean actualConnected = new AtomicBoolean();
         final AtomicBoolean done = new AtomicBoolean();
-        ws.connect(KEY1, new WebSocket.ConnectionEvent() {
+        ws = new BitmarkWebSocketService(new WebSocket.ConnectionEvent() {
             @Override
             public void onConnected() {
                 actualConnected.set(true);
@@ -93,6 +94,7 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
                 done.set(true);
             }
         });
+        ws.connect(KEY1);
 
         while (!done.get()) {
             Thread.sleep(200);
@@ -105,7 +107,7 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
 
         final AtomicBoolean connectDone = new AtomicBoolean();
         final AtomicReference<Throwable> error = new AtomicReference<>();
-        ws.connect(KEY1, new WebSocket.ConnectionEvent() {
+        ws = new BitmarkWebSocketService(new WebSocket.ConnectionEvent() {
             @Override
             public void onConnected() {
                 connectDone.set(true);
@@ -123,6 +125,7 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
                 connectDone.set(true);
             }
         });
+        ws.connect(KEY1);
 
         while (!connectDone.get()) {
             Thread.sleep(200);
@@ -144,7 +147,7 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
 
         final AtomicBoolean connectDone = new AtomicBoolean();
         final AtomicReference<Throwable> error = new AtomicReference<>();
-        ws.connect(KEY1, new WebSocket.ConnectionEvent() {
+        ws = new BitmarkWebSocketService(new WebSocket.ConnectionEvent() {
             @Override
             public void onConnected() {
                 connectDone.set(true);
@@ -162,6 +165,7 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
                 connectDone.set(true);
             }
         });
+        ws.connect(KEY1);
 
         while (!connectDone.get()) {
             Thread.sleep(200);

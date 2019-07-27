@@ -13,7 +13,7 @@ import io.github.centrifugal.centrifuge.UnsubscribeEvent;
  */
 public interface WebSocket {
 
-    void connect(KeyPair keyPair, ConnectionEvent connEvent);
+    void connect(KeyPair keyPair);
 
     void disconnect();
 

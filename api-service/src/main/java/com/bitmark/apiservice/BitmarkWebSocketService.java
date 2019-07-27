@@ -30,8 +30,14 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
 
     private WebSocketClient client;
 
+    private final ConnectionEvent connEvent;
+
+    public BitmarkWebSocketService(ConnectionEvent event) {
+        this.connEvent = event;
+    }
+
     @Override
-    public void connect(KeyPair keyPair, ConnectionEvent connEvent) {
+    public void connect(KeyPair keyPair) {
         // disconnect before if needed
         if (isConnected()) disconnect();
 
@@ -48,7 +54,7 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
 
             @Override
             public void onError(Throwable throwable) {
-                connEvent.onConnectionError(throwable);
+                if (connEvent != null) connEvent.onConnectionError(throwable);
             }
         });
 
@@ -62,19 +68,20 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
             @Override
             public void onConnect(Client client, ConnectEvent ev) {
                 super.onConnect(client, ev);
-                connEvent.onConnected();
+                if (connEvent != null) connEvent.onConnected();
             }
 
             @Override
             public void onDisconnect(Client client, DisconnectEvent ev) {
                 super.onDisconnect(client, ev);
-                connEvent.onDisconnected();
+                if (connEvent != null) connEvent.onDisconnected();
             }
 
             @Override
             public void onError(Client client, ErrorEvent ev) {
                 super.onError(client, ev);
-                connEvent.onConnectionError(new UnexpectedException("cannot connect to ws server"));
+                if (connEvent != null) connEvent
+                        .onConnectionError(new UnexpectedException("cannot connect to ws server"));
             }
         });
         client.connect();
