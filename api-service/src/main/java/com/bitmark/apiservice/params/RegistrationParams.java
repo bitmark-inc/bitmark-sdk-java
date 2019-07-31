@@ -54,12 +54,12 @@ public class RegistrationParams extends AbsSingleParams {
     public String setFingerprintFromFile(File file) throws IOException {
         checkValid(() -> file != null && file.exists() && !file.isDirectory(), "invalid file");
         byte[] data = FileUtils.getBytes(file);
-        return fingerprint = computeFingerprint(data, "01");
+        return fingerprint = computeFingerprint(data);
     }
 
     public String setFingerprintFromData(byte[] data) {
         checkValid(() -> data != null, "invalid data");
-        return fingerprint = computeFingerprint(data, "01");
+        return fingerprint = computeFingerprint(data);
     }
 
     public Address getRegistrant() {
@@ -101,9 +101,9 @@ public class RegistrationParams extends AbsSingleParams {
         return data;
     }
 
-    private static String computeFingerprint(byte[] data, String hexPrefix) {
+    public static String computeFingerprint(byte[] data) {
         final byte[] hashedBytes = Sha3512.hash(data);
-        return hexPrefix + HEX.encode(hashedBytes);
+        return "01" + HEX.encode(hashedBytes);
     }
 
     public static String getPackedMetadata(Map<String, String> metadata) {
