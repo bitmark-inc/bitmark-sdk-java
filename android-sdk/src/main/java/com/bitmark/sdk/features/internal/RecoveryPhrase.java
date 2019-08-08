@@ -34,7 +34,7 @@ public class RecoveryPhrase {
 
     private static final int[] MASKS = new int[]{0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023};
 
-    private static String[] getWords(Locale locale) {
+    public static String[] getWords(Locale locale) {
         checkValid(() -> locale == Locale.ENGLISH || locale == Locale.TRADITIONAL_CHINESE,
                    "Does not support this locale");
         if (locale == Locale.ENGLISH && EN_WORDS != null) return EN_WORDS;
