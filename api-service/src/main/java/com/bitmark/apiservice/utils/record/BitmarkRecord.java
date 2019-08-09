@@ -121,10 +121,6 @@ public class BitmarkRecord implements Record {
         return edition;
     }
 
-    public void setEdition(Integer edition) {
-        this.edition = edition;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
