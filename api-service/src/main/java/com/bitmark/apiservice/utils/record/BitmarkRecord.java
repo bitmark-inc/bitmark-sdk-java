@@ -59,6 +59,8 @@ public class BitmarkRecord implements Record {
 
     private OfferRecord offer;
 
+    private Integer edition;
+
     public String getAssetId() {
         return assetId;
     }
@@ -115,29 +117,39 @@ public class BitmarkRecord implements Record {
         return offer != null;
     }
 
+    public Integer getEdition() {
+        return edition;
+    }
+
+    public void setEdition(Integer edition) {
+        this.edition = edition;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BitmarkRecord bitmark = (BitmarkRecord) o;
-        return blockNumber == bitmark.blockNumber &&
-               offset == bitmark.offset &&
-               Objects.equals(assetId, bitmark.assetId) &&
-               Objects.equals(confirmedAt, bitmark.confirmedAt) &&
-               Objects.equals(createdAt, bitmark.createdAt) &&
-               Objects.equals(head, bitmark.head) &&
-               Objects.equals(headId, bitmark.headId) &&
-               Objects.equals(id, bitmark.id) &&
-               Objects.equals(issuedAt, bitmark.issuedAt) &&
-               Objects.equals(issuer, bitmark.issuer) &&
-               Objects.equals(owner, bitmark.owner) &&
-               status == bitmark.status &&
-               Objects.equals(offer, bitmark.offer);
+        BitmarkRecord that = (BitmarkRecord) o;
+        return blockNumber == that.blockNumber &&
+               offset == that.offset &&
+               Objects.equals(assetId, that.assetId) &&
+               Objects.equals(confirmedAt, that.confirmedAt) &&
+               Objects.equals(createdAt, that.createdAt) &&
+               head == that.head &&
+               Objects.equals(headId, that.headId) &&
+               Objects.equals(id, that.id) &&
+               Objects.equals(issuedAt, that.issuedAt) &&
+               Objects.equals(issuer, that.issuer) &&
+               Objects.equals(owner, that.owner) &&
+               status == that.status &&
+               Objects.equals(offer, that.offer) &&
+               Objects.equals(edition, that.edition);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(assetId, blockNumber, confirmedAt, createdAt, head, headId, id,
-                            issuedAt, issuer, offset, owner, status, offer);
+        return Objects
+                .hash(assetId, blockNumber, confirmedAt, createdAt, head, headId, id, issuedAt,
+                      issuer, offset, owner, status, offer, edition);
     }
 }
