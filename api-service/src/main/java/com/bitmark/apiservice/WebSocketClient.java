@@ -2,9 +2,6 @@ package com.bitmark.apiservice;
 
 import io.github.centrifugal.centrifuge.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Hieu Pham
  * @since 7/6/19
@@ -18,8 +15,6 @@ class WebSocketClient extends EventListener {
     private EventListener eventListener;
 
     private boolean isConnected;
-
-    private final Map<String, Subscription> subscribedChannel = new HashMap<>();
 
     WebSocketClient(String address, String token) {
         client = new Client(address, new Options(), this);
@@ -41,43 +36,17 @@ class WebSocketClient extends EventListener {
     void subscribe(String channel, SubscriptionEventListener listener) {
         if (isSubscribed(channel)) return;
 
-        final SubscriptionEventListener internalListener = new SubscriptionEventListener() {
-            @Override
-            public void onPublish(Subscription sub, PublishEvent event) {
-                super.onPublish(sub, event);
-                listener.onPublish(sub, event);
-            }
-
-            @Override
-            public void onSubscribeSuccess(Subscription sub, SubscribeSuccessEvent event) {
-                super.onSubscribeSuccess(sub, event);
-                subscribedChannel.put(channel, sub);
-                listener.onSubscribeSuccess(sub, event);
-            }
-
-            @Override
-            public void onSubscribeError(Subscription sub, SubscribeErrorEvent event) {
-                super.onSubscribeError(sub, event);
-                listener.onSubscribeError(sub, event);
-            }
-
-            @Override
-            public void onUnsubscribe(Subscription sub, UnsubscribeEvent event) {
-                super.onUnsubscribe(sub, event);
-                final String channel = sub.getChannel();
-                subscribedChannel.remove(channel);
-                listener.onUnsubscribe(sub, event);
-            }
-        };
-
-        final Subscription subscription = client.newSubscription(channel, internalListener);
+        Subscription subscription = client.getSubscription(channel);
+        if (subscription == null) {
+            subscription = client.newSubscription(channel, listener);
+        }
         subscription.subscribe();
     }
 
     void unsubscribe(String channel) {
         if (!isSubscribed(channel)) return;
-        final Subscription subscription = subscribedChannel.get(channel);
-        subscription.unsubscribe();
+        final Subscription subscription = client.getSubscription(channel);
+        client.removeSubscription(subscription);
     }
 
     @Override
@@ -95,7 +64,7 @@ class WebSocketClient extends EventListener {
     }
 
     private boolean isSubscribed(String channel) {
-        return subscribedChannel.containsKey(channel);
+        return client.getSubscription(channel) != null;
     }
 
     boolean isConnected() {
