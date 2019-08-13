@@ -122,6 +122,7 @@ class FingerprintAuthenticator extends AbsAuthenticator {
         public void onAuthenticationError(int errorCode, CharSequence errString) {
             super.onAuthenticationError(errorCode, errString);
             if (errorCode == FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
+                if (dialog.isShowing()) dialog.dismiss();
                 callback.onCancelled();
             } else {
                 dialog.updateView(ERROR, errString.toString(), null);
