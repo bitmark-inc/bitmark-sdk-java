@@ -40,8 +40,10 @@ class HttpClientImpl implements HttpClient {
         builder.addInterceptor(new BitmarkApiInterceptor(apiToken));
 
         // Add Logging
-        builder.addInterceptor(new HttpLoggingInterceptor(GlobalConfiguration.logger())
-                                       .setLevel(GlobalConfiguration.logLevel()));
+        if (GlobalConfiguration.logLevel() != null) {
+            builder.addInterceptor(
+                    new HttpLoggingInterceptor().setLevel(GlobalConfiguration.logLevel()));
+        }
 
         // Configure the timeout
         int timeout = GlobalConfiguration.connectionTimeout();
