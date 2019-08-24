@@ -8,9 +8,13 @@ import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.error.NetworkException;
 import okhttp3.*;
+import okhttp3.internal.Util;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,6 +53,11 @@ class HttpClientImpl implements HttpClient {
         int timeout = GlobalConfiguration.connectionTimeout();
         builder.readTimeout(timeout, TimeUnit.SECONDS);
         builder.connectTimeout(timeout, TimeUnit.SECONDS);
+        final ExecutorService executorService =
+                new ThreadPoolExecutor(0, 10, 60,
+                                       TimeUnit.SECONDS, new SynchronousQueue<>(), Util
+                                               .threadFactory("OkHttp Dispatcher", false));
+        builder.dispatcher(new Dispatcher(executorService));
         return builder.build();
     }
 
