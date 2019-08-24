@@ -35,7 +35,20 @@ public class ApiService implements BitmarkApi {
 
     private HttpClient client;
 
-    public ApiService() {
+    private static volatile ApiService INSTANCE;
+
+    public static ApiService getInstance() {
+        if (INSTANCE == null) {
+            synchronized (ApiService.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new ApiService();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    private ApiService() {
         final String endpoint = GlobalConfiguration.network() ==
                                 Network.TEST_NET ? TEST_NET_ENDPOINT : LIVE_NET_ENDPOINT;
         this.client = new HttpClientImpl(endpoint, GlobalConfiguration.apiToken());

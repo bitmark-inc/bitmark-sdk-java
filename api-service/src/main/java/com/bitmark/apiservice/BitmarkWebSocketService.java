@@ -46,7 +46,7 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
         Address requester = Address.getDefault(keyPair.publicKey(), network);
         RegisterWsTokenParams params = new RegisterWsTokenParams(requester);
         params.sign(keyPair);
-        new ApiService().registerWsToken(params, new Callback1<String>() {
+        ApiService.getInstance().registerWsToken(params, new Callback1<String>() {
             @Override
             public void onSuccess(String token) {
                 connect(token, connEvent);
