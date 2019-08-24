@@ -20,15 +20,15 @@ public class Asset {
 
     public static void register(RegistrationParams params,
                                 Callback1<RegistrationResponse> callback) {
-        new ApiService().registerAsset(params, callback);
+        ApiService.getInstance().registerAsset(params, callback);
     }
 
     public static void get(String assetId, Callback1<AssetRecord> callback) {
-        new ApiService().getAsset(assetId, callback);
+        ApiService.getInstance().getAsset(assetId, callback);
     }
 
     public static void list(AssetQueryBuilder builder, Callback1<List<AssetRecord>> callback) {
-        new ApiService().listAssets(builder.build(), callback);
+        ApiService.getInstance().listAssets(builder.build(), callback);
     }
 
 }
