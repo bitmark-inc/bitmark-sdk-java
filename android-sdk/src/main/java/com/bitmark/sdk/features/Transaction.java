@@ -26,11 +26,11 @@ public class Transaction {
 
     public static void get(String txId, boolean loadAsset,
                            Callback1<GetTransactionResponse> callback) {
-        new ApiService().getTransaction(txId, loadAsset, wrapCallbackOnMain(callback));
+        ApiService.getInstance().getTransaction(txId, loadAsset, wrapCallbackOnMain(callback));
     }
 
     public static void list(TransactionQueryBuilder builder,
                             Callback1<GetTransactionsResponse> callback) {
-        new ApiService().listTransactions(builder.build(), wrapCallbackOnMain(callback));
+        ApiService.getInstance().listTransactions(builder.build(), wrapCallbackOnMain(callback));
     }
 }

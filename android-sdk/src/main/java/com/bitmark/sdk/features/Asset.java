@@ -22,15 +22,15 @@ public class Asset {
 
     public static void register(RegistrationParams params,
                                 Callback1<RegistrationResponse> callback) {
-        new ApiService().registerAsset(params, wrapCallbackOnMain(callback));
+        ApiService.getInstance().registerAsset(params, wrapCallbackOnMain(callback));
     }
 
     public static void get(String assetId, Callback1<AssetRecord> callback) {
-        new ApiService().getAsset(assetId, wrapCallbackOnMain(callback));
+        ApiService.getInstance().getAsset(assetId, wrapCallbackOnMain(callback));
     }
 
     public static void list(AssetQueryBuilder builder, Callback1<List<AssetRecord>> callback) {
-        new ApiService().listAssets(builder.build(), wrapCallbackOnMain(callback));
+        ApiService.getInstance().listAssets(builder.build(), wrapCallbackOnMain(callback));
     }
 
 }
