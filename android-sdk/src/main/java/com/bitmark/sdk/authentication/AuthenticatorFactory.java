@@ -1,12 +1,9 @@
 package com.bitmark.sdk.authentication;
 
-import android.app.Activity;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import com.bitmark.sdk.authentication.error.AuthenticationRequiredException;
+import android.annotation.SuppressLint;
+import android.content.Context;
 
-import static com.bitmark.sdk.authentication.DeviceAuthenticator.isDeviceSecured;
-import static com.bitmark.sdk.authentication.error.AuthenticationRequiredException.*;
+import static com.bitmark.sdk.utils.DeviceUtils.isAboveP;
 
 /**
  * @author Hieu Pham
@@ -14,41 +11,36 @@ import static com.bitmark.sdk.authentication.error.AuthenticationRequiredExcepti
  * Email: hieupham@bitmark.com
  * Copyright © 2018 Bitmark. All rights reserved.
  */
-@RequiresApi(api = Build.VERSION_CODES.M)
 public class AuthenticatorFactory {
 
-    public static Authenticator getDeviceAuthenticator(Activity activity, String title,
-                                                       String description,
-                                                       AuthenticationCallback callback)
-            throws AuthenticationRequiredException {
-        if (!isDeviceSecured(activity)) throw new AuthenticationRequiredException(PASSWORD);
-        return new DeviceAuthenticator(activity, title, description, callback);
+    private final Provider provider;
+
+    public static AuthenticatorFactory from(Provider provider) {
+        return new AuthenticatorFactory(provider);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public static Authenticator getFingerprintAuthenticator(Activity activity, String title,
-                                                            String description,
-                                                            AuthenticationCallback callback)
-            throws AuthenticationRequiredException {
-        if (FingerprintAuthenticator.isFingerprintEnrolled(activity)) {
-            return new FingerprintAuthenticator(activity, title, description, callback);
-        } else {
-            // Has not setup fingerprint
-            throw new AuthenticationRequiredException(FINGERPRINT);
-        }
+    private AuthenticatorFactory(Provider provider) {
+        this.provider = provider;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    public static Authenticator getBiometricAuthenticator(Activity activity, String title,
-                                                          String description,
-                                                          AuthenticationCallback callback)
-            throws AuthenticationRequiredException {
-        if (BiometricAuthenticator.isFingerprintEnrolled(activity)) {
-            // Has setup at least 1 fingerprint
-            return new BiometricAuthenticator(activity, title, description, callback);
-        } else {
-            // Has not setup fingerprint
-            throw new AuthenticationRequiredException(BIOMETRIC);
+    @SuppressLint("NewApi")
+    public Authenticator getAuthenticator(Context context) {
+        Authenticator authenticator = null;
+        switch (provider) {
+            case DEVICE:
+                authenticator = new DeviceAuthenticator(context);
+                break;
+            case FINGERPRINT:
+                authenticator = new FingerprintAuthenticator(context);
+                break;
+            case BIOMETRIC:
+                if (isAboveP()) {
+                    authenticator = new BiometricAuthenticator(context);
+                } else {
+                    throw new UnsupportedOperationException("provider is not supported");
+                }
+                break;
         }
+        return authenticator;
     }
 }

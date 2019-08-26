@@ -7,7 +7,10 @@ import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.*;
-import android.support.annotation.*;
+import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialog;
 import android.view.View;
@@ -19,12 +22,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bitmark.sdk.R;
+import com.bitmark.sdk.authentication.error.AuthenticationRequiredException;
+import com.bitmark.sdk.authentication.error.HardwareNotSupportedException;
 
 import javax.crypto.Cipher;
 
 import static android.content.Context.FINGERPRINT_SERVICE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.bitmark.sdk.authentication.FingerprintAuthenticator.FingerprintDialog.State.*;
+import static com.bitmark.sdk.authentication.Provider.FINGERPRINT;
 import static com.bitmark.sdk.utils.CommonUtils.switchOnMain;
 
 /**
@@ -36,36 +42,39 @@ import static com.bitmark.sdk.utils.CommonUtils.switchOnMain;
 @RequiresApi(api = Build.VERSION_CODES.M)
 class FingerprintAuthenticator extends AbsAuthenticator {
 
-    private String title;
-
-    private String description;
-
-    FingerprintAuthenticator(Activity activity, String title, String description,
-                             AuthenticationCallback callback) {
-        super(activity, callback);
-        this.title = title;
-        this.description = description;
+    FingerprintAuthenticator(Context context) {
+        super(context);
     }
 
     @Override
-    public void authenticate(@NonNull Cipher cipher) {
+    public void authenticate(Activity activity, String title, String description, Cipher cipher,
+                             AuthenticationCallback callback) {
         switchOnMain(
                 () -> new FingerprintAuthenticationHandler(activity, title, description, callback)
                         .authenticate(cipher));
     }
 
-    private static FingerprintManager getFingerPrintManager(Context context) {
-        return (FingerprintManager) context.getSystemService(FINGERPRINT_SERVICE);
-    }
-
-    static boolean isFingerprintHardwareDetected(Context context) {
+    @Override
+    public boolean isHardwareDetected() {
         FingerprintManager manager = getFingerPrintManager(context);
         return manager != null && manager.isHardwareDetected();
     }
 
-    static boolean isFingerprintEnrolled(Context context) {
+    @Override
+    public boolean isEnrolled() {
         FingerprintManager manager = getFingerPrintManager(context);
         return manager != null && manager.hasEnrolledFingerprints();
+    }
+
+    @Override
+    public void checkAvailability()
+            throws AuthenticationRequiredException, HardwareNotSupportedException {
+        if (!isHardwareDetected()) throw new HardwareNotSupportedException(FINGERPRINT);
+        if (!isEnrolled()) throw new AuthenticationRequiredException(FINGERPRINT);
+    }
+
+    private static FingerprintManager getFingerPrintManager(Context context) {
+        return (FingerprintManager) context.getSystemService(FINGERPRINT_SERVICE);
     }
 
     private static class FingerprintAuthenticationHandler

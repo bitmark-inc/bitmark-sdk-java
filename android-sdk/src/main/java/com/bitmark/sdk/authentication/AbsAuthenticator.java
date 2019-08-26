@@ -1,23 +1,18 @@
 package com.bitmark.sdk.authentication;
 
-import android.app.Activity;
-import android.support.annotation.NonNull;
+import android.content.Context;
 
 /**
  * @author Hieu Pham
- * @since 12/6/18
+ * @since 2019-08-26
  * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
+ * Copyright © 2019 Bitmark. All rights reserved.
  */
 abstract class AbsAuthenticator implements Authenticator {
 
-    protected AuthenticationCallback callback;
+    protected final Context context;
 
-    protected Activity activity;
-
-    AbsAuthenticator(@NonNull Activity activity, @NonNull AuthenticationCallback callback) {
-        this.activity = activity;
-        this.callback = callback;
+    AbsAuthenticator(Context context) {
+        this.context = context;
     }
-
 }

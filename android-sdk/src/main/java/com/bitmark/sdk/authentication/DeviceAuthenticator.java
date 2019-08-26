@@ -4,16 +4,18 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+import com.bitmark.sdk.authentication.error.AuthenticationRequiredException;
+import com.bitmark.sdk.authentication.error.HardwareNotSupportedException;
 
 import javax.crypto.Cipher;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.KEYGUARD_SERVICE;
+import static com.bitmark.sdk.authentication.Provider.DEVICE;
+import static com.bitmark.sdk.utils.DeviceUtils.isAboveM;
 
 /**
  * @author Hieu Pham
@@ -23,29 +25,36 @@ import static android.content.Context.KEYGUARD_SERVICE;
  */
 class DeviceAuthenticator extends AbsAuthenticator {
 
-    private String title;
-
-    private String description;
-
-    DeviceAuthenticator(Activity activity, String title, String description,
-                        AuthenticationCallback callback) {
-        super(activity, callback);
-        this.title = title;
-        this.description = description;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public static boolean isDeviceSecured(Context context) {
-        KeyguardManager keyguardManager =
-                (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
-        if (keyguardManager == null) return false;
-        return keyguardManager.isDeviceSecure();
+    DeviceAuthenticator(Context context) {
+        super(context);
     }
 
     @Override
-    public void authenticate(Cipher cipher) {
+    public void authenticate(Activity activity, String title, String description, Cipher cipher,
+                             AuthenticationCallback callback) {
         new DeviceAuthenticationHandler(activity, title, description, callback)
                 .authenticate(cipher);
+    }
+
+    @Override
+    public boolean isHardwareDetected() {
+        // all devices support PIN/Pattern/Password
+        return true;
+    }
+
+    @Override
+    public boolean isEnrolled() {
+        KeyguardManager keyguardManager =
+                (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
+        if (keyguardManager == null) return false;
+        return isAboveM() ? keyguardManager.isDeviceSecure() : keyguardManager.isKeyguardSecure();
+    }
+
+    @Override
+    public void checkAvailability()
+            throws AuthenticationRequiredException, HardwareNotSupportedException {
+        if (!isHardwareDetected()) throw new HardwareNotSupportedException(DEVICE);
+        if (!isEnrolled()) throw new AuthenticationRequiredException(DEVICE);
     }
 
 

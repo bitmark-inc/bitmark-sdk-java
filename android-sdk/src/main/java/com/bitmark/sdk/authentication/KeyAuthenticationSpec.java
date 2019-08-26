@@ -29,7 +29,9 @@ public class KeyAuthenticationSpec {
                                            getAuthenticationValidityDuration())
                                    .setAuthenticationDescription(
                                            getAuthenticationDescription())
-                                   .setAuthenticationTitle(getAuthenticationTitle());
+                                   .setAuthenticationTitle(getAuthenticationTitle())
+                                   .setUsePossibleAlternativeAuthentication(
+                                           usePossibleAlternativeAuthentication());
     }
 
     public boolean isAuthenticationRequired() {
@@ -52,8 +54,16 @@ public class KeyAuthenticationSpec {
         return builder.keyAlias;
     }
 
+    public boolean usePossibleAlternativeAuthentication() {
+        return builder.usePossibleAlternativeAuthentication;
+    }
+
     public boolean willInvalidateInTimeFrame() {
         return getAuthenticationValidityDuration() != -1;
+    }
+
+    public boolean needAuthenticateImmediately() {
+        return isAuthenticationRequired() && !willInvalidateInTimeFrame();
     }
 
     public static final class Builder {
@@ -68,6 +78,8 @@ public class KeyAuthenticationSpec {
 
         private String authenticationDescription;
 
+        private boolean usePossibleAlternativeAuthentication;
+
         public Builder(Context context) {
             initDefault(context);
         }
@@ -75,6 +87,7 @@ public class KeyAuthenticationSpec {
         private void initDefault(Context context) {
             keyAlias = BuildConfig.APPLICATION_ID + "encryption_key";
             isAuthenticationRequired = false;
+            usePossibleAlternativeAuthentication = false;
             authenticationTitle = context.getString(R.string.authentication);
             authenticationDescription = context.getString(R.string.please_authenticate_to_unlock);
 
@@ -103,6 +116,11 @@ public class KeyAuthenticationSpec {
 
         public Builder setKeyAlias(String keyAlias) {
             this.keyAlias = keyAlias;
+            return this;
+        }
+
+        public Builder setUsePossibleAlternativeAuthentication(boolean use) {
+            this.usePossibleAlternativeAuthentication = use;
             return this;
         }
 

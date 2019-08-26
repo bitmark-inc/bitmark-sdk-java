@@ -20,4 +20,8 @@ public class DeviceUtils {
     public static boolean isAboveN() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     }
+
+    public static boolean isAboveM() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
 }
