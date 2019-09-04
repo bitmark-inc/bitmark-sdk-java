@@ -173,7 +173,7 @@ public class KeyManagerImpl implements KeyManager {
 
             final Authenticator authenticator =
                     detectAuthenticator(activity.getApplicationContext(),
-                                        spec.usePossibleAlternativeAuthentication());
+                                        spec.useAlternativeAuthentication());
             authenticator.authenticate(activity, spec.getAuthenticationTitle(),
                                        spec.getAuthenticationDescription(), cipher, authCallback);
         } catch (AuthenticationRequiredException | HardwareNotSupportedException e) {
@@ -224,7 +224,9 @@ public class KeyManagerImpl implements KeyManager {
                             activity.getApplicationContext(),
                             keyAuthSpec.getKeyAlias(),
                             keyAuthSpec.isAuthenticationRequired(),
-                            keyAuthSpec.getAuthenticationValidityDuration(), isAboveP());
+                            keyAuthSpec.getAuthenticationValidityDuration(),
+                            keyAuthSpec.useAlternativeAuthentication(),
+                            isAboveP());
 
             // Regenerate key spec
             newKeyAuthSpec =
@@ -333,7 +335,7 @@ public class KeyManagerImpl implements KeyManager {
                     });
             final Authenticator authenticator =
                     detectAuthenticator(activity.getApplicationContext(),
-                                        spec.usePossibleAlternativeAuthentication());
+                                        spec.useAlternativeAuthentication());
             authenticator.authenticate(activity, spec.getAuthenticationTitle(),
                                        spec.getAuthenticationDescription(), cipher, authCallback);
         } catch (AuthenticationRequiredException | HardwareNotSupportedException e) {
@@ -484,6 +486,7 @@ public class KeyManagerImpl implements KeyManager {
     private SecretKey generateEncryptionKey(Context context, String keyAlias,
                                             boolean isAuthenticationRequired,
                                             int keyAuthValidityDuration,
+                                            boolean useAlternativeAuth,
                                             boolean supportStrongBoxBacked)
             throws NoSuchProviderException, NoSuchAlgorithmException,
                    InvalidAlgorithmParameterException, AuthenticationRequiredException {
@@ -510,15 +513,21 @@ public class KeyManagerImpl implements KeyManager {
             return keyGenerator.generateKey();
         } catch (InvalidAlgorithmParameterException e) {
             if (e.getCause() instanceof IllegalStateException) {
-                if (!AuthenticatorFactory.from(FINGERPRINT).getAuthenticator(context)
-                                         .isHardwareDetected()) {
+                if (AuthenticatorFactory.from(FINGERPRINT).getAuthenticator(context)
+                                        .isHardwareDetected()) {
+                    throw new AuthenticationRequiredException(FINGERPRINT);
+
+                } else if (useAlternativeAuth) {
+                    final SharedPreferenceApi sharePrefApi = new SharedPreferenceApi(context);
                     // save flag for detect device authentication is required
-                    new SharedPreferenceApi(context).put(keyAlias, true);
+                    sharePrefApi.put(keyAlias + "_auth_required", true);
+                    // save flag for detect using alternative auth
+                    sharePrefApi.put(keyAlias + "_alternative_auth", true);
                     // using device authentication in case of device does not support fingerprint sensor
                     return generateEncryptionKey(context, keyAlias, false, keyAuthValidityDuration,
-                                                 false);
+                                                 true, false);
                 } else {
-                    throw new AuthenticationRequiredException(FINGERPRINT);
+                    throw e;
                 }
             } else {
                 throw e;
@@ -527,7 +536,7 @@ public class KeyManagerImpl implements KeyManager {
             // We do not know how to check the device supports strongbox key master or not
             // So we need to catch StrongBoxUnavailableException to re-generate the key without strongbox support
             return generateEncryptionKey(context, keyAlias, isAuthenticationRequired,
-                                         keyAuthValidityDuration, false);
+                                         keyAuthValidityDuration, useAlternativeAuth, false);
         }
     }
 
@@ -561,9 +570,12 @@ public class KeyManagerImpl implements KeyManager {
                                                      KeyAuthenticationSpec oldSpec)
             throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException {
         final Context context = activity.getApplicationContext();
+        final SharedPreferenceApi sharePrefApi = new SharedPreferenceApi(context);
 
         final boolean authRequiredFlag =
-                new SharedPreferenceApi(context).get(oldSpec.getKeyAlias(), Boolean.class);
+                sharePrefApi.get(oldSpec.getKeyAlias() + "_auth_required", Boolean.class);
+        final boolean useAlternativeAuth =
+                sharePrefApi.get(oldSpec.getKeyAlias() + "_alternative_auth", Boolean.class);
 
 
         // Retrieve the key info of encryption key
@@ -577,8 +589,8 @@ public class KeyManagerImpl implements KeyManager {
                               info.isUserAuthenticationRequired() || authRequiredFlag)
                       .setAuthenticationValidityDuration(
                               info.getUserAuthenticationValidityDurationSeconds())
-                      .setUsePossibleAlternativeAuthentication(
-                              oldSpec.usePossibleAlternativeAuthentication())
+                      .setUseAlternativeAuthentication(
+                              oldSpec.useAlternativeAuthentication() || useAlternativeAuth)
                       .build();
     }
 }

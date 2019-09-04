@@ -30,8 +30,8 @@ public class KeyAuthenticationSpec {
                                    .setAuthenticationDescription(
                                            getAuthenticationDescription())
                                    .setAuthenticationTitle(getAuthenticationTitle())
-                                   .setUsePossibleAlternativeAuthentication(
-                                           usePossibleAlternativeAuthentication());
+                                   .setUseAlternativeAuthentication(
+                                           useAlternativeAuthentication());
     }
 
     public boolean isAuthenticationRequired() {
@@ -54,8 +54,8 @@ public class KeyAuthenticationSpec {
         return builder.keyAlias;
     }
 
-    public boolean usePossibleAlternativeAuthentication() {
-        return builder.usePossibleAlternativeAuthentication;
+    public boolean useAlternativeAuthentication() {
+        return builder.useAlternativeAuthentication;
     }
 
     public boolean willInvalidateInTimeFrame() {
@@ -78,7 +78,7 @@ public class KeyAuthenticationSpec {
 
         private String authenticationDescription;
 
-        private boolean usePossibleAlternativeAuthentication;
+        private boolean useAlternativeAuthentication;
 
         public Builder(Context context) {
             initDefault(context);
@@ -87,7 +87,7 @@ public class KeyAuthenticationSpec {
         private void initDefault(Context context) {
             keyAlias = BuildConfig.APPLICATION_ID + "encryption_key";
             isAuthenticationRequired = false;
-            usePossibleAlternativeAuthentication = false;
+            useAlternativeAuthentication = false;
             authenticationTitle = context.getString(R.string.authentication);
             authenticationDescription = context.getString(R.string.please_authenticate_to_unlock);
 
@@ -119,8 +119,8 @@ public class KeyAuthenticationSpec {
             return this;
         }
 
-        public Builder setUsePossibleAlternativeAuthentication(boolean use) {
-            this.usePossibleAlternativeAuthentication = use;
+        public Builder setUseAlternativeAuthentication(boolean use) {
+            this.useAlternativeAuthentication = use;
             return this;
         }
 
