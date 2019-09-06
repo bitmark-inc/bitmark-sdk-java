@@ -18,8 +18,11 @@ abstract class AbsSeed implements Seed {
 
     byte[] seedBytes;
 
-    AbsSeed(byte[] seedBytes) throws ValidateException {
-        checkValid(() -> seedBytes != null && seedBytes.length == length(), "Invalid Seed");
+    AbsSeed(byte[] seedBytes)  {
+        checkValid(
+                () -> seedBytes != null && seedBytes.length == length(),
+                "Invalid Seed"
+        );
         this.seedBytes = seedBytes;
     }
 

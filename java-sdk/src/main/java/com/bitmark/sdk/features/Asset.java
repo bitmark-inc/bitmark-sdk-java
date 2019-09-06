@@ -18,8 +18,10 @@ import java.util.List;
 
 public class Asset {
 
-    public static void register(RegistrationParams params,
-                                Callback1<RegistrationResponse> callback) {
+    public static void register(
+            RegistrationParams params,
+            Callback1<RegistrationResponse> callback
+    ) {
         ApiService.getInstance().registerAsset(params, callback);
     }
 
@@ -27,7 +29,10 @@ public class Asset {
         ApiService.getInstance().getAsset(assetId, callback);
     }
 
-    public static void list(AssetQueryBuilder builder, Callback1<List<AssetRecord>> callback) {
+    public static void list(
+            AssetQueryBuilder builder,
+            Callback1<List<AssetRecord>> callback
+    ) {
         ApiService.getInstance().listAssets(builder.build(), callback);
     }
 

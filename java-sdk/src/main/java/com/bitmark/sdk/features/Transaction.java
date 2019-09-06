@@ -14,21 +14,31 @@ import com.bitmark.apiservice.utils.callback.Callback1;
  */
 public class Transaction {
 
-    public static void get(String txId, Callback1<GetTransactionResponse> callback) {
+    public static void get(
+            String txId,
+            Callback1<GetTransactionResponse> callback
+    ) {
         get(txId, false, callback);
     }
 
-    public static void getWithAsset(String txId, Callback1<GetTransactionResponse> callback) {
+    public static void getWithAsset(
+            String txId,
+            Callback1<GetTransactionResponse> callback
+    ) {
         get(txId, true, callback);
     }
 
-    public static void get(String txId, boolean loadAsset,
-                           Callback1<GetTransactionResponse> callback) {
+    public static void get(
+            String txId, boolean loadAsset,
+            Callback1<GetTransactionResponse> callback
+    ) {
         ApiService.getInstance().getTransaction(txId, loadAsset, callback);
     }
 
-    public static void list(TransactionQueryBuilder builder,
-                            Callback1<GetTransactionsResponse> callback) {
+    public static void list(
+            TransactionQueryBuilder builder,
+            Callback1<GetTransactionsResponse> callback
+    ) {
         ApiService.getInstance().listTransactions(builder.build(), callback);
     }
 }

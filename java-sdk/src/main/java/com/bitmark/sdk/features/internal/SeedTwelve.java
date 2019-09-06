@@ -36,7 +36,7 @@ public class SeedTwelve extends AbsSeed {
 
     public static byte[] HEADER = {0x5A, (byte) 0xFE, 0x02};
 
-    public static Seed fromEncodedSeed(String encodedSeed) throws ValidateException {
+    public static Seed fromEncodedSeed(String encodedSeed) {
         final byte[] seedBytes = BASE_58.decode(encodedSeed);
         checkValidLength(seedBytes, ENCODED_SEED_LENGTH);
 
@@ -44,18 +44,30 @@ public class SeedTwelve extends AbsSeed {
 
         // Checksum is last 4 bits
         final int length = seedBytes.length;
-        final byte[] checksum = slice(seedBytes,
-                                      length - CHECKSUM_LENGTH, length);
+        final byte[] checksum = slice(
+                seedBytes,
+                length - CHECKSUM_LENGTH,
+                length
+        );
 
         // Bytes not contains checksum
-        final byte[] data = Arrays.copyOfRange(seedBytes, 0,
-                                               length - CHECKSUM_LENGTH);
+        final byte[] data = Arrays.copyOfRange(
+                seedBytes,
+                0,
+                length - CHECKSUM_LENGTH
+        );
 
         // Verify checksum
         final byte[] dataHashed = Sha3256.hash(data);
-        final byte[] checksumVerification = slice(dataHashed, 0, CHECKSUM_LENGTH);
-        checkValid(() -> Arrays.equals(checksum, checksumVerification),
-                   new InvalidChecksumException(checksumVerification, checksum));
+        final byte[] checksumVerification = slice(
+                dataHashed,
+                0,
+                CHECKSUM_LENGTH
+        );
+        checkValid(
+                () -> Arrays.equals(checksum, checksumVerification),
+                new InvalidChecksumException(checksumVerification, checksum)
+        );
 
         // Get seed
         final byte[] seed = slice(data, HEADER.length, data.length);
@@ -67,7 +79,7 @@ public class SeedTwelve extends AbsSeed {
         this(randomEntropy(GlobalConfiguration.network()));
     }
 
-    public SeedTwelve(byte[] seedBytes) throws ValidateException {
+    public SeedTwelve(byte[] seedBytes) {
         super(seedBytes);
     }
 
@@ -105,14 +117,17 @@ public class SeedTwelve extends AbsSeed {
         return extractNetwork(seedBytes);
     }
 
-    private static Network extractNetwork(byte[] core) throws InvalidNetworkException {
+    private static Network extractNetwork(byte[] core)
+            throws InvalidNetworkException {
         int mode =
                 ((core[0] & 0x80) | (core[1] & 0x40) | (core[2] & 0x20) | (core[3] & 0x10));
         if (mode == (core[15] & 0xF0)) {
             return Network.LIVE_NET;
         } else if (mode == (core[15] & 0xF0 ^ 0xF0)) {
             return Network.TEST_NET;
-        } else throw new InvalidNetworkException("Cannot extract network from core");
+        } else {
+            throw new InvalidNetworkException("Cannot extract network from core");
+        }
 
     }
 
@@ -136,23 +151,29 @@ public class SeedTwelve extends AbsSeed {
         byte[] seed = secureRandomBytes(SEED_BYTE_LENGTH - 1);
 
         // Extend to 132 bits
-        seed = concat(seed, new byte[]{(byte) (seed[15] & 0xF0)}); // bits 7654xxxx  where x=zero
+        seed = concat(
+                seed,
+                new byte[]{(byte) (seed[15] & 0xF0)}
+        ); // bits 7654xxxx  where x=zero
 
         byte mode =
                 (byte) (seed[0] & 0x80 | seed[1] & 0x40 | seed[2] & 0x20 | seed[3] & 0x10);
-        if (network == Network.TEST_NET) mode = (byte) (mode ^ 0xF0);
+        if (network == Network.TEST_NET) {
+            mode = (byte) (mode ^ 0xF0);
+        }
         seed[15] = (byte) (mode | (seed[15] & 0x0F));
         return seed;
     }
 
-    private static byte[] generateSeedKey(byte[] core) throws ValidateException {
+    private static byte[] generateSeedKey(byte[] core) {
         List<byte[]> keys = generateSeedKeys(core, 1);
-        if (keys.isEmpty()) throw new ValidateException("Generate seed key failed");
+        if (keys.isEmpty()) {
+            throw new ValidateException("Generate seed key failed");
+        }
         return keys.get(0);
     }
 
-    private static List<byte[]> generateSeedKeys(byte[] core, int keyCount)
-            throws ValidateException {
+    private static List<byte[]> generateSeedKeys(byte[] core, int keyCount) {
         checkValid(() -> core != null && core.length > 0 && keyCount > 0);
 
         // add the seed 4 times to hash value

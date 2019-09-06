@@ -6,7 +6,6 @@ import com.bitmark.apiservice.utils.Address;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.PublicKey;
-import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.internal.RecoveryPhrase;
 import com.bitmark.sdk.features.internal.Seed;
 import com.bitmark.sdk.features.internal.SeedTwelve;
@@ -40,22 +39,29 @@ public class Account {
      * @see Account#fromSeed(String)
      */
     @Deprecated
-    public static Account fromSeed(Seed seed) throws ValidateException {
-        checkValid(() -> seed.getNetwork() == GlobalConfiguration.network(), "Incorrect network " +
-                                                                             "from Seed");
+    public static Account fromSeed(Seed seed) {
+        checkValid(
+                () -> seed.getNetwork() == GlobalConfiguration.network(),
+                "Incorrect network from Seed"
+        );
 
         final String accountNumber =
-                generateAccountNumber(seed.getAuthKeyPair().publicKey(), seed.getNetwork());
+                generateAccountNumber(
+                        seed.getAuthKeyPair().publicKey(),
+                        seed.getNetwork()
+                );
         return new Account(seed, accountNumber);
     }
 
-    public static Account fromSeed(String encodedSeed) throws ValidateException {
+    public static Account fromSeed(String encodedSeed) {
         checkNonNull(encodedSeed);
 
         byte[] encodedSeedBytes = BASE_58.decode(encodedSeed);
-        checkValid(() -> (encodedSeedBytes.length == SeedTwelve.ENCODED_SEED_LENGTH ||
-                          encodedSeedBytes.length == SeedTwentyFour.ENCODED_SEED_LENGTH),
-                   "invalid encoded seed");
+        checkValid(
+                () -> (encodedSeedBytes.length == SeedTwelve.ENCODED_SEED_LENGTH ||
+                        encodedSeedBytes.length == SeedTwentyFour.ENCODED_SEED_LENGTH),
+                "invalid encoded seed"
+        );
         Seed seed;
         if (encodedSeedBytes.length == SeedTwelve.ENCODED_SEED_LENGTH) {
             seed = SeedTwelve.fromEncodedSeed(encodedSeed);
@@ -64,19 +70,24 @@ public class Account {
         }
 
         final String accountNumber =
-                generateAccountNumber(seed.getAuthKeyPair().publicKey(), seed.getNetwork());
+                generateAccountNumber(
+                        seed.getAuthKeyPair().publicKey(),
+                        seed.getNetwork()
+                );
         return new Account(seed, accountNumber);
     }
 
-    public static Account fromRecoveryPhrase(String... recoveryPhrase) throws ValidateException {
-        final RecoveryPhrase phrase = RecoveryPhrase.fromMnemonicWords(recoveryPhrase);
+    public static Account fromRecoveryPhrase(String... recoveryPhrase) {
+        final RecoveryPhrase phrase = RecoveryPhrase.fromMnemonicWords(
+                recoveryPhrase);
         final Seed seed = phrase.recoverSeed();
         return fromSeed(seed);
     }
 
     public Account() {
         seed = new SeedTwelve();
-        accountNumber = generateAccountNumber(seed.getAuthKeyPair().publicKey());
+        accountNumber = generateAccountNumber(seed.getAuthKeyPair()
+                .publicKey());
     }
 
     private Account(Seed seed, String accountNumber) {
@@ -84,7 +95,7 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public KeyPair getKeyPair() {
+    public KeyPair getAuthKeyPair() {
         return seed.getAuthKeyPair();
     }
 
@@ -120,13 +131,24 @@ public class Account {
         return generateAccountNumber(key, GlobalConfiguration.network());
     }
 
-    private static String generateAccountNumber(PublicKey key, Network network) {
+    private static String generateAccountNumber(
+            PublicKey key,
+            Network network
+    ) {
         Address address = Address.getDefault(key, network);
         final byte[] keyVariantVarInt = address.getPrefix();
         final byte[] publicKeyBytes = key.toBytes();
         final byte[] preChecksum = concat(keyVariantVarInt, publicKeyBytes);
-        final byte[] checksum = slice(Sha3256.hash(preChecksum), 0, CHECKSUM_LENGTH);
-        return BASE_58.encode(concat(keyVariantVarInt, publicKeyBytes, checksum));
+        final byte[] checksum = slice(
+                Sha3256.hash(preChecksum),
+                0,
+                CHECKSUM_LENGTH
+        );
+        return BASE_58.encode(concat(
+                keyVariantVarInt,
+                publicKeyBytes,
+                checksum
+        ));
     }
 
 }

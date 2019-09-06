@@ -16,19 +16,25 @@ public class FileUtils {
     private FileUtils() {
     }
 
-    public static InputStream getResourceAsStream(String name) throws IOException {
-        ClassLoader[] loaders = new ClassLoader[]{ClassLoader.getSystemClassLoader(),
+    public static InputStream getResourceAsStream(String name)
+            throws IOException {
+        ClassLoader[] loaders = new ClassLoader[]{
+                ClassLoader.getSystemClassLoader(),
                 RecoveryPhrase.class.getClassLoader(),
-                Thread.currentThread().getContextClassLoader()};
+                Thread.currentThread().getContextClassLoader()
+        };
         String[] paths = new String[]{name, "/" + name};
         for (ClassLoader loader : loaders) {
             InputStream stream = null;
             for (String path : paths) {
                 stream = loader.getResourceAsStream(path);
-                if (stream != null) break;
+                if (stream != null) {
+                    break;
+                }
             }
-            if (stream != null)
+            if (stream != null) {
                 return stream;
+            }
         }
         throw new IOException("File with path " + name + " is not found");
     }
@@ -42,7 +48,10 @@ public class FileUtils {
      */
     public static File getResourceAsFile(String name) throws IOException {
         final String suffix = name.substring(name.lastIndexOf("."));
-        final String prefix = name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."));
+        final String prefix = name.substring(
+                name.lastIndexOf("/") + 1,
+                name.lastIndexOf(".")
+        );
         final String fileName = prefix + suffix;
 
         File tmpFile = new File(getTmpDir() + "/" + fileName);
@@ -57,7 +66,9 @@ public class FileUtils {
             } catch (IOException e) {
                 throw e;
             } finally {
-                if (os != null) os.close();
+                if (os != null) {
+                    os.close();
+                }
             }
 
         }
