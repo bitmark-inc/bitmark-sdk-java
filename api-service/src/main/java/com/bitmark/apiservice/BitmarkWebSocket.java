@@ -22,7 +22,10 @@ public interface BitmarkWebSocket extends WebSocket {
 
     void unsubscribeTransferOffer(Address requester);
 
-    void subscribeNewPendingIssuance(Address owner, NewPendingIssuanceEvent event);
+    void subscribeNewPendingIssuance(
+            Address owner,
+            NewPendingIssuanceEvent event
+    );
 
     void unsubscribeNewPendingIssuance(Address owner);
 
@@ -37,7 +40,11 @@ public interface BitmarkWebSocket extends WebSocket {
 
     abstract class BitmarkChangedEvent extends SubscribeEvent {
 
-        public abstract void onChanged(String bitmarkId, String txId, boolean presence);
+        public abstract void onChanged(
+                String bitmarkId,
+                String txId,
+                boolean presence
+        );
     }
 
     abstract class TransferOfferEvent extends SubscribeEvent {
@@ -52,8 +59,10 @@ public interface BitmarkWebSocket extends WebSocket {
 
     abstract class NewPendingTxEvent extends SubscribeEvent {
 
-        public abstract void onNewPendingIx(String txId, String owner, String prevTxId,
-                                            String prevOwner);
+        public abstract void onNewPendingIx(
+                String txId, String owner, String prevTxId,
+                String prevOwner
+        );
     }
 
 }

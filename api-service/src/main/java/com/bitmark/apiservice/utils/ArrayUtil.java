@@ -105,7 +105,13 @@ public class ArrayUtil {
             System.arraycopy(a, 0, rv, 0, a.length);
             System.arraycopy(b, 0, rv, a.length, b.length);
             System.arraycopy(c, 0, rv, a.length + b.length, c.length);
-            System.arraycopy(d, 0, rv, a.length + b.length + c.length, d.length);
+            System.arraycopy(
+                    d,
+                    0,
+                    rv,
+                    a.length + b.length + c.length,
+                    d.length
+            );
 
             return rv;
         } else if (d == null) {
@@ -167,36 +173,47 @@ public class ArrayUtil {
     public static byte[] minimize(byte[] data) {
         int i = 0;
         for (byte b : data) {
-            if (b == 0) i++;
-            else break;
+            if (b == 0) {
+                i++;
+            } else {
+                break;
+            }
         }
         return slice(data, i, data.length);
     }
 
     public static boolean contains(int[] source, int examined) {
         for (int item : source) {
-            if (item == examined) return true;
+            if (item == examined) {
+                return true;
+            }
         }
         return false;
     }
 
     public static <T> boolean contains(T[] source, T examined) {
         for (T item : source) {
-            if (item.equals(examined)) return true;
+            if (item.equals(examined)) {
+                return true;
+            }
         }
         return false;
     }
 
     public static <T> boolean contains(T[] source, T[] examined) {
         for (T item : examined) {
-            if (!contains(source, item)) return false;
+            if (!contains(source, item)) {
+                return false;
+            }
         }
         return true;
     }
 
     public static <T> int indexOf(T[] source, T examined) {
         for (int i = 0; i < source.length; i++) {
-            if (source[i].equals(examined)) return i;
+            if (source[i].equals(examined)) {
+                return i;
+            }
         }
         return -1;
     }
@@ -213,8 +230,11 @@ public class ArrayUtil {
     public static <T> boolean isDuplicate(T[] input) {
         final List<T> nonDupArray = new ArrayList<>();
         for (T item : input) {
-            if (nonDupArray.contains(item)) return true;
-            else nonDupArray.add(item);
+            if (nonDupArray.contains(item)) {
+                return true;
+            } else {
+                nonDupArray.add(item);
+            }
         }
         return false;
     }
@@ -222,15 +242,20 @@ public class ArrayUtil {
     public static boolean isDuplicate(int[] input) {
         final List<Integer> nonDupArray = new ArrayList<>();
         for (int item : input) {
-            if (nonDupArray.contains(item)) return true;
-            else nonDupArray.add(item);
+            if (nonDupArray.contains(item)) {
+                return true;
+            } else {
+                nonDupArray.add(item);
+            }
         }
         return false;
     }
 
     public static boolean isPositive(int[] input) {
         for (int item : input) {
-            if (item < 0) return false;
+            if (item < 0) {
+                return false;
+            }
         }
         return true;
     }
@@ -248,8 +273,10 @@ public class ArrayUtil {
     }
 
     public static Float[] toFloatArray(float[] input) {
-        return IntStream.range(0, input.length).mapToDouble(i -> input[i]).boxed()
-                        .toArray(Float[]::new);
+        return IntStream.range(0, input.length)
+                .mapToDouble(i -> input[i])
+                .boxed()
+                .toArray(Float[]::new);
     }
 
     public static <T> List<T> concat(List<T> first, List<T> second) {

@@ -8,7 +8,6 @@ import com.bitmark.apiservice.utils.error.UnexpectedException;
 import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.encoder.VarInt;
 import com.bitmark.cryptography.crypto.key.KeyPair;
-import com.bitmark.cryptography.error.ValidateException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ public class IssuanceParams extends AbsMultipleParams {
 
     private String assetId;
 
-    private Address owner;
+    private Address issuer;
 
     private Boolean containsGenesisBitmark;
 
@@ -42,25 +41,30 @@ public class IssuanceParams extends AbsMultipleParams {
     // Hold the nonces for both case of issuance : contains and not contains genesis Bitmark
     private Pair<List<byte[]>, List<byte[]>> signaturePair;
 
-    public IssuanceParams(String assetId, Address owner) throws ValidateException {
+    public IssuanceParams(String assetId, Address owner) {
         this(assetId, owner, 1);
     }
 
-    public IssuanceParams(String assetId, Address owner, int quantity) throws ValidateException {
+    public IssuanceParams(String assetId, Address issuer, int quantity) {
         checkValidHex(assetId);
-        checkValid(() -> HEX.decode(assetId).length <= ASSET_ID_LENGTH, "invalid asset id");
-        checkValid(() -> owner != null, "invalid owner");
+        checkValid(
+                () -> HEX.decode(assetId).length <= ASSET_ID_LENGTH,
+                "invalid asset id"
+        );
+        checkValid(() -> issuer != null, "invalid issuer");
         checkValid(() -> quantity > 0, "quantity must be greater than zero");
         this.assetId = assetId;
-        this.owner = owner;
+        this.issuer = issuer;
         generateNonces(quantity);
     }
 
-    private void generateNonces(int quantity)
-            throws ValidateException {
-        final int[] genesisNonces = quantity == 1 ? new int[]{0} : concat(new int[]{0},
-                                                                          secureRandomInts(
-                                                                                  quantity - 1));
+    private void generateNonces(int quantity) {
+        final int[] genesisNonces = quantity == 1
+                                    ? new int[]{0}
+                                    : concat(
+                                            new int[]{0},
+                                            secureRandomInts(quantity - 1)
+                                    );
         final int[] nonGenesisNonces = secureRandomInts(quantity);
         checkNonces(genesisNonces);
         checkNonces(nonGenesisNonces);
@@ -68,7 +72,9 @@ public class IssuanceParams extends AbsMultipleParams {
     }
 
     private void checkNonces(int[] nonces) {
-        if (!ArrayUtil.isDuplicate(nonces) && ArrayUtil.isPositive(nonces)) return;
+        if (!ArrayUtil.isDuplicate(nonces) && ArrayUtil.isPositive(nonces)) {
+            return;
+        }
         throw new UnexpectedException(
                 "Invalid generate nonce. The generated nonce cannot be duplicated and positive");
     }
@@ -81,8 +87,8 @@ public class IssuanceParams extends AbsMultipleParams {
         return assetId;
     }
 
-    public Address getOwner() {
-        return owner;
+    public Address getIssuer() {
+        return issuer;
     }
 
     public void setContainsGenesisBitmark(boolean containsGenesisBitmark) {
@@ -93,7 +99,10 @@ public class IssuanceParams extends AbsMultipleParams {
     public List<byte[]> sign(KeyPair key) {
         List<byte[]> containGenesisBitmarkSig = sign(key, true);
         List<byte[]> notContainsGenesisBitmarkSig = sign(key, false);
-        signaturePair = new Pair<>(containGenesisBitmarkSig, notContainsGenesisBitmarkSig);
+        signaturePair = new Pair<>(
+                containGenesisBitmarkSig,
+                notContainsGenesisBitmarkSig
+        );
         return concat(containGenesisBitmarkSig, notContainsGenesisBitmarkSig);
     }
 
@@ -105,7 +114,9 @@ public class IssuanceParams extends AbsMultipleParams {
         builder.append("{\"issues\":[");
         for (int i = 0, size = size(); i < size; i++) {
             builder.append(buildSingleJson(i));
-            if (i < size - 1) builder.append(",");
+            if (i < size - 1) {
+                builder.append(",");
+            }
         }
         builder.append("]}");
         return builder.toString();
@@ -115,8 +126,10 @@ public class IssuanceParams extends AbsMultipleParams {
         checkValid(() -> key != null && key.isValid(), "Invalid key pair");
         List<byte[]> signatures = new ArrayList<>(size());
         for (int i = 0; i < size(); i++) {
-            signatures
-                    .add(Ed25519.sign(pack(i, containsGenesisBitmark), key.privateKey().toBytes()));
+            signatures.add(Ed25519.sign(
+                    pack(i, containsGenesisBitmark),
+                    key.privateKey().toBytes()
+            ));
         }
         return signatures;
     }
@@ -125,8 +138,11 @@ public class IssuanceParams extends AbsMultipleParams {
         final byte[] assetId = HEX.decode(this.assetId);
         byte[] data = VarInt.writeUnsignedVarInt(0x03);
         data = BinaryPacking.concat(assetId, data);
-        data = BinaryPacking.concat(owner.pack(), data);
-        data = concat(data, VarInt.writeUnsignedVarInt(getNonces(containsGenesisBitmark)[index]));
+        data = BinaryPacking.concat(issuer.pack(), data);
+        data = concat(
+                data,
+                VarInt.writeUnsignedVarInt(getNonces(containsGenesisBitmark)[index])
+        );
         return data;
     }
 
@@ -153,23 +169,27 @@ public class IssuanceParams extends AbsMultipleParams {
     }
 
     private String buildSingleJson(int index) {
-        return "{\"owner\":\"" + owner.getAddress() + "\",\"signature\":\"" +
-               HEX.encode(getSignatures(containsGenesisBitmark).get(index)) + "\"," +
-               "\"asset_id\":\"" + assetId + "\",\"nonce\":" +
-               getNonces(containsGenesisBitmark)[index] + "}";
+        return "{\"owner\":\"" + issuer.getAddress() + "\",\"signature\":\"" + HEX
+                .encode(getSignatures(containsGenesisBitmark).get(index)) + "\"," + "\"asset_id\":\"" + assetId + "\",\"nonce\":" + getNonces(
+                containsGenesisBitmark)[index] + "}";
     }
 
     private List<byte[]> getSignatures(boolean containsGenesisBitmark) {
-        return containsGenesisBitmark ? signaturePair.first() : signaturePair.second();
+        return containsGenesisBitmark
+               ? signaturePair.first()
+               : signaturePair.second();
     }
 
     private int[] getNonces(boolean containsGenesisBitmark) {
-        return containsGenesisBitmark ? noncesPair.first() : noncesPair.second();
+        return containsGenesisBitmark
+               ? noncesPair.first()
+               : noncesPair.second();
     }
 
     private void checkContainsGenesisBitmarkExisted() {
-        if (containsGenesisBitmark == null)
+        if (containsGenesisBitmark == null) {
             throw new IllegalArgumentException(
                     "Need to mark this params is contains genesis bitmark or not");
+        }
     }
 }

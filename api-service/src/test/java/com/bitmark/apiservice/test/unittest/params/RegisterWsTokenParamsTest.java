@@ -22,7 +22,10 @@ public class RegisterWsTokenParamsTest extends BaseTest {
 
     @Test
     public void testConstructor__ValidInstanceOrErrorThrow() {
-        assertThrows(ValidateException.class, () -> new RegisterWsTokenParams(null));
+        assertThrows(
+                ValidateException.class,
+                () -> new RegisterWsTokenParams(null)
+        );
 
         assertDoesNotThrow(() -> new RegisterWsTokenParams(ADDRESS1));
         assertDoesNotThrow(() -> new RegisterWsTokenParams(ADDRESS2));
@@ -40,10 +43,17 @@ public class RegisterWsTokenParamsTest extends BaseTest {
     public void testSign() {
         RegisterWsTokenParams params = new RegisterWsTokenParams(ADDRESS1);
         assertThrows(ValidateException.class, () -> params.sign(null));
-        assertThrows(ValidateException.class,
-                     () -> params.sign(BoxKeyPair.from(new byte[32], new byte[64])));
-        assertThrows(ValidateException.class,
-                     () -> params.sign(Ed25519KeyPair.from(new byte[32], new byte[64])));
+        assertThrows(
+                ValidateException.class,
+                () -> params.sign(BoxKeyPair.from(new byte[32], new byte[64]))
+        );
+        assertThrows(
+                ValidateException.class,
+                () -> params.sign(Ed25519KeyPair.from(
+                        new byte[32],
+                        new byte[64]
+                ))
+        );
         assertThrows(ValidateException.class, () -> params.sign(KEY2));
 
         assertDoesNotThrow(() -> params.sign(KEY1));

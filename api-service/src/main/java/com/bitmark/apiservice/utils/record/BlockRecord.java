@@ -40,13 +40,17 @@ public class BlockRecord implements Record {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         BlockRecord that = (BlockRecord) o;
         return number == that.number &&
-               Objects.equals(hash, that.hash) &&
-               Objects.equals(bitmarkId, that.bitmarkId) &&
-               Objects.equals(createdAt, that.createdAt);
+                Objects.equals(hash, that.hash) &&
+                Objects.equals(bitmarkId, that.bitmarkId) &&
+                Objects.equals(createdAt, that.createdAt);
     }
 
     @Override

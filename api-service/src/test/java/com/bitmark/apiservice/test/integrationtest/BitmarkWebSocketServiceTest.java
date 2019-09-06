@@ -34,7 +34,9 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
 
     @AfterEach
     public void teardown() {
-        if (ws != null) ws.disconnect();
+        if (ws != null) {
+            ws.disconnect();
+        }
         ws = null;
     }
 
@@ -268,27 +270,34 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final AtomicBoolean actualSubscribed = new AtomicBoolean();
         final AtomicBoolean done = new AtomicBoolean();
 
-        ws.subscribeBitmarkChanged(ADDRESS1, new BitmarkWebSocket.BitmarkChangedEvent() {
+        ws.subscribeBitmarkChanged(
+                ADDRESS1,
+                new BitmarkWebSocket.BitmarkChangedEvent() {
 
-            @Override
-            public void onChanged(String bitmarkId, String txId, boolean presence) {
+                    @Override
+                    public void onChanged(
+                            String bitmarkId,
+                            String txId,
+                            boolean presence
+                    ) {
 
-            }
+                    }
 
-            @Override
-            public void onSubscribeSuccess(SubscribeSuccessEvent event) {
-                super.onSubscribeSuccess(event);
-                actualSubscribed.set(true);
-                done.set(true);
-            }
+                    @Override
+                    public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                        super.onSubscribeSuccess(event);
+                        actualSubscribed.set(true);
+                        done.set(true);
+                    }
 
-            @Override
-            public void onSubscribeError(SubscribeErrorEvent event) {
-                super.onSubscribeError(event);
-                actualSubscribed.set(false);
-                done.set(true);
-            }
-        });
+                    @Override
+                    public void onSubscribeError(SubscribeErrorEvent event) {
+                        super.onSubscribeError(event);
+                        actualSubscribed.set(false);
+                        done.set(true);
+                    }
+                }
+        );
 
         while (!done.get()) {
             Thread.sleep(200);
@@ -305,33 +314,40 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final AtomicBoolean done = new AtomicBoolean();
         final AtomicReference<Throwable> error = new AtomicReference<>();
 
-        ws.subscribeBitmarkChanged(ADDRESS1, new BitmarkWebSocket.BitmarkChangedEvent() {
+        ws.subscribeBitmarkChanged(
+                ADDRESS1,
+                new BitmarkWebSocket.BitmarkChangedEvent() {
 
-            @Override
-            public void onChanged(String bitmarkId, String txId, boolean presence) {
+                    @Override
+                    public void onChanged(
+                            String bitmarkId,
+                            String txId,
+                            boolean presence
+                    ) {
 
-            }
+                    }
 
-            @Override
-            public void onUnsubscribe(UnsubscribeEvent event) {
-                super.onUnsubscribe(event);
-                actualUnsubscribed.set(true);
-                done.set(true);
-            }
+                    @Override
+                    public void onUnsubscribe(UnsubscribeEvent event) {
+                        super.onUnsubscribe(event);
+                        actualUnsubscribed.set(true);
+                        done.set(true);
+                    }
 
-            @Override
-            public void onSubscribeSuccess(SubscribeSuccessEvent event) {
-                super.onSubscribeSuccess(event);
-                ws.unsubscribeBitmarkChanged(ADDRESS1);
-            }
+                    @Override
+                    public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                        super.onSubscribeSuccess(event);
+                        ws.unsubscribeBitmarkChanged(ADDRESS1);
+                    }
 
-            @Override
-            public void onSubscribeError(SubscribeErrorEvent event) {
-                super.onSubscribeError(event);
-                error.set(new RuntimeException("subscribe failed"));
-                done.set(true);
-            }
-        });
+                    @Override
+                    public void onSubscribeError(SubscribeErrorEvent event) {
+                        super.onSubscribeError(event);
+                        error.set(new RuntimeException("subscribe failed"));
+                        done.set(true);
+                    }
+                }
+        );
 
         while (!done.get()) {
             Thread.sleep(200);
@@ -350,27 +366,30 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final AtomicBoolean actualSubscribed = new AtomicBoolean();
         final AtomicBoolean done = new AtomicBoolean();
 
-        ws.subscribeTransferOffer(ADDRESS1, new BitmarkWebSocket.TransferOfferEvent() {
+        ws.subscribeTransferOffer(
+                ADDRESS1,
+                new BitmarkWebSocket.TransferOfferEvent() {
 
-            @Override
-            public void onReceived(String bitmarkId) {
+                    @Override
+                    public void onReceived(String bitmarkId) {
 
-            }
+                    }
 
-            @Override
-            public void onSubscribeSuccess(SubscribeSuccessEvent event) {
-                super.onSubscribeSuccess(event);
-                actualSubscribed.set(true);
-                done.set(true);
-            }
+                    @Override
+                    public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                        super.onSubscribeSuccess(event);
+                        actualSubscribed.set(true);
+                        done.set(true);
+                    }
 
-            @Override
-            public void onSubscribeError(SubscribeErrorEvent event) {
-                super.onSubscribeError(event);
-                actualSubscribed.set(false);
-                done.set(true);
-            }
-        });
+                    @Override
+                    public void onSubscribeError(SubscribeErrorEvent event) {
+                        super.onSubscribeError(event);
+                        actualSubscribed.set(false);
+                        done.set(true);
+                    }
+                }
+        );
 
         while (!done.get()) {
             Thread.sleep(200);
@@ -387,33 +406,36 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final AtomicBoolean done = new AtomicBoolean();
         final AtomicReference<Throwable> error = new AtomicReference<>();
 
-        ws.subscribeTransferOffer(ADDRESS1, new BitmarkWebSocket.TransferOfferEvent() {
+        ws.subscribeTransferOffer(
+                ADDRESS1,
+                new BitmarkWebSocket.TransferOfferEvent() {
 
-            @Override
-            public void onReceived(String bitmarkId) {
+                    @Override
+                    public void onReceived(String bitmarkId) {
 
-            }
+                    }
 
-            @Override
-            public void onUnsubscribe(UnsubscribeEvent event) {
-                super.onUnsubscribe(event);
-                actualUnsubscribed.set(true);
-                done.set(true);
-            }
+                    @Override
+                    public void onUnsubscribe(UnsubscribeEvent event) {
+                        super.onUnsubscribe(event);
+                        actualUnsubscribed.set(true);
+                        done.set(true);
+                    }
 
-            @Override
-            public void onSubscribeSuccess(SubscribeSuccessEvent event) {
-                super.onSubscribeSuccess(event);
-                ws.unsubscribeTransferOffer(ADDRESS1);
-            }
+                    @Override
+                    public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                        super.onSubscribeSuccess(event);
+                        ws.unsubscribeTransferOffer(ADDRESS1);
+                    }
 
-            @Override
-            public void onSubscribeError(SubscribeErrorEvent event) {
-                super.onSubscribeError(event);
-                error.set(new RuntimeException("subscribe failed"));
-                done.set(true);
-            }
-        });
+                    @Override
+                    public void onSubscribeError(SubscribeErrorEvent event) {
+                        super.onSubscribeError(event);
+                        error.set(new RuntimeException("subscribe failed"));
+                        done.set(true);
+                    }
+                }
+        );
 
         while (!done.get()) {
             Thread.sleep(200);
@@ -432,27 +454,30 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final AtomicBoolean actualSubscribed = new AtomicBoolean();
         final AtomicBoolean done = new AtomicBoolean();
 
-        ws.subscribeNewPendingIssuance(ADDRESS1, new BitmarkWebSocket.NewPendingIssuanceEvent() {
+        ws.subscribeNewPendingIssuance(
+                ADDRESS1,
+                new BitmarkWebSocket.NewPendingIssuanceEvent() {
 
-            @Override
-            public void onNewPendingIssuance(String bitmarkId) {
+                    @Override
+                    public void onNewPendingIssuance(String bitmarkId) {
 
-            }
+                    }
 
-            @Override
-            public void onSubscribeSuccess(SubscribeSuccessEvent event) {
-                super.onSubscribeSuccess(event);
-                actualSubscribed.set(true);
-                done.set(true);
-            }
+                    @Override
+                    public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                        super.onSubscribeSuccess(event);
+                        actualSubscribed.set(true);
+                        done.set(true);
+                    }
 
-            @Override
-            public void onSubscribeError(SubscribeErrorEvent event) {
-                super.onSubscribeError(event);
-                actualSubscribed.set(false);
-                done.set(true);
-            }
-        });
+                    @Override
+                    public void onSubscribeError(SubscribeErrorEvent event) {
+                        super.onSubscribeError(event);
+                        actualSubscribed.set(false);
+                        done.set(true);
+                    }
+                }
+        );
 
         while (!done.get()) {
             Thread.sleep(200);
@@ -469,33 +494,36 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final AtomicBoolean done = new AtomicBoolean();
         final AtomicReference<Throwable> error = new AtomicReference<>();
 
-        ws.subscribeNewPendingIssuance(ADDRESS1, new BitmarkWebSocket.NewPendingIssuanceEvent() {
+        ws.subscribeNewPendingIssuance(
+                ADDRESS1,
+                new BitmarkWebSocket.NewPendingIssuanceEvent() {
 
-            @Override
-            public void onNewPendingIssuance(String bitmarkId) {
+                    @Override
+                    public void onNewPendingIssuance(String bitmarkId) {
 
-            }
+                    }
 
-            @Override
-            public void onUnsubscribe(UnsubscribeEvent event) {
-                super.onUnsubscribe(event);
-                actualUnsubscribed.set(true);
-                done.set(true);
-            }
+                    @Override
+                    public void onUnsubscribe(UnsubscribeEvent event) {
+                        super.onUnsubscribe(event);
+                        actualUnsubscribed.set(true);
+                        done.set(true);
+                    }
 
-            @Override
-            public void onSubscribeSuccess(SubscribeSuccessEvent event) {
-                super.onSubscribeSuccess(event);
-                ws.unsubscribeNewPendingIssuance(ADDRESS1);
-            }
+                    @Override
+                    public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                        super.onSubscribeSuccess(event);
+                        ws.unsubscribeNewPendingIssuance(ADDRESS1);
+                    }
 
-            @Override
-            public void onSubscribeError(SubscribeErrorEvent event) {
-                super.onSubscribeError(event);
-                error.set(new RuntimeException("subscribe failed"));
-                done.set(true);
-            }
-        });
+                    @Override
+                    public void onSubscribeError(SubscribeErrorEvent event) {
+                        super.onSubscribeError(event);
+                        error.set(new RuntimeException("subscribe failed"));
+                        done.set(true);
+                    }
+                }
+        );
 
         while (!done.get()) {
             Thread.sleep(200);
@@ -514,28 +542,33 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final AtomicBoolean actualSubscribed = new AtomicBoolean();
         final AtomicBoolean done = new AtomicBoolean();
 
-        ws.subscribeNewPendingTx(ADDRESS1, new BitmarkWebSocket.NewPendingTxEvent() {
+        ws.subscribeNewPendingTx(
+                ADDRESS1,
+                new BitmarkWebSocket.NewPendingTxEvent() {
 
-            @Override
-            public void onNewPendingIx(String txId, String owner, String prevTxId,
-                                       String prevOwner) {
+                    @Override
+                    public void onNewPendingIx(
+                            String txId, String owner, String prevTxId,
+                            String prevOwner
+                    ) {
 
-            }
+                    }
 
-            @Override
-            public void onSubscribeSuccess(SubscribeSuccessEvent event) {
-                super.onSubscribeSuccess(event);
-                actualSubscribed.set(true);
-                done.set(true);
-            }
+                    @Override
+                    public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                        super.onSubscribeSuccess(event);
+                        actualSubscribed.set(true);
+                        done.set(true);
+                    }
 
-            @Override
-            public void onSubscribeError(SubscribeErrorEvent event) {
-                super.onSubscribeError(event);
-                actualSubscribed.set(false);
-                done.set(true);
-            }
-        });
+                    @Override
+                    public void onSubscribeError(SubscribeErrorEvent event) {
+                        super.onSubscribeError(event);
+                        actualSubscribed.set(false);
+                        done.set(true);
+                    }
+                }
+        );
 
         while (!done.get()) {
             Thread.sleep(200);
@@ -552,34 +585,39 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
         final AtomicBoolean done = new AtomicBoolean();
         final AtomicReference<Throwable> error = new AtomicReference<>();
 
-        ws.subscribeNewPendingTx(ADDRESS1, new BitmarkWebSocket.NewPendingTxEvent() {
+        ws.subscribeNewPendingTx(
+                ADDRESS1,
+                new BitmarkWebSocket.NewPendingTxEvent() {
 
-            @Override
-            public void onNewPendingIx(String txId, String owner, String prevTxId,
-                                       String prevOwner) {
+                    @Override
+                    public void onNewPendingIx(
+                            String txId, String owner, String prevTxId,
+                            String prevOwner
+                    ) {
 
-            }
+                    }
 
-            @Override
-            public void onUnsubscribe(UnsubscribeEvent event) {
-                super.onUnsubscribe(event);
-                actualUnsubscribed.set(true);
-                done.set(true);
-            }
+                    @Override
+                    public void onUnsubscribe(UnsubscribeEvent event) {
+                        super.onUnsubscribe(event);
+                        actualUnsubscribed.set(true);
+                        done.set(true);
+                    }
 
-            @Override
-            public void onSubscribeSuccess(SubscribeSuccessEvent event) {
-                super.onSubscribeSuccess(event);
-                ws.unsubscribeNewPendingTx(ADDRESS1);
-            }
+                    @Override
+                    public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                        super.onSubscribeSuccess(event);
+                        ws.unsubscribeNewPendingTx(ADDRESS1);
+                    }
 
-            @Override
-            public void onSubscribeError(SubscribeErrorEvent event) {
-                super.onSubscribeError(event);
-                error.set(new RuntimeException("subscribe failed"));
-                done.set(true);
-            }
-        });
+                    @Override
+                    public void onSubscribeError(SubscribeErrorEvent event) {
+                        super.onSubscribeError(event);
+                        error.set(new RuntimeException("subscribe failed"));
+                        done.set(true);
+                    }
+                }
+        );
 
         while (!done.get()) {
             Thread.sleep(200);

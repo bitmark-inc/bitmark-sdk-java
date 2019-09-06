@@ -67,8 +67,10 @@ public class TransactionQueryBuilder extends AbsQueryBuilder {
     }
 
     public TransactionQueryBuilder referencedBlockNumber(Long blockNumber) {
-        checkValid(() -> blockNumber != null && blockNumber > 0,
-                   "Invalid at value. Must greater than 0");
+        checkValid(
+                () -> blockNumber != null && blockNumber > 0,
+                "Invalid at value. Must greater than 0"
+        );
         this.blockNumber = blockNumber;
         return this;
     }
@@ -86,20 +88,28 @@ public class TransactionQueryBuilder extends AbsQueryBuilder {
     }
 
     public TransactionQueryBuilder limit(Integer limit) {
-        checkValid(() -> limit != null && limit > 0 && limit <= 100, "Invalid limit value");
+        checkValid(
+                () -> limit != null && limit > 0 && limit <= 100,
+                "Invalid limit value"
+        );
         this.limit = limit;
         return this;
     }
 
     public TransactionQueryBuilder at(Long at) {
-        checkValid(() -> at != null && at > 0, "Invalid at value. Must greater than 0");
+        checkValid(
+                () -> at != null && at > 0,
+                "Invalid at value. Must greater than 0"
+        );
         this.at = at;
         return this;
     }
 
     public TransactionQueryBuilder to(String to) {
-        checkValid(() -> to != null && (to.equals("earlier") || to.equals("later")), "Invalid " +
-                                                                                     "value to. It must be 'later' or 'earlier'.");
+        checkValid(
+                () -> to != null && (to.equals("earlier") || to.equals("later")),
+                "Invalid value to. It must be 'later' or 'earlier'."
+        );
         this.to = to;
         return this;
     }

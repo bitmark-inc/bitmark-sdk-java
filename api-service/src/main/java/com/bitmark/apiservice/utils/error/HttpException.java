@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -24,8 +25,12 @@ public class HttpException extends RuntimeException {
     private String message;
 
     public HttpException(int code, String response) {
-        super(String.format("A Http Exception has occurred when trying to connect with server. " +
-                "The status code is %d. \n Root cause : %s", code, response));
+        super(String.format(
+                Locale.getDefault(),
+                "A Http Exception has occurred when trying to connect with server. The status code is %d. \n Root cause : %s",
+                code,
+                response
+        ));
         this.statusCode = code;
         Map<String, String> jsonMap = deserialize(response);
         if (jsonMap != null) {
@@ -33,11 +38,12 @@ public class HttpException extends RuntimeException {
             this.errorCode = codeStr == null ? -1 : Integer.valueOf(codeStr);
             this.message = jsonMap.get("message");
             this.reason = jsonMap.get("reason");
-        } else
+        } else {
             this.message = response;
+        }
     }
 
-    public String getErrorMessage(){
+    public String getErrorMessage() {
         return message;
     }
 
@@ -55,9 +61,10 @@ public class HttpException extends RuntimeException {
 
     private Map<String, String> deserialize(String response) {
         try {
-            return new GsonBuilder().create().fromJson(response, new TypeToken<Map<String,
-                    String>>() {
-            }.getType());
+            return new GsonBuilder().create()
+                    .fromJson(response, new TypeToken<Map<String,
+                            String>>() {
+                    }.getType());
         } catch (JsonSyntaxException e) {
             return null;
         }

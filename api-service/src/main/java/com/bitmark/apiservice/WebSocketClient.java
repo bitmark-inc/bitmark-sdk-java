@@ -34,7 +34,9 @@ class WebSocketClient extends EventListener {
     }
 
     void subscribe(String channel, SubscriptionEventListener listener) {
-        if (isSubscribed(channel)) return;
+        if (isSubscribed(channel)) {
+            return;
+        }
 
         Subscription subscription = client.getSubscription(channel);
         if (subscription == null) {
@@ -44,7 +46,9 @@ class WebSocketClient extends EventListener {
     }
 
     void unsubscribe(String channel) {
-        if (!isSubscribed(channel)) return;
+        if (!isSubscribed(channel)) {
+            return;
+        }
         final Subscription subscription = client.getSubscription(channel);
         client.removeSubscription(subscription);
     }
@@ -53,14 +57,18 @@ class WebSocketClient extends EventListener {
     public void onConnect(Client client, ConnectEvent event) {
         super.onConnect(client, event);
         isConnected = true;
-        if (null != eventListener) eventListener.onConnect(client, event);
+        if (null != eventListener) {
+            eventListener.onConnect(client, event);
+        }
     }
 
     @Override
     public void onDisconnect(Client client, DisconnectEvent event) {
         super.onDisconnect(client, event);
         isConnected = false;
-        if (null != eventListener) eventListener.onDisconnect(client, event);
+        if (null != eventListener) {
+            eventListener.onDisconnect(client, event);
+        }
     }
 
     private boolean isSubscribed(String channel) {

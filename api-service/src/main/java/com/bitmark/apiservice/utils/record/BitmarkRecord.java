@@ -123,29 +123,46 @@ public class BitmarkRecord implements Record {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         BitmarkRecord that = (BitmarkRecord) o;
         return blockNumber == that.blockNumber &&
-               offset == that.offset &&
-               Objects.equals(assetId, that.assetId) &&
-               Objects.equals(confirmedAt, that.confirmedAt) &&
-               Objects.equals(createdAt, that.createdAt) &&
-               head == that.head &&
-               Objects.equals(headId, that.headId) &&
-               Objects.equals(id, that.id) &&
-               Objects.equals(issuedAt, that.issuedAt) &&
-               Objects.equals(issuer, that.issuer) &&
-               Objects.equals(owner, that.owner) &&
-               status == that.status &&
-               Objects.equals(offer, that.offer) &&
-               Objects.equals(edition, that.edition);
+                offset == that.offset &&
+                Objects.equals(assetId, that.assetId) &&
+                Objects.equals(confirmedAt, that.confirmedAt) &&
+                Objects.equals(createdAt, that.createdAt) &&
+                head == that.head &&
+                Objects.equals(headId, that.headId) &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(issuedAt, that.issuedAt) &&
+                Objects.equals(issuer, that.issuer) &&
+                Objects.equals(owner, that.owner) &&
+                status == that.status &&
+                Objects.equals(offer, that.offer) &&
+                Objects.equals(edition, that.edition);
     }
 
     @Override
     public int hashCode() {
         return Objects
-                .hash(assetId, blockNumber, confirmedAt, createdAt, head, headId, id, issuedAt,
-                      issuer, offset, owner, status, offer, edition);
+                .hash(assetId,
+                        blockNumber,
+                        confirmedAt,
+                        createdAt,
+                        head,
+                        headId,
+                        id,
+                        issuedAt,
+                        issuer,
+                        offset,
+                        owner,
+                        status,
+                        offer,
+                        edition
+                );
     }
 }

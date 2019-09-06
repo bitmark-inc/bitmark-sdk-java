@@ -39,13 +39,17 @@ public class ShareRecord implements Record {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ShareRecord that = (ShareRecord) o;
         return balance == that.balance &&
-               available == that.available &&
-               Objects.equals(id, that.id) &&
-               Objects.equals(owner, that.owner);
+                available == that.available &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(owner, that.owner);
     }
 
     @Override

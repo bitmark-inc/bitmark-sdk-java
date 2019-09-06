@@ -5,7 +5,6 @@ import com.bitmark.apiservice.utils.ArrayUtil;
 import com.bitmark.apiservice.utils.BinaryPacking;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.encoder.VarInt;
-import com.bitmark.cryptography.error.ValidateException;
 
 import java.util.Map;
 
@@ -33,19 +32,35 @@ public class ShareGrantingParams extends AbsSingleParams {
 
     private Map<String, String> extraInfo;
 
-    public ShareGrantingParams(String shareId, int quantity, Address owner, Address receiver,
-                               int beforeBlock) throws ValidateException {
+    public ShareGrantingParams(
+            String shareId,
+            int quantity,
+            Address owner,
+            Address receiver,
+            int beforeBlock
+    ) {
         this(shareId, quantity, owner, receiver, beforeBlock, null);
     }
 
-    public ShareGrantingParams(String shareId, int quantity, Address owner, Address receiver,
-                               int beforeBlock, Map<String, String> extraInfo)
-            throws ValidateException {
+    public ShareGrantingParams(
+            String shareId,
+            int quantity,
+            Address owner,
+            Address receiver,
+            int beforeBlock,
+            Map<String, String> extraInfo
+    ) {
         checkValid(() -> isValidShareId(shareId), "invalid share id");
-        checkValid(() -> quantity > 0, "invalid quantity. must be greater than zero");
+        checkValid(
+                () -> quantity > 0,
+                "invalid quantity. must be greater than zero"
+        );
         checkValid(() -> owner != null, "invalid owner address");
         checkValid(() -> receiver != null, "invalid receiver address");
-        checkValid(() -> beforeBlock >= 0, "invalid before block, must be greater or equal zero");
+        checkValid(
+                () -> beforeBlock >= 0,
+                "invalid before block, must be greater or equal zero"
+        );
         this.shareId = shareId;
         this.owner = owner;
         this.receiver = receiver;
@@ -54,9 +69,8 @@ public class ShareGrantingParams extends AbsSingleParams {
         this.extraInfo = extraInfo;
     }
 
-    public void setBeforeBlock(Integer beforeBlock) {
-        checkValid(() -> beforeBlock >= 0, "invalid before block, must be greater or equal zero");
-        this.beforeBlock = beforeBlock;
+    private static boolean isValidShareId(String shareId) {
+        return shareId != null && !shareId.isEmpty() && HEX.decode(shareId).length == Sha3256.HASH_BYTE_LENGTH;
     }
 
     public String getShareId() {
@@ -79,6 +93,14 @@ public class ShareGrantingParams extends AbsSingleParams {
         return beforeBlock;
     }
 
+    public void setBeforeBlock(Integer beforeBlock) {
+        checkValid(
+                () -> beforeBlock >= 0,
+                "invalid before block, must be greater or equal zero"
+        );
+        this.beforeBlock = beforeBlock;
+    }
+
     public Map<String, String> getExtraInfo() {
         return extraInfo;
     }
@@ -98,16 +120,11 @@ public class ShareGrantingParams extends AbsSingleParams {
     public String toJson() {
         checkSigned();
         return "{\"record\":{\"shareId\":\"" + shareId +
-               "\",\"quantity\":" + quantity +
-               ",\"owner\":\"" + owner.getAddress() +
-               "\",\"recipient\":\"" + receiver.getAddress() +
-               "\",\"beforeBlock\":" + beforeBlock + ",\"signature\":\"" +
-               HEX.encode(signature) +
-               "\"},\"extra_info\":" + mapToJson(extraInfo) + "}";
-    }
-
-    private static boolean isValidShareId(String shareId) {
-        return shareId != null && !shareId.isEmpty() &&
-               HEX.decode(shareId).length == Sha3256.HASH_BYTE_LENGTH;
+                "\",\"quantity\":" + quantity +
+                ",\"owner\":\"" + owner.getAddress() +
+                "\",\"recipient\":\"" + receiver.getAddress() +
+                "\",\"beforeBlock\":" + beforeBlock + ",\"signature\":\"" +
+                HEX.encode(signature) +
+                "\"},\"extra_info\":" + mapToJson(extraInfo) + "}";
     }
 }

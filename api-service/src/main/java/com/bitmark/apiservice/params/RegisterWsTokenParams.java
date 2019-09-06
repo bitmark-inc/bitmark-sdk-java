@@ -2,7 +2,6 @@ package com.bitmark.apiservice.params;
 
 import com.bitmark.apiservice.utils.Address;
 import com.bitmark.cryptography.crypto.key.KeyPair;
-import com.bitmark.cryptography.error.ValidateException;
 
 import java.nio.charset.Charset;
 import java.util.*;
@@ -22,7 +21,7 @@ public class RegisterWsTokenParams extends AbsSingleParams {
 
     private long timestamp;
 
-    public RegisterWsTokenParams(Address requester) throws ValidateException {
+    public RegisterWsTokenParams(Address requester) {
         checkNonNull(requester);
         this.requester = requester;
     }
@@ -30,17 +29,24 @@ public class RegisterWsTokenParams extends AbsSingleParams {
     @Override
     byte[] pack() {
         timestamp = Calendar.getInstance().getTimeInMillis();
-        final String signableMessage =
-                String.format(Locale.getDefault(), "register|websocket|%s|%d",
-                              requester.getAddress(), timestamp);
+        final String signableMessage = String.format(
+                Locale.getDefault(),
+                "register|websocket|%s|%d",
+                requester.getAddress(),
+                timestamp
+        );
         return signableMessage.getBytes(Charset.forName("UTF-8"));
     }
 
     @Override
     public byte[] sign(KeyPair key) {
-        checkValid(() -> null != key && Objects.deepEquals(requester.getKey().toBytes(),
-                                                           key.publicKey().toBytes()),
-                   "invalid public key, the public key must be corresponding to requester");
+        checkValid(
+                () -> null != key && Objects.deepEquals(
+                        requester.getKey().toBytes(),
+                        key.publicKey().toBytes()
+                ),
+                "invalid public key, the public key must be corresponding to requester"
+        );
         return super.sign(key);
     }
 

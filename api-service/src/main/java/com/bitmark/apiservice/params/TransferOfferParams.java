@@ -21,24 +21,24 @@ import static com.bitmark.cryptography.utils.Validator.checkValid;
 
 public class TransferOfferParams extends AbsSingleParams {
 
-    private Address offeredOwner;
+    private Address receiver;
 
     private String link;
 
     private Map<String, String> extraInfo;
 
-    public TransferOfferParams(Address offeredOwner) {
-        checkValid(() -> offeredOwner != null, "invalid offer owner address");
-        this.offeredOwner = offeredOwner;
+    public TransferOfferParams(Address receiver) {
+        checkValid(() -> receiver != null, "invalid receiver address");
+        this.receiver = receiver;
     }
 
-    public TransferOfferParams(Address offeredOwner, String link) {
-        this(offeredOwner);
+    public TransferOfferParams(Address receiver, String link) {
+        this(receiver);
         setLink(link);
     }
 
-    public void setExtraInfo(Map<String, String> extraInfo) {
-        this.extraInfo = extraInfo;
+    public String getLink() {
+        return link;
     }
 
     public void setLink(String link) {
@@ -46,25 +46,25 @@ public class TransferOfferParams extends AbsSingleParams {
         this.link = link;
     }
 
-    public String getLink() {
-        return link;
-    }
-
-    public Address getOfferedOwner() {
-        return offeredOwner;
+    public Address getReceiver() {
+        return receiver;
     }
 
     public Map<String, String> getExtraInfo() {
         return extraInfo;
     }
 
+    public void setExtraInfo(Map<String, String> extraInfo) {
+        this.extraInfo = extraInfo;
+    }
+
     @Override
     public String toJson() {
         checkSigned();
         return "{\"offer\":{\"extra_info\":{" + getExtraInfoJson() + "},\"record\":{\"link\":\"" +
-               link
-               + "\",\"owner\":\"" + offeredOwner.getAddress() + "\",\"signature\":\"" +
-               HEX.encode(signature) + "\"}}}";
+                link
+                + "\",\"owner\":\"" + receiver.getAddress() + "\",\"signature\":\"" +
+                HEX.encode(signature) + "\"}}}";
     }
 
     @Override
@@ -78,13 +78,15 @@ public class TransferOfferParams extends AbsSingleParams {
         byte[] data = VarInt.writeUnsignedVarInt(0x05);
         data = BinaryPacking.concat(HEX.decode(link), data);
         data = ArrayUtil.concat(data, new byte[]{0x00});
-        data = BinaryPacking.concat(offeredOwner.pack(), data);
+        data = BinaryPacking.concat(receiver.pack(), data);
         return data;
     }
 
     private void checkValidLink(String link) {
-        checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH,
-                   "invalid link");
+        checkValid(
+                () -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH,
+                "invalid link"
+        );
     }
 
     private String getExtraInfoJson() {

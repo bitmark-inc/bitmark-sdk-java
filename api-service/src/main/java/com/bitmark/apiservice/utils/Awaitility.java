@@ -44,20 +44,25 @@ public class Awaitility {
         final long timeStart = System.currentTimeMillis();
         while (data.getValue() == null && error.getValue() == null) {
             long timeSpent = System.currentTimeMillis() - timeStart;
-            if (timeSpent >= TIMEOUT)
+            if (timeSpent >= TIMEOUT) {
                 throw new TimeoutException("Timeout after " + timeSpent + " ms");
+            }
         }
 
         T value = data.getValue();
-        if (value != null) return value;
-        else throw error.getValue();
+        if (value != null) {
+            return value;
+        } else {
+            throw error.getValue();
+        }
     }
 
     public static <T> T await(Callable1<T> callable) throws Throwable {
         return await(callable, null);
     }
 
-    public static <T> T await(Callable1<T> callable, Long timeout) throws Throwable {
+    public static <T> T await(Callable1<T> callable, Long timeout)
+            throws Throwable {
         Data<T> data = new Data<>();
         Data<Throwable> error = new Data<>();
 
@@ -77,13 +82,17 @@ public class Awaitility {
         timeout = timeout == null ? TIMEOUT : timeout;
         while (data.getValue() == null && error.getValue() == null) {
             long timeSpent = System.currentTimeMillis() - timeStart;
-            if (timeSpent >= timeout)
+            if (timeSpent >= timeout) {
                 throw new TimeoutException("Timeout after " + timeSpent + " ms");
+            }
         }
 
         T value = data.getValue();
-        if (value != null) return value;
-        else throw error.getValue();
+        if (value != null) {
+            return value;
+        } else {
+            throw error.getValue();
+        }
 
     }
 }

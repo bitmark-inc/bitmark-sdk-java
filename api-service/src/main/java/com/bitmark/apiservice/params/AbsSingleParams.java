@@ -20,7 +20,10 @@ public abstract class AbsSingleParams implements SingleParams {
 
     @Override
     public byte[] sign(KeyPair key) {
-        checkValid(() -> key instanceof Ed25519KeyPair && key.isValid(), "Invalid key pair");
+        checkValid(
+                () -> key instanceof Ed25519KeyPair && key.isValid(),
+                "Invalid key pair"
+        );
         return signature = Ed25519.sign(pack(), key.privateKey().toBytes());
     }
 
@@ -36,6 +39,9 @@ public abstract class AbsSingleParams implements SingleParams {
     }
 
     protected void checkSigned() {
-        if (!isSigned()) throw new UnsupportedOperationException("Params need to be signed before");
+        if (!isSigned()) {
+            throw new UnsupportedOperationException(
+                    "Params need to be signed before");
+        }
     }
 }

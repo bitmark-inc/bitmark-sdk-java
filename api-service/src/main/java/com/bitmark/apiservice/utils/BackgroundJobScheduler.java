@@ -35,12 +35,14 @@ public class BackgroundJobScheduler {
 
     private BackgroundJobScheduler() {
         BlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<>();
-        executorService = new ThreadPoolExecutor(NUMBER_OF_CORES,
-                                                 NUMBER_OF_CORES * 2,
-                                                 KEEP_ALIVE_TIME,
-                                                 KEEP_ALIVE_TIME_UNIT,
-                                                 taskQueue,
-                                                 new BackgroundThreadFactory());
+        executorService = new ThreadPoolExecutor(
+                NUMBER_OF_CORES,
+                NUMBER_OF_CORES * 2,
+                KEEP_ALIVE_TIME,
+                KEEP_ALIVE_TIME_UNIT,
+                taskQueue,
+                new BackgroundThreadFactory()
+        );
     }
 
     public void execute(Runnable runnable) {
@@ -48,7 +50,9 @@ public class BackgroundJobScheduler {
     }
 
     public void shutdown() {
-        if (executorService.isShutdown() || executorService.isTerminated()) return;
+        if (executorService.isShutdown() || executorService.isTerminated()) {
+            return;
+        }
         executorService.shutdown();
     }
 
@@ -60,7 +64,8 @@ public class BackgroundJobScheduler {
         return executorService.getQueue();
     }
 
-    private static final class BackgroundThreadFactory implements ThreadFactory {
+    private static final class BackgroundThreadFactory
+            implements ThreadFactory {
 
         @Override
         public Thread newThread(Runnable r) {

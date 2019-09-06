@@ -19,18 +19,26 @@ import static com.bitmark.cryptography.utils.Validator.checkValid;
 
 public class TransferParams extends AbsSingleParams {
 
-    private Address owner;
+    private Address receiver;
 
     private String link;
 
-    public TransferParams(Address owner) {
-        checkValid(() -> owner != null, "invalid owner address");
-        this.owner = owner;
+    public TransferParams(Address receiver) {
+        checkValid(() -> receiver != null, "invalid receiver address");
+        this.receiver = receiver;
     }
 
-    public TransferParams(Address owner, String link) {
-        this(owner);
+    public TransferParams(Address receiver, String link) {
+        this(receiver);
         setLink(link);
+    }
+
+    public Address getReceiver() {
+        return receiver;
+    }
+
+    public String getLink() {
+        return link;
     }
 
     public void setLink(String link) {
@@ -38,19 +46,12 @@ public class TransferParams extends AbsSingleParams {
         this.link = link;
     }
 
-    public Address getOwner() {
-        return owner;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
     @Override
     public String toJson() {
         checkSigned();
-        return "{\"transfer\":{\"link\":\"" + link + "\",\"owner\":\"" + owner.getAddress() +
-               "\",\"signature\":\"" + HEX.encode(signature) + "\"}}";
+        return "{\"transfer\":{\"link\":\"" + link + "\",\"owner\":\"" + receiver
+                .getAddress() +
+                "\",\"signature\":\"" + HEX.encode(signature) + "\"}}";
     }
 
     @Override
@@ -64,12 +65,14 @@ public class TransferParams extends AbsSingleParams {
         byte[] data = VarInt.writeUnsignedVarInt(0x04);
         data = BinaryPacking.concat(HEX.decode(link), data);
         data = ArrayUtil.concat(data, new byte[]{0x00});
-        data = BinaryPacking.concat(owner.pack(), data);
+        data = BinaryPacking.concat(receiver.pack(), data);
         return data;
     }
 
     private void checkValidLink(String link) {
-        checkValid(() -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH,
-                   "invalid link");
+        checkValid(
+                () -> link != null && HEX.decode(link).length == Sha3256.HASH_BYTE_LENGTH,
+                "invalid link"
+        );
     }
 }

@@ -26,7 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 class HttpClientImpl implements HttpClient {
 
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final MediaType JSON = MediaType.parse(
+            "application/json; charset=utf-8");
 
     private OkHttpClient client;
 
@@ -55,8 +56,9 @@ class HttpClientImpl implements HttpClient {
         builder.connectTimeout(timeout, TimeUnit.SECONDS);
         final ExecutorService executorService =
                 new ThreadPoolExecutor(0, 10, 60,
-                                       TimeUnit.SECONDS, new SynchronousQueue<>(), Util
-                                               .threadFactory("OkHttp Dispatcher", false));
+                        TimeUnit.SECONDS, new SynchronousQueue<>(), Util
+                        .threadFactory("OkHttp Dispatcher", false)
+                );
         builder.dispatcher(new Dispatcher(executorService));
         return builder.build();
     }
@@ -75,41 +77,65 @@ class HttpClientImpl implements HttpClient {
     }
 
     @Override
-    public void getAsync(String path, QueryParams params, Callback1<Response> callback) {
-        String requestUrl = params == null ? getRequestUrl(path) : getRequestUrl(path, params);
+    public void getAsync(
+            String path,
+            QueryParams params,
+            Callback1<Response> callback
+    ) {
+        String requestUrl = params == null
+                            ? getRequestUrl(path)
+                            : getRequestUrl(path, params);
         Request request = new Request.Builder().url(requestUrl).get().build();
         client.newCall(request).enqueue(wrapCallback(callback));
     }
 
     @Override
-    public void postAsync(String path, Params params, Callback1<Response> callback) {
+    public void postAsync(
+            String path,
+            Params params,
+            Callback1<Response> callback
+    ) {
         postAsync(path, null, params, callback);
     }
 
     @Override
-    public void postAsync(String path, Headers headers, Params params,
-                          Callback1<Response> callback) {
+    public void postAsync(
+            String path, Headers headers, Params params,
+            Callback1<Response> callback
+    ) {
         String requestUrl = getRequestUrl(path);
         Request.Builder builder = new Request.Builder()
                 .url(requestUrl)
                 .post(RequestBody.create(JSON, params.toJson()));
-        if (headers != null) builder.headers(headers);
+        if (headers != null) {
+            builder.headers(headers);
+        }
         client.newCall(builder.build()).enqueue(wrapCallback(callback));
     }
 
     @Override
-    public void patchAsync(String path, Params params, Callback1<Response> callback) {
+    public void patchAsync(
+            String path,
+            Params params,
+            Callback1<Response> callback
+    ) {
         patchAsync(path, null, params, callback);
     }
 
     @Override
-    public void patchAsync(String path, Headers headers, Params params,
-                           Callback1<Response> callback) {
+    public void patchAsync(
+            String path, Headers headers, Params params,
+            Callback1<Response> callback
+    ) {
         String requestUrl = getRequestUrl(path);
         Request.Builder builder =
-                new Request.Builder().url(requestUrl).patch(RequestBody.create(JSON,
-                                                                               params.toJson()));
-        if (headers != null) builder.headers(headers);
+                new Request.Builder().url(requestUrl).patch(RequestBody.create(
+                        JSON,
+                        params.toJson()
+                ));
+        if (headers != null) {
+            builder.headers(headers);
+        }
         client.newCall(builder.build()).enqueue(wrapCallback(callback));
     }
 
@@ -119,12 +145,19 @@ class HttpClientImpl implements HttpClient {
     }
 
     @Override
-    public void deleteAsync(String path, Params params, Callback1<Response> callback) {
+    public void deleteAsync(
+            String path,
+            Params params,
+            Callback1<Response> callback
+    ) {
         String requestUrl = getRequestUrl(path);
         Request.Builder builder = new Request.Builder()
                 .url(requestUrl);
         Request request = params == null ? builder.delete().build() :
-                builder.delete(RequestBody.create(JSON, params.toJson())).build();
+                          builder.delete(RequestBody.create(
+                                  JSON,
+                                  params.toJson()
+                          )).build();
         client.newCall(request).enqueue(wrapCallback(callback));
     }
 
@@ -136,10 +169,16 @@ class HttpClientImpl implements HttpClient {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful())
+            public void onResponse(Call call, Response response)
+                    throws IOException {
+                if (response.isSuccessful()) {
                     callback.onSuccess(response);
-                else callback.onError(new HttpException(response.code(), response.body().string()));
+                } else {
+                    callback.onError(new HttpException(
+                            response.code(),
+                            response.body().string()
+                    ));
+                }
             }
         };
     }

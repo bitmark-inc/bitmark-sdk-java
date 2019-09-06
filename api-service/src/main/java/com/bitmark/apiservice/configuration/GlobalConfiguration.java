@@ -34,8 +34,10 @@ public class GlobalConfiguration {
                     INSTANCE = new GlobalConfiguration(builder);
                 }
             }
-        } else
-            throw new UnsupportedOperationException("GlobalConfiguration must be initialize once");
+        } else {
+            throw new UnsupportedOperationException(
+                    "GlobalConfiguration must be initialize once");
+        }
     }
 
     public static boolean isInitialized() {
@@ -67,8 +69,10 @@ public class GlobalConfiguration {
     }
 
     private static void validate() {
-        if (INSTANCE == null) throw new UnsupportedOperationException("You must init " +
-                                                                      "Configuration before");
+        if (INSTANCE == null) {
+            throw new UnsupportedOperationException("You must init " +
+                    "Configuration before");
+        }
     }
 
 
@@ -115,9 +119,9 @@ public class GlobalConfiguration {
         }
 
         private void validate() {
-            if (apiToken == null || apiToken.isEmpty())
+            if (apiToken == null || apiToken.isEmpty()) {
                 throw new IllegalArgumentException("Api token is required");
-
+            }
         }
 
     }

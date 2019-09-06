@@ -29,27 +29,43 @@ public class GrantResponseParamsTest extends BaseTest {
     @Test
     public void testConstructor__ValidInstanceOrErrorThrow() {
 
-        assertThrows(ValidateException.class,
-                     () -> GrantResponseParams.accept(new ShareGrantRecord()));
-        assertThrows(ValidateException.class,
-                     () -> GrantResponseParams.reject(new ShareGrantRecord()));
-        assertThrows(ValidateException.class,
-                     () -> GrantResponseParams.cancel(new ShareGrantRecord()));
+        assertThrows(
+                ValidateException.class,
+                () -> GrantResponseParams.accept(new ShareGrantRecord())
+        );
+        assertThrows(
+                ValidateException.class,
+                () -> GrantResponseParams.reject(new ShareGrantRecord())
+        );
+        assertThrows(
+                ValidateException.class,
+                () -> GrantResponseParams.cancel(new ShareGrantRecord())
+        );
 
-        assertThrows(ValidateException.class,
-                     () -> GrantResponseParams.accept(null));
-        assertThrows(ValidateException.class,
-                     () -> GrantResponseParams.reject(null));
-        assertThrows(ValidateException.class,
-                     () -> GrantResponseParams.cancel(null));
+        assertThrows(
+                ValidateException.class,
+                () -> GrantResponseParams.accept(null)
+        );
+        assertThrows(
+                ValidateException.class,
+                () -> GrantResponseParams.reject(null)
+        );
+        assertThrows(
+                ValidateException.class,
+                () -> GrantResponseParams.cancel(null)
+        );
 
-        assertDoesNotThrow(() -> GrantResponseParams.accept(createValidShareGrantRecord1()));
-        assertDoesNotThrow(() -> GrantResponseParams.reject(createValidShareGrantRecord1()));
-        assertDoesNotThrow(() -> GrantResponseParams.cancel(createValidShareGrantRecord1()));
+        assertDoesNotThrow(() -> GrantResponseParams.accept(
+                createValidShareGrantRecord1()));
+        assertDoesNotThrow(() -> GrantResponseParams.reject(
+                createValidShareGrantRecord1()));
+        assertDoesNotThrow(() -> GrantResponseParams.cancel(
+                createValidShareGrantRecord1()));
     }
 
     @Test
-    public void testGetter__ValidValueReturn() throws NoSuchFieldException, IllegalAccessException {
+    public void testGetter__ValidValueReturn()
+            throws NoSuchFieldException, IllegalAccessException {
         ShareGrantRecord record = createValidShareGrantRecord1();
         GrantResponseParams params = GrantResponseParams.accept(record);
         assertEquals(record, params.getShareGrantRecord());
@@ -76,8 +92,10 @@ public class GrantResponseParamsTest extends BaseTest {
 
     @ParameterizedTest
     @MethodSource("createValidGrantResponseParamsJsonString")
-    public void testToJson_ValidParams_CorrectJsonReturn(GrantResponseParams params,
-                                                         String expectedJson) {
+    public void testToJson_ValidParams_CorrectJsonReturn(
+            GrantResponseParams params,
+            String expectedJson
+    ) {
         String json = params.toJson();
         assertNotNull(json);
         assertFalse(json.isEmpty());
@@ -86,69 +104,120 @@ public class GrantResponseParamsTest extends BaseTest {
 
     @Test
     public void testToJson_WithoutSigning_CorrectValidation() {
-        assertThrows(UnsupportedOperationException.class,
-                     () -> GrantResponseParams.accept(createValidShareGrantRecord1())
-                                              .toJson());
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> GrantResponseParams.accept(createValidShareGrantRecord1())
+                        .toJson()
+        );
         assertDoesNotThrow(
-                () -> GrantResponseParams.cancel(createValidShareGrantRecord1()).toJson());
+                () -> GrantResponseParams.cancel(createValidShareGrantRecord1())
+                        .toJson());
         assertDoesNotThrow(
-                () -> GrantResponseParams.reject(createValidShareGrantRecord1()).toJson());
+                () -> GrantResponseParams.reject(createValidShareGrantRecord1())
+                        .toJson());
     }
 
     private static Stream<Arguments> createValidGrantResponseParamsJsonString()
             throws IOException, NoSuchFieldException, IllegalAccessException {
         String json1 = FileUtils.loadRequest("/share/grant_response_share1.json");
         String json2 = FileUtils.loadRequest("/share/grant_response_share2.json");
-        GrantResponseParams params1 = GrantResponseParams.accept(createValidShareGrantRecord2());
+        GrantResponseParams params1 = GrantResponseParams.accept(
+                createValidShareGrantRecord2());
         params1.sign(KEY_PAIR_4);
-        GrantResponseParams params2 = GrantResponseParams.cancel(createValidShareGrantRecord1());
+        GrantResponseParams params2 = GrantResponseParams.cancel(
+                createValidShareGrantRecord1());
         params2.sign(KEY_PAIR_4);
-        return Stream.of(Arguments.of(params1, json1), Arguments.of(params2, json2));
+        return Stream.of(
+                Arguments.of(params1, json1),
+                Arguments.of(params2, json2)
+        );
     }
 
     private static ShareGrantRecord createValidShareGrantRecord1()
             throws NoSuchFieldException, IllegalAccessException {
         ShareGrantRecord.Record record = new ShareGrantRecord.Record();
-        reflectionSet(record, new Pair<>("quantity", 1), new Pair<>("shareId",
-                                                                    "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41"),
-                      new Pair<>("owner", "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
-                      new Pair<>("receiver", "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"),
-                      new Pair<>("beforeBlock", 150212348),
-                      new Pair<>("signature",
-                                 "63d0492088db46296f8fc220234be211a678dd6de576350250f79c716d9a5c920b4bbd3f1ce1c112365fa496f41e63fddd4899abfa9c1bf94a572e052ba50a0f"));
+        reflectionSet(record, new Pair<>("quantity", 1), new Pair<>(
+                        "shareId",
+                        "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41"
+                ),
+                new Pair<>(
+                        "owner",
+                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"
+                ),
+                new Pair<>(
+                        "receiver",
+                        "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"
+                ),
+                new Pair<>("beforeBlock", 150212348),
+                new Pair<>(
+                        "signature",
+                        "63d0492088db46296f8fc220234be211a678dd6de576350250f79c716d9a5c920b4bbd3f1ce1c112365fa496f41e63fddd4899abfa9c1bf94a572e052ba50a0f"
+                )
+        );
 
         ShareGrantRecord shareGrantRecord = new ShareGrantRecord();
-        reflectionSet(shareGrantRecord, new Pair<>("id", "73781d92-6352-4b79-a404-cb8e88f96a85"),
-                      new Pair<>("shareId",
-                                 "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41"),
-                      new Pair<>("from", "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
-                      new Pair<>("to", "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"),
-                      new Pair<>("record", record),
-                      new Pair<>("createdAt", "2019-03-11T15:35:23.456511Z"),
-                      new Pair<>("status", "open"));
+        reflectionSet(shareGrantRecord,
+                new Pair<>("id", "73781d92-6352-4b79-a404-cb8e88f96a85"),
+                new Pair<>(
+                        "shareId",
+                        "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41"
+                ),
+                new Pair<>(
+                        "from",
+                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"
+                ),
+                new Pair<>(
+                        "to",
+                        "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"
+                ),
+                new Pair<>("record", record),
+                new Pair<>("createdAt", "2019-03-11T15:35:23.456511Z"),
+                new Pair<>("status", "open")
+        );
         return shareGrantRecord;
     }
 
     private static ShareGrantRecord createValidShareGrantRecord2()
             throws NoSuchFieldException, IllegalAccessException {
         ShareGrantRecord.Record record = new ShareGrantRecord.Record();
-        reflectionSet(record, new Pair<>("quantity", 1), new Pair<>("shareId",
-                                                                    "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41"),
-                      new Pair<>("owner", "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
-                      new Pair<>("receiver", "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"),
-                      new Pair<>("beforeBlock", 989824143),
-                      new Pair<>("signature",
-                                 "1efe017096bf5d159e4fb734f39f5684534e21a355623ddcf6a2f2de27f48698dc755af1c9715f544178c14cbbb360343fbd69b4f86b3c3e0a8c890b7fcb170e"));
+        reflectionSet(record, new Pair<>("quantity", 1), new Pair<>(
+                        "shareId",
+                        "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41"
+                ),
+                new Pair<>(
+                        "owner",
+                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"
+                ),
+                new Pair<>(
+                        "receiver",
+                        "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"
+                ),
+                new Pair<>("beforeBlock", 989824143),
+                new Pair<>(
+                        "signature",
+                        "1efe017096bf5d159e4fb734f39f5684534e21a355623ddcf6a2f2de27f48698dc755af1c9715f544178c14cbbb360343fbd69b4f86b3c3e0a8c890b7fcb170e"
+                )
+        );
 
         ShareGrantRecord shareGrantRecord = new ShareGrantRecord();
-        reflectionSet(shareGrantRecord, new Pair<>("id", "59e079b6-0534-4bc5-ae14-7ce965724562"),
-                      new Pair<>("shareId",
-                                 "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41"),
-                      new Pair<>("from", "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
-                      new Pair<>("to", "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"),
-                      new Pair<>("record", record),
-                      new Pair<>("createdAt", "2019-03-11T15:35:23.011111Z"),
-                      new Pair<>("status", "open"));
+        reflectionSet(shareGrantRecord,
+                new Pair<>("id", "59e079b6-0534-4bc5-ae14-7ce965724562"),
+                new Pair<>(
+                        "shareId",
+                        "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41"
+                ),
+                new Pair<>(
+                        "from",
+                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"
+                ),
+                new Pair<>(
+                        "to",
+                        "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"
+                ),
+                new Pair<>("record", record),
+                new Pair<>("createdAt", "2019-03-11T15:35:23.011111Z"),
+                new Pair<>("status", "open")
+        );
         return shareGrantRecord;
     }
 }

@@ -35,8 +35,12 @@ public class GetBitmarkResponse implements Response {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GetBitmarkResponse that = (GetBitmarkResponse) o;
         return Objects.equals(bitmark, that.bitmark) &&
                 Objects.equals(asset, that.asset);

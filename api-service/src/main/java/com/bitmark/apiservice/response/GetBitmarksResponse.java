@@ -21,7 +21,10 @@ public class GetBitmarksResponse implements Response {
     private List<AssetRecord> assets;
 
     @VisibleForTesting
-    public GetBitmarksResponse(List<BitmarkRecord> bitmarks, List<AssetRecord> assets) {
+    public GetBitmarksResponse(
+            List<BitmarkRecord> bitmarks,
+            List<AssetRecord> assets
+    ) {
         this.bitmarks = bitmarks;
         this.assets = assets;
     }
@@ -36,8 +39,12 @@ public class GetBitmarksResponse implements Response {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GetBitmarksResponse that = (GetBitmarksResponse) o;
         return Objects.equals(bitmarks, that.bitmarks) &&
                 Objects.equals(assets, that.assets);

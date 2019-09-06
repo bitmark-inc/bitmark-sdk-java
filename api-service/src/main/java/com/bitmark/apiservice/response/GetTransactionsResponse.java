@@ -26,7 +26,10 @@ public class GetTransactionsResponse implements Response {
     private List<BlockRecord> blocks;
 
     @VisibleForTesting
-    public GetTransactionsResponse(List<TransactionRecord> transactions, List<AssetRecord> assets) {
+    public GetTransactionsResponse(
+            List<TransactionRecord> transactions,
+            List<AssetRecord> assets
+    ) {
         this.transactions = transactions;
         this.assets = assets;
     }
@@ -45,11 +48,15 @@ public class GetTransactionsResponse implements Response {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GetTransactionsResponse that = (GetTransactionsResponse) o;
         return Objects.equals(transactions, that.transactions) &&
-               Objects.equals(assets, that.assets);
+                Objects.equals(assets, that.assets);
     }
 
     @Override

@@ -24,14 +24,36 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ShareParamsTest extends BaseTest {
 
+    private static Stream<Arguments> createValidShareParamsJsonString()
+            throws IOException {
+        String json1 = FileUtils.loadRequest("/share/create_share1.json");
+        String json2 = FileUtils.loadRequest("/share/create_share2.json");
+        ShareParams params1 = new ShareParams(
+                100,
+                "03a70acb35ef1eca10634137967ea28b8f2ca90c5aaf77dbb53ee54ab04fc8b6"
+        );
+        params1.sign(KEY_PAIR_3);
+        ShareParams params2 = new ShareParams(
+                100,
+                "d6e16ac271e3bdce061092056729da0401362fe796a563b76c75fcbf6c79fd05"
+        );
+        params2.sign(KEY_PAIR_3);
+        return Stream.of(
+                Arguments.of(params1, json1),
+                Arguments.of(params2, json2)
+        );
+    }
+
     @Test
     public void testConstructor__ValidInstanceOrErrorThrow() {
 
         assertThrows(ValidateException.class, () -> new ShareParams(-1, TX_ID));
         assertThrows(ValidateException.class, () -> new ShareParams(0, TX_ID));
         assertThrows(ValidateException.class, () -> new ShareParams(1000, ""));
-        assertThrows(ValidateException.class, () -> new ShareParams(1000,
-                                                                    "d97cb558f58fcaa70d1a654e45c21545096077f2de4adfeb0bf8f239b97115aZ"));
+        assertThrows(ValidateException.class, () -> new ShareParams(
+                1000,
+                "d97cb558f58fcaa70d1a654e45c21545096077f2de4adfeb0bf8f239b97115aZ"
+        ));
         assertDoesNotThrow(() -> new ShareParams(100, TX_ID));
     }
 
@@ -63,7 +85,10 @@ public class ShareParamsTest extends BaseTest {
 
     @ParameterizedTest
     @MethodSource("createValidShareParamsJsonString")
-    public void testToJson_ValidParams_CorrectJsonReturn(ShareParams params, String expectedJson) {
+    public void testToJson_ValidParams_CorrectJsonReturn(
+            ShareParams params,
+            String expectedJson
+    ) {
         String json = params.toJson();
         assertNotNull(json);
         assertFalse(json.isEmpty());
@@ -74,17 +99,5 @@ public class ShareParamsTest extends BaseTest {
     public void testToJson_WithoutSigning_ErrorThrow() {
         ShareParams params = new ShareParams(100, TX_ID);
         assertThrows(UnsupportedOperationException.class, params::toJson);
-    }
-
-    private static Stream<Arguments> createValidShareParamsJsonString() throws IOException {
-        String json1 = FileUtils.loadRequest("/share/create_share1.json");
-        String json2 = FileUtils.loadRequest("/share/create_share2.json");
-        ShareParams params1 = new ShareParams(100,
-                                              "03a70acb35ef1eca10634137967ea28b8f2ca90c5aaf77dbb53ee54ab04fc8b6");
-        params1.sign(KEY_PAIR_3);
-        ShareParams params2 = new ShareParams(100,
-                                              "d6e16ac271e3bdce061092056729da0401362fe796a563b76c75fcbf6c79fd05");
-        params2.sign(KEY_PAIR_3);
-        return Stream.of(Arguments.of(params1, json1), Arguments.of(params2, json2));
     }
 }
