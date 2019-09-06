@@ -88,10 +88,12 @@ public class Sha256 implements Comparable<Sha256> {
         for (int i = HASH_LENGTH - 1; i >= 0; i--) {
             final int thisByte = this.bytes[i] & 0xFF;
             final int otherByte = other.bytes[i] & 0xFF;
-            if (thisByte > otherByte)
+            if (thisByte > otherByte) {
                 return 1;
-            if (thisByte < otherByte)
+            }
+            if (thisByte < otherByte) {
                 return -1;
+            }
         }
         return 0;
     }

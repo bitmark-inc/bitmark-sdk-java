@@ -59,17 +59,24 @@ public class LibraryLoader {
 
         static CPU getCPU() {
             String name = System.getProperty("os.arch");
-            if (name == null) throw new LibraryLoaderException("Un-support CPU");
-            if (name.equalsIgnoreCase("x86") || name.equalsIgnoreCase("i386") ||
-                    name.equalsIgnoreCase("i486") || name.equalsIgnoreCase("i586") ||
-                    name.equalsIgnoreCase("i686") || name.equalsIgnoreCase("i786") ||
-                    name.equalsIgnoreCase("i86pc")) {
+            if (name == null) {
+                throw new LibraryLoaderException("Un-support CPU");
+            }
+            if (name.equalsIgnoreCase("x86") || name.equalsIgnoreCase("i386") || name
+                    .equalsIgnoreCase("i486") || name.equalsIgnoreCase("i586") || name
+                    .equalsIgnoreCase("i686") || name.equalsIgnoreCase("i786") || name
+                    .equalsIgnoreCase("i86pc")) {
                 return X86;
-            } else if (name.equalsIgnoreCase("x86_64") || name.equalsIgnoreCase("amd64"))
+            } else if (name.equalsIgnoreCase("x86_64") || name.equalsIgnoreCase(
+                    "amd64")) {
                 return X86_64;
-            else if (name.equalsIgnoreCase("aarch64") || name.contains("armv8")) return AARCH64;
-            else if (name.contains("arm")) return ARM;
-            else return UNKNOWN;
+            } else if (name.equalsIgnoreCase("aarch64") || name.contains("armv8")) {
+                return AARCH64;
+            } else if (name.contains("arm")) {
+                return ARM;
+            } else {
+                return UNKNOWN;
+            }
         }
     }
 
@@ -103,13 +110,15 @@ public class LibraryLoader {
         static OS getOS() {
             String osName = System.getProperty("os.name").split(" ")[0];
 
-            if (osName.equalsIgnoreCase("mac") || osName.equalsIgnoreCase("darwin")) {
+            if (osName.equalsIgnoreCase("mac") || osName.equalsIgnoreCase(
+                    "darwin")) {
                 return OS.DARWIN;
             } else if (osName.equalsIgnoreCase("linux")) {
                 String javaVM = System.getProperty("java.vm.name");
                 String javaVendor = System.getProperty("java.vendor");
 
-                if (javaVendor.contains("Android") || javaVM.equalsIgnoreCase("dalvik")
+                if (javaVendor.contains("Android") || javaVM.equalsIgnoreCase(
+                        "dalvik")
                         || javaVM.equalsIgnoreCase("art")) {
                     return OS.ANDROID;
                 } else {
@@ -134,11 +143,16 @@ public class LibraryLoader {
     @SuppressLint("UnsafeDynamicallyLoadedCode")
     private static void loadNativeLib() throws IOException {
         InputStream inputStream = getLibStream();
-        if (inputStream == null) throw new LibraryLoaderException("Cannot get native library");
+        if (inputStream == null) {
+            throw new LibraryLoaderException("Cannot get native library");
+        }
         FileOutputStream outputStream = null;
         File tempFile = null;
         try {
-            tempFile = File.createTempFile("native-lib", "." + getLibExtension());
+            tempFile = File.createTempFile(
+                    "native-lib",
+                    "." + getLibExtension()
+            );
             tempFile.deleteOnExit();
             outputStream = new FileOutputStream(tempFile);
             byte[] buffer = new byte[1024 * 8];
@@ -164,7 +178,9 @@ public class LibraryLoader {
                     outputStream.close();
                 }
                 inputStream.close();
-                if (tempFile != null && tempFile.exists()) tempFile.delete();
+                if (tempFile != null && tempFile.exists()) {
+                    tempFile.delete();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -182,16 +198,22 @@ public class LibraryLoader {
             }
         }
 
-        throw new LibraryLoaderException("Couldn't load native library with path " + Arrays.deepToString(paths));
+        throw new LibraryLoaderException(
+                "Couldn't load native library with path " + Arrays.deepToString(
+                        paths));
     }
 
     private static InputStream getResourceAsStream(String name) {
-        ClassLoader[] loaders = new ClassLoader[]{ClassLoader.getSystemClassLoader(),
+        ClassLoader[] loaders = new ClassLoader[]{
+                ClassLoader.getSystemClassLoader(),
                 LibraryLoader.class.getClassLoader(),
-                Thread.currentThread().getContextClassLoader()};
+                Thread.currentThread().getContextClassLoader()
+        };
         for (ClassLoader loader : loaders) {
             InputStream stream = loader.getResourceAsStream(name);
-            if (stream != null) return stream;
+            if (stream != null) {
+                return stream;
+            }
         }
         return null;
     }
@@ -199,10 +221,12 @@ public class LibraryLoader {
     private static String getLibPath() {
         CPU cpu = CPU.getCPU();
         OS os = OS.getOS();
-        if (cpu == CPU.UNKNOWN || os == OS.UNKNOWN)
+        if (cpu == CPU.UNKNOWN || os == OS.UNKNOWN) {
             throw new LibraryLoaderException("Not support platform");
-        if (os == OS.DARWIN || os == OS.LINUX) return "lib";
-        else if (os == OS.ANDROID) {
+        }
+        if (os == OS.DARWIN || os == OS.LINUX) {
+            return "lib";
+        } else if (os == OS.ANDROID) {
             switch (cpu) {
                 case ARM:
                     return "lib/armeabi-v7a";
@@ -213,10 +237,12 @@ public class LibraryLoader {
                 case X86_64:
                     return "lib/x86_64";
                 default:
-                    throw new LibraryLoaderException("Unknown or does not support CPU " +
-                            "architecture");
+                    throw new LibraryLoaderException(
+                            "Unknown or does not support CPU architecture");
             }
-        } else throw new LibraryLoaderException("Unknown or does not support OS");
+        } else {
+            throw new LibraryLoaderException("Unknown or does not support OS");
+        }
     }
 
     private static String getLibName() {
@@ -230,7 +256,8 @@ public class LibraryLoader {
             case ANDROID:
                 return "libsodiumjni.so";
             default:
-                throw new LibraryLoaderException("Unknown or does not support OS");
+                throw new LibraryLoaderException(
+                        "Unknown or does not support OS");
         }
     }
 
@@ -245,7 +272,8 @@ public class LibraryLoader {
             case DARWIN:
                 return "dylib";
             default:
-                throw new LibraryLoaderException("Unknown or does not support OS");
+                throw new LibraryLoaderException(
+                        "Unknown or does not support OS");
         }
     }
 

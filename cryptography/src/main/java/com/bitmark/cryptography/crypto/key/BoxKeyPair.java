@@ -41,15 +41,27 @@ public class BoxKeyPair implements KeyPair {
     @Override
     public boolean isValid() {
         boolean isValidLength = publicKey.length == PUB_KEY_BYTE_LENGTH &&
-                                privateKey.length == PRIVATE_KEY_BYTE_LENGTH;
-        if (!isValidLength) return false;
+                privateKey.length == PRIVATE_KEY_BYTE_LENGTH;
+        if (!isValidLength) {
+            return false;
+        }
         final KeyPair receiver = Box.generateKeyPair();
         final byte[] messageSent = new byte[]{0x7F};
         final byte[] nonce = new byte[Box.NONCE_BYTE_LENGTH];
         final byte[] cipher =
-                Box.box(messageSent, nonce, receiver.publicKey().toBytes(), privateKey);
+                Box.box(
+                        messageSent,
+                        nonce,
+                        receiver.publicKey().toBytes(),
+                        privateKey
+                );
         final byte[] messageReceived =
-                Box.unbox(cipher, nonce, publicKey, receiver.privateKey().toBytes());
+                Box.unbox(
+                        cipher,
+                        nonce,
+                        publicKey,
+                        receiver.privateKey().toBytes()
+                );
         return Objects.deepEquals(messageSent, messageReceived);
     }
 }

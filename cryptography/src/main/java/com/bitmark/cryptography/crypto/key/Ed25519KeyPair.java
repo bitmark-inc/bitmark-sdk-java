@@ -37,8 +37,10 @@ public class Ed25519KeyPair implements KeyPair {
     @Override
     public boolean isValid() {
         boolean isValidLength = publicKey.length == Ed25519.PUBLIC_KEY_LENGTH &&
-                                privateKey.length == Ed25519.PRIVATE_KEY_LENGTH;
-        if (!isValidLength) return false;
+                privateKey.length == Ed25519.PRIVATE_KEY_LENGTH;
+        if (!isValidLength) {
+            return false;
+        }
         final byte[] message = "bitmark_sdk_java".getBytes();
         final byte[] sig = Ed25519.sign(message, privateKey);
         return Ed25519.verify(sig, message, publicKey);

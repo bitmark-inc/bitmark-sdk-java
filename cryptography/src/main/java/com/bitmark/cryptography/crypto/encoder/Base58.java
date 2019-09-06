@@ -17,8 +17,8 @@ public class Base58 implements Encoder {
 
     public static final Base58 BASE_58 = new Base58();
 
-    private static final char[] ALPHABET =
-            "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
+    private static final char[] ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+            .toCharArray();
 
     private static final char ENCODED_ZERO = ALPHABET[0];
 
@@ -44,11 +44,19 @@ public class Base58 implements Encoder {
             ++zeros;
         }
         // Convert base-256 digits to base-58 digits (plus conversion to ASCII characters)
-        byte[] bytes = Arrays.copyOf(input, input.length); // since we modify it in-place
+        byte[] bytes = Arrays.copyOf(
+                input,
+                input.length
+        ); // since we modify it in-place
         char[] encoded = new char[bytes.length * 2]; // upper bound
         int outputStart = encoded.length;
         for (int inputStart = zeros; inputStart < bytes.length; ) {
-            encoded[--outputStart] = ALPHABET[divmod(bytes, inputStart, 256, 58)];
+            encoded[--outputStart] = ALPHABET[divmod(
+                    bytes,
+                    inputStart,
+                    256,
+                    58
+            )];
             if (bytes[inputStart] == 0) {
                 ++inputStart; // optimization - skip leading zeros
             }
@@ -99,7 +107,12 @@ public class Base58 implements Encoder {
         return Arrays.copyOfRange(decoded, outputStart - zeros, decoded.length);
     }
 
-    private static byte divmod(byte[] number, int firstDigit, int base, int divisor) {
+    private static byte divmod(
+            byte[] number,
+            int firstDigit,
+            int base,
+            int divisor
+    ) {
         // this is just long division which accounts for the base of the input digits
         int remainder = 0;
         for (int i = firstDigit; i < number.length; i++) {

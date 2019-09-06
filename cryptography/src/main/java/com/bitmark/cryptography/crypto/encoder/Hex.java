@@ -13,8 +13,24 @@ public class Hex implements Encoder {
 
     public static final Hex HEX = new Hex();
 
-    private static final char[] DIGITS =
-            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    private static final char[] DIGITS = {
+            '0',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            'a',
+            'b',
+            'c',
+            'd',
+            'e',
+            'f'
+    };
 
     private Hex() {
     }
@@ -22,7 +38,9 @@ public class Hex implements Encoder {
     @Override
     public byte[] decode(String value) {
         checkValidHex(value);
-        if (value.length() % 2 == 1) value = "0" + value;
+        if (value.length() % 2 == 1) {
+            value = "0" + value;
+        }
         final char[] data = value.toCharArray();
         final int len = data.length;
 
@@ -57,8 +75,7 @@ public class Hex implements Encoder {
     private static int toDigit(final char ch, final int index) {
         final int digit = Character.digit(ch, 16);
         if (digit == -1) {
-            throw new RuntimeException(
-                    "Illegal hexadecimal character " + ch + " at index " + index);
+            throw new RuntimeException("Illegal hexadecimal character " + ch + " at index " + index);
         }
         return digit;
     }

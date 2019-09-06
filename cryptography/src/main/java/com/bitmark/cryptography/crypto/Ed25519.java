@@ -32,8 +32,10 @@ public class Ed25519 {
     public static KeyPair generateKeyPair() {
         final byte[] publicKey = new byte[PUBLIC_KEY_LENGTH];
         final byte[] privateKey = new byte[PRIVATE_KEY_LENGTH];
-        call(() -> Sodium.crypto_sign_ed25519_keypair(publicKey, privateKey),
-             "cannot generate Ed25519 key pair");
+        call(
+                () -> Sodium.crypto_sign_ed25519_keypair(publicKey, privateKey),
+                "cannot generate Ed25519 key pair"
+        );
         return Ed25519KeyPair.from(publicKey, privateKey);
     }
 
@@ -41,24 +43,37 @@ public class Ed25519 {
         checkValidLength(seed, SEED_LENGTH);
         final byte[] publicKey = new byte[PUBLIC_KEY_LENGTH];
         final byte[] privateKey = new byte[PRIVATE_KEY_LENGTH];
-        call(() -> Sodium.crypto_sign_ed25519_seed_keypair(publicKey, privateKey, seed),
-             "cannot generate Ed25519 key pair from seed");
+        call(
+                () -> Sodium.crypto_sign_ed25519_seed_keypair(
+                        publicKey,
+                        privateKey,
+                        seed
+                ),
+                "cannot generate Ed25519 key pair from seed"
+        );
         return Ed25519KeyPair.from(publicKey, privateKey);
     }
 
     public static KeyPair getKeyPair(byte[] privateKey) {
         checkValidLength(privateKey, PRIVATE_KEY_LENGTH);
         final byte[] publicKey = new byte[PUBLIC_KEY_LENGTH];
-        call(() -> Sodium.crypto_sign_ed25519_sk_to_pk(publicKey, privateKey),
-             "cannot derive public key from private key");
+        call(
+                () -> Sodium.crypto_sign_ed25519_sk_to_pk(
+                        publicKey,
+                        privateKey
+                ),
+                "cannot derive public key from private key"
+        );
         return Ed25519KeyPair.from(publicKey, privateKey);
     }
 
     public static byte[] getSeed(byte[] privateKey) {
         checkValidLength(privateKey, PRIVATE_KEY_LENGTH);
         final byte[] seed = new byte[SEED_LENGTH];
-        call(() -> Sodium.crypto_sign_ed25519_sk_to_seed(seed, privateKey),
-             "cannot get seed from private key");
+        call(
+                () -> Sodium.crypto_sign_ed25519_sk_to_seed(seed, privateKey),
+                "cannot get seed from private key"
+        );
         return seed;
     }
 
@@ -70,30 +85,56 @@ public class Ed25519 {
     public static byte[] sign(byte[] message, byte[] privateKey) {
         checkValidLength(privateKey, PRIVATE_KEY_LENGTH);
         final byte[] signature = new byte[SIG_LENGTH];
-        call(() -> Sodium.crypto_sign_ed25519_detached(signature, new int[]{signature.length},
-                                                       message, message.length, privateKey),
-             "cannot sign message");
+        call(
+                () -> Sodium.crypto_sign_ed25519_detached(
+                        signature,
+                        new int[]{signature.length},
+                        message,
+                        message.length,
+                        privateKey
+                ),
+                "cannot sign message"
+        );
         return signature;
     }
 
     public static String sign(String hexMessage, String hexPrivateKey) {
         checkValidHex(hexMessage);
         checkValidHex(hexPrivateKey);
-        return HEX.encode(sign(HEX.decode(hexMessage), HEX.decode(hexPrivateKey)));
+        return HEX.encode(sign(
+                HEX.decode(hexMessage),
+                HEX.decode(hexPrivateKey)
+        ));
     }
 
-    public static boolean verify(byte[] signature, byte[] message, byte[] publicKey) {
+    public static boolean verify(
+            byte[] signature,
+            byte[] message,
+            byte[] publicKey
+    ) {
         checkValidLength(publicKey, PUBLIC_KEY_LENGTH);
         checkValidLength(signature, SIG_LENGTH);
-        return Sodium.crypto_sign_ed25519_verify_detached(signature, message, message.length,
-                                                          publicKey) == 0;
+        return Sodium.crypto_sign_ed25519_verify_detached(
+                signature,
+                message,
+                message.length,
+                publicKey
+        ) == 0;
     }
 
-    public static boolean verify(String hexSignature, String hexMessage, String hexPublicKey) {
+    public static boolean verify(
+            String hexSignature,
+            String hexMessage,
+            String hexPublicKey
+    ) {
         checkValidHex(hexSignature);
         checkValidHex(hexMessage);
         checkValidHex(hexPublicKey);
-        return verify(HEX.decode(hexSignature), HEX.decode(hexMessage), HEX.decode(hexPublicKey));
+        return verify(
+                HEX.decode(hexSignature),
+                HEX.decode(hexMessage),
+                HEX.decode(hexPublicKey)
+        );
     }
 
 

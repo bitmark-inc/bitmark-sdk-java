@@ -31,13 +31,19 @@ public class Chacha20Poly1305 {
         return key;
     }
 
-    public static byte[] aeadIetfEncrypt(byte[] message, byte[] additionalData, byte[] nonce,
-                                         byte[] key) {
+    public static byte[] aeadIetfEncrypt(
+            byte[] message,
+            byte[] additionalData,
+            byte[] nonce,
+            byte[] key
+    ) {
 
         checkValidLength(key, IETF_KEY_BYTE_LENGTH);
         checkNonNull(nonce);
 
-        byte[] additionalDataBytes = additionalData == null ? new byte[0] : additionalData;
+        byte[] additionalDataBytes = additionalData == null
+                                     ? new byte[0]
+                                     : additionalData;
 
         final int messageLength = message.length;
         final int additionalDataLength = additionalDataBytes.length;
@@ -45,25 +51,36 @@ public class Chacha20Poly1305 {
 
         final byte[] cipherBytes = new byte[cipherLength];
 
-        call(() -> Sodium.crypto_aead_chacha20poly1305_ietf_encrypt(cipherBytes,
-                                                                    new int[0],
-                                                                    message,
-                                                                    messageLength,
-                                                                    additionalDataBytes,
-                                                                    additionalDataLength,
-                                                                    new byte[0], nonce,
-                                                                    key),
-             "Cannot encrypt message");
+        call(
+                () -> Sodium.crypto_aead_chacha20poly1305_ietf_encrypt(
+                        cipherBytes,
+                        new int[0],
+                        message,
+                        messageLength,
+                        additionalDataBytes,
+                        additionalDataLength,
+                        new byte[0],
+                        nonce,
+                        key
+                ),
+                "Cannot encrypt message"
+        );
         return cipherBytes;
     }
 
-    public static byte[] aeadIetfDecrypt(byte[] cipherBytes, byte[] additionalData, byte[] nonce,
-                                         byte[] key) {
+    public static byte[] aeadIetfDecrypt(
+            byte[] cipherBytes,
+            byte[] additionalData,
+            byte[] nonce,
+            byte[] key
+    ) {
 
         checkValidLength(key, IETF_KEY_BYTE_LENGTH);
         checkNonNull(nonce);
 
-        byte[] additionalDataBytes = additionalData == null ? new byte[0] : additionalData;
+        byte[] additionalDataBytes = additionalData == null
+                                     ? new byte[0]
+                                     : additionalData;
 
         final int cipherBytesLength = cipherBytes.length;
         final int additionalDataLength = additionalDataBytes.length;
@@ -71,13 +88,19 @@ public class Chacha20Poly1305 {
         final byte[] decryptedBytes = new byte[decryptedBytesLength];
 
         call(
-                () -> Sodium.crypto_aead_chacha20poly1305_ietf_decrypt(decryptedBytes, new int[1],
-                                                                       new byte[0], cipherBytes,
-                                                                       cipherBytesLength,
-                                                                       additionalDataBytes,
-                                                                       additionalDataLength,
-                                                                       nonce, key),
-                "Cannot decrypt cipher");
+                () -> Sodium.crypto_aead_chacha20poly1305_ietf_decrypt(
+                        decryptedBytes,
+                        new int[1],
+                        new byte[0],
+                        cipherBytes,
+                        cipherBytesLength,
+                        additionalDataBytes,
+                        additionalDataLength,
+                        nonce,
+                        key
+                ),
+                "Cannot decrypt cipher"
+        );
         return decryptedBytes;
     }
 }

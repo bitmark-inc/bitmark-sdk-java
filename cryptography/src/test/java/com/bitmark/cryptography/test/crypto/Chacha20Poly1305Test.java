@@ -41,10 +41,20 @@ public class Chacha20Poly1305Test extends BaseCryptoTest {
         byte[] nonce = secureRandomBytes(Chacha20Poly1305.IETF_NPUBBYTE_LENGTH);
         byte[] key = secureRandomBytes(Chacha20Poly1305.IETF_KEY_BYTE_LENGTH);
 
-        byte[] cipherBytes = Chacha20Poly1305.aeadIetfEncrypt(MESSAGE, ADDITIONAL_DATA, nonce, key);
+        byte[] cipherBytes = Chacha20Poly1305.aeadIetfEncrypt(
+                MESSAGE,
+                ADDITIONAL_DATA,
+                nonce,
+                key
+        );
         assertNotZeroBytes(cipherBytes);
 
-        byte[] message = Chacha20Poly1305.aeadIetfDecrypt(cipherBytes, ADDITIONAL_DATA, nonce, key);
+        byte[] message = Chacha20Poly1305.aeadIetfDecrypt(
+                cipherBytes,
+                ADDITIONAL_DATA,
+                nonce,
+                key
+        );
         assertTrue(Arrays.equals(MESSAGE, message));
     }
 
@@ -54,10 +64,20 @@ public class Chacha20Poly1305Test extends BaseCryptoTest {
         byte[] nonce = secureRandomBytes(Chacha20Poly1305.IETF_NPUBBYTE_LENGTH);
         byte[] key = secureRandomBytes(Chacha20Poly1305.IETF_KEY_BYTE_LENGTH);
 
-        byte[] cipherBytes = Chacha20Poly1305.aeadIetfEncrypt(MESSAGE, null, nonce, key);
+        byte[] cipherBytes = Chacha20Poly1305.aeadIetfEncrypt(
+                MESSAGE,
+                null,
+                nonce,
+                key
+        );
         assertNotZeroBytes(cipherBytes);
 
-        byte[] message = Chacha20Poly1305.aeadIetfDecrypt(cipherBytes, null, nonce, key);
+        byte[] message = Chacha20Poly1305.aeadIetfDecrypt(
+                cipherBytes,
+                null,
+                nonce,
+                key
+        );
         assertTrue(Arrays.equals(MESSAGE, message));
     }
 
@@ -65,16 +85,30 @@ public class Chacha20Poly1305Test extends BaseCryptoTest {
     @MethodSource("createInvalidKey")
     public void testEncryptIetf_InvalidKey_ErrorIsThrown(byte[] key) {
         byte[] nonce = secureRandomBytes(Chacha20Poly1305.IETF_NPUBBYTE_LENGTH);
-        assertThrows(ValidateException.class,
-                     () -> Chacha20Poly1305.aeadIetfEncrypt(MESSAGE, null, nonce, key));
+        assertThrows(
+                ValidateException.class,
+                () -> Chacha20Poly1305.aeadIetfEncrypt(
+                        MESSAGE,
+                        null,
+                        nonce,
+                        key
+                )
+        );
     }
 
     @ParameterizedTest
     @MethodSource("createInvalidKey")
     public void testDecryptIetf_InvalidKey_ErrorIsThrown(byte[] key) {
         byte[] nonce = secureRandomBytes(Chacha20Poly1305.IETF_NPUBBYTE_LENGTH);
-        assertThrows(ValidateException.class,
-                     () -> Chacha20Poly1305.aeadIetfDecrypt(MESSAGE, null, nonce, key));
+        assertThrows(
+                ValidateException.class,
+                () -> Chacha20Poly1305.aeadIetfDecrypt(
+                        MESSAGE,
+                        null,
+                        nonce,
+                        key
+                )
+        );
     }
 
     private static Stream<byte[]> createInvalidKey() {

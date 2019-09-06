@@ -14,6 +14,8 @@ public class JniUtils {
     }
 
     public static void call(Callable<Integer> callable, String errorMessage) {
-        if (callable.call() != 0) throw new JniCallException(errorMessage);
+        if (callable.call() != 0) {
+            throw new JniCallException(errorMessage);
+        }
     }
 }

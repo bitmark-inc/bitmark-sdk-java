@@ -23,8 +23,10 @@ public class Base58Test extends BaseEncoderTest {
 
     @ParameterizedTest
     @MethodSource("createBytesBase58String")
-    public void testEncode_ValidByteArrayInput_CorrectValueIsReturn(byte[] input,
-                                                                    String expectedResult) {
+    public void testEncode_ValidByteArrayInput_CorrectValueIsReturn(
+            byte[] input,
+            String expectedResult
+    ) {
         final String output = BASE_58.encode(input);
         assertTrue(expectedResult.equalsIgnoreCase(output));
     }
@@ -37,8 +39,10 @@ public class Base58Test extends BaseEncoderTest {
 
     @ParameterizedTest
     @MethodSource("createBase58StringBytes")
-    public void testDecode_ValidStringInput_CorrectValueReturn(String input,
-                                                               byte[] expectedResult) {
+    public void testDecode_ValidStringInput_CorrectValueReturn(
+            String input,
+            byte[] expectedResult
+    ) {
         final byte[] output = BASE_58.decode(input);
         assertTrue(Arrays.equals(expectedResult, output));
     }
@@ -50,16 +54,38 @@ public class Base58Test extends BaseEncoderTest {
     }
 
     private static Stream<Arguments> createBytesBase58String() {
-        return Stream.of(Arguments.of(new byte[]{66, 105, 116, 109, 97, 114, 107}, "3WyEDmUoFG"),
+        return Stream.of(
+                Arguments.of(
+                        new byte[]{66, 105, 116, 109, 97, 114, 107},
+                        "3WyEDmUoFG"
+                ),
                 Arguments.of(new byte[]{97, 65, 98, 66, 99, 67}, "qRxhjkSW"),
-                Arguments.of(new byte[]{66, 105, 116, 109, 97, 114, 107, 83, 68, 75}, "4jQZmYmXmMpbDt"));
+                Arguments.of(new byte[]{
+                        66,
+                        105,
+                        116,
+                        109,
+                        97,
+                        114,
+                        107,
+                        83,
+                        68,
+                        75
+                }, "4jQZmYmXmMpbDt")
+        );
     }
 
     private static Stream<Arguments> createBase58StringBytes() {
-        return Stream.of(Arguments.of("3WyEDmUoFG", new byte[]{66, 105, 116, 109, 97, 114, 107}),
+        return Stream.of(
+                Arguments.of(
+                        "3WyEDmUoFG",
+                        new byte[]{66, 105, 116, 109, 97, 114, 107}
+                ),
                 Arguments.of("qRxhjkSW", new byte[]{97, 65, 98, 66, 99, 67}),
-                Arguments.of("4jQZmYmXmMpbDt", new byte[]{66, 105, 116, 109, 97, 114, 107, 83, 68,
-                        75}));
+                Arguments.of("4jQZmYmXmMpbDt", new byte[]{
+                        66, 105, 116, 109, 97, 114, 107, 83, 68, 75
+                })
+        );
     }
 
     private static Stream<byte[]> createInvalidBytes() {

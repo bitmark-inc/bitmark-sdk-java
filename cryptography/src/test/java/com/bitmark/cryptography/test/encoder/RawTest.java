@@ -23,8 +23,10 @@ public class RawTest extends BaseEncoderTest {
 
     @ParameterizedTest
     @MethodSource("createBytesString")
-    public void testEncode_ValidByteArrayInput_CorrectResultIsReturn(byte[] input,
-                                                                     String expectedResult) {
+    public void testEncode_ValidByteArrayInput_CorrectResultIsReturn(
+            byte[] input,
+            String expectedResult
+    ) {
         final String output = RAW.encode(input);
         assertTrue(output.equalsIgnoreCase(expectedResult));
     }
@@ -37,8 +39,10 @@ public class RawTest extends BaseEncoderTest {
 
     @ParameterizedTest
     @MethodSource("createStringBytes")
-    public void testDecode_ValidStringInput_CorrectResultIsReturn(String input,
-                                                                  byte[] expectedResult) {
+    public void testDecode_ValidStringInput_CorrectResultIsReturn(
+            String input,
+            byte[] expectedResult
+    ) {
         final byte[] output = RAW.decode(input);
         assertTrue(Arrays.equals(output, expectedResult));
     }
@@ -50,15 +54,25 @@ public class RawTest extends BaseEncoderTest {
     }
 
     private static Stream<Arguments> createStringBytes() {
-        return Stream.of(Arguments.of("Bitmark", new byte[]{66, 105, 116, 109, 97, 114, 107}),
-                Arguments.of("aAbBcC", new byte[]{97, 65, 98, 66, 99, 67}), Arguments.of("z",
-                        new byte[]{122}));
+        return Stream.of(
+                Arguments.of(
+                        "Bitmark",
+                        new byte[]{66, 105, 116, 109, 97, 114, 107}
+                ),
+                Arguments.of("aAbBcC", new byte[]{97, 65, 98, 66, 99, 67}),
+                Arguments.of("z", new byte[]{122})
+        );
     }
 
     private static Stream<Arguments> createBytesString() {
-        return Stream.of(Arguments.of(new byte[]{66, 105, 116, 109, 97, 114, 107}, "Bitmark"),
-                Arguments.of(new byte[]{97, 65, 98, 66, 99, 67}, "aAbBcC"), Arguments.of(
-                        new byte[]{122}, "z"));
+        return Stream.of(
+                Arguments.of(
+                        new byte[]{66, 105, 116, 109, 97, 114, 107},
+                        "Bitmark"
+                ),
+                Arguments.of(new byte[]{97, 65, 98, 66, 99, 67}, "aAbBcC"),
+                Arguments.of(new byte[]{122}, "z")
+        );
     }
 
     private static Stream<byte[]> createInvalidBytes() {
