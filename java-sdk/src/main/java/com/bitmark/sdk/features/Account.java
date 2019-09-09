@@ -3,6 +3,7 @@ package com.bitmark.sdk.features;
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.utils.Address;
+import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.PublicKey;
@@ -84,6 +85,24 @@ public class Account {
         return fromSeed(seed);
     }
 
+    public static boolean verify(
+            String accountNumber,
+            byte[] signature,
+            byte[] message
+    ) {
+        return Ed25519.verify(
+                signature,
+                message,
+                Address.fromAccountNumber(accountNumber)
+                        .getPublicKey()
+                        .toBytes()
+        );
+    }
+
+    public byte[] sign(byte[] message) {
+        return Ed25519.sign(message, getAuthKeyPair().privateKey().toBytes());
+    }
+
     public Account() {
         seed = new SeedTwelve();
         accountNumber = generateAccountNumber(seed.getAuthKeyPair()
@@ -99,7 +118,7 @@ public class Account {
         return seed.getAuthKeyPair();
     }
 
-    public KeyPair getEncryptionKey() {
+    public KeyPair getEncKeyPair() {
         return seed.getEncKeyPair();
     }
 

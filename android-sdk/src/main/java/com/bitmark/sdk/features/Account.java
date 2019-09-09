@@ -9,6 +9,7 @@ import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.utils.Address;
 import com.bitmark.apiservice.utils.callback.Callback0;
 import com.bitmark.apiservice.utils.callback.Callback1;
+import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.PublicKey;
@@ -148,6 +149,24 @@ public class Account {
         keyManager.removeKey(alias, spec, callback);
     }
 
+    public static boolean verify(
+            String accountNumber,
+            byte[] signature,
+            byte[] message
+    ) {
+        return Ed25519.verify(
+                signature,
+                message,
+                Address.fromAccountNumber(accountNumber)
+                        .getPublicKey()
+                        .toBytes()
+        );
+    }
+
+    public byte[] sign(byte[] message) {
+        return Ed25519.sign(message, getAuthKeyPair().privateKey().toBytes());
+    }
+
     public static boolean isValidAccountNumber(String accountNumber) {
         return Address.isValidAccountNumber(accountNumber);
     }
@@ -176,11 +195,11 @@ public class Account {
         ));
     }
 
-    public KeyPair getKeyPair() {
+    public KeyPair getAuthKeyPair() {
         return seed.getAuthKeyPair();
     }
 
-    public KeyPair getEncryptionKey() {
+    public KeyPair getEncKeyPair() {
         return seed.getEncKeyPair();
     }
 

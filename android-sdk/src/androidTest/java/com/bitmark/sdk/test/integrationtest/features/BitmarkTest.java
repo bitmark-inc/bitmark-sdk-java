@@ -600,7 +600,7 @@ public class BitmarkTest extends BaseTest {
 
         // Create share
         ShareParams params = new ShareParams(100, bitmark.getHeadId());
-        params.sign(ACCOUNT1.getKeyPair());
+        params.sign(ACCOUNT1.getAuthKeyPair());
         Pair<String, String> res = await(callback -> Bitmark.createShare(
                 params,
                 callback
@@ -660,7 +660,7 @@ public class BitmarkTest extends BaseTest {
 
         // Create share
         ShareParams params = new ShareParams(100, bitmark.getHeadId());
-        params.sign(ACCOUNT2.getKeyPair());
+        params.sign(ACCOUNT2.getAuthKeyPair());
         await((Callable1<Pair<String, String>>) callback -> Bitmark.createShare(
                 params,
                 callback
@@ -708,7 +708,7 @@ public class BitmarkTest extends BaseTest {
 
             // Create share
             ShareParams params = new ShareParams(100, bitmark.getHeadId());
-            params.sign(ACCOUNT1.getKeyPair());
+            params.sign(ACCOUNT1.getAuthKeyPair());
             Pair<String, String> res = await(callback -> Bitmark.createShare(
                     params,
                     callback
@@ -724,7 +724,7 @@ public class BitmarkTest extends BaseTest {
                         ACCOUNT2.toAddress(),
                         secureRandomInt()
                 );
-        grantingParams.sign(ACCOUNT1.getKeyPair());
+        grantingParams.sign(ACCOUNT1.getAuthKeyPair());
         String offerId = await(callback -> Bitmark.grantShare(
                 grantingParams,
                 callback
@@ -782,7 +782,7 @@ public class BitmarkTest extends BaseTest {
 
             // Create share
             ShareParams params = new ShareParams(100, bitmark.getHeadId());
-            params.sign(ACCOUNT1.getKeyPair());
+            params.sign(ACCOUNT1.getAuthKeyPair());
             Pair<String, String> res = await(callback -> Bitmark.createShare(
                     params,
                     callback
@@ -798,7 +798,7 @@ public class BitmarkTest extends BaseTest {
                         ACCOUNT2.toAddress(),
                         secureRandomInt()
                 );
-        grantingParams.sign(ACCOUNT3.getKeyPair());
+        grantingParams.sign(ACCOUNT3.getAuthKeyPair());
         await((Callable1<String>) callback -> Bitmark.grantShare(
                 grantingParams,
                 callback
@@ -845,7 +845,7 @@ public class BitmarkTest extends BaseTest {
                             ACCOUNT2.toAddress(),
                             secureRandomInt()
                     );
-            grantingParams.sign(ACCOUNT1.getKeyPair());
+            grantingParams.sign(ACCOUNT1.getAuthKeyPair());
             String offerId = await(callback -> Bitmark.grantShare(
                     grantingParams,
                     callback
@@ -866,7 +866,7 @@ public class BitmarkTest extends BaseTest {
         // Respond offer
         GrantResponseParams responseParams = GrantResponseParams.accept(
                 grantRecords.get(0));
-        responseParams.sign(ACCOUNT2.getKeyPair());
+        responseParams.sign(ACCOUNT2.getAuthKeyPair());
         String txId = await(callback -> Bitmark.respondShareOffer(
                 responseParams,
                 callback
@@ -915,7 +915,7 @@ public class BitmarkTest extends BaseTest {
                             ACCOUNT2.toAddress(),
                             secureRandomInt()
                     );
-            grantingParams.sign(ACCOUNT1.getKeyPair());
+            grantingParams.sign(ACCOUNT1.getAuthKeyPair());
             String offerId = await(callback -> Bitmark.grantShare(
                     grantingParams,
                     callback
@@ -936,7 +936,7 @@ public class BitmarkTest extends BaseTest {
         // Respond offer
         GrantResponseParams responseParams = GrantResponseParams.reject(
                 grantRecords.get(0));
-        responseParams.sign(ACCOUNT2.getKeyPair());
+        responseParams.sign(ACCOUNT2.getAuthKeyPair());
         String txId = await(callback -> Bitmark.respondShareOffer(
                 responseParams,
                 callback
@@ -985,7 +985,7 @@ public class BitmarkTest extends BaseTest {
                             ACCOUNT2.toAddress(),
                             secureRandomInt()
                     );
-            grantingParams.sign(ACCOUNT1.getKeyPair());
+            grantingParams.sign(ACCOUNT1.getAuthKeyPair());
             String offerId = await(callback -> Bitmark.grantShare(
                     grantingParams,
                     callback
@@ -1006,7 +1006,7 @@ public class BitmarkTest extends BaseTest {
         // Respond offer
         GrantResponseParams responseParams = GrantResponseParams.cancel(
                 grantRecords.get(0));
-        responseParams.sign(ACCOUNT1.getKeyPair());
+        responseParams.sign(ACCOUNT1.getAuthKeyPair());
         String txId = await(callback -> Bitmark.respondShareOffer(
                 responseParams,
                 callback
@@ -1048,7 +1048,7 @@ public class BitmarkTest extends BaseTest {
 
             // Create share
             ShareParams params = new ShareParams(100, bitmark.getHeadId());
-            params.sign(ACCOUNT1.getKeyPair());
+            params.sign(ACCOUNT1.getAuthKeyPair());
             Pair<String, String> res = await(callback -> Bitmark.createShare(
                     params,
                     callback
@@ -1086,7 +1086,7 @@ public class BitmarkTest extends BaseTest {
 
         // Create share
         ShareParams params = new ShareParams(100, bitmark.getHeadId());
-        params.sign(ACCOUNT1.getKeyPair());
+        params.sign(ACCOUNT1.getAuthKeyPair());
         Pair<String, String> res = await(callback -> Bitmark.createShare(
                 params,
                 callback
@@ -1150,7 +1150,7 @@ public class BitmarkTest extends BaseTest {
 
                 // Create share
                 ShareParams params = new ShareParams(100, bitmark.getHeadId());
-                params.sign(ACCOUNT1.getKeyPair());
+                params.sign(ACCOUNT1.getAuthKeyPair());
                 Pair<String, String> res = await(callback -> Bitmark.createShare(
                         params,
                         callback
@@ -1165,7 +1165,7 @@ public class BitmarkTest extends BaseTest {
                     new ShareGrantingParams(shareId, 1, ACCOUNT1.toAddress(),
                             ACCOUNT2.toAddress(), secureRandomInt()
                     );
-            grantingParams.sign(ACCOUNT1.getKeyPair());
+            grantingParams.sign(ACCOUNT1.getAuthKeyPair());
             String offerId = await(callback -> Bitmark.grantShare(
                     grantingParams,
                     callback

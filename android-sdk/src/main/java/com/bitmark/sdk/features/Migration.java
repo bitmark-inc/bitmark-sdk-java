@@ -137,7 +137,7 @@ public class Migration {
     ) {
 
         final Address ownerAddress = owner.toAddress();
-        final KeyPair key = owner.getKeyPair();
+        final KeyPair key = owner.getAuthKeyPair();
 
         // Build collection of IssuanceParams
         List<IssuanceParams> params = new ArrayList<>();

@@ -2,12 +2,14 @@ package com.bitmark.sdk.test.unittest.features;
 
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.cryptography.crypto.Ed25519;
+import com.bitmark.cryptography.crypto.Random;
 import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.Account;
 import com.bitmark.sdk.features.internal.Seed;
 import com.bitmark.sdk.features.internal.SeedTwelve;
 import com.bitmark.sdk.features.internal.SeedTwentyFour;
 import com.bitmark.sdk.test.unittest.BaseTest;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -171,6 +173,34 @@ public class AccountTest extends BaseTest {
                 Account.isValidAccountNumber(accountNumber),
                 expectedResult
         );
+    }
+
+    @RepeatedTest(3)
+    public void testSignVerify() {
+        final byte[] message = Random.randomBytes(32);
+        final Account account1 = new Account();
+        final Account account2 = new Account();
+
+        // test sign
+        byte[] signature = assertDoesNotThrow(() -> account1.sign(message));
+        assertNotNull(signature);
+        assertTrue(signature.length > 0);
+
+        // test verify
+        boolean verified = assertDoesNotThrow(() -> Account.verify(
+                account1.getAccountNumber(),
+                signature,
+                message
+        ));
+        assertTrue(verified);
+
+        verified = assertDoesNotThrow(() -> Account.verify(
+                account2.getAccountNumber(),
+                signature,
+                message
+        ));
+        assertFalse(verified);
+
     }
 
     private static Stream<Arguments> createRecoveryPhraseAccountNumberPublicKey() {

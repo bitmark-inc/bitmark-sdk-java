@@ -2,12 +2,14 @@ package com.bitmark.sdk.test.unittest.features;
 
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.cryptography.crypto.Ed25519;
+import com.bitmark.cryptography.crypto.Random;
 import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.Account;
 import com.bitmark.sdk.features.internal.Seed;
 import com.bitmark.sdk.features.internal.SeedTwelve;
 import com.bitmark.sdk.features.internal.SeedTwentyFour;
 import com.bitmark.sdk.test.unittest.BaseTest;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -166,11 +168,11 @@ public class AccountTest extends BaseTest {
     public void testNewAccount_NoCondition_ValidAccountIsCreated() {
         final Account account = new Account();
         assertEquals(
-                account.getKeyPair().privateKey().size(),
+                account.getAuthKeyPair().privateKey().size(),
                 Ed25519.PRIVATE_KEY_LENGTH
         );
         assertEquals(
-                account.getKeyPair().publicKey().size(),
+                account.getAuthKeyPair().publicKey().size(),
                 Ed25519.PUBLIC_KEY_LENGTH
         );
         assertNotNull(account.getAccountNumber());
@@ -187,7 +189,7 @@ public class AccountTest extends BaseTest {
         final Account account = Account.fromSeed(seed);
         assertEquals(account.getAccountNumber(), accountNumber);
         assertEquals(
-                HEX.encode(account.getKeyPair().publicKey().toBytes()),
+                HEX.encode(account.getAuthKeyPair().publicKey().toBytes()),
                 publicKey
         );
     }
@@ -202,7 +204,7 @@ public class AccountTest extends BaseTest {
         final Account account = Account.fromSeed(seed);
         assertEquals(account.getAccountNumber(), accountNumber);
         assertEquals(
-                HEX.encode(account.getKeyPair().publicKey().toBytes()),
+                HEX.encode(account.getAuthKeyPair().publicKey().toBytes()),
                 publicKey
         );
     }
@@ -227,7 +229,7 @@ public class AccountTest extends BaseTest {
         assertEquals(accountNumber, account.getAccountNumber());
         assertEquals(
                 publicKey,
-                HEX.encode(account.getKeyPair().publicKey().toBytes())
+                HEX.encode(account.getAuthKeyPair().publicKey().toBytes())
         );
     }
 
@@ -302,6 +304,34 @@ public class AccountTest extends BaseTest {
                 Account.isValidAccountNumber(accountNumber),
                 expectedResult
         );
+    }
+
+    @RepeatedTest(3)
+    public void testSignVerify() {
+        final byte[] message = Random.randomBytes(32);
+        final Account account1 = new Account();
+        final Account account2 = new Account();
+
+        // test sign
+        byte[] signature = assertDoesNotThrow(() -> account1.sign(message));
+        assertNotNull(signature);
+        assertTrue(signature.length > 0);
+
+        // test verify
+        boolean verified = assertDoesNotThrow(() -> Account.verify(
+                account1.getAccountNumber(),
+                signature,
+                message
+        ));
+        assertTrue(verified);
+
+        verified = assertDoesNotThrow(() -> Account.verify(
+                account2.getAccountNumber(),
+                signature,
+                message
+        ));
+        assertFalse(verified);
+
     }
 
 }
