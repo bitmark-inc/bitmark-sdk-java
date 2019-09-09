@@ -1,5 +1,7 @@
 package com.bitmark.sdk.features.internal;
 
+import com.bitmark.cryptography.crypto.key.KeyPair;
+
 import java.util.Locale;
 
 import static com.bitmark.cryptography.utils.Validator.checkValid;
@@ -15,6 +17,10 @@ abstract class AbsSeed implements Seed {
     static final int CHECKSUM_LENGTH = 4;
 
     byte[] seedBytes;
+
+    KeyPair authKeyPair;
+
+    KeyPair encKeyPair;
 
     AbsSeed(byte[] seedBytes) {
         checkValid(

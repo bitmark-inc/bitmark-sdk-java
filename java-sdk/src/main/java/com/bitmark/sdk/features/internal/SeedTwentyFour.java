@@ -144,21 +144,28 @@ public class SeedTwentyFour extends AbsSeed {
 
     @Override
     public KeyPair getAuthKeyPair() {
-        return Ed25519.generateKeyPairFromSeed(box(
+        return authKeyPair == null
+               ? authKeyPair = Ed25519.generateKeyPairFromSeed(box(
                 KEY_INDEX,
                 new byte[NONCE_LENGTH],
                 seedBytes
-        ));
+        ))
+               : authKeyPair;
     }
 
     @Override
     public KeyPair getEncKeyPair() {
-        byte[] privateKey = box(
-                ENC_KEY_INDEX,
-                new byte[NONCE_LENGTH],
-                seedBytes
-        );
-        return Box.generateKeyPair(privateKey);
+        if (encKeyPair != null) {
+            return encKeyPair;
+        } else {
+            byte[] privateKey = box(
+                    ENC_KEY_INDEX,
+                    new byte[NONCE_LENGTH],
+                    seedBytes
+            );
+            return encKeyPair = Box.generateKeyPair(privateKey);
+        }
+
     }
 
     @Override

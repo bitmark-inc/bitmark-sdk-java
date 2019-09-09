@@ -93,13 +93,20 @@ public class SeedTwelve extends AbsSeed {
 
     @Override
     public KeyPair getAuthKeyPair() {
-        return Ed25519.generateKeyPairFromSeed(generateSeedKey(seedBytes));
+        return authKeyPair == null
+               ? authKeyPair = Ed25519.generateKeyPairFromSeed(generateSeedKey(
+                seedBytes))
+               : authKeyPair;
     }
 
     @Override
     public KeyPair getEncKeyPair() {
-        final byte[] privateKey = generateSeedKeys(seedBytes, 2).get(1);
-        return Box.generateKeyPair(privateKey);
+        if (encKeyPair != null) {
+            return encKeyPair;
+        } else {
+            final byte[] privateKey = generateSeedKeys(seedBytes, 2).get(1);
+            return encKeyPair = Box.generateKeyPair(privateKey);
+        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.bitmark.sdk.features.internal;
 
-import com.bitmark.cryptography.error.ValidateException;
+import com.bitmark.cryptography.crypto.key.KeyPair;
 
 import java.util.Locale;
 
@@ -18,7 +18,11 @@ abstract class AbsSeed implements Seed {
 
     byte[] seedBytes;
 
-    AbsSeed(byte[] seedBytes)  {
+    KeyPair authKeyPair;
+
+    KeyPair encKeyPair;
+
+    AbsSeed(byte[] seedBytes) {
         checkValid(
                 () -> seedBytes != null && seedBytes.length == length(),
                 "Invalid Seed"
