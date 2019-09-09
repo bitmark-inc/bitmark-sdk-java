@@ -8,7 +8,6 @@ import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.encoder.VarInt;
 import com.bitmark.cryptography.crypto.key.PublicKey;
-import com.bitmark.cryptography.error.ValidateException;
 
 import java.util.Arrays;
 
@@ -27,7 +26,7 @@ public class Address {
 
     public static final int CHECKSUM_LENGTH = 4;
 
-    private PublicKey key;
+    private PublicKey publicKey;
 
     private Network network;
 
@@ -96,8 +95,7 @@ public class Address {
         }
     }
 
-    public static Address getDefault(PublicKey key, Network network)
-             {
+    public static Address getDefault(PublicKey key, Network network) {
         checkValid(
                 () -> null != key && Ed25519.PUBLIC_KEY_LENGTH == key.size(),
                 "invalid public key"
@@ -112,27 +110,27 @@ public class Address {
     private Address() {
     }
 
-    private Address(PublicKey key, Network network) {
+    private Address(PublicKey publicKey, Network network) {
         this();
-        this.key = key;
+        this.publicKey = publicKey;
         this.network = network;
     }
 
     public byte[] pack() {
-        return ArrayUtil.concat(getPrefix(), key.toBytes());
+        return ArrayUtil.concat(getPrefix(), publicKey.toBytes());
     }
 
     public Network getNetwork() {
         return network;
     }
 
-    public PublicKey getKey() {
-        return key;
+    public PublicKey getPublicKey() {
+        return publicKey;
     }
 
     public String getAddress() {
         final byte[] keyVariantVarInt = getPrefix();
-        final byte[] publicKeyBytes = key.toBytes();
+        final byte[] publicKeyBytes = publicKey.toBytes();
         final byte[] preChecksum = ArrayUtil.concat(
                 keyVariantVarInt,
                 publicKeyBytes

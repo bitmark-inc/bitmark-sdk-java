@@ -42,7 +42,7 @@ public class RegisterWsTokenParams extends AbsSingleParams {
     public byte[] sign(KeyPair key) {
         checkValid(
                 () -> null != key && Objects.deepEquals(
-                        requester.getKey().toBytes(),
+                        requester.getPublicKey().toBytes(),
                         key.publicKey().toBytes()
                 ),
                 "invalid public key, the public key must be corresponding to requester"
