@@ -14,8 +14,7 @@ public enum Version {
     TWELVE,
     TWENTY_FOUR;
 
-    public static Version fromMnemonicWords(String... words)
-            throws ValidateException {
+    public static Version fromMnemonicWords(String... words) {
         int length = words.length;
         Version version = length == 12
                           ? TWELVE
@@ -26,7 +25,7 @@ public enum Version {
         return version;
     }
 
-    public static Version fromEntropy(byte[] entropy) throws ValidateException {
+    public static Version fromEntropy(byte[] entropy) {
         int length = entropy.length;
         Version version = length == 17
                           ? TWELVE

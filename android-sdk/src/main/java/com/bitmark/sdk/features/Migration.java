@@ -10,7 +10,6 @@ import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.apiservice.utils.record.BitmarkRecord;
 import com.bitmark.cryptography.crypto.key.KeyPair;
-import com.bitmark.cryptography.error.ValidateException;
 import io.reactivex.Single;
 
 import java.util.ArrayList;
@@ -33,8 +32,7 @@ public class Migration {
     public static void migrate(
             String[] phraseWords,
             Callback1<Pair<Account, List<String>>> callback
-    )
-            throws ValidateException {
+    ) {
         checkValid(
                 () -> phraseWords != null &&
                         phraseWords.length == TWENTY_FOUR.getMnemonicWordsLength(),

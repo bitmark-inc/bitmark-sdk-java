@@ -12,7 +12,6 @@ import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.PublicKey;
-import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.authentication.KeyAuthenticationSpec;
 import com.bitmark.sdk.features.internal.RecoveryPhrase;
 import com.bitmark.sdk.features.internal.Seed;
@@ -60,7 +59,7 @@ public class Account {
      * @see Account#fromSeed(String)
      */
     @Deprecated
-    public static Account fromSeed(Seed seed) throws ValidateException {
+    public static Account fromSeed(Seed seed) {
         checkValid(
                 () -> seed.getNetwork() == GlobalConfiguration.network(),
                 "Incorrect network from Seed"
@@ -74,8 +73,7 @@ public class Account {
         return new Account(seed, accountNumber);
     }
 
-    public static Account fromSeed(String encodedSeed)
-            throws ValidateException {
+    public static Account fromSeed(String encodedSeed) {
         checkNonNull(encodedSeed);
 
         byte[] encodedSeedBytes = BASE_58.decode(encodedSeed);
@@ -99,8 +97,7 @@ public class Account {
         return new Account(seed, accountNumber);
     }
 
-    public static Account fromRecoveryPhrase(String... recoveryPhrase)
-            throws ValidateException {
+    public static Account fromRecoveryPhrase(String... recoveryPhrase) {
         final RecoveryPhrase phrase = RecoveryPhrase.fromMnemonicWords(
                 recoveryPhrase);
         final Seed seed = phrase.recoverSeed();

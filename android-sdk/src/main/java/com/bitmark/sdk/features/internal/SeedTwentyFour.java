@@ -8,7 +8,6 @@ import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.encoder.VarInt;
 import com.bitmark.cryptography.crypto.key.KeyPair;
-import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.utils.SequenceIterateByteArray;
 import com.bitmark.sdk.utils.error.InvalidChecksumException;
 import com.bitmark.sdk.utils.error.InvalidSeedException;
@@ -62,8 +61,7 @@ public class SeedTwentyFour extends AbsSeed {
         this.network = network;
     }
 
-    public static Seed fromEncodedSeed(String encodedSeed)
-            throws ValidateException {
+    public static Seed fromEncodedSeed(String encodedSeed) {
 
         final byte[] seedBytes = BASE_58.decode(encodedSeed);
         checkValidLength(seedBytes, ENCODED_SEED_LENGTH);

@@ -40,12 +40,11 @@ public class SeedTwelve extends AbsSeed {
         this(randomEntropy(GlobalConfiguration.network()));
     }
 
-    public SeedTwelve(byte[] seedBytes) throws ValidateException {
+    public SeedTwelve(byte[] seedBytes) {
         super(seedBytes);
     }
 
-    public static Seed fromEncodedSeed(String encodedSeed)
-            throws ValidateException {
+    public static Seed fromEncodedSeed(String encodedSeed) {
         final byte[] seedBytes = BASE_58.decode(encodedSeed);
         checkValidLength(seedBytes, ENCODED_SEED_LENGTH);
 
@@ -132,8 +131,7 @@ public class SeedTwelve extends AbsSeed {
         return seed;
     }
 
-    private static byte[] generateSeedKey(byte[] core)
-            throws ValidateException {
+    private static byte[] generateSeedKey(byte[] core) {
         List<byte[]> keys = generateSeedKeys(core, 1);
         if (keys.isEmpty()) {
             throw new ValidateException("Generate seed key failed");
@@ -141,8 +139,7 @@ public class SeedTwelve extends AbsSeed {
         return keys.get(0);
     }
 
-    private static List<byte[]> generateSeedKeys(byte[] core, int keyCount)
-            throws ValidateException {
+    private static List<byte[]> generateSeedKeys(byte[] core, int keyCount) {
         checkValid(() -> core != null && core.length > 0 && keyCount > 0);
 
         // add the seed 4 times to hash value

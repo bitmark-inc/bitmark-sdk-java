@@ -45,7 +45,7 @@ public class RecoveryPhrase {
 
     private final String[] mnemonicWords;
 
-    private RecoveryPhrase(String... mnemonicWords) throws ValidateException {
+    private RecoveryPhrase(String... mnemonicWords) {
         validate(mnemonicWords);
         this.mnemonicWords = mnemonicWords;
     }
@@ -87,12 +87,11 @@ public class RecoveryPhrase {
         }
     }
 
-    public static RecoveryPhrase fromSeed(Seed seed) throws ValidateException {
+    public static RecoveryPhrase fromSeed(Seed seed) {
         return fromSeed(seed, Locale.ENGLISH);
     }
 
-    public static RecoveryPhrase fromSeed(Seed seed, Locale locale)
-            throws ValidateException {
+    public static RecoveryPhrase fromSeed(Seed seed, Locale locale) {
         checkValid(() -> seed != null, "invalid seed");
         final byte[] seedBytes = seed.getSeedBytes();
         final Version version = seed.getVersion();
@@ -104,13 +103,11 @@ public class RecoveryPhrase {
                        , seedBytes), locale));
     }
 
-    public static RecoveryPhrase fromMnemonicWords(String... mnemonicWords)
-            throws ValidateException {
+    public static RecoveryPhrase fromMnemonicWords(String... mnemonicWords) {
         return new RecoveryPhrase(mnemonicWords);
     }
 
-    public static Seed recoverSeed(String[] mnemonicWord)
-            throws ValidateException {
+    public static Seed recoverSeed(String[] mnemonicWord) {
         validate(mnemonicWord);
         final Version version = Version.fromMnemonicWords(mnemonicWord);
         final int wordsLength = version.getMnemonicWordsLength();
@@ -162,13 +159,11 @@ public class RecoveryPhrase {
         }
     }
 
-    public static String[] generateMnemonic(byte[] entropy)
-            throws ValidateException {
+    public static String[] generateMnemonic(byte[] entropy) {
         return generateMnemonic(entropy, Locale.ENGLISH);
     }
 
-    public static String[] generateMnemonic(byte[] entropy, Locale locale)
-            throws ValidateException {
+    public static String[] generateMnemonic(byte[] entropy, Locale locale) {
         checkValid(
                 () -> entropy != null && Version.matchesEntropy(entropy),
                 "invalid entropy"

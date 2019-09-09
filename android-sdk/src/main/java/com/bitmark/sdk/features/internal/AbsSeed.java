@@ -1,7 +1,5 @@
 package com.bitmark.sdk.features.internal;
 
-import com.bitmark.cryptography.error.ValidateException;
-
 import java.util.Locale;
 
 import static com.bitmark.cryptography.utils.Validator.checkValid;
@@ -18,7 +16,7 @@ abstract class AbsSeed implements Seed {
 
     byte[] seedBytes;
 
-    AbsSeed(byte[] seedBytes) throws ValidateException {
+    AbsSeed(byte[] seedBytes) {
         checkValid(
                 () -> seedBytes != null && seedBytes.length == length(),
                 "Invalid Seed"
