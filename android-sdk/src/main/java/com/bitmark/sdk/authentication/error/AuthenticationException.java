@@ -9,7 +9,11 @@ package com.bitmark.sdk.authentication.error;
 public class AuthenticationException extends Exception {
 
     public enum Type {
-        FAILED, ERROR, CANCELLED
+        FAILED,
+
+        ERROR,
+
+        CANCELLED
     }
 
     private Type type;

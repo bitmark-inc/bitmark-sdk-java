@@ -30,10 +30,19 @@ class DeviceAuthenticator extends AbsAuthenticator {
     }
 
     @Override
-    public void authenticate(Activity activity, String title, String description, Cipher cipher,
-                             AuthenticationCallback callback) {
-        new DeviceAuthenticationHandler(activity, title, description, callback)
-                .authenticate(cipher);
+    public void authenticate(
+            Activity activity,
+            String title,
+            String description,
+            Cipher cipher,
+            AuthenticationCallback callback
+    ) {
+        new DeviceAuthenticationHandler(
+                activity,
+                title,
+                description,
+                callback
+        ).authenticate(cipher);
     }
 
     @Override
@@ -46,19 +55,30 @@ class DeviceAuthenticator extends AbsAuthenticator {
     public boolean isEnrolled() {
         KeyguardManager keyguardManager =
                 (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
-        if (keyguardManager == null) return false;
-        return isAboveM() ? keyguardManager.isDeviceSecure() : keyguardManager.isKeyguardSecure();
+        if (keyguardManager == null) {
+            return false;
+        }
+        return isAboveM()
+               ? keyguardManager.isDeviceSecure()
+               : keyguardManager.isKeyguardSecure();
     }
 
     @Override
     public void checkAvailability()
-            throws AuthenticationRequiredException, HardwareNotSupportedException {
-        if (!isHardwareDetected()) throw new HardwareNotSupportedException(DEVICE);
-        if (!isEnrolled()) throw new AuthenticationRequiredException(DEVICE);
+            throws
+            AuthenticationRequiredException,
+            HardwareNotSupportedException {
+        if (!isHardwareDetected()) {
+            throw new HardwareNotSupportedException(DEVICE);
+        }
+        if (!isEnrolled()) {
+            throw new AuthenticationRequiredException(DEVICE);
+        }
     }
 
 
-    private static class DeviceAuthenticationHandler implements ActivityListener {
+    private static class DeviceAuthenticationHandler
+            implements ActivityListener {
 
         private static final int REQUEST_CODE = 0x99;
 
@@ -72,8 +92,12 @@ class DeviceAuthenticator extends AbsAuthenticator {
 
         private String description;
 
-        DeviceAuthenticationHandler(@NonNull Activity activity, String title, String description,
-                                    @NonNull AuthenticationCallback callback) {
+        DeviceAuthenticationHandler(
+                @NonNull Activity activity,
+                String title,
+                String description,
+                @NonNull AuthenticationCallback callback
+        ) {
             this.activity = activity;
             this.title = title;
             this.description = description;
@@ -91,20 +115,27 @@ class DeviceAuthenticator extends AbsAuthenticator {
             final Context context = activity.getApplicationContext();
             KeyguardManager keyguardManager = (KeyguardManager) context
                     .getSystemService(KEYGUARD_SERVICE);
-            if (keyguardManager == null)
+            if (keyguardManager == null) {
                 throw new UnsupportedOperationException(
                         "Not support this kind of service " + KEYGUARD_SERVICE);
+            }
             Intent intent = keyguardManager
                     .createConfirmDeviceCredentialIntent(title, description);
             activity.startActivityForResult(intent, REQUEST_CODE, null);
         }
 
         @Override
-        public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        public void onActivityResult(
+                int requestCode,
+                int resultCode,
+                @Nullable Intent data
+        ) {
             if (requestCode == REQUEST_CODE) {
                 if (resultCode == RESULT_OK) {
                     callback.onSucceeded(cipher);
-                } else if (resultCode == RESULT_CANCELED) callback.onCancelled();
+                } else if (resultCode == RESULT_CANCELED) {
+                    callback.onCancelled();
+                }
             }
         }
     }

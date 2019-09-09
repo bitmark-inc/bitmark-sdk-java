@@ -28,8 +28,10 @@ public class BitmarkSDK {
     }
 
     private static void validate() {
-        if (GlobalConfiguration.isInitialized()) throw new UnsupportedOperationException("You " +
-                "can only call BitmarkSDK.init() once");
+        if (GlobalConfiguration.isInitialized()) {
+            throw new UnsupportedOperationException(
+                    "You can only call BitmarkSDK.init() once");
+        }
     }
 
 }

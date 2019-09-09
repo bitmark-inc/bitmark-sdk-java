@@ -7,5 +7,9 @@ package com.bitmark.sdk.authentication;
  * Copyright © 2019 Bitmark. All rights reserved.
  */
 public enum Provider {
-    DEVICE, FINGERPRINT, BIOMETRIC
+    DEVICE,
+
+    FINGERPRINT,
+
+    BIOMETRIC
 }

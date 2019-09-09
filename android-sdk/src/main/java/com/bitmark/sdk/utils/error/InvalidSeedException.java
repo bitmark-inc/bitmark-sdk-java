@@ -17,14 +17,16 @@ public class InvalidSeedException extends ValidateException {
         super(message);
     }
 
-    public static class InvalidMagicNumberException extends InvalidSeedException {
+    public static class InvalidMagicNumberException
+            extends InvalidSeedException {
 
         public InvalidMagicNumberException(String message) {
             super(message);
         }
 
         public InvalidMagicNumberException(byte[] actual, byte[] expected) {
-            this("Invalid magic number. Expected is " + HEX.encode(expected) + " but actual is " + HEX.encode(actual));
+            this("Invalid magic number. Expected is " + HEX.encode(expected) + " but actual is " + HEX
+                    .encode(actual));
         }
     }
 
@@ -39,7 +41,8 @@ public class InvalidSeedException extends ValidateException {
         }
 
         public InvalidVersionException(byte[] actual, byte[] expected) {
-            this("Invalid version. Expected is " + HEX.encode(expected) + " but actual is " + HEX.encode(actual));
+            this("Invalid version. Expected is " + HEX.encode(expected) + " but actual is " + HEX
+                    .encode(actual));
         }
     }
 }

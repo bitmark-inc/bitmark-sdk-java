@@ -21,9 +21,11 @@ public abstract class BaseTest {
 
     @BeforeClass
     public static void beforeAll() {
-        if (!BitmarkSDK.isInitialized())
-            BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg")
-                                               .withNetwork(Network.TEST_NET));
+        if (!BitmarkSDK.isInitialized()) {
+            BitmarkSDK.init(GlobalConfiguration.builder()
+                    .withApiToken("bmk-lljpzkhqdkzmblhg")
+                    .withNetwork(Network.TEST_NET));
+        }
 
     }
 }

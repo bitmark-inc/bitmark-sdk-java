@@ -43,6 +43,17 @@ public class Account {
 
     private Seed seed;
 
+    public Account() {
+        seed = new SeedTwelve();
+        accountNumber = generateAccountNumber(seed.getAuthKeyPair()
+                .publicKey());
+    }
+
+    private Account(Seed seed, String accountNumber) {
+        this.seed = seed;
+        this.accountNumber = accountNumber;
+    }
+
     /**
      * This is deprecated.
      *
@@ -50,21 +61,29 @@ public class Account {
      */
     @Deprecated
     public static Account fromSeed(Seed seed) throws ValidateException {
-        checkValid(() -> seed.getNetwork() == GlobalConfiguration.network(), "Incorrect network " +
-                                                                             "from Seed");
+        checkValid(
+                () -> seed.getNetwork() == GlobalConfiguration.network(),
+                "Incorrect network from Seed"
+        );
 
         final String accountNumber =
-                generateAccountNumber(seed.getAuthKeyPair().publicKey(), seed.getNetwork());
+                generateAccountNumber(
+                        seed.getAuthKeyPair().publicKey(),
+                        seed.getNetwork()
+                );
         return new Account(seed, accountNumber);
     }
 
-    public static Account fromSeed(String encodedSeed) throws ValidateException {
+    public static Account fromSeed(String encodedSeed)
+            throws ValidateException {
         checkNonNull(encodedSeed);
 
         byte[] encodedSeedBytes = BASE_58.decode(encodedSeed);
-        checkValid(() -> (encodedSeedBytes.length == SeedTwelve.ENCODED_SEED_LENGTH ||
-                          encodedSeedBytes.length == SeedTwentyFour.ENCODED_SEED_LENGTH),
-                   "invalid encoded seed");
+        checkValid(
+                () -> (encodedSeedBytes.length == SeedTwelve.ENCODED_SEED_LENGTH ||
+                        encodedSeedBytes.length == SeedTwentyFour.ENCODED_SEED_LENGTH),
+                "invalid encoded seed"
+        );
         Seed seed;
         if (encodedSeedBytes.length == SeedTwelve.ENCODED_SEED_LENGTH) {
             seed = SeedTwelve.fromEncodedSeed(encodedSeed);
@@ -73,31 +92,39 @@ public class Account {
         }
 
         final String accountNumber =
-                generateAccountNumber(seed.getAuthKeyPair().publicKey(), seed.getNetwork());
+                generateAccountNumber(
+                        seed.getAuthKeyPair().publicKey(),
+                        seed.getNetwork()
+                );
         return new Account(seed, accountNumber);
     }
 
-    public static Account fromRecoveryPhrase(String... recoveryPhrase) throws ValidateException {
-        final RecoveryPhrase phrase = RecoveryPhrase.fromMnemonicWords(recoveryPhrase);
+    public static Account fromRecoveryPhrase(String... recoveryPhrase)
+            throws ValidateException {
+        final RecoveryPhrase phrase = RecoveryPhrase.fromMnemonicWords(
+                recoveryPhrase);
         final Seed seed = phrase.recoverSeed();
         return fromSeed(seed);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void loadFromKeyStore(Activity activity, String accountNumber,
-                                        KeyAuthenticationSpec spec,
-                                        Callback1<Account> callback) {
+    public static void loadFromKeyStore(
+            Activity activity, String accountNumber,
+            KeyAuthenticationSpec spec,
+            Callback1<Account> callback
+    ) {
         final KeyManager keyManager = new KeyManagerImpl(activity);
         keyManager.getKey(accountNumber, spec, new Callback1<byte[]>() {
             @Override
             public void onSuccess(byte[] seedBytes) {
                 Account account = null;
                 try {
-                    Seed seed =
-                            seedBytes.length == SeedTwelve.SEED_BYTE_LENGTH ? new SeedTwelve(
-                                    seedBytes) : new SeedTwentyFour(seedBytes,
-                                                                    GlobalConfiguration
-                                                                            .network());
+                    Seed seed = seedBytes.length == SeedTwelve.SEED_BYTE_LENGTH
+                                ? new SeedTwelve(seedBytes)
+                                : new SeedTwentyFour(
+                                        seedBytes,
+                                        GlobalConfiguration.network()
+                                );
                     account = Account.fromSeed(seed);
                 } catch (Throwable e) {
                     callback.onError(e);
@@ -115,14 +142,41 @@ public class Account {
         });
     }
 
-    public Account() {
-        seed = new SeedTwelve();
-        accountNumber = generateAccountNumber(seed.getAuthKeyPair().publicKey());
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public static void removeFromKeyStore(
+            Activity activity, String alias,
+            KeyAuthenticationSpec spec, Callback0 callback
+    ) {
+        final KeyManager keyManager = new KeyManagerImpl(activity);
+        keyManager.removeKey(alias, spec, callback);
     }
 
-    private Account(Seed seed, String accountNumber) {
-        this.seed = seed;
-        this.accountNumber = accountNumber;
+    public static boolean isValidAccountNumber(String accountNumber) {
+        return Address.isValidAccountNumber(accountNumber);
+    }
+
+    private static String generateAccountNumber(PublicKey key) {
+        return generateAccountNumber(key, GlobalConfiguration.network());
+    }
+
+    private static String generateAccountNumber(
+            PublicKey key,
+            Network network
+    ) {
+        Address address = Address.getDefault(key, network);
+        final byte[] keyVariantVarInt = address.getPrefix();
+        final byte[] publicKeyBytes = key.toBytes();
+        final byte[] preChecksum = concat(keyVariantVarInt, publicKeyBytes);
+        final byte[] checksum = slice(
+                Sha3256.hash(preChecksum),
+                0,
+                CHECKSUM_LENGTH
+        );
+        return BASE_58.encode(concat(
+                keyVariantVarInt,
+                publicKeyBytes,
+                checksum
+        ));
     }
 
     public KeyPair getKeyPair() {
@@ -154,47 +208,31 @@ public class Account {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void saveToKeyStore(Activity activity, String alias, KeyAuthenticationSpec spec,
-                               Callback0 callback) {
-        final String keyAlias = TextUtils.isEmpty(alias) ? accountNumber : alias;
+    public void saveToKeyStore(
+            Activity activity, String alias, KeyAuthenticationSpec spec,
+            Callback0 callback
+    ) {
+        final String keyAlias = TextUtils.isEmpty(alias)
+                                ? accountNumber
+                                : alias;
         final KeyManager keyManager = new KeyManagerImpl(activity);
         keyManager.saveKey(keyAlias, spec, seed.getSeedBytes(), callback);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void saveToKeyStore(Activity activity, KeyAuthenticationSpec spec,
-                               Callback0 callback) {
+    public void saveToKeyStore(
+            Activity activity, KeyAuthenticationSpec spec,
+            Callback0 callback
+    ) {
         saveToKeyStore(activity, accountNumber, spec, callback);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void removeFromKeyStore(Activity activity, KeyAuthenticationSpec spec,
-                                   Callback0 callback) {
+    public void removeFromKeyStore(
+            Activity activity, KeyAuthenticationSpec spec,
+            Callback0 callback
+    ) {
         removeFromKeyStore(activity, accountNumber, spec, callback);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void removeFromKeyStore(Activity activity, String alias,
-                                          KeyAuthenticationSpec spec, Callback0 callback) {
-        final KeyManager keyManager = new KeyManagerImpl(activity);
-        keyManager.removeKey(alias, spec, callback);
-    }
-
-    public static boolean isValidAccountNumber(String accountNumber) {
-        return Address.isValidAccountNumber(accountNumber);
-    }
-
-    private static String generateAccountNumber(PublicKey key) {
-        return generateAccountNumber(key, GlobalConfiguration.network());
-    }
-
-    private static String generateAccountNumber(PublicKey key, Network network) {
-        Address address = Address.getDefault(key, network);
-        final byte[] keyVariantVarInt = address.getPrefix();
-        final byte[] publicKeyBytes = key.toBytes();
-        final byte[] preChecksum = concat(keyVariantVarInt, publicKeyBytes);
-        final byte[] checksum = slice(Sha3256.hash(preChecksum), 0, CHECKSUM_LENGTH);
-        return BASE_58.encode(concat(keyVariantVarInt, publicKeyBytes, checksum));
     }
 
 }

@@ -37,7 +37,8 @@ public class AuthenticatorFactory {
                 if (isAboveP()) {
                     authenticator = new BiometricAuthenticator(context);
                 } else {
-                    throw new UnsupportedOperationException("provider is not supported");
+                    throw new UnsupportedOperationException(
+                            "provider is not supported");
                 }
                 break;
         }

@@ -46,11 +46,25 @@ class FingerprintAuthenticator extends AbsAuthenticator {
         super(context);
     }
 
+    private static FingerprintManager getFingerPrintManager(Context context) {
+        return (FingerprintManager) context.getSystemService(FINGERPRINT_SERVICE);
+    }
+
     @Override
-    public void authenticate(Activity activity, String title, String description, Cipher cipher,
-                             AuthenticationCallback callback) {
+    public void authenticate(
+            Activity activity,
+            String title,
+            String description,
+            Cipher cipher,
+            AuthenticationCallback callback
+    ) {
         switchOnMain(
-                () -> new FingerprintAuthenticationHandler(activity, title, description, callback)
+                () -> new FingerprintAuthenticationHandler(
+                        activity,
+                        title,
+                        description,
+                        callback
+                )
                         .authenticate(cipher));
     }
 
@@ -68,48 +82,56 @@ class FingerprintAuthenticator extends AbsAuthenticator {
 
     @Override
     public void checkAvailability()
-            throws AuthenticationRequiredException, HardwareNotSupportedException {
-        if (!isHardwareDetected()) throw new HardwareNotSupportedException(FINGERPRINT);
-        if (!isEnrolled()) throw new AuthenticationRequiredException(FINGERPRINT);
-    }
-
-    private static FingerprintManager getFingerPrintManager(Context context) {
-        return (FingerprintManager) context.getSystemService(FINGERPRINT_SERVICE);
+            throws
+            AuthenticationRequiredException,
+            HardwareNotSupportedException {
+        if (!isHardwareDetected()) {
+            throw new HardwareNotSupportedException(FINGERPRINT);
+        }
+        if (!isEnrolled()) {
+            throw new AuthenticationRequiredException(FINGERPRINT);
+        }
     }
 
     private static class FingerprintAuthenticationHandler
             extends FingerprintManager.AuthenticationCallback {
 
+        private final FingerprintDialog dialog;
+        private final CancellationSignal cancellationSignal = new CancellationSignal();
         private Activity activity;
-
         private AuthenticationCallback callback;
 
-        private final FingerprintDialog dialog;
-
-        private final CancellationSignal cancellationSignal = new CancellationSignal();
-
         @MainThread
-        FingerprintAuthenticationHandler(@NonNull Activity activity, String title,
-                                         String description,
-                                         @NonNull AuthenticationCallback callback) {
+        FingerprintAuthenticationHandler(
+                @NonNull Activity activity,
+                String title,
+                String description,
+                @NonNull AuthenticationCallback callback
+        ) {
             this.activity = activity;
             this.callback = callback;
             dialog = new FingerprintDialog(activity, title, description,
-                                           v -> cancellationSignal.cancel());
+                    v -> cancellationSignal.cancel()
+            );
         }
 
         void authenticate(Cipher cipher) {
             final FingerprintManager manager =
                     (FingerprintManager) activity.getApplicationContext()
-                                                 .getSystemService(FINGERPRINT_SERVICE);
-            if (manager == null) callback.onError("Cannot get FingerprintManager");
-            else {
-                if (dialog.isShowing()) dialog.dismiss();
+                            .getSystemService(FINGERPRINT_SERVICE);
+            if (manager == null) {
+                callback.onError("Cannot get FingerprintManager");
+            } else {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 dialog.show();
                 manager.authenticate(
-                        cipher != null ? new FingerprintManager.CryptoObject(cipher) : null,
+                        cipher != null ? new FingerprintManager.CryptoObject(
+                                cipher) : null,
                         cancellationSignal, 0, this,
-                        new Handler(Looper.getMainLooper()));
+                        new Handler(Looper.getMainLooper())
+                );
             }
         }
 
@@ -128,10 +150,15 @@ class FingerprintAuthenticator extends AbsAuthenticator {
         }
 
         @Override
-        public void onAuthenticationError(int errorCode, CharSequence errString) {
+        public void onAuthenticationError(
+                int errorCode,
+                CharSequence errString
+        ) {
             super.onAuthenticationError(errorCode, errString);
             if (errorCode == FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
-                if (dialog.isShowing()) dialog.dismiss();
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 callback.onCancelled();
             } else {
                 dialog.updateView(ERROR, errString.toString(), null);
@@ -142,22 +169,18 @@ class FingerprintAuthenticator extends AbsAuthenticator {
 
     static class FingerprintDialog extends AppCompatDialog {
 
-        enum State {
-            INITIALIZE, SUCCESS, FAILED, ERROR
-        }
-
         private TextView textStatus;
-
         private ImageView imageStatus;
-
         private String title;
-
         private String description;
-
         private View.OnClickListener onCancelListener;
 
-        FingerprintDialog(@NonNull Activity activity, String title, String description,
-                          @NonNull View.OnClickListener onCancelListener) {
+        FingerprintDialog(
+                @NonNull
+                        Activity activity, String title, String description,
+                @NonNull
+                        View.OnClickListener onCancelListener
+        ) {
             super(activity);
             this.title = title;
             this.description = description;
@@ -165,14 +188,19 @@ class FingerprintAuthenticator extends AbsAuthenticator {
         }
 
         @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
+        public void onCreate(
+                @Nullable
+                        Bundle savedInstanceState
+        ) {
             super.onCreate(savedInstanceState);
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setCancelable(false);
             setContentView(R.layout.dialog_fingerprint);
 
             Window window = getWindow();
-            if (window == null) return;
+            if (window == null) {
+                return;
+            }
             window.setLayout(MATCH_PARENT, MATCH_PARENT);
             window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             window.setWindowAnimations(R.style.Animation_AppCompat_Dialog_BottomUp);
@@ -182,7 +210,10 @@ class FingerprintAuthenticator extends AbsAuthenticator {
             Button buttonCancel = findViewById(R.id.button_cancel);
             textStatus = findViewById(R.id.text_status);
             imageStatus = findViewById(R.id.image_status);
-            Animation tween = AnimationUtils.loadAnimation(getContext(), R.anim.tween);
+            Animation tween = AnimationUtils.loadAnimation(
+                    getContext(),
+                    R.anim.tween
+            );
             imageStatus.startAnimation(tween);
             textTitle.setText(title);
             textDes.setText(description);
@@ -192,71 +223,102 @@ class FingerprintAuthenticator extends AbsAuthenticator {
             });
         }
 
-        void updateView(State state, @Nullable String error,
-                        @Nullable DialogInterface.OnDismissListener dismissListener) {
+        void updateView(
+                State state,
+                @Nullable
+                        String error,
+                @Nullable
+                        DialogInterface.OnDismissListener dismissListener
+        ) {
             Context context = getContext();
             imageStatus.clearAnimation();
             switch (state) {
                 case SUCCESS:
                     imageStatus.setImageResource(R.drawable.ic_success_circle);
-                    imageStatus.animate().rotationBy(360)
-                               .setInterpolator(new OvershootInterpolator(1.4f)).setDuration(500)
-                               .setListener(
-                                       new Animator.AnimatorListener() {
-                                           @Override
-                                           public void onAnimationStart(Animator animation) {
+                    imageStatus.animate()
+                            .rotationBy(360)
+                            .setInterpolator(new OvershootInterpolator(1.4f))
+                            .setDuration(500)
+                            .setListener(
+                                    new Animator.AnimatorListener() {
+                                        @Override
+                                        public void onAnimationStart(Animator animation) {
 
-                                           }
+                                        }
 
-                                           @Override
-                                           public void onAnimationEnd(Animator animation) {
-                                               dismiss();
-                                               if (dismissListener != null) {
-                                                   dismissListener
-                                                           .onDismiss(FingerprintDialog.this);
-                                               }
-                                           }
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            dismiss();
+                                            if (dismissListener != null) {
+                                                dismissListener
+                                                        .onDismiss(
+                                                                FingerprintDialog.this);
+                                            }
+                                        }
 
-                                           @Override
-                                           public void onAnimationCancel(Animator animation) {
+                                        @Override
+                                        public void onAnimationCancel(Animator animation) {
 
-                                           }
+                                        }
 
-                                           @Override
-                                           public void onAnimationRepeat(Animator animation) {
+                                        @Override
+                                        public void onAnimationRepeat(Animator animation) {
 
-                                           }
-                                       });
+                                        }
+                                    });
                     textStatus.setText(context.getString(R.string.fingerprint_is_recognized));
                     textStatus.setTextColor(
-                            ContextCompat.getColor(context, R.color.persian_green));
+                            ContextCompat.getColor(
+                                    context,
+                                    R.color.persian_green
+                            ));
                     break;
 
                 case FAILED:
                     imageStatus.setImageResource(R.drawable.ic_failed_circle);
-                    imageStatus.animate().rotationBy(360)
-                               .setInterpolator(new OvershootInterpolator(1.4f)).setDuration(500);
+                    imageStatus.animate()
+                            .rotationBy(360)
+                            .setInterpolator(new OvershootInterpolator(1.4f))
+                            .setDuration(500);
                     textStatus.setText(context.getString(R.string.fingerprint_not_recognized));
                     textStatus
-                            .setTextColor(ContextCompat.getColor(context, R.color.pomegranate));
+                            .setTextColor(ContextCompat.getColor(
+                                    context,
+                                    R.color.pomegranate
+                            ));
                     break;
 
                 case ERROR:
                     imageStatus.setImageResource(R.drawable.ic_failed_circle);
-                    imageStatus.animate().rotationBy(360)
-                               .setInterpolator(new OvershootInterpolator(1.4f)).setDuration(500);
+                    imageStatus.animate()
+                            .rotationBy(360)
+                            .setInterpolator(new OvershootInterpolator(1.4f))
+                            .setDuration(500);
                     textStatus.setText(error);
                     textStatus
-                            .setTextColor(ContextCompat.getColor(context, R.color.pomegranate));
+                            .setTextColor(ContextCompat.getColor(
+                                    context,
+                                    R.color.pomegranate
+                            ));
                     break;
 
                 case INITIALIZE:
                 default:
                     imageStatus.setImageResource(R.drawable.ic_fingerprint_circle);
                     textStatus.setText(context.getString(R.string.touch_the_fingerprint));
-                    textStatus.setTextColor(ContextCompat.getColor(context, R.color.lynch));
+                    textStatus.setTextColor(ContextCompat.getColor(
+                            context,
+                            R.color.lynch
+                    ));
                     break;
             }
+        }
+
+        enum State {
+            INITIALIZE,
+            SUCCESS,
+            FAILED,
+            ERROR
         }
     }
 }

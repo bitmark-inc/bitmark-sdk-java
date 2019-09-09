@@ -24,14 +24,12 @@ public class KeyAuthenticationSpec {
 
     public Builder newBuilder(Context context) {
         return new Builder(context).setKeyAlias(getKeyAlias())
-                                   .setAuthenticationRequired(isAuthenticationRequired())
-                                   .setAuthenticationValidityDuration(
-                                           getAuthenticationValidityDuration())
-                                   .setAuthenticationDescription(
-                                           getAuthenticationDescription())
-                                   .setAuthenticationTitle(getAuthenticationTitle())
-                                   .setUseAlternativeAuthentication(
-                                           useAlternativeAuthentication());
+                .setAuthenticationRequired(isAuthenticationRequired())
+                .setAuthenticationValidityDuration(
+                        getAuthenticationValidityDuration())
+                .setAuthenticationDescription(getAuthenticationDescription())
+                .setAuthenticationTitle(getAuthenticationTitle())
+                .setUseAlternativeAuthentication(useAlternativeAuthentication());
     }
 
     public boolean isAuthenticationRequired() {
@@ -99,7 +97,8 @@ public class KeyAuthenticationSpec {
         }
 
         public Builder setAuthenticationValidityDuration(
-                int authenticationValidityDuration) {
+                int authenticationValidityDuration
+        ) {
             this.authenticationValidityDuration = authenticationValidityDuration;
             return this;
         }

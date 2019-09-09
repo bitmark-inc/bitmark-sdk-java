@@ -23,61 +23,107 @@ import static com.bitmark.sdk.utils.CommonUtils.wrapCallbackOnMain;
 
 public class Bitmark {
 
-    public static void issue(IssuanceParams params, Callback1<List<String>> callback) {
-        ApiService.getInstance().issueBitmark(params, wrapCallbackOnMain(callback));
+    public static void issue(
+            IssuanceParams params,
+            Callback1<List<String>> callback
+    ) {
+        ApiService.getInstance()
+                .issueBitmark(params, wrapCallbackOnMain(callback));
     }
 
-    public static void transfer(TransferParams params, Callback1<String> callback) {
-        ApiService.getInstance().transferBitmark(params, wrapCallbackOnMain(callback));
+    public static void transfer(
+            TransferParams params,
+            Callback1<String> callback
+    ) {
+        ApiService.getInstance()
+                .transferBitmark(params, wrapCallbackOnMain(callback));
     }
 
-    public static void offer(TransferOfferParams params, Callback1<String> callback) {
-        ApiService.getInstance().offerBitmark(params, wrapCallbackOnMain(callback));
+    public static void offer(
+            TransferOfferParams params,
+            Callback1<String> callback
+    ) {
+        ApiService.getInstance()
+                .offerBitmark(params, wrapCallbackOnMain(callback));
     }
 
-    public static void respond(TransferResponseParams params, Callback1<String> callback) {
-        ApiService.getInstance().respondBitmarkOffer(params, wrapCallbackOnMain(callback));
+    public static void respond(
+            TransferResponseParams params,
+            Callback1<String> callback
+    ) {
+        ApiService.getInstance()
+                .respondBitmarkOffer(params, wrapCallbackOnMain(callback));
     }
 
-    public static void get(String bitmarkId, boolean loadAsset,
-                           Callback1<GetBitmarkResponse> callback) {
-        ApiService.getInstance().getBitmark(bitmarkId, loadAsset, wrapCallbackOnMain(callback));
+    public static void get(
+            String bitmarkId, boolean loadAsset,
+            Callback1<GetBitmarkResponse> callback
+    ) {
+        ApiService.getInstance()
+                .getBitmark(bitmarkId, loadAsset, wrapCallbackOnMain(callback));
     }
 
-    public static void get(String bitmarkId, Callback1<GetBitmarkResponse> callback) {
+    public static void get(
+            String bitmarkId,
+            Callback1<GetBitmarkResponse> callback
+    ) {
         get(bitmarkId, false, callback);
     }
 
-    public static void getWithAsset(String bitmarkId, Callback1<GetBitmarkResponse> callback) {
+    public static void getWithAsset(
+            String bitmarkId,
+            Callback1<GetBitmarkResponse> callback
+    ) {
         get(bitmarkId, true, callback);
     }
 
-    public static void list(BitmarkQueryBuilder builder, Callback1<GetBitmarksResponse> callback) {
-        ApiService.getInstance().listBitmarks(builder.build(), wrapCallbackOnMain(callback));
+    public static void list(
+            BitmarkQueryBuilder builder,
+            Callback1<GetBitmarksResponse> callback
+    ) {
+        ApiService.getInstance()
+                .listBitmarks(builder.build(), wrapCallbackOnMain(callback));
     }
 
-    public static void createShare(ShareParams params, Callback1<Pair<String, String>> callback) {
+    public static void createShare(
+            ShareParams params,
+            Callback1<Pair<String, String>> callback
+    ) {
         ApiService.getInstance().createShare(params, callback);
     }
 
-    public static void grantShare(ShareGrantingParams params, Callback1<String> callback) {
+    public static void grantShare(
+            ShareGrantingParams params,
+            Callback1<String> callback
+    ) {
         ApiService.getInstance().grantShare(params, callback);
     }
 
-    public static void respondShareOffer(GrantResponseParams params, Callback1<String> callback) {
+    public static void respondShareOffer(
+            GrantResponseParams params,
+            Callback1<String> callback
+    ) {
         ApiService.getInstance().respondShareOffer(params, callback);
     }
 
-    public static void getShare(String shareId, Callback1<ShareRecord> callback) {
+    public static void getShare(
+            String shareId,
+            Callback1<ShareRecord> callback
+    ) {
         ApiService.getInstance().getShare(shareId, callback);
     }
 
-    public static void listShares(String owner, Callback1<List<ShareRecord>> callback) {
+    public static void listShares(
+            String owner,
+            Callback1<List<ShareRecord>> callback
+    ) {
         ApiService.getInstance().listShares(owner, callback);
     }
 
-    public static void listShareOffer(String from, String to,
-                                      Callback1<List<ShareGrantRecord>> callback) {
+    public static void listShareOffer(
+            String from, String to,
+            Callback1<List<ShareGrantRecord>> callback
+    ) {
         ApiService.getInstance().listShareOffer(from, to, callback);
     }
 

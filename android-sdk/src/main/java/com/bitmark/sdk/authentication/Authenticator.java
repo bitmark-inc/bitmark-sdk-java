@@ -14,12 +14,19 @@ import javax.crypto.Cipher;
  */
 public interface Authenticator {
 
-    void authenticate(Activity activity, String title, String description, Cipher cipher,
-                      AuthenticationCallback callback);
+    void authenticate(
+            Activity activity,
+            String title,
+            String description,
+            Cipher cipher,
+            AuthenticationCallback callback
+    );
 
     boolean isHardwareDetected();
 
     boolean isEnrolled();
 
-    void checkAvailability() throws AuthenticationRequiredException, HardwareNotSupportedException;
+    void checkAvailability() throws
+            AuthenticationRequiredException,
+            HardwareNotSupportedException;
 }

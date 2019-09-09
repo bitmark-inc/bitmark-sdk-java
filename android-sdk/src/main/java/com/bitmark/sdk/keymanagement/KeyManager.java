@@ -12,9 +12,22 @@ import com.bitmark.sdk.authentication.KeyAuthenticationSpec;
  */
 public interface KeyManager {
 
-    void getKey(String alias, KeyAuthenticationSpec keyAuthSpec, Callback1<byte[]> callback);
+    void getKey(
+            String alias,
+            KeyAuthenticationSpec keyAuthSpec,
+            Callback1<byte[]> callback
+    );
 
-    void saveKey(String alias, KeyAuthenticationSpec keyAuthSpec, byte[] key, Callback0 callback);
+    void saveKey(
+            String alias,
+            KeyAuthenticationSpec keyAuthSpec,
+            byte[] key,
+            Callback0 callback
+    );
 
-    void removeKey(String alias, KeyAuthenticationSpec keyAuthSpec, Callback0 callback);
+    void removeKey(
+            String alias,
+            KeyAuthenticationSpec keyAuthSpec,
+            Callback0 callback
+    );
 }
