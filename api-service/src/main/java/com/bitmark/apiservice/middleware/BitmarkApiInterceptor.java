@@ -1,5 +1,6 @@
 package com.bitmark.apiservice.middleware;
 
+import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -41,6 +42,15 @@ public class BitmarkApiInterceptor implements Interceptor {
                         )
                 )
                 .build();
-        return chain.proceed(request);
+
+        HttpObserver observer = GlobalConfiguration.httpObserver();
+        if (observer != null) {
+            observer.onRequest(request.newBuilder().build());
+        }
+        Response response = chain.proceed(request);
+        if (observer != null) {
+            observer.onRespond(response.newBuilder().build());
+        }
+        return response;
     }
 }

@@ -1,5 +1,6 @@
 package com.bitmark.apiservice.configuration;
 
+import com.bitmark.apiservice.middleware.HttpObserver;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import static com.bitmark.cryptography.utils.Validator.checkNonNull;
@@ -36,7 +37,7 @@ public class GlobalConfiguration {
             }
         } else {
             throw new UnsupportedOperationException(
-                    "GlobalConfiguration must be initialize once");
+                    "GlobalConfiguration can only be initialized once");
         }
     }
 
@@ -68,10 +69,15 @@ public class GlobalConfiguration {
         return INSTANCE.builder.logLevel;
     }
 
+    public static HttpObserver httpObserver() {
+        validate();
+        return INSTANCE.builder.httpObserver;
+    }
+
     private static void validate() {
         if (INSTANCE == null) {
-            throw new UnsupportedOperationException("You must init " +
-                    "Configuration before");
+            throw new UnsupportedOperationException(
+                    "you have to call createInstance at first");
         }
     }
 
@@ -85,6 +91,8 @@ public class GlobalConfiguration {
         private int connectionTimeout = 30; // 30 seconds
 
         private HttpLoggingInterceptor.Level logLevel;
+
+        private HttpObserver httpObserver;
 
         Builder() {
         }
@@ -111,6 +119,11 @@ public class GlobalConfiguration {
 
         public Builder withLogLevel(HttpLoggingInterceptor.Level logLevel) {
             this.logLevel = logLevel;
+            return this;
+        }
+
+        public Builder withHttpObserver(HttpObserver httpObserver) {
+            this.httpObserver = httpObserver;
             return this;
         }
 
