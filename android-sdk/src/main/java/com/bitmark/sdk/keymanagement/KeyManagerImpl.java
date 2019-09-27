@@ -34,6 +34,7 @@ import static com.bitmark.cryptography.crypto.encoder.Base58.BASE_58;
 import static com.bitmark.cryptography.crypto.encoder.Raw.RAW;
 import static com.bitmark.sdk.authentication.Provider.*;
 import static com.bitmark.sdk.authentication.error.AuthenticationException.Type.*;
+import static com.bitmark.sdk.utils.DeviceUtils.isAboveM;
 import static com.bitmark.sdk.utils.DeviceUtils.isAboveP;
 import static com.bitmark.sdk.utils.FileUtils.read;
 import static com.bitmark.sdk.utils.FileUtils.write;
@@ -462,8 +463,9 @@ public class KeyManagerImpl implements KeyManager {
             final AuthenticatorFactory factory =
                     isAboveP()
                     ? AuthenticatorFactory.from(BIOMETRIC)
-                    : AuthenticatorFactory
-                            .from(FINGERPRINT);
+                    : isAboveM()
+                      ? AuthenticatorFactory.from(FINGERPRINT)
+                      : AuthenticatorFactory.from(DEVICE);
             final Authenticator authenticator = factory.getAuthenticator(context);
             authenticator.checkAvailability();
             return authenticator;
