@@ -165,6 +165,15 @@ class FingerprintAuthenticator extends AbsAuthenticator {
                 callback.onError(errString.toString());
             }
         }
+
+        @Override
+        public void onAuthenticationHelp(
+                int helpCode, CharSequence helpString
+        ) {
+            super.onAuthenticationHelp(helpCode, helpString);
+            dialog.updateView(ERROR, helpString.toString(), null);
+            callback.onError(helpString.toString());
+        }
     }
 
     static class FingerprintDialog extends AppCompatDialog {

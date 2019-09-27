@@ -141,6 +141,14 @@ class BiometricAuthenticator extends AbsAuthenticator {
             }
         }
 
+        @Override
+        public void onAuthenticationHelp(
+                int helpCode, CharSequence helpString
+        ) {
+            super.onAuthenticationHelp(helpCode, helpString);
+            callback.onError(helpString.toString());
+        }
+
         private BiometricPrompt getBiometricPrompt() {
             Context context = activity.getApplicationContext();
             return new BiometricPrompt.Builder(context)
