@@ -12,34 +12,19 @@ import java.util.concurrent.*;
 
 public class BackgroundJobScheduler {
 
-    private static int NUMBER_OF_CORES = 5;
-
-    private static final int KEEP_ALIVE_TIME = 30;
-
-    private static final TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
-
     private final ThreadPoolExecutor executorService;
 
-    private static volatile BackgroundJobScheduler INSTANCE;
-
-    public static BackgroundJobScheduler getInstance() {
-        if (INSTANCE == null) {
-            synchronized (BackgroundJobScheduler.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new BackgroundJobScheduler();
-                }
-            }
-        }
-        return INSTANCE;
+    public BackgroundJobScheduler() {
+        this(5);
     }
 
-    private BackgroundJobScheduler() {
+    public BackgroundJobScheduler(int threadCount) {
         BlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<>();
         executorService = new ThreadPoolExecutor(
-                NUMBER_OF_CORES,
-                NUMBER_OF_CORES * 2,
-                KEEP_ALIVE_TIME,
-                KEEP_ALIVE_TIME_UNIT,
+                1,
+                threadCount,
+                30,
+                TimeUnit.SECONDS,
                 taskQueue,
                 new BackgroundThreadFactory()
         );
