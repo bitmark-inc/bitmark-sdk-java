@@ -22,9 +22,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Hieu Pham
@@ -91,6 +89,16 @@ public class MigrationTest extends BaseTest {
         ), TIMEOUT);
         assertFalse(txIds.isEmpty());
         assertEquals(10, txIds.size());
+    }
+
+    @Test
+    public void testRekey_EmptyBitmark_NothingBeRekey() throws Throwable {
+        List<String> txIds = await(callback -> Migration.rekey(
+                new Account(),
+                new Account(),
+                callback
+        ), TIMEOUT);
+        assertTrue(txIds.isEmpty());
     }
 
     @Test
