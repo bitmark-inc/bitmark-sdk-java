@@ -3,6 +3,7 @@ package com.bitmark.sdk.test.integrationtest;
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.sdk.features.BitmarkSDK;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -24,7 +25,8 @@ public abstract class BaseTest {
         if (!BitmarkSDK.isInitialized()) {
             BitmarkSDK.init(GlobalConfiguration.builder()
                     .withApiToken("bmk-lljpzkhqdkzmblhg")
-                    .withNetwork(Network.TEST_NET));
+                    .withNetwork(Network.TEST_NET)
+                    .withLogLevel(HttpLoggingInterceptor.Level.BODY));
         }
 
     }

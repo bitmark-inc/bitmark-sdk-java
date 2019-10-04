@@ -20,8 +20,8 @@ import com.bitmark.sdk.authentication.error.AuthenticationException;
 import com.bitmark.sdk.authentication.error.AuthenticationRequiredException;
 import com.bitmark.sdk.authentication.error.HardwareNotSupportedException;
 import com.bitmark.sdk.utils.SharedPreferenceApi;
-import io.reactivex.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;

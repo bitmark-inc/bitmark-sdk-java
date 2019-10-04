@@ -4,7 +4,6 @@ apply plugin: 'com.kezong.fat-aar'
 
 def ext = project.ext
 def config = ext.configuration
-def project_publication = ext.publicationProperties(project.name)
 
 def fatAar = false
 
@@ -41,14 +40,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName project_publication.VERSION
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
     }
 
     packagingOptions {
@@ -77,7 +68,6 @@ dependencies {
 
     if (fatAar) {
         embed deps.bitmark_sdk.api_service
-        embed deps.rx.java
         embed deps.android_support.annotation
         embed deps.android_support.compat
         embed deps.android_support.appcompat
@@ -86,7 +76,6 @@ dependencies {
         }
 
         compileOnly deps.bitmark_sdk.api_service
-        compileOnly deps.rx.java
         compileOnly deps.android_support.annotation
         compileOnly deps.android_support.compat
         compileOnly deps.android_support.appcompat
@@ -95,7 +84,6 @@ dependencies {
         }
     } else {
         implementation deps.bitmark_sdk.api_service
-        implementation deps.rx.java
         implementation deps.android_support.annotation
         implementation deps.android_support.compat
         implementation deps.android_support.appcompat
