@@ -46,7 +46,9 @@ public class Migration {
         )).thenCompose(offers -> respond(offers, to)).whenComplete(
                 (txIds, throwable) -> {
                     if (throwable != null) {
-                        callback.onError(throwable);
+                        callback.onError(throwable instanceof CompletionException
+                                         ? throwable.getCause()
+                                         : throwable);
                     } else {
                         callback.onSuccess(txIds);
                     }
