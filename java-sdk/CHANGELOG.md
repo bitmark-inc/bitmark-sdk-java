@@ -18,4 +18,3 @@ All notable changes to Java SDK will be documented in this file.
 
 ### Reference
 - API Service: `com.bitmark.sdk:api-service:2.1.0`
-- Cryptography: `com.bitmark.sdk:cryptography:1.5.0`
