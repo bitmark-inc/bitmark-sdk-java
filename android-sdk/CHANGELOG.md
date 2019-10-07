@@ -1,14 +1,25 @@
-# Changelog for Bitmark SDK for Android
+# Changelog
+All notable changes to Android SDK will be documented in this file.
 
-## 2.1.0
-### Features:
-- Account: create new account, generate Recovery Phrase, recover account from Recovery Phrase
-- Register Asset, Issue Bitmarks
-- Query: Bitmarks, Assets, Transactions
-- Transfer Bitmark
-- Transfer Bitmark 2 Signatures
-- Bitmark share
+## 7-10-2019 [2.1.0]
 
-### Improvements:
-- Add Logger
-- Add User Agent to request
+### Added
+- `Migration#rekey(Account, Account, Callback1<List<String>>)` function that help to transfer all own bitmarks from old account to another one.
+- `Account#verify(String, byte[], byte[])` and `Account#sign(byte[])` that help to sign/verify message from `Account`
+- `KeyAuthenticationSpec#Builder#setUsePossibleAlternativeAuthentication(Boolean)` for using alternative authentication method if the expected one is not available.
+- `RecoveryPhrase#getWords(Locale)` to get the BIP39 words in different languages.
+- `Account#fromSeed(String)` support to construct an `Account` from encoded seed string
+- Support building fat AAR that contains all transitive dependencies.
+
+### Changed
+- Change recovery phrase language support from `Locale.CHINESE` to `Locale.TRADITIONAL_CHINESE`
+- Remove `Account#parseAccountNumber()`
+- Remove `Migration.migrate()` and replaced by `Migration.rekey(Account, Account, Callback1<List<String>>)`
+
+### Bug Fixes & Improvement
+- Fix some issues on authenticating users for storing/retrieving `Account` 
+- Speedup getting authentication/encryption key from `Account`
+
+### Reference
+- API Service: `com.bitmark.sdk:api-service:2.1.0`
+- Cryptography: `com.bitmark.sdk:cryptography:1.5.0`
