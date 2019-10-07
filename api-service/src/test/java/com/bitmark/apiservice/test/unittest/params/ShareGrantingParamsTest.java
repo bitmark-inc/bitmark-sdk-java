@@ -26,51 +26,127 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ShareGrantingParamsTest extends BaseTest {
 
+    private static Stream<Arguments> createValidShareGrantingParamsJsonString()
+            throws IOException {
+        String json1 = FileUtils.loadRequest("/share/grant_share1.json");
+        String json2 = FileUtils.loadRequest("/share/grant_share2.json");
+        ShareGrantingParams params1 =
+                new ShareGrantingParams(
+                        "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                        1,
+                        Address.fromAccountNumber(
+                                "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
+                        Address.fromAccountNumber(
+                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"),
+                        1460119645
+                );
+        params1.sign(KEY_PAIR_3);
+        ShareGrantingParams params2 =
+                new ShareGrantingParams(
+                        "03a70acb35ef1eca10634137967ea28b8f2ca90c5aaf77dbb53ee54ab04fc8b6",
+                        1,
+                        Address.fromAccountNumber(
+                                "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
+                        Address.fromAccountNumber(
+                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"),
+                        28929294,
+                        new LinkedHashMap<String, String>() {{
+                            put("source", "HealthKit");
+                            put("quantity", "15");
+                        }}
+                );
+        params2.sign(KEY_PAIR_3);
+        return Stream.of(
+                Arguments.of(params1, json1),
+                Arguments.of(params2, json2)
+        );
+    }
+
     @Test
     public void testConstructor__ValidInstanceOrErrorThrow() {
         assertThrows(ValidateException.class, () -> new ShareGrantingParams(
                 "", 1, ADDRESS1,
-                ADDRESS2, 10));
+                ADDRESS2, 10
+        ));
 
         assertThrows(ValidateException.class, () -> new ShareGrantingParams(
                 "123LKJ", 1, ADDRESS1,
-                ADDRESS2, 10));
+                ADDRESS2, 10
+        ));
 
         assertThrows(ValidateException.class, () -> new ShareGrantingParams(
-                "pff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41", 1, ADDRESS1,
-                ADDRESS2, 10));
+                "pff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                1,
+                ADDRESS1,
+                ADDRESS2,
+                10
+        ));
 
         assertThrows(ValidateException.class, () -> new ShareGrantingParams(
-                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41", 0, ADDRESS1,
-                ADDRESS2, 10));
+                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                0,
+                ADDRESS1,
+                ADDRESS2,
+                10
+        ));
 
         assertThrows(ValidateException.class, () -> new ShareGrantingParams(
-                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41", -1, ADDRESS1,
-                ADDRESS2, 10));
+                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                -1,
+                ADDRESS1,
+                ADDRESS2,
+                10
+        ));
 
         assertThrows(ValidateException.class, () -> new ShareGrantingParams(
-                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41", 10, null,
-                ADDRESS2, 10));
+                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                10,
+                null,
+                ADDRESS2,
+                10
+        ));
 
         assertThrows(ValidateException.class, () -> new ShareGrantingParams(
-                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41", 10, ADDRESS1,
-                null, 10));
+                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                10,
+                ADDRESS1,
+                null,
+                10
+        ));
 
         assertThrows(ValidateException.class, () -> new ShareGrantingParams(
-                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41", 1, ADDRESS1,
-                ADDRESS2, -1));
+                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                1,
+                ADDRESS1,
+                ADDRESS2,
+                -1
+        ));
 
         assertDoesNotThrow(() -> new ShareGrantingParams(
-                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41", 1, ADDRESS1,
-                ADDRESS2, 10000));
+                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                1,
+                ADDRESS1,
+                ADDRESS2,
+                10000
+        ));
 
         assertDoesNotThrow(() -> new ShareGrantingParams(
-                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41", 1, ADDRESS1,
-                ADDRESS2, 10000, null));
+                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                1,
+                ADDRESS1,
+                ADDRESS2,
+                10000,
+                null
+        ));
 
         assertDoesNotThrow(() -> new ShareGrantingParams(
-                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41", 1, ADDRESS1,
-                ADDRESS2, 10000, new HashMap<>()));
+                "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
+                1,
+                ADDRESS1,
+                ADDRESS2,
+                10000,
+                new HashMap<>()
+        ));
     }
 
     @Test
@@ -79,7 +155,13 @@ public class ShareGrantingParamsTest extends BaseTest {
         final int quantity = 1;
         final int beforeBlock = 10000;
         ShareGrantingParams params =
-                new ShareGrantingParams(shareId, quantity, ADDRESS1, ADDRESS2, beforeBlock);
+                new ShareGrantingParams(
+                        shareId,
+                        quantity,
+                        ADDRESS1,
+                        ADDRESS2,
+                        beforeBlock
+                );
 
         assertEquals(shareId, params.getShareId());
         assertEquals(quantity, params.getQuantity());
@@ -95,10 +177,13 @@ public class ShareGrantingParamsTest extends BaseTest {
         ShareGrantingParams params =
                 new ShareGrantingParams(
                         "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
-                        1, Address.fromAccountNumber(
-                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
+                        1,
                         Address.fromAccountNumber(
-                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"), 1460119645);
+                                "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
+                        Address.fromAccountNumber(
+                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"),
+                        1460119645
+                );
         assertDoesNotThrow(() -> params.sign(KEY_PAIR_3));
         assertEquals(expectedSig, params.getSignature());
     }
@@ -108,17 +193,22 @@ public class ShareGrantingParamsTest extends BaseTest {
         ShareGrantingParams params =
                 new ShareGrantingParams(
                         "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
-                        1, Address.fromAccountNumber(
-                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
+                        1,
                         Address.fromAccountNumber(
-                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"), 1460119645);
+                                "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
+                        Address.fromAccountNumber(
+                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"),
+                        1460119645
+                );
         assertThrows(ValidateException.class, () -> params.sign(null));
     }
 
     @ParameterizedTest
     @MethodSource("createValidShareGrantingParamsJsonString")
-    public void testToJson_ValidParams_CorrectJsonReturn(ShareGrantingParams params,
-                                                         String expectedJson) {
+    public void testToJson_ValidParams_CorrectJsonReturn(
+            ShareGrantingParams params,
+            String expectedJson
+    ) {
         String json = params.toJson();
         assertNotNull(json);
         assertFalse(json.isEmpty());
@@ -130,36 +220,13 @@ public class ShareGrantingParamsTest extends BaseTest {
         ShareGrantingParams params =
                 new ShareGrantingParams(
                         "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
-                        1, Address.fromAccountNumber(
-                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
+                        1,
                         Address.fromAccountNumber(
-                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"), 1460119645);
+                                "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
+                        Address.fromAccountNumber(
+                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"),
+                        1460119645
+                );
         assertThrows(UnsupportedOperationException.class, params::toJson);
-    }
-
-    private static Stream<Arguments> createValidShareGrantingParamsJsonString() throws IOException {
-        String json1 = FileUtils.loadRequest("/share/grant_share1.json");
-        String json2 = FileUtils.loadRequest("/share/grant_share2.json");
-        ShareGrantingParams params1 =
-                new ShareGrantingParams(
-                        "4ff47c5ca692699c3049eccad23ea98892d7a884c088d730f3ec42a966b85c41",
-                        1, Address.fromAccountNumber(
-                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
-                        Address.fromAccountNumber(
-                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"), 1460119645);
-        params1.sign(KEY_PAIR_3);
-        ShareGrantingParams params2 =
-                new ShareGrantingParams(
-                        "03a70acb35ef1eca10634137967ea28b8f2ca90c5aaf77dbb53ee54ab04fc8b6",
-                        1, Address.fromAccountNumber(
-                        "fXXHGtCdFPuQvNhJ4nDPKCdwPxH7aSZ4842n2katZi319NsaCs"),
-                        Address.fromAccountNumber(
-                                "f7nuKToBByL3jEcArZWoB9PJ8MVmGPjrYkW88v3Yw8p7G5Sxhy"), 28929294,
-                        new LinkedHashMap<String, String>() {{
-                            put("source", "HealthKit");
-                            put("quantity", "15");
-                        }});
-        params2.sign(KEY_PAIR_3);
-        return Stream.of(Arguments.of(params1, json1), Arguments.of(params2, json2));
     }
 }

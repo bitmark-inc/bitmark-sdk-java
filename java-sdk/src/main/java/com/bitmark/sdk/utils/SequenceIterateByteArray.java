@@ -28,9 +28,10 @@ public class SequenceIterateByteArray {
 
     public byte[] next(int length) {
         checkValid(() -> length > 0, "Length mush be greater than 0");
-        if (currentPos + length > bytes.length)
-            throw new ArrayIndexOutOfBoundsException("Length is " +
-                    "greater than remaining byte array length");
+        if (currentPos + length > bytes.length) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "Length is greater than remaining byte array length");
+        }
         int startPos = currentPos;
         int endPos = startPos + length;
         currentPos = endPos;

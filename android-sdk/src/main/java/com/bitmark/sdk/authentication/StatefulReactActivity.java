@@ -22,6 +22,8 @@ public abstract class StatefulReactActivity extends ReactActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (stateListener != null) stateListener.onActivityResult(requestCode, resultCode, data);
+        if (stateListener != null) {
+            stateListener.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

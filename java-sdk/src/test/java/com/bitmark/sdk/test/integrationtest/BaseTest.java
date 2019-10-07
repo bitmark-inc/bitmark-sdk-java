@@ -2,8 +2,9 @@ package com.bitmark.sdk.test.integrationtest;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.configuration.Network;
-import org.junit.jupiter.api.BeforeAll;
 import com.bitmark.sdk.features.BitmarkSDK;
+import okhttp3.logging.HttpLoggingInterceptor;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * @author Hieu Pham
@@ -16,8 +17,12 @@ public abstract class BaseTest {
 
     @BeforeAll
     public static void beforeAll() {
-        if (!BitmarkSDK.isInitialized())
-            BitmarkSDK.init(GlobalConfiguration.builder().withApiToken("bmk-lljpzkhqdkzmblhg").withNetwork(Network.TEST_NET));
+        if (!BitmarkSDK.isInitialized()) {
+            BitmarkSDK.init(GlobalConfiguration.builder()
+                    .withApiToken("bmk-lljpzkhqdkzmblhg")
+                    .withNetwork(Network.TEST_NET).withLogLevel(
+                            HttpLoggingInterceptor.Level.BODY));
+        }
 
     }
 }

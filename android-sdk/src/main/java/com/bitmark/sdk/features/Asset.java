@@ -20,17 +20,25 @@ import static com.bitmark.sdk.utils.CommonUtils.wrapCallbackOnMain;
 
 public class Asset {
 
-    public static void register(RegistrationParams params,
-                                Callback1<RegistrationResponse> callback) {
-        ApiService.getInstance().registerAsset(params, wrapCallbackOnMain(callback));
+    public static void register(
+            RegistrationParams params,
+            Callback1<RegistrationResponse> callback
+    ) {
+        ApiService.getInstance()
+                .registerAsset(params, wrapCallbackOnMain(callback));
     }
 
     public static void get(String assetId, Callback1<AssetRecord> callback) {
-        ApiService.getInstance().getAsset(assetId, wrapCallbackOnMain(callback));
+        ApiService.getInstance()
+                .getAsset(assetId, wrapCallbackOnMain(callback));
     }
 
-    public static void list(AssetQueryBuilder builder, Callback1<List<AssetRecord>> callback) {
-        ApiService.getInstance().listAssets(builder.build(), wrapCallbackOnMain(callback));
+    public static void list(
+            AssetQueryBuilder builder,
+            Callback1<List<AssetRecord>> callback
+    ) {
+        ApiService.getInstance()
+                .listAssets(builder.build(), wrapCallbackOnMain(callback));
     }
 
 }

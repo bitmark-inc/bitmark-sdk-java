@@ -17,15 +17,29 @@ public interface HttpClient {
 
     void getAsync(String path, Callback1<Response> callback);
 
-    void getAsync(String path, QueryParams params, Callback1<Response> callback);
+    void getAsync(
+            String path,
+            QueryParams params,
+            Callback1<Response> callback
+    );
 
     void postAsync(String path, Params params, Callback1<Response> callback);
 
-    void postAsync(String path, Headers headers, Params params, Callback1<Response> callback);
+    void postAsync(
+            String path,
+            Headers headers,
+            Params params,
+            Callback1<Response> callback
+    );
 
     void patchAsync(String path, Params params, Callback1<Response> callback);
 
-    void patchAsync(String path, Headers headers, Params params, Callback1<Response> callback);
+    void patchAsync(
+            String path,
+            Headers headers,
+            Params params,
+            Callback1<Response> callback
+    );
 
     void deleteAsync(String path, Callback1<Response> callback);
 

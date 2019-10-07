@@ -18,6 +18,7 @@ public class InvalidChecksumException extends ValidateException {
     }
 
     public InvalidChecksumException(byte[] actual, byte[] expected) {
-        this("Invalid checksum. Expected is " + HEX.encode(expected) + " but actual is " + HEX.encode(actual));
+        this("Invalid checksum. Expected is " + HEX.encode(expected) + " but actual is " + HEX
+                .encode(actual));
     }
 }

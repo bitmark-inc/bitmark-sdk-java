@@ -18,9 +18,9 @@ public class FileUtils {
     }
 
     public static byte[] getBytes(File file) throws IOException {
-        if (!file.exists())
-            throw new FileNotFoundException("File with path " + file.getAbsolutePath() + " is not" +
-                    " found");
+        if (!file.exists()) {
+            throw new FileNotFoundException("File with path " + file.getAbsolutePath() + " is not found");
+        }
         byte[] bytes = new byte[(int) file.length()];
         FileInputStream stream = new FileInputStream(file);
         try {

@@ -55,6 +55,11 @@ public class TransactionRecord implements Record {
     @SerializedName("countersign")
     private boolean isCounterSignature;
 
+    @SerializedName("previous_owner")
+    private String previousOwner;
+
+    private int confirmation;
+
     public String getId() {
         return id;
     }
@@ -107,30 +112,58 @@ public class TransactionRecord implements Record {
         return isCounterSignature;
     }
 
+    public int getConfirmation() {
+        return confirmation;
+    }
+
+    public String getPreviousOwner() {
+        return previousOwner;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         TransactionRecord that = (TransactionRecord) o;
         return blockNumber == that.blockNumber &&
-               blockOffset == that.blockOffset &&
-               offset == that.offset &&
-               isCounterSignature == that.isCounterSignature &&
-               Objects.equals(id, that.id) &&
-               Objects.equals(owner, that.owner) &&
-               Objects.equals(assetId, that.assetId) &&
-               head == that.head &&
-               status == that.status &&
-               Objects.equals(expiredAt, that.expiredAt) &&
-               Objects.equals(payId, that.payId) &&
-               Objects.equals(previousId, that.previousId) &&
-               Objects.equals(bitmarkId, that.bitmarkId);
+                blockOffset == that.blockOffset &&
+                offset == that.offset &&
+                isCounterSignature == that.isCounterSignature &&
+                confirmation == that.confirmation &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(owner, that.owner) &&
+                Objects.equals(assetId, that.assetId) &&
+                head == that.head &&
+                status == that.status &&
+                Objects.equals(expiredAt, that.expiredAt) &&
+                Objects.equals(payId, that.payId) &&
+                Objects.equals(previousId, that.previousId) &&
+                Objects.equals(bitmarkId, that.bitmarkId) &&
+                Objects.equals(previousOwner, that.previousOwner);
     }
 
     @Override
     public int hashCode() {
         return Objects
-                .hash(id, owner, assetId, head, status, blockNumber, blockOffset, offset, expiredAt,
-                      payId, previousId, bitmarkId, isCounterSignature);
+                .hash(id,
+                        owner,
+                        assetId,
+                        head,
+                        status,
+                        blockNumber,
+                        blockOffset,
+                        offset,
+                        expiredAt,
+                        payId,
+                        previousId,
+                        bitmarkId,
+                        isCounterSignature,
+                        previousOwner,
+                        confirmation
+                );
     }
 }

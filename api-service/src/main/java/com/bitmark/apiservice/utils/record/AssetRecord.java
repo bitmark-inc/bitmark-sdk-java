@@ -94,8 +94,12 @@ public class AssetRecord implements Record {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AssetRecord asset = (AssetRecord) o;
         return blockNumber == asset.blockNumber &&
                 blockOffset == asset.blockOffset &&
@@ -112,7 +116,18 @@ public class AssetRecord implements Record {
 
     @Override
     public int hashCode() {
-        return Objects.hash(blockNumber, blockOffset, createdAt, expiredAt, fingerprint, id,
-                metadata, name, offset, registrant, status);
+        return Objects.hash(
+                blockNumber,
+                blockOffset,
+                createdAt,
+                expiredAt,
+                fingerprint,
+                id,
+                metadata,
+                name,
+                offset,
+                registrant,
+                status
+        );
     }
 }

@@ -43,6 +43,9 @@ public abstract class AbsMultipleParams implements MultipleParams {
     }
 
     protected void checkSigned() {
-        if (!isSigned()) throw new UnsupportedOperationException("Params need to be signed before");
+        if (!isSigned()) {
+            throw new UnsupportedOperationException(
+                    "Params need to be signed before");
+        }
     }
 }

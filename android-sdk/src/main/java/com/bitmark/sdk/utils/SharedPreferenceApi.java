@@ -21,17 +21,27 @@ public class SharedPreferenceApi {
     }
 
     public SharedPreferenceApi(Context context, String prefName) {
-        sharedPreferences = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(
+                prefName,
+                Context.MODE_PRIVATE
+        );
     }
 
     public <T> void put(String key, T data) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (data instanceof Integer) editor.putInt(key, (Integer) data);
-        else if (data instanceof Long) editor.putLong(key, (Long) data);
-        else if (data instanceof Float) editor.putFloat(key, (Float) data);
-        else if (data instanceof Boolean) editor.putBoolean(key, (Boolean) data);
-        else if (data instanceof String) editor.putString(key, (String) data);
-        else throw new IllegalArgumentException("Un-support type of data");
+        if (data instanceof Integer) {
+            editor.putInt(key, (Integer) data);
+        } else if (data instanceof Long) {
+            editor.putLong(key, (Long) data);
+        } else if (data instanceof Float) {
+            editor.putFloat(key, (Float) data);
+        } else if (data instanceof Boolean) {
+            editor.putBoolean(key, (Boolean) data);
+        } else if (data instanceof String) {
+            editor.putString(key, (String) data);
+        } else {
+            throw new IllegalArgumentException("Un-support type of data");
+        }
         editor.apply();
     }
 
@@ -40,7 +50,10 @@ public class SharedPreferenceApi {
         if (clazz == String.class) {
             return (T) sharedPreferences.getString(key, "");
         } else if (clazz == Boolean.class) {
-            return (T) Boolean.valueOf(sharedPreferences.getBoolean(key, false));
+            return (T) Boolean.valueOf(sharedPreferences.getBoolean(
+                    key,
+                    false
+            ));
         } else if (clazz == Float.class) {
             return (T) Float.valueOf(sharedPreferences.getFloat(key, 0));
         } else if (clazz == Integer.class) {

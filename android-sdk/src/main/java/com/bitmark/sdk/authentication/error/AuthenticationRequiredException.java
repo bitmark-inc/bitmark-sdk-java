@@ -1,5 +1,7 @@
 package com.bitmark.sdk.authentication.error;
 
+import com.bitmark.sdk.authentication.Provider;
+
 /**
  * @author Hieu Pham
  * @since 2/13/19
@@ -8,19 +10,13 @@ package com.bitmark.sdk.authentication.error;
  */
 public class AuthenticationRequiredException extends Exception {
 
-    public static final String BIOMETRIC = "biometric";
+    private Provider provider;
 
-    public static final String FINGERPRINT = "fingerprint";
-
-    public static final String PASSWORD = "password";
-
-    private String type;
-
-    public AuthenticationRequiredException(String type) {
-        this.type = type;
+    public AuthenticationRequiredException(Provider provider) {
+        this.provider = provider;
     }
 
-    public String getType() {
-        return type;
+    public Provider getProvider() {
+        return provider;
     }
 }

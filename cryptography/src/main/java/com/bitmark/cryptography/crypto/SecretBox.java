@@ -4,6 +4,8 @@ import com.bitmark.cryptography.crypto.sodium.Sodium;
 
 import java.util.Arrays;
 
+import static com.bitmark.cryptography.utils.JniUtils.call;
+
 
 /**
  * @author Hieu Pham
@@ -25,7 +27,10 @@ public class SecretBox {
 
         System.arraycopy(msg, 0, m, m.length - msgLength, msgLength);
 
-        Sodium.crypto_secretbox(c, m, m.length, nonce, key);
+        call(
+                () -> Sodium.crypto_secretbox(c, m, m.length, nonce, key),
+                "cannot box"
+        );
         return Arrays.copyOfRange(c, msgLength, c.length);
     }
 }

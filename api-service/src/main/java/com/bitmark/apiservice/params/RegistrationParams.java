@@ -1,13 +1,12 @@
 package com.bitmark.apiservice.params;
 
+import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.utils.Address;
-import com.bitmark.apiservice.utils.Awaitility;
 import com.bitmark.apiservice.utils.BinaryPacking;
 import com.bitmark.apiservice.utils.FileUtils;
-import com.bitmark.apiservice.utils.error.UnexpectedException;
 import com.bitmark.cryptography.crypto.Sha3512;
 import com.bitmark.cryptography.crypto.encoder.VarInt;
-import com.bitmark.cryptography.error.ValidateException;
+import com.bitmark.cryptography.crypto.key.KeyPair;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +23,9 @@ import static com.bitmark.cryptography.utils.Validator.checkValid;
  */
 
 public class RegistrationParams extends AbsSingleParams {
+
     private static final int ASSET_NAME_MAX_LENGTH = 64;
+
     private static final int METADATA_MAX_LENGTH = 2048;
 
     private String name;
@@ -35,41 +36,81 @@ public class RegistrationParams extends AbsSingleParams {
 
     private Address registrant;
 
-    public RegistrationParams(String name, Map<String, String> metadata, Address registrant)
-            throws ValidateException {
+    public RegistrationParams(String name, Map<String, String> metadata) {
         checkValid(
-                () -> name != null && registrant != null && !name.isEmpty() &&
-                      registrant.isValid(),
-                "Invalid RegistrationParams");
-        checkValid(
-                () -> name.length() <= ASSET_NAME_MAX_LENGTH,
-                String.format("Name is too long, must be maximum of %s", ASSET_NAME_MAX_LENGTH));
+                () -> name == null || name.length() <= ASSET_NAME_MAX_LENGTH,
+                String.format(
+                        "asset name is invalid, must be maximum of %s or abort",
+                        ASSET_NAME_MAX_LENGTH
+                )
+        );
         checkValid(
                 () -> getJsonMetadata(metadata).length() <= METADATA_MAX_LENGTH,
-                String.format("Metadata is too long, must be maximum of %s", METADATA_MAX_LENGTH));
+                String.format(
+                        "metadata is too long, must be maximum of %s",
+                        METADATA_MAX_LENGTH
+                )
+        );
 
-        this.name = name;
+        this.name = name == null ? "" : name;
         this.metadata = metadata;
-        this.registrant = registrant;
     }
 
-    public String generateFingerprint(File file) {
-        checkValid(() -> file != null && !file.isDirectory(), "Invalid file");
-        try {
-            fingerprint = Awaitility.await(() -> {
-                try {
-                    return computeFingerprint(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new UnexpectedException(e);
-                }
-            });
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            throw new UnexpectedException(throwable);
+    public static String computeFingerprint(byte[] data) {
+        final byte[] hashedBytes = Sha3512.hash(data);
+        return "01" + HEX.encode(hashedBytes);
+    }
+
+    public static String getPackedMetadata(Map<String, String> metadata) {
+        if (metadata == null) {
+            return "";
         }
-        if (fingerprint == null) throw new UnexpectedException("Cannot generate fingerprint");
-        return fingerprint;
+        StringBuilder builder = new StringBuilder();
+        int iteration = 0;
+        for (Map.Entry<String, String> entry : metadata.entrySet()) {
+            iteration++;
+            builder.append(entry.getKey())
+                    .append('\u0000')
+                    .append(entry.getValue());
+            if (iteration < metadata.size()) {
+                builder.append('\u0000');
+            }
+
+        }
+        return builder.toString();
+    }
+
+    public static String getJsonMetadata(Map<String, String> metadata) {
+        if (metadata == null) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        int iteration = 0;
+        for (Map.Entry<String, String> entry : metadata.entrySet()) {
+            iteration++;
+            builder.append(entry.getKey())
+                    .append("\\u0000")
+                    .append(entry.getValue());
+            if (iteration < metadata.size()) {
+                builder.append("\\u0000");
+            }
+
+        }
+        return builder.toString();
+    }
+
+    public String setFingerprintFromFile(File file) throws IOException {
+        checkValid(
+                () -> file != null && file.exists() && !file.isDirectory(),
+                "invalid file"
+        );
+        byte[] data = FileUtils.getBytes(file);
+        return fingerprint = computeFingerprint(data);
+    }
+
+    public String setFingerprintFromData(byte[] data) {
+        checkValid(() -> data != null, "invalid data");
+        return fingerprint = computeFingerprint(data);
     }
 
     public Address getRegistrant() {
@@ -85,13 +126,23 @@ public class RegistrationParams extends AbsSingleParams {
     }
 
     @Override
+    public byte[] sign(KeyPair key) {
+        registrant = Address.getDefault(
+                key.publicKey(),
+                GlobalConfiguration.network()
+        );
+        checkValid(() -> null != fingerprint, "missing fingerprint");
+        return super.sign(key);
+    }
+
+    @Override
     public String toJson() {
         checkSigned();
         return "{\"assets\":[{\"fingerprint\":\"" + fingerprint + "\",\"name\":\"" + name + "\"," +
-               "\"metadata\":\"" + getJsonMetadata(metadata) +
-               "\",\"registrant\":\"" +
-               registrant.getAddress() +
-               "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
+                "\"metadata\":\"" + getJsonMetadata(metadata) +
+                "\",\"registrant\":\"" +
+                registrant.getAddress() +
+                "\",\"signature\":\"" + HEX.encode(signature) + "\"}]}";
     }
 
     @Override
@@ -102,37 +153,5 @@ public class RegistrationParams extends AbsSingleParams {
         data = BinaryPacking.concat(getPackedMetadata(metadata), data);
         data = BinaryPacking.concat(registrant.pack(), data);
         return data;
-    }
-
-    public static String computeFingerprint(File file) throws IOException {
-        final byte[] bytes = FileUtils.getBytes(file);
-        final byte[] hashedBytes = Sha3512.hash(bytes);
-        return "01" + HEX.encode(hashedBytes);
-    }
-
-    public static String getPackedMetadata(Map<String, String> metadata) {
-        if (metadata == null) return "";
-        StringBuilder builder = new StringBuilder();
-        int iteration = 0;
-        for (Map.Entry<String, String> entry : metadata.entrySet()) {
-            iteration++;
-            builder.append(entry.getKey()).append('\u0000').append(entry.getValue());
-            if (iteration < metadata.size()) builder.append('\u0000');
-
-        }
-        return builder.toString();
-    }
-
-    public static String getJsonMetadata(Map<String, String> metadata) {
-        if (metadata == null) return "";
-        StringBuilder builder = new StringBuilder();
-        int iteration = 0;
-        for (Map.Entry<String, String> entry : metadata.entrySet()) {
-            iteration++;
-            builder.append(entry.getKey()).append("\\u0000").append(entry.getValue());
-            if (iteration < metadata.size()) builder.append("\\u0000");
-
-        }
-        return builder.toString();
     }
 }

@@ -12,7 +12,10 @@ import java.lang.reflect.Field;
  */
 public class TestUtils {
 
-    public static void reflectionSet(Object object, Pair<String, Object>... fieldValuePairs)
+    public static void reflectionSet(
+            Object object,
+            Pair<String, Object>... fieldValuePairs
+    )
             throws NoSuchFieldException, IllegalAccessException {
         for (Pair<String, Object> fieldValuePair : fieldValuePairs) {
             Field field =

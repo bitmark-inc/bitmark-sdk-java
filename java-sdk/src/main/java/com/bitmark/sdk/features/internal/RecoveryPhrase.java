@@ -14,8 +14,8 @@ import java.util.Locale;
 
 import static com.bitmark.apiservice.utils.ArrayUtil.*;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
-import static com.bitmark.sdk.utils.FileUtils.getResourceAsFile;
 import static com.bitmark.sdk.features.internal.Version.TWELVE;
+import static com.bitmark.sdk.utils.FileUtils.getResourceAsFile;
 
 /**
  * @author Hieu Pham
@@ -32,52 +32,77 @@ public class RecoveryPhrase {
 
     private static String[] CN_WORDS;
 
-    private static final int[] MASKS = new int[]{0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023};
+    private static final int[] MASKS = new int[]{
+            0,
+            1,
+            3,
+            7,
+            15,
+            31,
+            63,
+            127,
+            255,
+            511,
+            1023
+    };
 
-    private static String[] getWords(Locale locale) {
-        checkValid(() -> locale == Locale.ENGLISH || locale == Locale.CHINESE, "Does not support " +
-                                                                               "this locale");
-        if (locale == Locale.ENGLISH && EN_WORDS != null) return EN_WORDS;
-        if (locale == Locale.CHINESE && CN_WORDS != null) return CN_WORDS;
+    public static String[] getWords(Locale locale) {
+        checkValid(
+                () -> locale == Locale.ENGLISH || locale == Locale.TRADITIONAL_CHINESE,
+                "does not support this locale"
+        );
+        if (locale == Locale.ENGLISH && EN_WORDS != null) {
+            return EN_WORDS;
+        }
+        if (locale == Locale.TRADITIONAL_CHINESE && CN_WORDS != null) {
+            return CN_WORDS;
+        }
 
         try {
             final int size = 2048;
-            File file = getResourceAsFile(locale == Locale.ENGLISH ? "bip/bip39_eng.txt" : "bip" +
-                                                                                           "/bip39_cn.txt");
+            File file = getResourceAsFile(locale == Locale.ENGLISH
+                                          ? "bip/bip39_eng.txt"
+                                          : "bip/bip39_cn.txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String[] words = new String[size];
             for (int i = 0; i < size; i++) {
                 String word = reader.readLine();
-                if (word == null) break;
+                if (word == null) {
+                    break;
+                }
                 words[i] = word;
             }
-            if (locale == Locale.ENGLISH) EN_WORDS = words;
-            else CN_WORDS = words;
+            if (locale == Locale.ENGLISH) {
+                EN_WORDS = words;
+            } else {
+                CN_WORDS = words;
+            }
             return words;
         } catch (IOException e) {
             throw new UnexpectedException(e.getMessage());
         }
     }
 
-    public static RecoveryPhrase fromSeed(Seed seed) throws ValidateException {
+    public static RecoveryPhrase fromSeed(Seed seed) {
         return fromSeed(seed, Locale.ENGLISH);
     }
 
-    public static RecoveryPhrase fromSeed(Seed seed, Locale locale) throws ValidateException {
-        checkValid(() -> seed != null, "Invalid Seed");
+    public static RecoveryPhrase fromSeed(Seed seed, Locale locale) {
+        checkValid(() -> seed != null, "invalid seed");
         final byte[] seedBytes = seed.getSeedBytes();
         final Version version = seed.getVersion();
-        return version == TWELVE ? new RecoveryPhrase(generateMnemonic(seedBytes, locale)) :
-                new RecoveryPhrase(generateMnemonic(concat(toByteArray(seed.getNetwork().value())
-                        , seedBytes), locale));
+        return version == TWELVE
+               ? new RecoveryPhrase(generateMnemonic(seedBytes, locale))
+               :
+               new RecoveryPhrase(generateMnemonic(concat(toByteArray(seed.getNetwork()
+                       .value()), seedBytes), locale));
     }
 
-    public static RecoveryPhrase fromMnemonicWords(String... mnemonicWords)
-            throws ValidateException {
+    public static RecoveryPhrase fromMnemonicWords(String... mnemonicWords) {
         return new RecoveryPhrase(mnemonicWords);
     }
 
-    private RecoveryPhrase(String... mnemonicWords) throws ValidateException {
+    private RecoveryPhrase(String... mnemonicWords) {
         validate(mnemonicWords);
         this.mnemonicWords = mnemonicWords;
     }
@@ -90,15 +115,21 @@ public class RecoveryPhrase {
         return recoverSeed(mnemonicWords);
     }
 
-    public static Seed recoverSeed(String[] mnemonicWord) throws ValidateException {
+    public static Seed recoverSeed(String[] mnemonicWord) {
         validate(mnemonicWord);
         final Version version = Version.fromMnemonicWords(mnemonicWord);
         final int wordsLength = version.getMnemonicWordsLength();
         final int seedBytesLen =
-                version == TWELVE ? SeedTwelve.SEED_BYTE_LENGTH : SeedTwentyFour.SEED_BYTE_LENGTH;
-        final int entropyLength = version == TWELVE ? seedBytesLen : seedBytesLen + 1;
+                version == TWELVE
+                ? SeedTwelve.SEED_BYTE_LENGTH
+                : SeedTwentyFour.SEED_BYTE_LENGTH;
+        final int entropyLength = version == TWELVE
+                                  ? seedBytesLen
+                                  : seedBytesLen + 1;
         final Locale locale = detectLocale(mnemonicWord[0]);
-        if (locale == null) throw new ValidateException("Does not support this language");
+        if (locale == null) {
+            throw new ValidateException("does not support this language");
+        }
 
         String[] words = getWords(locale);
         int[] data = new int[]{};
@@ -115,11 +146,14 @@ public class RecoveryPhrase {
             }
             remainder &= MASKS[bits];
         }
-        final byte[] entropy = version == TWELVE ? concat(toByteArray(data),
-                                                          new byte[]{(byte) (remainder <<
-                                                                             4)}) : toByteArray(
-                data);
-        checkValid(() -> entropy.length == entropyLength, "Invalid mnemonic words");
+        final byte[] entropy = version == TWELVE ? concat(
+                toByteArray(data),
+                new byte[]{(byte) (remainder << 4)}
+        ) : toByteArray(data);
+        checkValid(
+                () -> entropy.length == entropyLength,
+                "invalid mnemonic words"
+        );
         if (version == TWELVE) {
             return new SeedTwelve(entropy);
         } else {
@@ -129,13 +163,15 @@ public class RecoveryPhrase {
         }
     }
 
-    public static String[] generateMnemonic(byte[] entropy) throws ValidateException {
+    public static String[] generateMnemonic(byte[] entropy) {
         return generateMnemonic(entropy, Locale.ENGLISH);
     }
 
-    public static String[] generateMnemonic(byte[] entropy, Locale locale)
-            throws ValidateException {
-        checkValid(() -> entropy != null && Version.matchesEntropy(entropy), "Invalid entropy");
+    public static String[] generateMnemonic(byte[] entropy, Locale locale) {
+        checkValid(
+                () -> entropy != null && Version.matchesEntropy(entropy),
+                "invalid entropy"
+        );
         final String[] words = getWords(locale);
         final Version version = Version.fromEntropy(entropy);
         final int mnenonicWordsLength = version.getMnemonicWordsLength();
@@ -159,13 +195,18 @@ public class RecoveryPhrase {
     }
 
     private static void validate(String... mnemonicWords) {
-        checkValid(() -> mnemonicWords != null && Version.matchesMnemonicWords(mnemonicWords)
-                         && (contains(getWords(Locale.ENGLISH), mnemonicWords) ||
-                             contains(getWords(Locale.CHINESE), mnemonicWords)));
+        checkValid(() -> mnemonicWords != null && Version.matchesMnemonicWords(
+                mnemonicWords) && (contains(
+                getWords(Locale.ENGLISH),
+                mnemonicWords
+        ) || contains(getWords(Locale.TRADITIONAL_CHINESE), mnemonicWords)));
     }
 
     private static Locale detectLocale(String examined) {
-        return contains(getWords(Locale.ENGLISH), examined) ? Locale.ENGLISH :
-                contains(getWords(Locale.CHINESE), examined) ? Locale.CHINESE : null;
+        return contains(getWords(Locale.ENGLISH), examined)
+               ? Locale.ENGLISH
+               : contains(getWords(Locale.TRADITIONAL_CHINESE), examined)
+                 ? Locale.TRADITIONAL_CHINESE
+                 : null;
     }
 }

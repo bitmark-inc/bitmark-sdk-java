@@ -1,26 +1,24 @@
 package com.bitmark.sdk.features;
 
-import com.bitmark.apiservice.params.IssuanceParams;
+import com.bitmark.apiservice.params.TransferOfferParams;
+import com.bitmark.apiservice.params.TransferResponseParams;
 import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;
+import com.bitmark.apiservice.response.GetBitmarkResponse;
 import com.bitmark.apiservice.response.GetBitmarksResponse;
-import com.bitmark.apiservice.utils.Address;
+import com.bitmark.apiservice.utils.Awaitility;
 import com.bitmark.apiservice.utils.Pair;
-import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.callback.Callback1;
-import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.apiservice.utils.record.BitmarkRecord;
-import com.bitmark.cryptography.crypto.key.KeyPair;
-import com.bitmark.cryptography.error.ValidateException;
+import com.bitmark.apiservice.utils.record.OfferRecord;
+import java8.util.concurrent.CompletionException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
-import static com.bitmark.sdk.features.internal.Version.TWENTY_FOUR;
 
 /**
  * @author Hieu Pham
@@ -31,120 +29,135 @@ import static com.bitmark.sdk.features.internal.Version.TWENTY_FOUR;
 
 public class Migration {
 
-    public static void migrate(String[] phraseWords,
-                               Callback1<Pair<Account, List<String>>> callback) throws ValidateException {
-        checkValid(() -> phraseWords != null && phraseWords.length == TWENTY_FOUR.getMnemonicWordsLength(),
-                   "Only support migrate from 24 recovery words ");
-        final Account oldAccount = Account.fromRecoveryPhrase(phraseWords);
-        final String oldAccountNumber = oldAccount.getAccountNumber();
-        final Account newAccount = new Account();
-
-        try {
-            // Get all owned bitmarks
-            final List<GetBitmarksResponse> bitmarksResponses =
-                    getBitmarksResponses(oldAccountNumber);
-            if (bitmarksResponses == null)
-                callback.onSuccess(new Pair<>(newAccount, Collections.emptyList()));
-            else {
-                final List<String> bitmarkIds = new ArrayList<>();
-
-                CompletableFuture.allOf(bitmarksResponses.stream().map(response -> {
-                    List<BitmarkRecord> bitmarks = response.getBitmarks();
-                    List<AssetRecord> assets = response.getAssets();
-                    return internalMigrate(newAccount, bitmarks, assets).whenComplete((result,
-                                                                                       throwable) -> {
-                        if (throwable == null) bitmarkIds.addAll(result);
-
-                    });
-                }).toArray(CompletableFuture[]::new)).whenComplete((ignore, throwable) -> {
+    public static void rekey(
+            Account from,
+            Account to,
+            Callback1<List<String>> callback
+    ) {
+        checkValid(() -> from != null && to != null, "account is null");
+        checkValid(
+                () -> !from.getAccountNumber().equals(to.getAccountNumber()),
+                "cannot use same account for rekey"
+        );
+        getOwningBitmarks(from).thenCompose(bitmarks -> offer(
+                bitmarks,
+                from,
+                to
+        )).thenCompose(offers -> respond(offers, to)).whenComplete(
+                (txIds, throwable) -> {
                     if (throwable != null) {
-                        callback.onError(throwable.getCause());
+                        callback.onError(throwable instanceof CompletionException
+                                         ? throwable.getCause()
+                                         : throwable);
                     } else {
-                        callback.onSuccess(new Pair<>(newAccount, bitmarkIds));
+                        callback.onSuccess(txIds);
                     }
                 });
-            }
-
-        } catch (Throwable throwable) {
-            // Error when collect all owned bitmark
-            callback.onError(throwable);
-        }
     }
 
-    private static List<GetBitmarksResponse> getBitmarksResponses(String accountNumber) throws Throwable {
-        final int limit = 100;
-        final List<GetBitmarksResponse> result = new ArrayList<>();
-
-        // Get the latest bitmark by offset
-        List<BitmarkRecord> firstBitmarks =
-                await((Callable1<GetBitmarksResponse>) internalCallback ->
-                        Bitmark.list(new BitmarkQueryBuilder().ownedBy(accountNumber).pending(true).limit(1),
-                                     internalCallback)).getBitmarks();
-        if (firstBitmarks == null || firstBitmarks.isEmpty()) return null;
-        Long lastOffset = firstBitmarks.get(0).getOffset();
-        while (lastOffset != null) {
-
-            BitmarkQueryBuilder builder =
-                    new BitmarkQueryBuilder().ownedBy(accountNumber).at(lastOffset).to("earlier").loadAsset(true)
-                                             .pending(true).limit(limit);
-            GetBitmarksResponse response = await(internalCallback -> Bitmark.list(builder,
-                                                                                  internalCallback));
-            result.add(response);
-            final List<BitmarkRecord> bitmarks = response.getBitmarks();
-            final int size = bitmarks == null ? 0 : bitmarks.size();
-            if (size == limit) {
-                // Continue finding out more bitmarks by querying from the offset of last bitmark
-                lastOffset = bitmarks.get(bitmarks.size() - 1).getOffset();
-            } else lastOffset = null; // No more bitmarks will be found
+    private static CompletableFuture<List<String>> respond(
+            List<OfferRecord> offers,
+            Account receiver
+    ) {
+        if (offers.isEmpty()) {
+            return CompletableFuture.supplyAsync(ArrayList::new);
         }
-        return result;
-    }
 
-    private static CompletableFuture<List<String>> internalMigrate(Account owner,
-                                                                   List<BitmarkRecord> bitmarks,
-                                                                   List<AssetRecord> assets) {
-
-        final Address ownerAddress = owner.toAddress();
-        final KeyPair key = owner.getKeyPair();
-
-        // Build collection of IssuanceParams
-
-        List<IssuanceParams> params =
-                bitmarks.stream().collect(Collectors.groupingBy(BitmarkRecord::getAssetId, Collectors.counting()))
-                        .entrySet().stream().map(entry -> {
-                    IssuanceParams param =
-                            new IssuanceParams(entry.getKey(), ownerAddress, Math.toIntExact(entry.getValue()));
-                    param.sign(key);
+        return CompletableFuture.supplyAsync(() -> offers.stream()
+                .map(offer -> {
+                    TransferResponseParams param = TransferResponseParams.accept(
+                            offer);
+                    param.sign(receiver.getAuthKeyPair());
                     return param;
-                }).collect(Collectors.toList());
-
-        // Execute from the above collection
-        final List<String> bitmarkIds = new ArrayList<>();
-        final CompletableFuture<List<String>> emitters = new CompletableFuture<>();
-        CompletableFuture.allOf(params.stream().map(param -> issue(param).whenComplete((result,
-                                                                                        throwable) -> {
-            if (throwable == null) bitmarkIds.addAll(result);
-        })).toArray(CompletableFuture[]::new)).whenComplete((result, throwable) -> {
-            if (throwable != null) emitters.completeExceptionally(throwable.getCause());
-            else emitters.complete(bitmarkIds);
-        });
-
-        return emitters;
+                })
+                .map(param -> CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return Awaitility.<String>await(callback -> Bitmark.respond(
+                                param,
+                                callback
+                        ));
+                    } catch (Throwable e) {
+                        throw new CompletionException(e);
+                    }
+                }))
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList()));
     }
 
-    private static CompletableFuture<List<String>> issue(IssuanceParams params) {
-        final CompletableFuture<List<String>> emitter = new CompletableFuture<>();
-        Bitmark.issue(params, new Callback1<List<String>>() {
-            @Override
-            public void onSuccess(List<String> data) {
-                emitter.complete(data);
-            }
+    private static CompletableFuture<List<OfferRecord>> offer(
+            List<BitmarkRecord> bitmarks,
+            Account sender,
+            Account receiver
+    ) {
+        if (bitmarks.isEmpty()) {
+            return CompletableFuture.supplyAsync(ArrayList::new);
+        }
 
-            @Override
-            public void onError(Throwable throwable) {
-                emitter.completeExceptionally(throwable);
+        return CompletableFuture.supplyAsync(() -> {
+            List<Pair<String, TransferOfferParams>> params = bitmarks.stream()
+                    .map(bm -> {
+                        TransferOfferParams param = new TransferOfferParams(
+                                receiver.toAddress(),
+                                bm.getHeadId()
+                        );
+                        param.sign(sender.getAuthKeyPair());
+                        return new Pair<>(bm.getId(), param);
+                    })
+                    .collect(Collectors.toList());
+
+            return params.stream()
+                    .map(p -> CompletableFuture.supplyAsync(
+                            () -> {
+                                try {
+                                    String bitmarkId = p.first();
+                                    TransferOfferParams param = p.second();
+                                    Awaitility.<String>await(callback -> Bitmark
+                                            .offer(param, callback));
+                                    GetBitmarkResponse res = await(callback -> Bitmark
+                                            .get(bitmarkId, callback));
+                                    return res.getBitmark().getOffer();
+                                } catch (Throwable e) {
+                                    throw new CompletionException(e);
+                                }
+                            }))
+                    .map(CompletableFuture::join)
+                    .collect(Collectors.toList());
+        });
+    }
+
+    private static CompletableFuture<List<BitmarkRecord>> getOwningBitmarks(
+            Account owner
+    ) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                final List<BitmarkRecord> bitmarks = new ArrayList<>();
+
+                boolean existing = true;
+                Long offset = null;
+                while (existing) {
+                    BitmarkQueryBuilder builder = new BitmarkQueryBuilder().ownedBy(
+                            owner.getAccountNumber())
+                            .to("earlier")
+                            .limit(100)
+                            .pending(false);
+                    if (offset != null) {
+                        builder.at(offset);
+                    }
+                    GetBitmarksResponse res = await(callback -> Bitmark.list(
+                            builder,
+                            callback
+                    ));
+                    List<BitmarkRecord> bms = res.getBitmarks();
+                    existing = bms.size() == 100;
+                    if (existing) {
+                        offset = bms.get(bms.size() - 1).getOffset();
+                    }
+                    bitmarks.addAll(bms);
+                }
+                return bitmarks;
+            } catch (Throwable e) {
+                throw new CompletionException(e);
             }
         });
-        return emitter;
     }
 }

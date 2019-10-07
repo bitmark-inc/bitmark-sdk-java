@@ -1,5 +1,6 @@
 package com.bitmark.apiservice.middleware;
 
+import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -30,9 +31,26 @@ public class BitmarkApiInterceptor implements Interceptor {
                 .addHeader("Accept", "application/json")
                 .addHeader("Cache-Control", "no-cache")
                 .addHeader("Cache-Control", "no-store")
-                .addHeader("Accept-Encoding","*")
-                .addHeader("User-Agent", String.format("%s, %s, %s", "bitmark-sdk-java", System.getProperty("os.name"), System.getProperty("java.version")))
+                .addHeader("Accept-Encoding", "*")
+                .addHeader(
+                        "User-Agent",
+                        String.format(
+                                "%s, %s, %s",
+                                "bitmark-sdk-java",
+                                System.getProperty("os.name"),
+                                System.getProperty("java.version")
+                        )
+                )
                 .build();
-        return chain.proceed(request);
+
+        HttpObserver observer = GlobalConfiguration.httpObserver();
+        if (observer != null) {
+            observer.onRequest(request.newBuilder().build());
+        }
+        Response response = chain.proceed(request);
+        if (observer != null) {
+            observer.onRespond(response.newBuilder().build());
+        }
+        return response;
     }
 }

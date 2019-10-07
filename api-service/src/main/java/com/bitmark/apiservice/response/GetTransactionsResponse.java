@@ -2,6 +2,7 @@ package com.bitmark.apiservice.response;
 
 import com.bitmark.apiservice.utils.annotation.VisibleForTesting;
 import com.bitmark.apiservice.utils.record.AssetRecord;
+import com.bitmark.apiservice.utils.record.BlockRecord;
 import com.bitmark.apiservice.utils.record.TransactionRecord;
 import com.google.gson.annotations.SerializedName;
 
@@ -22,8 +23,13 @@ public class GetTransactionsResponse implements Response {
 
     private List<AssetRecord> assets;
 
+    private List<BlockRecord> blocks;
+
     @VisibleForTesting
-    public GetTransactionsResponse(List<TransactionRecord> transactions, List<AssetRecord> assets) {
+    public GetTransactionsResponse(
+            List<TransactionRecord> transactions,
+            List<AssetRecord> assets
+    ) {
         this.transactions = transactions;
         this.assets = assets;
     }
@@ -36,10 +42,18 @@ public class GetTransactionsResponse implements Response {
         return assets;
     }
 
+    public List<BlockRecord> getBlocks() {
+        return blocks;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GetTransactionsResponse that = (GetTransactionsResponse) o;
         return Objects.equals(transactions, that.transactions) &&
                 Objects.equals(assets, that.assets);

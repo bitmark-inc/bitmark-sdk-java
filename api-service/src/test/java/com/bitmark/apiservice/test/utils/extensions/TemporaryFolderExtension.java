@@ -22,28 +22,37 @@ import static com.bitmark.apiservice.test.utils.FileUtils.createTempFile;
  * Copyright © 2019 Bitmark. All rights reserved.
  */
 
-public class TemporaryFolderExtension implements AfterEachCallback, ParameterResolver {
+public class TemporaryFolderExtension
+        implements AfterEachCallback, ParameterResolver {
 
     private static final String KEY = "tempDirectory";
 
     @Override
-    public boolean supportsParameter(ParameterContext parameterContext,
-                                     ExtensionContext extensionContext) {
+    public boolean supportsParameter(
+            ParameterContext parameterContext,
+            ExtensionContext extensionContext
+    ) {
         return parameterContext.getParameter().getType() == File.class;
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext context) {
+    public Object resolveParameter(
+            ParameterContext parameterContext,
+            ExtensionContext context
+    ) {
         String content = getFileContent(parameterContext.getParameter());
-        return getLocalStore(context).getOrComputeIfAbsent(KEY,
+        return getLocalStore(context).getOrComputeIfAbsent(
+                KEY,
                 key -> {
                     Path path = createTempDirectory(context);
                     try {
                         return createTempFile(getFileName(), path, content);
                     } catch (IOException e) {
-                        throw new RuntimeException("Error when create temporary file");
+                        throw new RuntimeException(
+                                "Error when create temporary file");
                     }
-                });
+                }
+        );
     }
 
     @Override
@@ -68,7 +77,10 @@ public class TemporaryFolderExtension implements AfterEachCallback, ParameterRes
     }
 
     private ExtensionContext.Namespace localNamespace(ExtensionContext context) {
-        return ExtensionContext.Namespace.create(TemporaryFolderExtension.class, context);
+        return ExtensionContext.Namespace.create(
+                TemporaryFolderExtension.class,
+                context
+        );
     }
 
     private Path createTempDirectory(ExtensionContext context) {
@@ -84,27 +96,40 @@ public class TemporaryFolderExtension implements AfterEachCallback, ParameterRes
 
             return Files.createTempDirectory(tempDirName);
         } catch (IOException e) {
-            throw new ParameterResolutionException("Could not create temp directory", e);
+            throw new ParameterResolutionException(
+                    "Could not create temp directory",
+                    e
+            );
         }
     }
 
     private void delete(File tempDirectory) throws IOException {
-        Files.walkFileTree(tempDirectory.toPath(), new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(
+                tempDirectory.toPath(),
+                new SimpleFileVisitor<Path>() {
 
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                return deleteAndContinue(file);
-            }
+                    @Override
+                    public FileVisitResult visitFile(
+                            Path file,
+                            BasicFileAttributes attrs
+                    ) throws IOException {
+                        return deleteAndContinue(file);
+                    }
 
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                return deleteAndContinue(dir);
-            }
+                    @Override
+                    public FileVisitResult postVisitDirectory(
+                            Path dir,
+                            IOException exc
+                    ) throws IOException {
+                        return deleteAndContinue(dir);
+                    }
 
-            private FileVisitResult deleteAndContinue(Path path) throws IOException {
-                Files.delete(path);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+                    private FileVisitResult deleteAndContinue(Path path)
+                            throws IOException {
+                        Files.delete(path);
+                        return FileVisitResult.CONTINUE;
+                    }
+                }
+        );
     }
 }

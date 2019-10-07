@@ -34,7 +34,10 @@ public class AssetQueryBuilder extends AbsQueryBuilder {
     }
 
     public AssetQueryBuilder assetIds(String[] assetIds) {
-        checkValid(() -> assetIds != null && assetIds.length > 0, "Invalid asset ids");
+        checkValid(
+                () -> assetIds != null && assetIds.length > 0,
+                "Invalid asset ids"
+        );
         this.assetIds = assetIds;
         return this;
     }
@@ -46,20 +49,28 @@ public class AssetQueryBuilder extends AbsQueryBuilder {
     }
 
     public AssetQueryBuilder limit(Integer limit) {
-        checkValid(() -> limit != null && limit > 0 && limit <= 100, "Invalid limit value");
+        checkValid(
+                () -> limit != null && limit > 0 && limit <= 100,
+                "Invalid limit value"
+        );
         this.limit = limit;
         return this;
     }
 
     public AssetQueryBuilder at(Long at) {
-        checkValid(() -> at != null && at > 0, "Invalid at value. Must greater than 0");
+        checkValid(
+                () -> at != null && at > 0,
+                "Invalid at value. Must greater than 0"
+        );
         this.at = at;
         return this;
     }
 
     public AssetQueryBuilder to(String to) {
-        checkValid(() -> to != null && (to.equals("earlier") || to.equals("later")), "Invalid " +
-                "value to. It must be 'later' or 'earlier'.");
+        checkValid(
+                () -> to != null && (to.equals("earlier") || to.equals("later")),
+                "Invalid value to. It must be 'later' or 'earlier'."
+        );
         this.to = to;
         return this;
     }

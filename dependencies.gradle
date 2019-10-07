@@ -9,14 +9,16 @@ versions.junit_platform = "1.2.0"
 versions.junit_vintage = "5.2.0"
 versions.gson = "2.8.5"
 versions.bintray_plugin = "1.7.3"
-versions.cryptography = "1.5.0-SNAPSHOT"
-versions.api_service = "1.11.0-SNAPSHOT"
+versions.cryptography = "1.5.0"
+versions.api_service = "2.1.0"
 versions.android_plugin = "3.2.1"
 versions.android_maven_plugin = "2.1"
 versions.android_test_runner = "1.0.2"
 versions.rxjava = "2.2.3"
 versions.android_support = "28.0.0"
 versions.java_stream = "1.2.1"
+versions.centrifuge = "0.0.2"
+versions.fat_aar = "1.1.7"
 
 def okhttp = [:]
 okhttp.okhttp3 = "com.squareup.okhttp3:okhttp:$versions.okhttp"
@@ -58,6 +60,8 @@ def android_plugin = "com.android.tools.build:gradle:$versions.android_plugin"
 def android_maven_plugin = "com.github.dcendents:android-maven-gradle-plugin:$versions.android_maven_plugin"
 def android_test_runner = "com.android.support.test:runner:$versions.android_test_runner"
 def java_stream = "com.annimon:stream:$versions.java_stream"
+def centrifuge = "io.github.centrifugal:centrifuge-java:$versions.centrifuge"
+def fat_aar = "com.kezong:fat-aar:$versions.fat_aar"
 
 def dependencies = [:]
 dependencies.okhttp = okhttp
@@ -76,6 +80,8 @@ dependencies.android_test_runner = android_test_runner
 dependencies.rx = rx
 dependencies.android_support = android_support
 dependencies.java_stream = java_stream
+dependencies.centrifuge = centrifuge
+dependencies.fat_aar = fat_aar
 ext.deps = dependencies
 
 
@@ -85,6 +91,7 @@ static def addRepos(RepositoryHandler handler) {
     handler.maven { url = 'http://repo1.maven.org/maven2/' }
     handler.maven { url = 'https://oss.sonatype.org/content/repositories/releases/' }
     handler.maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    handler.maven { url = 'https://plugins.gradle.org/m2/' }
 }
 
 ext.addRepos = this.&addRepos

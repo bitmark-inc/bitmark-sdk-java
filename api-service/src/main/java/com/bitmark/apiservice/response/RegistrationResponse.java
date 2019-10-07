@@ -28,8 +28,12 @@ public class RegistrationResponse implements Response {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RegistrationResponse response = (RegistrationResponse) o;
         return Objects.equals(assets, response.assets);
     }
@@ -62,8 +66,12 @@ public class RegistrationResponse implements Response {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Asset asset = (Asset) o;
             return isDuplicate == asset.isDuplicate &&
                     Objects.equals(id, asset.id);

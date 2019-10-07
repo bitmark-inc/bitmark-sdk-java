@@ -11,20 +11,28 @@ import com.bitmark.cryptography.error.ValidateException;
 
 public enum Version {
 
-    TWELVE, TWENTY_FOUR;
+    TWELVE,
+    TWENTY_FOUR;
 
-    public static Version fromMnemonicWords(String... words) throws ValidateException {
+    public static Version fromMnemonicWords(String... words) {
         int length = words.length;
-        Version version = length == 12 ? TWELVE : length == 24 ? TWENTY_FOUR : null;
-        if (version == null) throw new ValidateException("Invalid mnemonic word length " + length);
+        Version version = length == 12
+                          ? TWELVE
+                          : length == 24 ? TWENTY_FOUR : null;
+        if (version == null) {
+            throw new ValidateException("Invalid mnemonic word length " + length);
+        }
         return version;
     }
 
-    public static Version fromEntropy(byte[] entropy) throws ValidateException {
+    public static Version fromEntropy(byte[] entropy) {
         int length = entropy.length;
-        Version version = length == 17 ? TWELVE : length == 33 ? TWENTY_FOUR :
-                null;
-        if (version == null) throw new ValidateException("Invalid entropy length " + length);
+        Version version = length == 17
+                          ? TWELVE
+                          : length == 33 ? TWENTY_FOUR : null;
+        if (version == null) {
+            throw new ValidateException("Invalid entropy length " + length);
+        }
         return version;
     }
 

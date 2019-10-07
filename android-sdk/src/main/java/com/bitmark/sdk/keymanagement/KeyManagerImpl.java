@@ -2,6 +2,7 @@ package com.bitmark.sdk.keymanagement;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.security.keystore.*;
 import android.support.annotation.NonNull;
@@ -17,8 +18,10 @@ import com.bitmark.sdk.authentication.AuthenticatorFactory;
 import com.bitmark.sdk.authentication.KeyAuthenticationSpec;
 import com.bitmark.sdk.authentication.error.AuthenticationException;
 import com.bitmark.sdk.authentication.error.AuthenticationRequiredException;
-import io.reactivex.annotations.Nullable;
+import com.bitmark.sdk.authentication.error.HardwareNotSupportedException;
+import com.bitmark.sdk.utils.SharedPreferenceApi;
 
+import javax.annotation.Nullable;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
@@ -29,8 +32,9 @@ import java.security.spec.InvalidKeySpecException;
 
 import static com.bitmark.cryptography.crypto.encoder.Base58.BASE_58;
 import static com.bitmark.cryptography.crypto.encoder.Raw.RAW;
+import static com.bitmark.sdk.authentication.Provider.*;
 import static com.bitmark.sdk.authentication.error.AuthenticationException.Type.*;
-import static com.bitmark.sdk.authentication.error.AuthenticationRequiredException.FINGERPRINT;
+import static com.bitmark.sdk.utils.DeviceUtils.isAboveM;
 import static com.bitmark.sdk.utils.DeviceUtils.isAboveP;
 import static com.bitmark.sdk.utils.FileUtils.read;
 import static com.bitmark.sdk.utils.FileUtils.write;
@@ -46,9 +50,7 @@ public class KeyManagerImpl implements KeyManager {
 
     private static final String ANDROID_KEYSTORE = "AndroidKeyStore";
 
-    private static final String AES_KEY_TRANSFORMATION = KeyProperties.KEY_ALGORITHM_AES + "/" +
-                                                         KeyProperties.BLOCK_MODE_CBC + "/" +
-                                                         KeyProperties.ENCRYPTION_PADDING_PKCS7;
+    private static final String AES_KEY_TRANSFORMATION = KeyProperties.KEY_ALGORITHM_AES + "/" + KeyProperties.BLOCK_MODE_CBC + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7;
 
     private static final String SEPARATE_CHARACTER = "/";
 
@@ -59,43 +61,48 @@ public class KeyManagerImpl implements KeyManager {
     }
 
     @Override
-    public void getKey(String alias, KeyAuthenticationSpec keyAuthSpec,
-                       Callback1<byte[]> callback) {
+    public void getKey(
+            String alias,
+            KeyAuthenticationSpec keyAuthSpec,
+            Callback1<byte[]> callback
+    ) {
 
         KeyAuthenticationSpec newKeyAuthSpec;
 
         try {
 
-            if (!isEncryptionKeyExisted(keyAuthSpec.getKeyAlias())) {
+            if (!isEncKeyExisting(keyAuthSpec.getKeyAlias())) {
                 callback.onError(
-                        new IllegalArgumentException("Encryption key alias is not existing"));
+                        new IllegalArgumentException(
+                                "Encryption key alias is not existing"));
                 return;
             }
 
             final SecretKey encryptionKey =
-                    (SecretKey) getLoadedAndroidKeyStore().getKey(keyAuthSpec.getKeyAlias(), null);
+                    (SecretKey) getLoadedAndroidKeyStore().getKey(
+                            keyAuthSpec.getKeyAlias(),
+                            null
+                    );
 
-            // Retrieve the key info of encryption key
-            SecretKeyFactory factory =
-                    SecretKeyFactory
-                            .getInstance(encryptionKey.getAlgorithm(), ANDROID_KEYSTORE);
-            KeyInfo info = (KeyInfo) factory.getKeySpec(encryptionKey, KeyInfo.class);
-
-            newKeyAuthSpec = keyAuthSpec.newBuilder(activity)
-                                        .setAuthenticationRequired(
-                                                info.isUserAuthenticationRequired())
-                                        .setAuthenticationValidityDuration(
-                                                info.getUserAuthenticationValidityDurationSeconds())
-                                        .build();
+            newKeyAuthSpec = rebuildKeyAuthSpec(
+                    activity,
+                    encryptionKey,
+                    keyAuthSpec
+            );
 
             try {
                 Cipher cipher = getDecryptCipher(alias, encryptionKey);
 
-                if (newKeyAuthSpec.isAuthenticationRequired() &&
-                    !newKeyAuthSpec.willInvalidateInTimeFrame()) {
+                if (newKeyAuthSpec.needAuthenticateImmediately()) {
 
                     // The key authentication is required and user didn't set the validity time frame for it
-                    authForGetKey(alias, newKeyAuthSpec, cipher, callback);
+                    authForGetKey(
+                            activity,
+                            alias,
+                            newKeyAuthSpec,
+                            cipher,
+                            callback
+                    );
                 } else {
 
                     // Don't require for authentication
@@ -104,28 +111,33 @@ public class KeyManagerImpl implements KeyManager {
             } catch (UserNotAuthenticatedException e) {
 
                 // The user has not authenticated within the specified time frame
-                triggerDeviceAuthentication(newKeyAuthSpec,
-                                            getAuthCallback(new Callback1<Cipher>() {
-                                                @Override
-                                                public void onSuccess(Cipher cipher) {
-                                                    try {
-                                                        callback.onSuccess(
-                                                                getKey(alias,
-                                                                       getDecryptCipher(alias,
-                                                                                        encryptionKey)));
-                                                    } catch (IOException | BadPaddingException | IllegalBlockSizeException
-                                                            | NoSuchPaddingException | NoSuchAlgorithmException
-                                                            | InvalidAlgorithmParameterException | InvalidKeyException e1) {
-                                                        e1.printStackTrace();
-                                                        callback.onError(e1);
-                                                    }
-                                                }
+                triggerDeviceAuthentication(activity, newKeyAuthSpec,
+                        getAuthCallback(new Callback1<Cipher>() {
+                            @Override
+                            public void onSuccess(Cipher cipher) {
+                                try {
+                                    callback.onSuccess(
+                                            getKey(
+                                                    alias,
+                                                    getDecryptCipher(
+                                                            alias,
+                                                            encryptionKey
+                                                    )
+                                            ));
+                                } catch (IOException | BadPaddingException | IllegalBlockSizeException
+                                        | NoSuchPaddingException | NoSuchAlgorithmException
+                                        | InvalidAlgorithmParameterException | InvalidKeyException e1) {
+                                    e1.printStackTrace();
+                                    callback.onError(e1);
+                                }
+                            }
 
-                                                @Override
-                                                public void onError(Throwable throwable) {
-                                                    callback.onError(throwable);
-                                                }
-                                            }));
+                            @Override
+                            public void onError(Throwable throwable) {
+                                callback.onError(throwable);
+                            }
+                        })
+                );
             }
 
         } catch (KeyStoreException | InvalidAlgorithmParameterException | CertificateException
@@ -139,15 +151,20 @@ public class KeyManagerImpl implements KeyManager {
             // Cannot get the key because if it might be broken
             e.printStackTrace();
             callback.onError(new InvalidKeyException(e));
-        } catch (AuthenticationRequiredException e) {
-            // Missing key requirement
+        } catch (AuthenticationRequiredException | HardwareNotSupportedException e) {
+            // the hardware is not supported or user did not set up
             e.printStackTrace();
             callback.onError(e);
         }
     }
 
-    private void authForGetKey(String alias, KeyAuthenticationSpec spec, Cipher cipher,
-                               Callback1<byte[]> callback) {
+    private void authForGetKey(
+            Activity activity,
+            String alias,
+            KeyAuthenticationSpec spec,
+            Cipher cipher,
+            Callback1<byte[]> callback
+    ) {
 
         try {
 
@@ -179,12 +196,19 @@ public class KeyManagerImpl implements KeyManager {
                 }
             };
 
-            Authenticator authenticator =
-                    spec.willInvalidateInTimeFrame() ? getDeviceAuthenticator(spec,
-                                                                              authCallback) : getBiometricAuthenticator(
-                            spec, authCallback);
-            authenticator.authenticate(cipher);
-        } catch (AuthenticationRequiredException e) {
+            final Authenticator authenticator =
+                    detectAuthenticator(
+                            activity.getApplicationContext(),
+                            spec.useAlternativeAuthentication()
+                    );
+            authenticator.authenticate(
+                    activity,
+                    spec.getAuthenticationTitle(),
+                    spec.getAuthenticationDescription(),
+                    cipher,
+                    authCallback
+            );
+        } catch (AuthenticationRequiredException | HardwareNotSupportedException e) {
             e.printStackTrace();
             callback.onError(e);
         }
@@ -198,8 +222,12 @@ public class KeyManagerImpl implements KeyManager {
     }
 
     private Cipher getDecryptCipher(String alias, SecretKey key)
-            throws IOException, NoSuchPaddingException, NoSuchAlgorithmException,
-                   InvalidAlgorithmParameterException, InvalidKeyException {
+            throws
+            IOException,
+            NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException,
+            InvalidKeyException {
 
         byte[] iv = getEncryptedKeyInfo(alias).second();
         Cipher cipher = Cipher.getInstance(AES_KEY_TRANSFORMATION);
@@ -207,51 +235,63 @@ public class KeyManagerImpl implements KeyManager {
         return cipher;
     }
 
-    private Pair<byte[], byte[]> getEncryptedKeyInfo(String alias) throws IOException {
+    private Pair<byte[], byte[]> getEncryptedKeyInfo(String alias)
+            throws IOException {
         File file = getEncryptedKeyFile(alias);
-        if (!file.exists()) throw new IOException("File is not existing");
+        if (!file.exists()) {
+            throw new IOException("File is not existing");
+        }
         String encryptedKeyString = RAW.encode(read(file));
-        byte[] encryptedKey = BASE_58.decode(encryptedKeyString.split(SEPARATE_CHARACTER)[0]);
+        byte[] encryptedKey = BASE_58.decode(encryptedKeyString.split(
+                SEPARATE_CHARACTER)[0]);
         byte[] iv = BASE_58.decode(encryptedKeyString.split(SEPARATE_CHARACTER)[1]);
         return new Pair<>(encryptedKey, iv);
     }
 
     @Override
-    public void saveKey(String alias, KeyAuthenticationSpec keyAuthSpec, byte[] key,
-                        Callback0 callback) {
+    public void saveKey(
+            String alias,
+            KeyAuthenticationSpec keyAuthSpec,
+            byte[] key,
+            Callback0 callback
+    ) {
 
         KeyAuthenticationSpec newKeyAuthSpec;
 
         try {
 
+            final boolean isEncKeyExisting = isEncKeyExisting(keyAuthSpec.getKeyAlias());
+
             final SecretKey encryptionKey =
-                    isEncryptionKeyExisted(
-                            keyAuthSpec.getKeyAlias()) ? (SecretKey) getLoadedAndroidKeyStore()
-                            .getKey(keyAuthSpec.getKeyAlias(), null) : generateEncryptionKey(
+                    isEncKeyExisting
+                    ? (SecretKey) getLoadedAndroidKeyStore()
+                            .getKey(keyAuthSpec.getKeyAlias(), null)
+                    : generateEncryptionKey(
+                            activity.getApplicationContext(),
                             keyAuthSpec.getKeyAlias(),
                             keyAuthSpec.isAuthenticationRequired(),
-                            keyAuthSpec.getAuthenticationValidityDuration(), isAboveP());
-
-            // Retrieve the key info of encryption key
-            SecretKeyFactory factory =
-                    SecretKeyFactory.getInstance(encryptionKey.getAlgorithm(), ANDROID_KEYSTORE);
-            KeyInfo info = (KeyInfo) factory.getKeySpec(encryptionKey, KeyInfo.class);
+                            keyAuthSpec.getAuthenticationValidityDuration(),
+                            keyAuthSpec.useAlternativeAuthentication(),
+                            isAboveP()
+                    );
 
             // Regenerate key spec
-            newKeyAuthSpec = keyAuthSpec.newBuilder(activity)
-                                        .setAuthenticationRequired(
-                                                info.isUserAuthenticationRequired())
-                                        .setAuthenticationValidityDuration(
-                                                info.getUserAuthenticationValidityDurationSeconds())
-                                        .build();
+            newKeyAuthSpec =
+                    rebuildKeyAuthSpec(activity, encryptionKey, keyAuthSpec);
 
             try {
                 Cipher cipher = getEncryptCipher(encryptionKey);
 
-                if (newKeyAuthSpec.isAuthenticationRequired() &&
-                    !newKeyAuthSpec.willInvalidateInTimeFrame()) {
+                if (newKeyAuthSpec.needAuthenticateImmediately()) {
                     // The key authentication is required and user didn't set the validity time frame for it
-                    authForSaveKey(alias, newKeyAuthSpec, key, cipher, callback);
+                    authForSaveKey(
+                            activity,
+                            alias,
+                            newKeyAuthSpec,
+                            key,
+                            cipher,
+                            callback
+                    );
                 } else {
                     // Do not require for authentication
                     saveKey(alias, key, cipher);
@@ -261,26 +301,28 @@ public class KeyManagerImpl implements KeyManager {
             } catch (UserNotAuthenticatedException e) {
 
                 // The user has not authenticated within the specified time frame
-                triggerDeviceAuthentication(newKeyAuthSpec,
-                                            getAuthCallback(new Callback1<Cipher>() {
-                                                @Override
-                                                public void onSuccess(Cipher cipher) {
-                                                    try {
-                                                        saveKey(alias, key,
-                                                                getEncryptCipher(encryptionKey));
-                                                        callback.onSuccess();
-                                                    } catch (BadPaddingException | IllegalBlockSizeException | IOException
-                                                            | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e1) {
-                                                        e1.printStackTrace();
-                                                        callback.onError(e1);
-                                                    }
-                                                }
+                triggerDeviceAuthentication(activity, newKeyAuthSpec,
+                        getAuthCallback(new Callback1<Cipher>() {
+                            @Override
+                            public void onSuccess(Cipher cipher) {
+                                try {
+                                    saveKey(alias, key,
+                                            getEncryptCipher(encryptionKey)
+                                    );
+                                    callback.onSuccess();
+                                } catch (BadPaddingException | IllegalBlockSizeException | IOException
+                                        | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e1) {
+                                    e1.printStackTrace();
+                                    callback.onError(e1);
+                                }
+                            }
 
-                                                @Override
-                                                public void onError(Throwable throwable) {
-                                                    callback.onError(throwable);
-                                                }
-                                            }));
+                            @Override
+                            public void onError(Throwable throwable) {
+                                callback.onError(throwable);
+                            }
+                        })
+                );
             }
 
         } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException
@@ -293,8 +335,8 @@ public class KeyManagerImpl implements KeyManager {
             // Cannot get the key because if it might be broken
             e.printStackTrace();
             callback.onError(new InvalidKeyException(e));
-        } catch (AuthenticationRequiredException e) {
-            // Missing key requirement
+        } catch (AuthenticationRequiredException | HardwareNotSupportedException e) {
+            // the hardware is not supported or user did not set up
             e.printStackTrace();
             callback.onError(e);
         }
@@ -324,8 +366,14 @@ public class KeyManagerImpl implements KeyManager {
         };
     }
 
-    private void authForSaveKey(String alias, KeyAuthenticationSpec spec, byte[] key, Cipher cipher,
-                                Callback0 callback) {
+    private void authForSaveKey(
+            Activity activity,
+            String alias,
+            KeyAuthenticationSpec spec,
+            byte[] key,
+            Cipher cipher,
+            Callback0 callback
+    ) {
 
         try {
             final AuthenticationCallback authCallback = getAuthCallback(
@@ -346,22 +394,40 @@ public class KeyManagerImpl implements KeyManager {
                             callback.onError(throwable);
                         }
                     });
-            Authenticator authenticator =
-                    spec.willInvalidateInTimeFrame() ? getDeviceAuthenticator(spec,
-                                                                              authCallback) : getBiometricAuthenticator(
-                            spec, authCallback);
-            authenticator.authenticate(cipher);
-        } catch (AuthenticationRequiredException e) {
+            final Authenticator authenticator =
+                    detectAuthenticator(
+                            activity.getApplicationContext(),
+                            spec.useAlternativeAuthentication()
+                    );
+            authenticator.authenticate(
+                    activity,
+                    spec.getAuthenticationTitle(),
+                    spec.getAuthenticationDescription(),
+                    cipher,
+                    authCallback
+            );
+        } catch (AuthenticationRequiredException | HardwareNotSupportedException e) {
             e.printStackTrace();
             callback.onError(e);
         }
     }
 
-    private void triggerDeviceAuthentication(KeyAuthenticationSpec spec,
-                                             AuthenticationCallback authCallback)
-            throws AuthenticationRequiredException {
+    private void triggerDeviceAuthentication(
+            Activity activity,
+            KeyAuthenticationSpec spec,
+            AuthenticationCallback authCallback
+    )
+            throws
+            AuthenticationRequiredException,
+            HardwareNotSupportedException {
 
-        getDeviceAuthenticator(spec, authCallback).authenticate(null);
+        getDeviceAuthenticator(activity.getApplicationContext()).authenticate(
+                activity,
+                spec.getAuthenticationTitle(),
+                spec.getAuthenticationDescription(),
+                null,
+                authCallback
+        );
     }
 
     private void saveKey(String alias, byte[] key, Cipher cipher)
@@ -369,45 +435,69 @@ public class KeyManagerImpl implements KeyManager {
 
         byte[] encryptedKey = cipher.doFinal(key);
         byte[] iv = cipher.getIV();
-        String result = BASE_58.encode(encryptedKey) + SEPARATE_CHARACTER + BASE_58.encode(iv);
+        String result = BASE_58.encode(encryptedKey) + SEPARATE_CHARACTER + BASE_58
+                .encode(iv);
 
         // Write encrypted key to local storage
         write(createEncryptedKeyFile(alias), RAW.decode(result));
     }
 
     private Cipher getEncryptCipher(SecretKey key)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+            throws
+            NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidKeyException {
         Cipher cipher = Cipher.getInstance(AES_KEY_TRANSFORMATION);
         cipher.init(Cipher.ENCRYPT_MODE, key);
         return cipher;
     }
 
-    @SuppressLint("NewApi")
-    private Authenticator getBiometricAuthenticator(KeyAuthenticationSpec spec,
-                                                    AuthenticationCallback callback)
-            throws AuthenticationRequiredException {
-        return isAboveP() ? AuthenticatorFactory
-                .getBiometricAuthenticator(activity, spec.getAuthenticationTitle(),
-                                           spec.getAuthenticationDescription(),
-                                           callback) : AuthenticatorFactory
-                .getFingerprintAuthenticator(activity, spec.getAuthenticationTitle(),
-                                             spec.getAuthenticationDescription(), callback);
+    private Authenticator detectAuthenticator(
+            Context context,
+            boolean useAlternativePossibleAuthenticator
+    )
+            throws
+            AuthenticationRequiredException,
+            HardwareNotSupportedException {
+        try {
+            final AuthenticatorFactory factory =
+                    isAboveP()
+                    ? AuthenticatorFactory.from(BIOMETRIC)
+                    : isAboveM()
+                      ? AuthenticatorFactory.from(FINGERPRINT)
+                      : AuthenticatorFactory.from(DEVICE);
+            final Authenticator authenticator = factory.getAuthenticator(context);
+            authenticator.checkAvailability();
+            return authenticator;
+        } catch (AuthenticationRequiredException | HardwareNotSupportedException e) {
+            if (useAlternativePossibleAuthenticator) {
+                return getDeviceAuthenticator(context);
+            }
+            throw e;
+        }
     }
 
-    private Authenticator getDeviceAuthenticator(KeyAuthenticationSpec spec,
-                                                 AuthenticationCallback callback)
-            throws AuthenticationRequiredException {
-        return AuthenticatorFactory
-                .getDeviceAuthenticator(activity, spec.getAuthenticationTitle(),
-                                        spec.getAuthenticationDescription(), callback);
+    private Authenticator getDeviceAuthenticator(Context context)
+            throws
+            AuthenticationRequiredException,
+            HardwareNotSupportedException {
+        final Authenticator authenticator =
+                AuthenticatorFactory.from(DEVICE).getAuthenticator(context);
+        authenticator.checkAvailability();
+        return authenticator;
     }
 
     @Override
-    public void removeKey(String alias, KeyAuthenticationSpec keyAuthSpec, Callback0 callback) {
+    public void removeKey(
+            String alias,
+            KeyAuthenticationSpec keyAuthSpec,
+            Callback0 callback
+    ) {
 
-        if (!isEncryptionKeyExisted(keyAuthSpec.getKeyAlias())) {
+        if (!isEncKeyExisting(keyAuthSpec.getKeyAlias())) {
             callback.onError(
-                    new IllegalArgumentException("Encryption key alias is not existing"));
+                    new IllegalArgumentException(
+                            "Encryption key alias is not existing"));
             return;
         }
 
@@ -419,24 +509,16 @@ public class KeyManagerImpl implements KeyManager {
                     (SecretKey) getLoadedAndroidKeyStore()
                             .getKey(keyAuthSpec.getKeyAlias(), null);
 
-            // Retrieve the key info of encryption key
-            SecretKeyFactory factory =
-                    SecretKeyFactory.getInstance(encryptionKey.getAlgorithm(), ANDROID_KEYSTORE);
-            KeyInfo info = (KeyInfo) factory.getKeySpec(encryptionKey, KeyInfo.class);
-
             // Regenerate key spec
-            newKeyAuthSpec = keyAuthSpec.newBuilder(activity)
-                                        .setAuthenticationRequired(
-                                                info.isUserAuthenticationRequired())
-                                        .setAuthenticationValidityDuration(
-                                                info.getUserAuthenticationValidityDurationSeconds())
-                                        .build();
+            newKeyAuthSpec = rebuildKeyAuthSpec(
+                    activity,
+                    encryptionKey,
+                    keyAuthSpec
+            );
 
-            if (newKeyAuthSpec.isAuthenticationRequired() &&
-                !newKeyAuthSpec.willInvalidateInTimeFrame()) {
+            if (newKeyAuthSpec.needAuthenticateImmediately()) {
                 // The key in keystore is required to be authenticated each time using it
-                // Always need to authenticate user before remove the key
-                authForRemoveKey(alias, newKeyAuthSpec, callback);
+                authForRemoveKey(activity, alias, newKeyAuthSpec, callback);
             } else {
                 // Verify the key is valid on time frame
                 getDecryptCipher(alias, encryptionKey);
@@ -448,7 +530,7 @@ public class KeyManagerImpl implements KeyManager {
 
         } catch (UserNotAuthenticatedException e) {
             // Key is now out of time frame, need to authenticate again
-            authForRemoveKey(alias, newKeyAuthSpec, callback);
+            authForRemoveKey(activity, alias, newKeyAuthSpec, callback);
 
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException
                 | IOException | UnrecoverableKeyException | NoSuchPaddingException
@@ -460,36 +542,49 @@ public class KeyManagerImpl implements KeyManager {
 
     }
 
-    private void authForRemoveKey(String alias, KeyAuthenticationSpec keyAuthSpec,
-                                  Callback0 callback) {
+    private void authForRemoveKey(
+            Activity activity,
+            String alias,
+            KeyAuthenticationSpec keyAuthSpec,
+            Callback0 callback
+    ) {
         try {
-            triggerDeviceAuthentication(keyAuthSpec, getAuthCallback(new Callback1<Cipher>() {
-                @Override
-                public void onSuccess(Cipher cipher) {
-                    try {
-                        removeKey(alias, keyAuthSpec);
-                        callback.onSuccess();
-                    } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                        callback.onError(e);
-                    }
-                }
+            triggerDeviceAuthentication(activity, keyAuthSpec,
+                    getAuthCallback(new Callback1<Cipher>() {
+                        @Override
+                        public void onSuccess(Cipher cipher) {
+                            try {
+                                removeKey(alias, keyAuthSpec);
+                                callback.onSuccess();
+                            } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                                callback.onError(e);
+                            }
+                        }
 
-                @Override
-                public void onError(Throwable throwable) {
-                    callback.onError(throwable);
-                }
-            }));
-        } catch (AuthenticationRequiredException e1) {
+                        @Override
+                        public void onError(Throwable throwable) {
+                            callback.onError(throwable);
+                        }
+                    })
+            );
+
+        } catch (AuthenticationRequiredException | HardwareNotSupportedException e1) {
             e1.printStackTrace();
             callback.onError(e1);
         }
     }
 
     private void removeKey(String alias, KeyAuthenticationSpec keyAuthSpec)
-            throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
-        if (TextUtils.isEmpty(alias) || TextUtils.isEmpty(keyAuthSpec.getKeyAlias()))
-            throw new IllegalArgumentException("Invalid key store alias or the key alias");
+            throws
+            CertificateException,
+            NoSuchAlgorithmException,
+            KeyStoreException,
+            IOException {
+        if (TextUtils.isEmpty(alias) || TextUtils.isEmpty(keyAuthSpec.getKeyAlias())) {
+            throw new IllegalArgumentException(
+                    "Invalid key store alias or the key alias");
+        }
         KeyStore keyStore = getLoadedAndroidKeyStore();
         keyStore.deleteEntry(keyAuthSpec.getKeyAlias());
         getEncryptedKeyFile(alias).delete();
@@ -497,46 +592,89 @@ public class KeyManagerImpl implements KeyManager {
 
 
     @SuppressLint("NewApi")
-    private SecretKey generateEncryptionKey(String keyAlias, boolean isAuthenticationRequired,
-                                            int keyAuthValidityDuration,
-                                            boolean supportStrongBoxBacked)
-            throws NoSuchProviderException, NoSuchAlgorithmException,
-                   InvalidAlgorithmParameterException, AuthenticationRequiredException {
+    private SecretKey generateEncryptionKey(
+            Context context, String keyAlias,
+            boolean isAuthenticationRequired,
+            int keyAuthValidityDuration,
+            boolean useAlternativeAuth,
+            boolean supportStrongBoxBacked
+    )
+            throws
+            NoSuchProviderException,
+            NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException,
+            AuthenticationRequiredException {
         try {
             final KeyGenerator keyGenerator = KeyGenerator
-                    .getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE);
+                    .getInstance(
+                            KeyProperties.KEY_ALGORITHM_AES,
+                            ANDROID_KEYSTORE
+                    );
 
             final KeyGenParameterSpec.Builder builder = new KeyGenParameterSpec.Builder(
                     keyAlias,
-                    KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                    KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT
+            )
                     .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7);
 
             if (isAuthenticationRequired) {
                 builder.setUserAuthenticationRequired(true);
-                if (keyAuthValidityDuration != -1)
+                if (keyAuthValidityDuration != -1) {
                     builder.setUserAuthenticationValidityDurationSeconds(
                             keyAuthValidityDuration);
+                }
             }
-            if (supportStrongBoxBacked)
+            if (supportStrongBoxBacked) {
                 builder.setIsStrongBoxBacked(true); // Enable hardware secure module
+            }
 
             keyGenerator.init(builder.build());
             return keyGenerator.generateKey();
         } catch (InvalidAlgorithmParameterException e) {
             if (e.getCause() instanceof IllegalStateException) {
-                throw new AuthenticationRequiredException(FINGERPRINT);
+                if (AuthenticatorFactory.from(FINGERPRINT)
+                        .getAuthenticator(context)
+                        .isHardwareDetected()) {
+                    throw new AuthenticationRequiredException(FINGERPRINT);
+
+                } else if (useAlternativeAuth) {
+                    final SharedPreferenceApi sharePrefApi = new SharedPreferenceApi(
+                            context);
+                    // save flag for detect device authentication is required
+                    sharePrefApi.put(keyAlias + "_auth_required", true);
+                    // save flag for detect using alternative auth
+                    sharePrefApi.put(keyAlias + "_alternative_auth", true);
+                    // using device authentication in case of device does not support fingerprint sensor
+                    return generateEncryptionKey(
+                            context,
+                            keyAlias,
+                            false,
+                            keyAuthValidityDuration,
+                            true,
+                            false
+                    );
+                } else {
+                    throw e;
+                }
+            } else {
+                throw e;
             }
-            throw e;
         } catch (StrongBoxUnavailableException e) {
             // We do not know how to check the device supports strongbox key master or not
             // So we need to catch StrongBoxUnavailableException to re-generate the key without strongbox support
-            return generateEncryptionKey(keyAlias, isAuthenticationRequired,
-                                         keyAuthValidityDuration, false);
+            return generateEncryptionKey(
+                    context,
+                    keyAlias,
+                    isAuthenticationRequired,
+                    keyAuthValidityDuration,
+                    useAlternativeAuth,
+                    false
+            );
         }
     }
 
-    private boolean isEncryptionKeyExisted(String keyAlias) {
+    private boolean isEncKeyExisting(String keyAlias) {
         try {
             return getLoadedAndroidKeyStore().containsAlias(keyAlias);
         } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
@@ -546,7 +684,11 @@ public class KeyManagerImpl implements KeyManager {
     }
 
     private KeyStore getLoadedAndroidKeyStore()
-            throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
+            throws
+            KeyStoreException,
+            CertificateException,
+            NoSuchAlgorithmException,
+            IOException {
         KeyStore keyStore = KeyStore.getInstance(ANDROID_KEYSTORE);
         keyStore.load(null);
         return keyStore;
@@ -554,11 +696,62 @@ public class KeyManagerImpl implements KeyManager {
 
     private File createEncryptedKeyFile(String fileName) throws IOException {
         File file = getEncryptedKeyFile(fileName);
-        if (!file.exists()) file.createNewFile();
+        if (!file.exists()) {
+            file.createNewFile();
+        }
         return file;
     }
 
     private File getEncryptedKeyFile(String fileName) {
-        return new File(activity.getApplicationContext().getFilesDir(), fileName + ".key");
+        return new File(
+                activity.getApplicationContext().getFilesDir(),
+                fileName + ".key"
+        );
+    }
+
+    private KeyAuthenticationSpec rebuildKeyAuthSpec(
+            Activity activity,
+            SecretKey encryptionKey,
+            KeyAuthenticationSpec oldSpec
+    )
+            throws
+            NoSuchProviderException,
+            NoSuchAlgorithmException,
+            InvalidKeySpecException {
+        final Context context = activity.getApplicationContext();
+        final SharedPreferenceApi sharePrefApi = new SharedPreferenceApi(context);
+
+        final boolean authRequiredFlag =
+                sharePrefApi.get(
+                        oldSpec.getKeyAlias() + "_auth_required",
+                        Boolean.class
+                );
+        final boolean useAlternativeAuth =
+                sharePrefApi.get(
+                        oldSpec.getKeyAlias() + "_alternative_auth",
+                        Boolean.class
+                );
+
+
+        // Retrieve the key info of encryption key
+        SecretKeyFactory factory =
+                SecretKeyFactory.getInstance(
+                        encryptionKey.getAlgorithm(),
+                        ANDROID_KEYSTORE
+                );
+        KeyInfo info = (KeyInfo) factory.getKeySpec(
+                encryptionKey,
+                KeyInfo.class
+        );
+
+        // Regenerate key spec
+        return oldSpec.newBuilder(activity)
+                .setAuthenticationRequired(
+                        info.isUserAuthenticationRequired() || authRequiredFlag)
+                .setAuthenticationValidityDuration(
+                        info.getUserAuthenticationValidityDurationSeconds())
+                .setUseAlternativeAuthentication(
+                        oldSpec.useAlternativeAuthentication() || useAlternativeAuth)
+                .build();
     }
 }

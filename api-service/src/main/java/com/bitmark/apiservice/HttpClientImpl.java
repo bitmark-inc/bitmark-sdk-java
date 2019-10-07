@@ -1,7 +1,6 @@
 package com.bitmark.apiservice;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
-import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.apiservice.middleware.BitmarkApiInterceptor;
 import com.bitmark.apiservice.params.Params;
 import com.bitmark.apiservice.params.query.QueryParams;
@@ -9,9 +8,13 @@ import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.error.NetworkException;
 import okhttp3.*;
+import okhttp3.internal.Util;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,17 +24,17 @@ import java.util.concurrent.TimeUnit;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class HttpClientImpl implements HttpClient {
+class HttpClientImpl implements HttpClient {
 
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-    public static final String LIVE_NET_ENDPOINT = "https://api.bitmark.com";
-
-    public static final String TEST_NET_ENDPOINT = "https://api.test.bitmark.com";
+    private static final MediaType JSON = MediaType.parse(
+            "application/json; charset=utf-8");
 
     private OkHttpClient client;
 
-    HttpClientImpl(String apiToken) {
+    private String endpoint;
+
+    HttpClientImpl(String endpoint, String apiToken) {
+        this.endpoint = endpoint;
         client = buildClient(apiToken);
     }
 
@@ -42,18 +45,26 @@ public class HttpClientImpl implements HttpClient {
         builder.addInterceptor(new BitmarkApiInterceptor(apiToken));
 
         // Add Logging
-        builder.addInterceptor(new HttpLoggingInterceptor(GlobalConfiguration.logger()).setLevel(GlobalConfiguration.logLevel()));
+        if (GlobalConfiguration.logLevel() != null) {
+            builder.addInterceptor(
+                    new HttpLoggingInterceptor().setLevel(GlobalConfiguration.logLevel()));
+        }
 
         // Configure the timeout
         int timeout = GlobalConfiguration.connectionTimeout();
         builder.readTimeout(timeout, TimeUnit.SECONDS);
         builder.connectTimeout(timeout, TimeUnit.SECONDS);
+        final ExecutorService executorService =
+                new ThreadPoolExecutor(0, 10, 60,
+                        TimeUnit.SECONDS, new SynchronousQueue<>(), Util
+                        .threadFactory("OkHttp Dispatcher", false)
+                );
+        builder.dispatcher(new Dispatcher(executorService));
         return builder.build();
     }
 
     private String getRequestUrl(String path) {
-        return (GlobalConfiguration.network() == Network.TEST_NET ? TEST_NET_ENDPOINT :
-                LIVE_NET_ENDPOINT) + path;
+        return endpoint + path;
     }
 
     private String getRequestUrl(String path, QueryParams params) {
@@ -66,41 +77,65 @@ public class HttpClientImpl implements HttpClient {
     }
 
     @Override
-    public void getAsync(String path, QueryParams params, Callback1<Response> callback) {
-        String requestUrl = params == null ? getRequestUrl(path) : getRequestUrl(path, params);
+    public void getAsync(
+            String path,
+            QueryParams params,
+            Callback1<Response> callback
+    ) {
+        String requestUrl = params == null
+                            ? getRequestUrl(path)
+                            : getRequestUrl(path, params);
         Request request = new Request.Builder().url(requestUrl).get().build();
         client.newCall(request).enqueue(wrapCallback(callback));
     }
 
     @Override
-    public void postAsync(String path, Params params, Callback1<Response> callback) {
+    public void postAsync(
+            String path,
+            Params params,
+            Callback1<Response> callback
+    ) {
         postAsync(path, null, params, callback);
     }
 
     @Override
-    public void postAsync(String path, Headers headers, Params params,
-                          Callback1<Response> callback) {
+    public void postAsync(
+            String path, Headers headers, Params params,
+            Callback1<Response> callback
+    ) {
         String requestUrl = getRequestUrl(path);
         Request.Builder builder = new Request.Builder()
                 .url(requestUrl)
                 .post(RequestBody.create(JSON, params.toJson()));
-        if (headers != null) builder.headers(headers);
+        if (headers != null) {
+            builder.headers(headers);
+        }
         client.newCall(builder.build()).enqueue(wrapCallback(callback));
     }
 
     @Override
-    public void patchAsync(String path, Params params, Callback1<Response> callback) {
+    public void patchAsync(
+            String path,
+            Params params,
+            Callback1<Response> callback
+    ) {
         patchAsync(path, null, params, callback);
     }
 
     @Override
-    public void patchAsync(String path, Headers headers, Params params,
-                           Callback1<Response> callback) {
+    public void patchAsync(
+            String path, Headers headers, Params params,
+            Callback1<Response> callback
+    ) {
         String requestUrl = getRequestUrl(path);
         Request.Builder builder =
-                new Request.Builder().url(requestUrl).patch(RequestBody.create(JSON,
-                        params.toJson()));
-        if (headers != null) builder.headers(headers);
+                new Request.Builder().url(requestUrl).patch(RequestBody.create(
+                        JSON,
+                        params.toJson()
+                ));
+        if (headers != null) {
+            builder.headers(headers);
+        }
         client.newCall(builder.build()).enqueue(wrapCallback(callback));
     }
 
@@ -110,12 +145,19 @@ public class HttpClientImpl implements HttpClient {
     }
 
     @Override
-    public void deleteAsync(String path, Params params, Callback1<Response> callback) {
+    public void deleteAsync(
+            String path,
+            Params params,
+            Callback1<Response> callback
+    ) {
         String requestUrl = getRequestUrl(path);
         Request.Builder builder = new Request.Builder()
                 .url(requestUrl);
         Request request = params == null ? builder.delete().build() :
-                builder.delete(RequestBody.create(JSON, params.toJson())).build();
+                          builder.delete(RequestBody.create(
+                                  JSON,
+                                  params.toJson()
+                          )).build();
         client.newCall(request).enqueue(wrapCallback(callback));
     }
 
@@ -127,10 +169,16 @@ public class HttpClientImpl implements HttpClient {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful())
+            public void onResponse(Call call, Response response)
+                    throws IOException {
+                if (response.isSuccessful()) {
                     callback.onSuccess(response);
-                else callback.onError(new HttpException(response.code(), response.body().string()));
+                } else {
+                    callback.onError(new HttpException(
+                            response.code(),
+                            response.body().string()
+                    ));
+                }
             }
         };
     }

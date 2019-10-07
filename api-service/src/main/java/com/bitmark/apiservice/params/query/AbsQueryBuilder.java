@@ -7,8 +7,6 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static com.bitmark.apiservice.utils.HttpUtils.buildArrayQueryString;
-
 /**
  * @author Hieu Pham
  * @since 9/16/18
@@ -34,11 +32,16 @@ public abstract class AbsQueryBuilder implements QueryBuilder {
                 String name = entry.getKey();
                 Object value = entry.getValue();
                 if (value.getClass().isArray()) {
-                    builder.append(HttpUtils.buildArrayQueryString(name, value));
+                    builder.append(HttpUtils.buildArrayQueryString(
+                            name,
+                            value
+                    ));
                 } else {
                     builder.append(name).append("=").append(value.toString());
                 }
-                if (iteration < valueMap.size()) builder.append("&");
+                if (iteration < valueMap.size()) {
+                    builder.append("&");
+                }
             }
             return builder.toString();
         } catch (IllegalAccessException e) {
@@ -46,15 +49,19 @@ public abstract class AbsQueryBuilder implements QueryBuilder {
         }
     }
 
-    private Map<String, Object> getValues(QueryBuilder builder) throws IllegalAccessException {
+    private Map<String, Object> getValues(QueryBuilder builder)
+            throws IllegalAccessException {
         Map<String, Object> valueMap = new TreeMap<>();
         Field[] fields = builder.getClass().getDeclaredFields();
         if (fields.length > 0) {
             for (Field field : fields) {
                 field.setAccessible(true);
                 Object value = field.get(builder);
-                if (value == null) continue;
-                SerializedName annotationName = field.getAnnotation(SerializedName.class);
+                if (value == null) {
+                    continue;
+                }
+                SerializedName annotationName = field.getAnnotation(
+                        SerializedName.class);
                 String name;
                 if (annotationName != null) {
                     name = annotationName.value();

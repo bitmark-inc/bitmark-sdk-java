@@ -22,7 +22,10 @@ public class GetTransactionResponse implements Response {
     private AssetRecord asset;
 
     @VisibleForTesting
-    public GetTransactionResponse(TransactionRecord transaction, AssetRecord asset) {
+    public GetTransactionResponse(
+            TransactionRecord transaction,
+            AssetRecord asset
+    ) {
         this.transaction = transaction;
         this.asset = asset;
     }
@@ -37,8 +40,12 @@ public class GetTransactionResponse implements Response {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GetTransactionResponse that = (GetTransactionResponse) o;
         return Objects.equals(transaction, that.transaction) &&
                 Objects.equals(asset, that.asset);

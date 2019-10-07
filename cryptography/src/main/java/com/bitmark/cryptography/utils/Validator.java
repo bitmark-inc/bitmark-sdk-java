@@ -12,27 +12,43 @@ import com.bitmark.cryptography.error.ValidateException;
 public class Validator {
 
     public static <T> void checkNonNull(T input) {
-        if (input == null) throw new ValidateException.NullValueError();
+        if (input == null) {
+            throw new ValidateException.NullValueError();
+        }
     }
 
     public static void checkValidString(String input) {
-        if (input == null || input.isEmpty()) throw new ValidateException.InvalidString();
+        if (input == null || input.isEmpty()) {
+            throw new ValidateException.InvalidString();
+        }
     }
 
     public static void checkValidHex(String input) {
         checkNonNull(input);
-        if (input.length() % 2 == 1) input = "0" + input;
-        if (!Matcher.isHex(input)) throw new ValidateException.InvalidHex();
+        if (input.length() % 2 == 1) {
+            input = "0" + input;
+        }
+        if (!Matcher.isHex(input)) {
+            throw new ValidateException.InvalidHex();
+        }
     }
 
     public static void checkValidLength(byte[] data, int length) {
-        if (data == null || data.length != length)
-            throw new ValidateException.InvalidLength(length, data == null ? 0 : data.length);
+        if (data == null || data.length != length) {
+            throw new ValidateException.InvalidLength(
+                    length,
+                    data == null ? 0 : data.length
+            );
+        }
     }
 
     public static void checkValidLength(String[] data, int length) {
-        if (data == null || data.length != length)
-            throw new ValidateException.InvalidLength(length, data == null ? 0 : data.length);
+        if (data == null || data.length != length) {
+            throw new ValidateException.InvalidLength(
+                    length,
+                    data == null ? 0 : data.length
+            );
+        }
     }
 
     public static void checkValid(Specification specification) {
@@ -40,24 +56,41 @@ public class Validator {
     }
 
     public static void checkValid(Specification specification, String message) {
-        if (!specification.isSatisfied()) throw new ValidateException(message);
+        if (!specification.isSatisfied()) {
+            throw new ValidateException(message);
+        }
     }
 
-    public static void checkValid(Specification specification, ValidateException exception) {
-        if (!specification.isSatisfied()) throw exception;
+    public static void checkValid(
+            Specification specification,
+            ValidateException exception
+    ) {
+        if (!specification.isSatisfied()) {
+            throw exception;
+        }
     }
 
     public static <T> void checkValid(T data, Specification1<T> specification) {
         checkValid(data, specification, "Specification is not match");
     }
 
-    public static <T> void checkValid(T data, Specification1<T> specification, String message) {
-        if (!specification.isSatisfied(data)) throw new ValidateException(message);
+    public static <T> void checkValid(
+            T data,
+            Specification1<T> specification,
+            String message
+    ) {
+        if (!specification.isSatisfied(data)) {
+            throw new ValidateException(message);
+        }
     }
 
-    public static <T> void checkValid(T data, Specification1<T> specification,
-                                      ValidateException exception) {
-        if (!specification.isSatisfied(data)) throw exception;
+    public static <T> void checkValid(
+            T data, Specification1<T> specification,
+            ValidateException exception
+    ) {
+        if (!specification.isSatisfied(data)) {
+            throw exception;
+        }
     }
 
     public interface Specification1<T> {

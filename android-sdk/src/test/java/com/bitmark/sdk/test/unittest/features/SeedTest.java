@@ -35,6 +35,67 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SeedTest extends BaseTest {
 
+    private static Stream<byte[]> createInvalidSeedByteArray() {
+        return Stream.of(
+                null,
+                new byte[]{},
+                new byte[]{13, 45, 123, -23, 29, 98, -23, -34}
+        );
+    }
+
+    private static Stream<Arguments> createValidTwelveSeedByteArrayNetwork() {
+        return Stream.of(
+                Arguments.of(
+                        HEX.decode("442f54cd072a9638be4a0344e1a6e5f010"),
+                        TEST_NET
+                ),
+                Arguments.of(HEX.decode(
+                        "ba0e357d9157a1a7299fbc4cb4c933bd0"), LIVE_NET)
+        );
+    }
+
+    private static Stream<Arguments> createValidEncodedTwelveSeedByteArraySeedNetwork() {
+        return Stream.of(
+                Arguments.of(
+                        "9J877LVjhr3Xxd2nGzRVRVNUZpSKJF4TH",
+                        HEX.decode("442f54cd072a9638be4a0344e1a6e5f010"),
+                        TEST_NET
+                ),
+                Arguments.of("9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2", HEX.decode(
+                        "3ae670cd91c5e15d0254a2abc57ba29d00"),
+                        TEST_NET
+                )
+        );
+    }
+
+    private static Stream<Arguments> createValidEncodedTwentyFourSeedByteArraySeedNetwork() {
+        return Stream.of(
+                Arguments.of(
+                        "5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD",
+                        HEX.decode(
+                                "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"),
+                        TEST_NET
+                ));
+    }
+
+    private static Stream<Arguments> createSeedRecoveryPhrase() {
+        return Stream.of(
+                Arguments.of(
+                        new SeedTwelve(
+                                HEX.decode("442f54cd072a9638be4a0344e1a6e5f010")),
+                        "during kingdom crew atom practice brisk weird document eager artwork ride then"
+                ),
+                Arguments.of(
+                        new SeedTwentyFour(
+                                HEX.decode(
+                                        "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"),
+                                TEST_NET
+                        ),
+                        "accident syrup inquiry you clutch liquid fame upset joke glow best school repeat birth library combine access camera organ trial crazy jeans lizard science"
+                )
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("createValidTwelveSeedByteArrayNetwork")
     public void testConstructTwelveSeed__NewSeedInstanceIsReturn() {
@@ -46,7 +107,8 @@ public class SeedTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("createValidTwelveSeedByteArrayNetwork")
     public void testConstructTwelveSeedFromByteArray_ValidSeedBytes_NewSeedInstanceIsReturn(
-            byte[] seedBytes, Network network) {
+            byte[] seedBytes, Network network
+    ) {
         final Seed seed = new SeedTwelve(seedBytes);
         assertTrue(ArrayUtil.equals(seedBytes, seed.getSeedBytes()));
         assertEquals(network, seed.getNetwork());
@@ -54,15 +116,21 @@ public class SeedTest extends BaseTest {
 
     @ParameterizedTest
     @MethodSource("createInvalidSeedByteArray")
-    public void testConstructSeedFromByteArray_InvalidSeedBytes_ErrorIsThrow(byte[] seedBytes) {
+    public void testConstructSeedFromByteArray_InvalidSeedBytes_ErrorIsThrow(
+            byte[] seedBytes
+    ) {
         assertThrows(ValidateException.class, () -> new SeedTwelve(seedBytes));
-        assertThrows(ValidateException.class, () -> new SeedTwentyFour(seedBytes, NETWORK));
+        assertThrows(
+                ValidateException.class,
+                () -> new SeedTwentyFour(seedBytes, NETWORK)
+        );
     }
 
     @ParameterizedTest
     @MethodSource("createValidEncodedTwelveSeedByteArraySeedNetwork")
     public void testConstructTwelveSeedFromEncodedSeed_ValidEncodedSeed_NewSeedInstanceIsReturn(
-            String encodedSeed, byte[] seedBytes, Network network) {
+            String encodedSeed, byte[] seedBytes, Network network
+    ) {
         final Seed seed = SeedTwelve.fromEncodedSeed(encodedSeed);
         assertTrue(ArrayUtil.equals(seedBytes, seed.getSeedBytes()));
         assertEquals(network, seed.getNetwork());
@@ -71,20 +139,30 @@ public class SeedTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("createValidEncodedTwentyFourSeedByteArraySeedNetwork")
     public void testConstructTwentyFourSeedFromEncodedSeed_ValidEncodedSeed_NewSeedInstanceIsReturn(
-            String encodedSeed, byte[] seedBytes, Network network) {
+            String encodedSeed, byte[] seedBytes, Network network
+    ) {
         final Seed seed = SeedTwentyFour.fromEncodedSeed(encodedSeed);
         assertTrue(ArrayUtil.equals(seedBytes, seed.getSeedBytes()));
         assertEquals(network, seed.getNetwork());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QU2yGb1DABXZsVeD",
-                            "5XEECt18HGBGNET1PpxLhy5CsCLG2yGb1DABXZsVeD",
-                            "5XEECqWqA47qWg86DR5HJ29HhbVqwigHUAhgiBMqFSBycbiwnbY639sabc1"})
+    @ValueSource(strings = {
+            "5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QU2yGb1DABXZsVeD",
+            "5XEECt18HGBGNET1PpxLhy5CsCLG2yGb1DABXZsVeD",
+            "5XEECqWqA47qWg86DR5HJ29HhbVqwigHUAhgiBMqFSBycbiwnbY639sabc1"
+    })
     public void testConstructSeedFromEncodedSeed_InvalidEncodedSeed_ErrorIsThrow(
-            String encodedSeed) {
-        assertThrows(ValidateException.class, () -> SeedTwelve.fromEncodedSeed(encodedSeed));
-        assertThrows(ValidateException.class, () -> SeedTwentyFour.fromEncodedSeed(encodedSeed));
+            String encodedSeed
+    ) {
+        assertThrows(
+                ValidateException.class,
+                () -> SeedTwelve.fromEncodedSeed(encodedSeed)
+        );
+        assertThrows(
+                ValidateException.class,
+                () -> SeedTwentyFour.fromEncodedSeed(encodedSeed)
+        );
     }
 
     @Test
@@ -95,62 +173,53 @@ public class SeedTest extends BaseTest {
         assertEquals(SeedTwentyFour.SEED_BYTE_LENGTH, twentyFour.length());
         assertEquals(Version.TWELVE, twelve.getVersion());
         assertEquals(Version.TWENTY_FOUR, twentyFour.getVersion());
-        assertEquals(Ed25519.PRIVATE_KEY_LENGTH, twelve.getAuthKeyPair().privateKey().size());
-        assertEquals(Ed25519.PUBLIC_KEY_LENGTH, twelve.getAuthKeyPair().publicKey().size());
-        assertEquals(Ed25519.PRIVATE_KEY_LENGTH, twentyFour.getAuthKeyPair().privateKey().size());
-        assertEquals(Ed25519.PUBLIC_KEY_LENGTH, twentyFour.getAuthKeyPair().publicKey().size());
-        assertEquals(Box.PRIVATE_KEY_BYTE_LENGTH, twelve.getEncKeyPair().privateKey().size());
-        assertEquals(Box.PUB_KEY_BYTE_LENGTH, twelve.getEncKeyPair().publicKey().size());
-        assertEquals(Box.PRIVATE_KEY_BYTE_LENGTH, twentyFour.getEncKeyPair().privateKey().size());
-        assertEquals(Box.PUB_KEY_BYTE_LENGTH, twentyFour.getEncKeyPair().publicKey().size());
+        assertEquals(
+                Ed25519.PRIVATE_KEY_LENGTH,
+                twelve.getAuthKeyPair().privateKey().size()
+        );
+        assertEquals(
+                Ed25519.PUBLIC_KEY_LENGTH,
+                twelve.getAuthKeyPair().publicKey().size()
+        );
+        assertEquals(
+                Ed25519.PRIVATE_KEY_LENGTH,
+                twentyFour.getAuthKeyPair().privateKey().size()
+        );
+        assertEquals(
+                Ed25519.PUBLIC_KEY_LENGTH,
+                twentyFour.getAuthKeyPair().publicKey().size()
+        );
+        assertEquals(
+                Box.PRIVATE_KEY_BYTE_LENGTH,
+                twelve.getEncKeyPair().privateKey().size()
+        );
+        assertEquals(
+                Box.PUB_KEY_BYTE_LENGTH,
+                twelve.getEncKeyPair().publicKey().size()
+        );
+        assertEquals(
+                Box.PRIVATE_KEY_BYTE_LENGTH,
+                twentyFour.getEncKeyPair().privateKey().size()
+        );
+        assertEquals(
+                Box.PUB_KEY_BYTE_LENGTH,
+                twentyFour.getEncKeyPair().publicKey().size()
+        );
     }
 
     @ParameterizedTest
     @MethodSource("createSeedRecoveryPhrase")
-    public void testTwelveSeedGetRecoveryPhrase__ValidPhraseReturn(Seed seed,
-                                                                   String expectedPhrase) {
-        assertEquals(expectedPhrase,
-                     Arrays.stream(seed.getRecoveryPhrase(Locale.ENGLISH).getMnemonicWords())
-                           .collect(
-                                   Collectors.joining(" ")));
-    }
-
-
-    private static Stream<byte[]> createInvalidSeedByteArray() {
-        return Stream.of(null, new byte[]{}, new byte[]{13, 45, 123, -23, 29, 98, -23, -34});
-    }
-
-    private static Stream<Arguments> createValidTwelveSeedByteArrayNetwork() {
-        return Stream.of(Arguments.of(HEX.decode("442f54cd072a9638be4a0344e1a6e5f010"), TEST_NET),
-                         Arguments.of(HEX.decode(
-                                 "ba0e357d9157a1a7299fbc4cb4c933bd0"), LIVE_NET));
-    }
-
-    private static Stream<Arguments> createValidEncodedTwelveSeedByteArraySeedNetwork() {
-        return Stream.of(Arguments.of("9J877LVjhr3Xxd2nGzRVRVNUZpSKJF4TH",
-                                      HEX.decode("442f54cd072a9638be4a0344e1a6e5f010"),
-                                      TEST_NET),
-                         Arguments.of("9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2", HEX.decode(
-                                 "3ae670cd91c5e15d0254a2abc57ba29d00"),
-                                      TEST_NET));
-    }
-
-    private static Stream<Arguments> createValidEncodedTwentyFourSeedByteArraySeedNetwork() {
-        return Stream.of(
-                Arguments.of("5XEECt18HGBGNET1PpxLhy5CsCLG9jnmM6Q8QGF4U2yGb1DABXZsVeD",
-                             HEX.decode(
-                                     "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"),
-                             TEST_NET));
-    }
-
-    private static Stream<Arguments> createSeedRecoveryPhrase() {
-        return Stream.of(Arguments.of(new SeedTwelve(
-                                              HEX.decode("442f54cd072a9638be4a0344e1a6e5f010")),
-                                      "during kingdom crew atom practice brisk weird document eager artwork ride then"),
-                         Arguments.of(new SeedTwentyFour(HEX.decode(
-                                 "7b95d37f92c904949f79784c7855606b6a2d60416f01441671f4132cef60b607"),
-                                                         TEST_NET),
-                                      "accident syrup inquiry you clutch liquid fame upset joke glow best school repeat birth library combine access camera organ trial crazy jeans lizard science"));
+    public void testTwelveSeedGetRecoveryPhrase__ValidPhraseReturn(
+            Seed seed,
+            String expectedPhrase
+    ) {
+        assertEquals(
+                expectedPhrase,
+                Arrays.stream(seed.getRecoveryPhrase(Locale.ENGLISH)
+                        .getMnemonicWords())
+                        .collect(
+                                Collectors.joining(" "))
+        );
     }
 
 }

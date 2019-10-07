@@ -1,7 +1,6 @@
 package com.bitmark.sdk.authentication;
 
-import io.reactivex.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import javax.crypto.Cipher;
 
 /**

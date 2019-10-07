@@ -10,7 +10,8 @@ import java.util.Arrays;
  */
 public class ArrayUtils {
 
-    private ArrayUtils(){}
+    private ArrayUtils() {
+    }
 
     public static byte[] concat(byte[] a, byte[] b) {
         if (a != null && b != null) {
@@ -52,7 +53,13 @@ public class ArrayUtils {
             System.arraycopy(a, 0, rv, 0, a.length);
             System.arraycopy(b, 0, rv, a.length, b.length);
             System.arraycopy(c, 0, rv, a.length + b.length, c.length);
-            System.arraycopy(d, 0, rv, a.length + b.length + c.length, d.length);
+            System.arraycopy(
+                    d,
+                    0,
+                    rv,
+                    a.length + b.length + c.length,
+                    d.length
+            );
 
             return rv;
         } else if (d == null) {

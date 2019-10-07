@@ -38,10 +38,13 @@ public class Converter {
                 try {
                     String raw = res.body().string();
                     Map<String, Object> mapJson = jsonToMap(raw);
-                    JsonArray jsonArray = GSON.toJsonTree(mapJson.get("bitmarks")).getAsJsonArray();
+                    JsonArray jsonArray = GSON.toJsonTree(mapJson.get("bitmarks"))
+                            .getAsJsonArray();
                     List<String> txIds = new ArrayList<>(jsonArray.size());
                     for (JsonElement jsonElement : jsonArray) {
-                        txIds.add(jsonElement.getAsJsonObject().get("id").getAsString());
+                        txIds.add(jsonElement.getAsJsonObject()
+                                .get("id")
+                                .getAsString());
                     }
                     callback.onSuccess(txIds);
                 } catch (Throwable e) {
@@ -57,13 +60,17 @@ public class Converter {
     }
 
     public static Callback1<Response> toRegistrationResponse(
-            Callback1<RegistrationResponse> callback) {
+            Callback1<RegistrationResponse> callback
+    ) {
         return new Callback1<Response>() {
             @Override
             public void onSuccess(Response res) {
                 try {
                     String raw = res.body().string();
-                    RegistrationResponse response = GSON.fromJson(raw, RegistrationResponse.class);
+                    RegistrationResponse response = GSON.fromJson(
+                            raw,
+                            RegistrationResponse.class
+                    );
                     callback.onSuccess(response);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
@@ -84,8 +91,19 @@ public class Converter {
                 try {
                     String raw = response.body().string();
                     Map<String, Object> json = jsonToMap(raw);
-                    String txId = json.get("txid") != null ? json.get("txid").toString() : json.get("txId").toString();
-                    callback.onSuccess(txId);
+                    if (json.containsKey("status")) {
+                        String status = json.get("status").toString();
+                        if (status.equals("ok")) {
+                            callback.onSuccess("");
+                        } else {
+                            callback.onError(new UnexpectedException(
+                                    "response status is not ok"));
+                        }
+                    } else if (json.containsKey("txid")) {
+                        callback.onSuccess(json.get("txid").toString());
+                    } else if (json.containsKey("txId")) {
+                        callback.onSuccess(json.get("txId").toString());
+                    }
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }
@@ -145,7 +163,10 @@ public class Converter {
             public void onSuccess(Response res) {
                 try {
                     String raw = res.body().string();
-                    callback.onSuccess(GSON.fromJson(raw, GetBitmarkResponse.class));
+                    callback.onSuccess(GSON.fromJson(
+                            raw,
+                            GetBitmarkResponse.class
+                    ));
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }
@@ -160,13 +181,17 @@ public class Converter {
     }
 
     public static Callback1<Response> toGetBitmarksResponse(
-            Callback1<GetBitmarksResponse> callback) {
+            Callback1<GetBitmarksResponse> callback
+    ) {
         return new Callback1<Response>() {
             @Override
             public void onSuccess(Response res) {
                 try {
                     String raw = res.body().string();
-                    callback.onSuccess(GSON.fromJson(raw, GetBitmarksResponse.class));
+                    callback.onSuccess(GSON.fromJson(
+                            raw,
+                            GetBitmarksResponse.class
+                    ));
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }
@@ -187,10 +212,14 @@ public class Converter {
                 try {
                     String raw = res.body().string();
                     Map<String, Object> jsonMap = jsonToMap(raw);
-                    String json =
-                            GSON.toJsonTree(jsonMap.get("asset")).getAsJsonObject().toString();
-                    AssetRecord asset = GSON.fromJson(json, new TypeToken<AssetRecord>() {
-                    }.getType());
+                    String json = GSON.toJsonTree(jsonMap.get("asset"))
+                            .getAsJsonObject()
+                            .toString();
+                    AssetRecord asset = GSON.fromJson(
+                            json,
+                            new TypeToken<AssetRecord>() {
+                            }.getType()
+                    );
                     callback.onSuccess(asset);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
@@ -211,11 +240,14 @@ public class Converter {
                 try {
                     String raw = res.body().string();
                     Map<String, Object> jsonMap = jsonToMap(raw);
-                    String json =
-                            GSON.toJsonTree(jsonMap.get("assets")).getAsJsonArray().toString();
-                    List<AssetRecord> assets = GSON.fromJson(json,
-                                                             new TypeToken<List<AssetRecord>>() {
-                                                             }.getType());
+                    String json = GSON.toJsonTree(jsonMap.get("assets"))
+                            .getAsJsonArray()
+                            .toString();
+                    List<AssetRecord> assets = GSON.fromJson(
+                            json,
+                            new TypeToken<List<AssetRecord>>() {
+                            }.getType()
+                    );
                     callback.onSuccess(assets);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
@@ -230,14 +262,17 @@ public class Converter {
     }
 
     public static Callback1<Response> toGetTransactionResponse(
-            Callback1<GetTransactionResponse> callback) {
+            Callback1<GetTransactionResponse> callback
+    ) {
         return new Callback1<Response>() {
             @Override
             public void onSuccess(Response res) {
                 try {
                     String raw = res.body().string();
-                    GetTransactionResponse response =
-                            GSON.fromJson(raw, GetTransactionResponse.class);
+                    GetTransactionResponse response = GSON.fromJson(
+                            raw,
+                            GetTransactionResponse.class
+                    );
                     callback.onSuccess(response);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
@@ -252,14 +287,17 @@ public class Converter {
     }
 
     public static Callback1<Response> toGetTransactionsResponse(
-            Callback1<GetTransactionsResponse> callback) {
+            Callback1<GetTransactionsResponse> callback
+    ) {
         return new Callback1<Response>() {
             @Override
             public void onSuccess(Response res) {
                 try {
                     String raw = res.body().string();
-                    GetTransactionsResponse response =
-                            GSON.fromJson(raw, GetTransactionsResponse.class);
+                    GetTransactionsResponse response = GSON.fromJson(
+                            raw,
+                            GetTransactionsResponse.class
+                    );
                     callback.onSuccess(response);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
@@ -274,15 +312,18 @@ public class Converter {
     }
 
     public static Callback1<Response> toCreateShareResponse(
-            Callback1<Pair<String, String>> callback) {
+            Callback1<Pair<String, String>> callback
+    ) {
         return new Callback1<Response>() {
             @Override
             public void onSuccess(Response res) {
                 try {
                     String raw = res.body().string();
                     Map<String, Object> mapRes = jsonToMap(raw);
-                    callback.onSuccess(new Pair<>(mapRes.get("tx_id").toString(),
-                                                  mapRes.get("share_id").toString()));
+                    callback.onSuccess(new Pair<>(
+                            mapRes.get("tx_id").toString(),
+                            mapRes.get("share_id").toString()
+                    ));
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }
@@ -322,12 +363,17 @@ public class Converter {
                 try {
                     String raw = res.body().string();
                     Map<String, Object> jsonMap = jsonToMap(raw);
-                    String json =
-                            GSON.toJsonTree(jsonMap.get("shares")).getAsJsonArray().toString();
-                    List<ShareRecord> shares = GSON.fromJson(json,
-                                                             new TypeToken<List<ShareRecord>>() {
-                                                             }.getType());
-                    callback.onSuccess(!shares.isEmpty() ? shares.get(0) : null);
+                    String json = GSON.toJsonTree(jsonMap.get("shares"))
+                            .getAsJsonArray()
+                            .toString();
+                    List<ShareRecord> shares = GSON.fromJson(
+                            json,
+                            new TypeToken<List<ShareRecord>>() {
+                            }.getType()
+                    );
+                    callback.onSuccess(!shares.isEmpty()
+                                       ? shares.get(0)
+                                       : null);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }
@@ -347,11 +393,14 @@ public class Converter {
                 try {
                     String raw = res.body().string();
                     Map<String, Object> jsonMap = jsonToMap(raw);
-                    String json =
-                            GSON.toJsonTree(jsonMap.get("shares")).getAsJsonArray().toString();
-                    List<ShareRecord> shares = GSON.fromJson(json,
-                                                             new TypeToken<List<ShareRecord>>() {
-                                                             }.getType());
+                    String json = GSON.toJsonTree(jsonMap.get("shares"))
+                            .getAsJsonArray()
+                            .toString();
+                    List<ShareRecord> shares = GSON.fromJson(
+                            json,
+                            new TypeToken<List<ShareRecord>>() {
+                            }.getType()
+                    );
                     callback.onSuccess(shares);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
@@ -366,19 +415,43 @@ public class Converter {
     }
 
     public static Callback1<Response> toListShareOffersResponse(
-            Callback1<List<ShareGrantRecord>> callback) {
+            Callback1<List<ShareGrantRecord>> callback
+    ) {
         return new Callback1<Response>() {
             @Override
             public void onSuccess(Response res) {
                 try {
                     String raw = res.body().string();
                     Map<String, Object> jsonMap = jsonToMap(raw);
-                    String json =
-                            GSON.toJsonTree(jsonMap.get("offers")).getAsJsonArray().toString();
-                    List<ShareGrantRecord> shareGrantRecords = GSON.fromJson(json,
-                                                                             new TypeToken<List<ShareGrantRecord>>() {
-                                                                             }.getType());
+                    String json = GSON.toJsonTree(jsonMap.get("offers"))
+                            .getAsJsonArray()
+                            .toString();
+                    List<ShareGrantRecord> shareGrantRecords = GSON.fromJson(
+                            json,
+                            new TypeToken<List<ShareGrantRecord>>() {
+                            }.getType()
+                    );
                     callback.onSuccess(shareGrantRecords);
+                } catch (Throwable e) {
+                    callback.onError(new UnexpectedException(e));
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        };
+    }
+
+    public static Callback1<Response> toWsToken(Callback1<String> callback) {
+        return new Callback1<Response>() {
+            @Override
+            public void onSuccess(Response res) {
+                try {
+                    String raw = res.body().string();
+                    Map<String, Object> jsonMap = jsonToMap(raw);
+                    callback.onSuccess(jsonMap.get("token").toString());
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }

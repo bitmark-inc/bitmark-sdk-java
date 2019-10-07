@@ -1,7 +1,6 @@
 package com.bitmark.apiservice.params;
 
 import com.bitmark.cryptography.crypto.key.KeyPair;
-import com.bitmark.cryptography.error.ValidateException;
 
 /**
  * @author Hieu Pham
@@ -12,5 +11,5 @@ import com.bitmark.cryptography.error.ValidateException;
 
 public interface SingleParams extends Params {
 
-    byte[] sign(KeyPair key) throws ValidateException;
+    byte[] sign(KeyPair key);
 }

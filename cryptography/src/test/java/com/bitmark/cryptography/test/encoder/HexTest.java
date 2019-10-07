@@ -23,8 +23,10 @@ public class HexTest extends BaseEncoderTest {
 
     @ParameterizedTest
     @MethodSource("createBytesHex")
-    public void testEncode_ValidByteArrayInput_CorrectHexIsReturn(byte[] input,
-                                                                  String expectedHex) {
+    public void testEncode_ValidByteArrayInput_CorrectHexIsReturn(
+            byte[] input,
+            String expectedHex
+    ) {
         String output = HEX.encode(input);
         assertEquals(output, expectedHex);
     }
@@ -37,7 +39,10 @@ public class HexTest extends BaseEncoderTest {
 
     @ParameterizedTest
     @MethodSource("createHexBytes")
-    public void testDecode_ValidHexString_CorrectByteArrayReturn(String hex, byte[] expectedBytes) {
+    public void testDecode_ValidHexString_CorrectByteArrayReturn(
+            String hex,
+            byte[] expectedBytes
+    ) {
         final byte[] output = HEX.decode(hex);
         assertTrue(Arrays.equals(output, expectedBytes));
     }
@@ -49,10 +54,14 @@ public class HexTest extends BaseEncoderTest {
     }
 
     private static Stream<Arguments> createBytesHex() {
-        return Stream.of(Arguments.of(new byte[]{1, 15, 13, 38, 47, 51, 0, 73, 80},
-                "010f0d262f33004950"),
+        return Stream.of(
+                Arguments.of(
+                        new byte[]{1, 15, 13, 38, 47, 51, 0, 73, 80},
+                        "010f0d262f33004950"
+                ),
                 Arguments.of(new byte[]{13, 33, 50, 7, 120}, "0d21320778"),
-                Arguments.of(new byte[]{2, 4, 6, 8, 10}, "020406080a"));
+                Arguments.of(new byte[]{2, 4, 6, 8, 10}, "020406080a")
+        );
     }
 
     private static Stream<byte[]> createInvalidBytes() {
@@ -60,9 +69,14 @@ public class HexTest extends BaseEncoderTest {
     }
 
     private static Stream<Arguments> createHexBytes() {
-        return Stream.of(Arguments.of("10f0d262f33004950", new byte[]{1, 15, 13, 38, 47, 51, 0, 73, 80}),
+        return Stream.of(
+                Arguments.of(
+                        "10f0d262f33004950",
+                        new byte[]{1, 15, 13, 38, 47, 51, 0, 73, 80}
+                ),
                 Arguments.of("0d21320778", new byte[]{13, 33, 50, 7, 120}),
-                Arguments.of("020406080a", new byte[]{2, 4, 6, 8, 10}));
+                Arguments.of("020406080a", new byte[]{2, 4, 6, 8, 10})
+        );
     }
 
 }

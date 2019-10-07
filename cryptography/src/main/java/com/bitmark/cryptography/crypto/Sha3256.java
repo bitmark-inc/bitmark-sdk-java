@@ -1,6 +1,5 @@
 package com.bitmark.cryptography.crypto;
 
-import com.bitmark.cryptography.error.ValidateException;
 import org.bouncycastle.crypto.digests.SHAKEDigest;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 
@@ -24,45 +23,45 @@ public class Sha3256 implements Comparable<Sha3256> {
         this.bytes = bytes;
     }
 
-    public static Sha3256 from(byte[] bytes) throws ValidateException {
+    public static Sha3256 from(byte[] bytes) {
         checkValidLength(bytes, HASH_BYTE_LENGTH);
         return new Sha3256(bytes);
     }
 
-    public static Sha3256 from(String hexHash) throws ValidateException {
+    public static Sha3256 from(String hexHash) {
         checkValidHex(hexHash);
         return from(HEX.decode(hexHash));
     }
 
-    public static byte[] hash(byte[] input) throws ValidateException {
+    public static byte[] hash(byte[] input) {
         return hash(input, 0, input.length);
     }
 
-    public static byte[] hash(byte[] input, int offset, int length) throws ValidateException {
+    public static byte[] hash(byte[] input, int offset, int length) {
         checkValid(() -> offset >= 0 && length > 0);
         SHA3.DigestSHA3 digest = new SHA3.Digest256();
         digest.update(input, offset, length);
         return digest.digest();
     }
 
-    public static byte[] hash(String hexInput) throws ValidateException {
+    public static byte[] hash(String hexInput) {
         checkValidHex(hexInput);
         final byte[] input = HEX.decode(hexInput);
         return hash(input);
     }
 
-    public static byte[] hashTwice(byte[] input) throws ValidateException {
+    public static byte[] hashTwice(byte[] input) {
         return hashTwice(input, 0, input.length);
     }
 
-    public static byte[] hashTwice(byte[] input, int offset, int length) throws ValidateException {
+    public static byte[] hashTwice(byte[] input, int offset, int length) {
         checkValid(() -> offset >= 0 && length > 0);
         SHA3.DigestSHA3 digest = new SHA3.Digest256();
         digest.update(input, offset, length);
         return digest.digest(digest.digest());
     }
 
-    public static byte[] hashTwice(String hexInput) throws ValidateException {
+    public static byte[] hashTwice(String hexInput) {
         checkValidHex(hexInput);
         final byte[] input = HEX.decode(hexInput);
         return hashTwice(input);
@@ -102,10 +101,12 @@ public class Sha3256 implements Comparable<Sha3256> {
         for (int i = HASH_BYTE_LENGTH - 1; i >= 0; i--) {
             final int thisByte = this.bytes[i] & 0xFF;
             final int otherByte = other.bytes[i] & 0xFF;
-            if (thisByte > otherByte)
+            if (thisByte > otherByte) {
                 return 1;
-            if (thisByte < otherByte)
+            }
+            if (thisByte < otherByte) {
                 return -1;
+            }
         }
         return 0;
     }

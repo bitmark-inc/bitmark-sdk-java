@@ -11,5 +11,9 @@ import android.support.annotation.Nullable;
  */
 interface ActivityListener {
 
-    void onActivityResult(int requestCode, int resultCode, @Nullable Intent data);
+    void onActivityResult(
+            int requestCode,
+            int resultCode,
+            @Nullable Intent data
+    );
 }

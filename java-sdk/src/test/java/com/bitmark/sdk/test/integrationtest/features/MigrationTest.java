@@ -1,19 +1,27 @@
 package com.bitmark.sdk.test.integrationtest.features;
 
-import com.bitmark.apiservice.utils.Pair;
-import com.bitmark.apiservice.utils.callback.Callable1;
+import com.bitmark.apiservice.params.IssuanceParams;
+import com.bitmark.apiservice.params.RegistrationParams;
+import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;
+import com.bitmark.apiservice.response.GetBitmarksResponse;
+import com.bitmark.apiservice.response.RegistrationResponse;
+import com.bitmark.apiservice.utils.Awaitility;
+import com.bitmark.apiservice.utils.record.BitmarkRecord;
 import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.Account;
+import com.bitmark.sdk.features.Asset;
+import com.bitmark.sdk.features.Bitmark;
 import com.bitmark.sdk.features.Migration;
 import com.bitmark.sdk.test.integrationtest.BaseTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import com.bitmark.sdk.test.utils.extensions.TemporaryFolderExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.io.File;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.concurrent.TimeUnit;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
-import static com.bitmark.sdk.features.internal.Version.TWELVE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -23,57 +31,105 @@ import static org.junit.jupiter.api.Assertions.*;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
+@ExtendWith({TemporaryFolderExtension.class})
 public class MigrationTest extends BaseTest {
 
     private static final long TIMEOUT = 50000;
 
-    //@ParameterizedTest
-    @MethodSource("createValid24Words")
-    public void testMigration_Valid24Words_CorrectValuesReturn(String[] twentyFourWords)
+    @Test
+    public void testRekey_ValidAccount_CorrectValuesReturn(File asset)
             throws Throwable {
-        Pair<Account, List<String>> pair = await(callback -> Migration.migrate(twentyFourWords,
-                                                                               callback), TIMEOUT);
-        Account account = pair.first();
-        List<String> bitmarksId = pair.second();
-        assertTrue(Account.isValidAccountNumber(account.getAccountNumber()));
-        assertEquals(TWELVE.getMnemonicWordsLength(),
-                     account.getRecoveryPhrase().getMnemonicWords().length);
-        assertNotNull(bitmarksId);
-        assertFalse(bitmarksId.isEmpty());
+        // Register asset
+        Account owner = new Account();
+        RegistrationParams registrationParams = new RegistrationParams(
+                asset.getName(),
+                null
+        );
+        registrationParams.setFingerprintFromFile(asset);
+        registrationParams.sign(owner.getAuthKeyPair());
+        RegistrationResponse registrationResponse =
+                await(callback -> Asset.register(registrationParams, callback));
+        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        String assetId = assets.get(0).getId();
+
+        // Issue bitmarks
+        IssuanceParams issuanceParams = new IssuanceParams(
+                assetId,
+                owner.toAddress(),
+                10
+        );
+        issuanceParams.sign(owner.getAuthKeyPair());
+        List<String> txIds = await(callback -> Bitmark.issue(
+                issuanceParams,
+                callback
+        ));
+        assertEquals(txIds.size(), 10);
+        assertFalse(txIds.get(0).isEmpty());
+
+        // Loop for waiting bitmark to be confirmed
+        while (true) {
+            Thread.sleep(TimeUnit.SECONDS.toMillis(15));
+            BitmarkQueryBuilder builder = new BitmarkQueryBuilder().ownedBy(
+                    owner.getAccountNumber()).pending(true);
+            GetBitmarksResponse res = await(callback -> Bitmark.list(
+                    builder,
+                    callback
+            ));
+            if (res.getBitmarks()
+                    .stream()
+                    .noneMatch(bm -> bm.getStatus() == BitmarkRecord.Status.ISSUING)) {
+                break;
+            }
+        }
+
+        txIds = await(callback -> Migration.rekey(
+                owner,
+                new Account(),
+                callback
+        ), TIMEOUT);
+        assertFalse(txIds.isEmpty());
+        assertEquals(10, txIds.size());
     }
 
-    //@ParameterizedTest
-    @MethodSource("createInvalid24Words")
-    public void testMigration_Invalid24Words_ErrorIsThrow(String[] words) {
-        assertThrows(ValidateException.class,
-                     () -> await((Callable1<Pair<Account, List<String>>>) callback -> Migration
-                             .migrate(words, callback)));
+    @Test
+    public void testRekey_EmptyBitmark_NothingBeRekey() throws Throwable {
+        List<String> txIds = await(callback -> Migration.rekey(
+                new Account(),
+                new Account(),
+                callback
+        ), TIMEOUT);
+        assertTrue(txIds.isEmpty());
     }
 
-    private static Stream<Arguments> createValid24Words() {
-        return Stream.of(Arguments.of((Object) ("abuse tooth riot whale dance dawn armor patch " +
-                                                "tube sugar " +
-                                                "edit clean guilt person lake height tilt wall prosper episode produce " +
-                                                "spy artist account").split(" ")),
-                         Arguments.of((Object) (
-                                 "accident syrup inquiry you clutch liquid fame upset joke " +
-                                 "glow best" +
-                                 " school repeat birth library combine access camera organ trial crazy " +
-                                 "jeans lizard science").split(" ")));
-    }
+    @Test
+    public void testRekey_InvalidAccount_ErrorThrow() {
 
-    private static Stream<Arguments> createInvalid24Words() {
-        return Stream.of(Arguments.of((Object) new String[]{}),
-                         Arguments.of((Object) new String[24]),
-                         Arguments.of((Object) ("abuse tooth riot " +
-                                                "whale dance dawn " +
-                                                "armor patch tube sugar edit clean guilt person lake height tilt wall " +
-                                                "prosper episode produce spy artist accountant")
-                                 .split(" ")),
-                         Arguments.of((Object) (
-                                 "during kingdom crew atom practice brisk weird document " +
-                                 "eager artwork ride then").split(" ")));
-    }
+        assertThrows(
+                ValidateException.class,
+                () -> Awaitility.<List<String>>await(callback -> Migration.rekey(
+                        null,
+                        new Account(),
+                        callback
+                ))
+        );
+        assertThrows(
+                ValidateException.class,
+                () -> Awaitility.<List<String>>await(callback -> Migration.rekey(
+                        new Account(),
+                        null,
+                        callback
+                ))
+        );
 
+        Account account = new Account();
+        assertThrows(
+                ValidateException.class,
+                () -> Awaitility.<List<String>>await(callback -> Migration.rekey(
+                        account,
+                        account,
+                        callback
+                ))
+        );
+    }
 
 }

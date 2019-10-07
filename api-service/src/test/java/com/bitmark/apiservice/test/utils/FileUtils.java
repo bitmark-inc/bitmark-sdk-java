@@ -29,12 +29,12 @@ public class FileUtils {
             }
             return builder.toString();
         }
-        throw new FileNotFoundException("File with path " + file.getAbsolutePath() + " is not " +
-                                        "found");
+        throw new FileNotFoundException("File with path " + file.getAbsolutePath() + " is not found");
     }
 
     public static String loadResponse(String name) throws IOException {
-        String json = load(new File(FileUtils.class.getResource("/response" + name).getFile()));
+        String json = load(new File(FileUtils.class.getResource("/response" + name)
+                .getFile()));
         Matcher matcher = Pattern.compile("[^\\s\"]+|\"[^\"]*\"").matcher(json);
         StringBuilder builder = new StringBuilder();
         while (matcher.find()) {
@@ -44,7 +44,8 @@ public class FileUtils {
     }
 
     public static String loadRequest(String name) throws IOException {
-        String json = load(new File(FileUtils.class.getResource("/request" + name).getFile()));
+        String json = load(new File(FileUtils.class.getResource("/request" + name)
+                .getFile()));
         Matcher matcher = Pattern.compile("[^\\s\"]+|\"[^\"]*\"").matcher(json);
         StringBuilder builder = new StringBuilder();
         while (matcher.find()) {
@@ -57,7 +58,12 @@ public class FileUtils {
         return new File(FileUtils.class.getResource("/" + name).getFile());
     }
 
-    public static File createFile(String absolutePath, String content) throws IOException {
+    public static byte[] getResourceAsBytes(String name) throws IOException {
+        return getBytes(getResourceFile(name));
+    }
+
+    public static File createFile(String absolutePath, String content)
+            throws IOException {
         final byte[] data = RAW.decode(content);
         File file = new File(absolutePath);
         FileOutputStream stream = new FileOutputStream(file);
@@ -66,8 +72,29 @@ public class FileUtils {
         return file;
     }
 
-    public static File createTempFile(String name, Path directory, String content)
+    public static File createTempFile(
+            String name,
+            Path directory,
+            String content
+    )
             throws IOException {
-        return createFile(new File(directory.toFile(), name).getAbsolutePath(), content);
+        return createFile(
+                new File(directory.toFile(), name).getAbsolutePath(),
+                content
+        );
+    }
+
+    public static byte[] getBytes(File file) throws IOException {
+        if (!file.exists()) {
+            throw new FileNotFoundException("File with path " + file.getAbsolutePath() + " is not found");
+        }
+        byte[] bytes = new byte[(int) file.length()];
+        FileInputStream stream = new FileInputStream(file);
+        try {
+            stream.read(bytes);
+        } finally {
+            stream.close();
+        }
+        return bytes;
     }
 }

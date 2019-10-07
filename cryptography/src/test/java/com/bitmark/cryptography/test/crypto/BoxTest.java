@@ -33,13 +33,21 @@ public class BoxTest extends BaseCryptoTest {
         byte[] nonce = secureRandomBytes(Box.NONCE_BYTE_LENGTH);
         byte[] message = RAW.decode(MESSAGE);
 
-        byte[] cipher =
-                Box.box(message, nonce, HEX.decode(ALICE_PUBLIC_KEY), HEX.decode(BOB_PRIVATE_KEY));
+        byte[] cipher = Box.box(
+                message,
+                nonce,
+                HEX.decode(ALICE_PUBLIC_KEY),
+                HEX.decode(BOB_PRIVATE_KEY)
+        );
         assertNotNull(cipher);
         assertNotZeroBytes(cipher);
 
-        byte[] actualMessage =
-                Box.unbox(cipher, nonce, HEX.decode(BOB_PUBLIC_KEY), HEX.decode(ALICE_PRIVATE_KEY));
+        byte[] actualMessage = Box.unbox(
+                cipher,
+                nonce,
+                HEX.decode(BOB_PUBLIC_KEY),
+                HEX.decode(ALICE_PRIVATE_KEY)
+        );
         assertNotNull(actualMessage);
         assertNotZeroBytes(actualMessage);
         assertTrue(Arrays.equals(message, actualMessage));
@@ -48,16 +56,26 @@ public class BoxTest extends BaseCryptoTest {
 
     @ParameterizedTest
     @MethodSource("createInvalidParamsForBox")
-    public void testBox_InvalidParams_ErrorThrown(byte[] message, byte[] nonce, byte[] publicKey,
-                                                  byte[] privateKey) {
-        assertThrows(ValidateException.class, () -> Box.box(message, nonce, publicKey, privateKey));
+    public void testBox_InvalidParams_ErrorThrown(
+            byte[] message, byte[] nonce, byte[] publicKey,
+            byte[] privateKey
+    ) {
+        assertThrows(
+                ValidateException.class,
+                () -> Box.box(message, nonce, publicKey, privateKey)
+        );
     }
 
     @ParameterizedTest
     @MethodSource("createInvalidParamsForBox")
-    public void testUnbox_InvalidParams_ErrorThrown(byte[] cipher, byte[] nonce, byte[] publicKey,
-                                                    byte[] privateKey) {
-        assertThrows(ValidateException.class, () -> Box.box(cipher, nonce, publicKey, privateKey));
+    public void testUnbox_InvalidParams_ErrorThrown(
+            byte[] cipher, byte[] nonce, byte[] publicKey,
+            byte[] privateKey
+    ) {
+        assertThrows(
+                ValidateException.class,
+                () -> Box.box(cipher, nonce, publicKey, privateKey)
+        );
     }
 
     @RepeatedTest(3)
@@ -71,8 +89,12 @@ public class BoxTest extends BaseCryptoTest {
     @ParameterizedTest
     @MethodSource("createInvalidKey")
     public void testGenKeyPairWithPrivateKey_InvalidPrivateKey_CorrectKeyPairReturn(
-            byte[] privateKey) {
-        assertThrows(ValidateException.class, () -> Box.generateKeyPair(privateKey));
+            byte[] privateKey
+    ) {
+        assertThrows(
+                ValidateException.class,
+                () -> Box.generateKeyPair(privateKey)
+        );
     }
 
     @RepeatedTest(3)
@@ -88,15 +110,21 @@ public class BoxTest extends BaseCryptoTest {
         byte[] nonce = secureRandomBytes(Box.NONCE_BYTE_LENGTH);
         byte[] message = RAW.decode(MESSAGE);
 
-        byte[] cipher =
-                Box.boxCurve25519XSalsa20Poly1305(message, nonce, HEX.decode(ALICE_PUBLIC_KEY),
-                                                  HEX.decode(BOB_PRIVATE_KEY));
+        byte[] cipher = Box.boxCurve25519XSalsa20Poly1305(
+                message,
+                nonce,
+                HEX.decode(ALICE_PUBLIC_KEY),
+                HEX.decode(BOB_PRIVATE_KEY)
+        );
         assertNotNull(cipher);
         assertNotZeroBytes(cipher);
 
-        byte[] actualMessage =
-                Box.unboxCurve25519XSalsa20Poly1305(cipher, nonce, HEX.decode(BOB_PUBLIC_KEY),
-                                                    HEX.decode(ALICE_PRIVATE_KEY));
+        byte[] actualMessage = Box.unboxCurve25519XSalsa20Poly1305(
+                cipher,
+                nonce,
+                HEX.decode(BOB_PUBLIC_KEY),
+                HEX.decode(ALICE_PRIVATE_KEY)
+        );
         assertNotNull(actualMessage);
         assertNotZeroBytes(actualMessage);
         assertTrue(Arrays.equals(message, actualMessage));
@@ -105,20 +133,38 @@ public class BoxTest extends BaseCryptoTest {
 
     @ParameterizedTest
     @MethodSource("createInvalidParamsForBox")
-    public void testBoxCurve25519_InvalidParams_ErrorThrown(byte[] message, byte[] nonce,
-                                                            byte[] publicKey,
-                                                            byte[] privateKey) {
-        assertThrows(ValidateException.class, () -> Box
-                .boxCurve25519XSalsa20Poly1305(message, nonce, publicKey, privateKey));
+    public void testBoxCurve25519_InvalidParams_ErrorThrown(
+            byte[] message, byte[] nonce,
+            byte[] publicKey,
+            byte[] privateKey
+    ) {
+        assertThrows(
+                ValidateException.class,
+                () -> Box.boxCurve25519XSalsa20Poly1305(
+                        message,
+                        nonce,
+                        publicKey,
+                        privateKey
+                )
+        );
     }
 
     @ParameterizedTest
     @MethodSource("createInvalidParamsForBox")
-    public void testUnboxCurve25519_InvalidParams_ErrorThrown(byte[] cipher, byte[] nonce,
-                                                              byte[] publicKey,
-                                                              byte[] privateKey) {
-        assertThrows(ValidateException.class, () -> Box
-                .unboxCurve25519XSalsa20Poly1305(cipher, nonce, publicKey, privateKey));
+    public void testUnboxCurve25519_InvalidParams_ErrorThrown(
+            byte[] cipher, byte[] nonce,
+            byte[] publicKey,
+            byte[] privateKey
+    ) {
+        assertThrows(
+                ValidateException.class,
+                () -> Box.unboxCurve25519XSalsa20Poly1305(
+                        cipher,
+                        nonce,
+                        publicKey,
+                        privateKey
+                )
+        );
     }
 
     private static Stream<byte[]> createInvalidKey() {
@@ -126,10 +172,15 @@ public class BoxTest extends BaseCryptoTest {
     }
 
     private static Stream<Arguments> createInvalidParamsForBox() {
-        return Stream.of(Arguments.of(null, null, null, null),
-                         Arguments.of(null, new byte[]{}, new byte[]{}, new byte[]{}), Arguments
-                                 .of(new byte[15], new byte[1],
-                                     new byte[Box.PUB_KEY_BYTE_LENGTH],
-                                     new byte[Box.PRIVATE_KEY_BYTE_LENGTH]));
+        return Stream.of(
+                Arguments.of(null, null, null, null),
+                Arguments.of(null, new byte[]{}, new byte[]{}, new byte[]{}),
+                Arguments.of(
+                        new byte[15],
+                        new byte[1],
+                        new byte[Box.PUB_KEY_BYTE_LENGTH],
+                        new byte[Box.PRIVATE_KEY_BYTE_LENGTH]
+                )
+        );
     }
 }

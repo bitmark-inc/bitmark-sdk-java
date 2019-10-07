@@ -8,13 +8,12 @@ import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.encoder.VarInt;
 import com.bitmark.cryptography.crypto.key.PublicKey;
-import com.bitmark.cryptography.error.ValidateException;
 
 import java.util.Arrays;
 
 import static com.bitmark.apiservice.configuration.KeyPart.PUBLIC_KEY;
 import static com.bitmark.cryptography.crypto.encoder.Base58.BASE_58;
-import static com.bitmark.cryptography.utils.Validator.checkNonNull;
+import static com.bitmark.cryptography.utils.Validator.checkValid;
 
 /**
  * @author Hieu Pham
@@ -23,11 +22,11 @@ import static com.bitmark.cryptography.utils.Validator.checkNonNull;
  * Copyright © 2018 Bitmark. All rights reserved.
  */
 
-public class Address implements Validation {
+public class Address {
 
     public static final int CHECKSUM_LENGTH = 4;
 
-    private PublicKey key;
+    private PublicKey publicKey;
 
     private Network network;
 
@@ -38,35 +37,51 @@ public class Address implements Validation {
 
         // Verify address length
         int addressLength = keyVariantLength + Ed25519.PUBLIC_KEY_LENGTH + CHECKSUM_LENGTH;
-        if (addressLength != addressBytes.length) throw new InvalidAddressException("Address " +
-                                                                                    "length is invalid. The expected is " +
-                                                                                    addressLength +
-                                                                                    " but actual is " +
-                                                                                    addressBytes.length);
+        if (addressLength != addressBytes.length) {
+            throw new InvalidAddressException(
+                    "Address length is invalid. The expected is " + addressLength + " but actual is " + addressBytes.length);
+        }
 
         // Verify checksum
-        final byte[] checksumData = ArrayUtil.slice(addressBytes, 0,
-                                                    keyVariantLength + Ed25519.PUBLIC_KEY_LENGTH);
-        final byte[] checksum = ArrayUtil.slice(Sha3256.hash(checksumData), 0, CHECKSUM_LENGTH);
-        final byte[] checksumFromAddress = ArrayUtil.slice(addressBytes,
-                                                           addressLength - CHECKSUM_LENGTH,
-                                                           addressLength);
-        if (!ArrayUtil.equals(checksumFromAddress, checksum)) throw new InvalidAddressException(
-                "Invalid checksum. The expected is " + Arrays.toString(checksum) + " but actual " +
-                "is " + Arrays.toString(checksumFromAddress));
+        final byte[] checksumData = ArrayUtil.slice(
+                addressBytes,
+                0,
+                keyVariantLength + Ed25519.PUBLIC_KEY_LENGTH
+        );
+        final byte[] checksum = ArrayUtil.slice(
+                Sha3256.hash(checksumData),
+                0,
+                CHECKSUM_LENGTH
+        );
+        final byte[] checksumFromAddress = ArrayUtil.slice(
+                addressBytes,
+                addressLength - CHECKSUM_LENGTH,
+                addressLength
+        );
+        if (!ArrayUtil.equals(checksumFromAddress, checksum)) {
+            throw new InvalidAddressException(
+                    "Invalid checksum. The expected is " + Arrays.toString(
+                            checksum) + " but actual is " + Arrays.toString(
+                            checksumFromAddress));
+        }
 
         // Check for whether it's an address
-        if ((keyVariant & 0x01) != PUBLIC_KEY.value())
+        if ((keyVariant & 0x01) != PUBLIC_KEY.value()) {
             throw new InvalidAddressException();
+        }
 
         // Verify network value
         int networkValue = (keyVariant >> 1) & 0x01;
         final Network network = Network.valueOf(networkValue);
-        if (!Network.isValid(networkValue) || GlobalConfiguration.network() != network)
+        if (!Network.isValid(networkValue) || GlobalConfiguration.network() != network) {
             throw new InvalidNetworkException(networkValue);
+        }
 
-        final byte[] publicKey = ArrayUtil.slice(addressBytes, keyVariantLength,
-                                                 addressLength - CHECKSUM_LENGTH);
+        final byte[] publicKey = ArrayUtil.slice(
+                addressBytes,
+                keyVariantLength,
+                addressLength - CHECKSUM_LENGTH
+        );
         return new Address(PublicKey.from(publicKey), network);
 
     }
@@ -80,44 +95,56 @@ public class Address implements Validation {
         }
     }
 
-    public static Address getDefault(PublicKey key, Network network) throws ValidateException {
-        checkNonNull(key);
-        checkNonNull(network);
+    public static Address getDefault(PublicKey key, Network network) {
+        checkValid(
+                () -> null != key && Ed25519.PUBLIC_KEY_LENGTH == key.size(),
+                "invalid public key"
+        );
+        checkValid(
+                () -> null != network && network == GlobalConfiguration.network(),
+                "invalid network"
+        );
         return new Address(key, network);
     }
 
     private Address() {
     }
 
-    private Address(PublicKey key, Network network) {
+    private Address(PublicKey publicKey, Network network) {
         this();
-        this.key = key;
+        this.publicKey = publicKey;
         this.network = network;
     }
 
     public byte[] pack() {
-        return ArrayUtil.concat(getPrefix(), key.toBytes());
-    }
-
-    @Override
-    public boolean isValid() {
-        return key != null && key.size() == Ed25519.PUBLIC_KEY_LENGTH && network != null;
+        return ArrayUtil.concat(getPrefix(), publicKey.toBytes());
     }
 
     public Network getNetwork() {
         return network;
     }
 
-    public PublicKey getKey() {
-        return key;
+    public PublicKey getPublicKey() {
+        return publicKey;
     }
 
     public String getAddress() {
         final byte[] keyVariantVarInt = getPrefix();
-        final byte[] publicKeyBytes = key.toBytes();
-        final byte[] preChecksum = ArrayUtil.concat(keyVariantVarInt, publicKeyBytes);
-        final byte[] checksum = ArrayUtil.slice(Sha3256.hash(preChecksum), 0, CHECKSUM_LENGTH);
-        final byte[] address = ArrayUtil.concat(keyVariantVarInt, publicKeyBytes, checksum);
+        final byte[] publicKeyBytes = publicKey.toBytes();
+        final byte[] preChecksum = ArrayUtil.concat(
+                keyVariantVarInt,
+                publicKeyBytes
+        );
+        final byte[] checksum = ArrayUtil.slice(
+                Sha3256.hash(preChecksum),
+                0,
+                CHECKSUM_LENGTH
+        );
+        final byte[] address = ArrayUtil.concat(
+                keyVariantVarInt,
+                publicKeyBytes,
+                checksum
+        );
         return BASE_58.encode(address);
     }
 

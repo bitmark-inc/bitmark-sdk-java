@@ -1,7 +1,5 @@
 package com.bitmark.cryptography.crypto.encoder;
 
-import com.bitmark.cryptography.error.ValidateException;
-
 import static com.bitmark.cryptography.utils.Validator.*;
 
 /**
@@ -15,16 +13,34 @@ public class Hex implements Encoder {
 
     public static final Hex HEX = new Hex();
 
-    private static final char[] DIGITS =
-            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    private static final char[] DIGITS = {
+            '0',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            'a',
+            'b',
+            'c',
+            'd',
+            'e',
+            'f'
+    };
 
     private Hex() {
     }
 
     @Override
-    public byte[] decode(String value) throws ValidateException {
+    public byte[] decode(String value) {
         checkValidHex(value);
-        if (value.length() % 2 == 1) value = "0" + value;
+        if (value.length() % 2 == 1) {
+            value = "0" + value;
+        }
         final char[] data = value.toCharArray();
         final int len = data.length;
 
@@ -43,7 +59,7 @@ public class Hex implements Encoder {
     }
 
     @Override
-    public String encode(byte[] data) throws ValidateException {
+    public String encode(byte[] data) {
         checkNonNull(data);
         checkValid(() -> data.length > 0);
         final int len = data.length;

@@ -16,12 +16,14 @@ public class VarInt {
     private VarInt() {
     }
 
-    public static void writeSignedVarLong(long value, DataOutput out) throws IOException {
+    public static void writeSignedVarLong(long value, DataOutput out)
+            throws IOException {
         // Great trick from http://code.google.com/apis/protocolbuffers/docs/encoding.html#types
         writeUnsignedVarLong((value << 1) ^ (value >> 63), out);
     }
 
-    public static void writeUnsignedVarLong(long value, DataOutput out) throws IOException {
+    public static void writeUnsignedVarLong(long value, DataOutput out)
+            throws IOException {
         while ((value & 0xFFFFFFFFFFFFFF80L) != 0L) {
             out.writeByte(((int) value & 0x7F) | 0x80);
             value >>>= 7;
@@ -29,12 +31,14 @@ public class VarInt {
         out.writeByte((int) value & 0x7F);
     }
 
-    public static void writeSignedVarInt(int value, DataOutput out) throws IOException {
+    public static void writeSignedVarInt(int value, DataOutput out)
+            throws IOException {
         // Great trick from http://code.google.com/apis/protocolbuffers/docs/encoding.html#types
         writeUnsignedVarInt((value << 1) ^ (value >> 31), out);
     }
 
-    public static void writeUnsignedVarInt(int value, DataOutput out) throws IOException {
+    public static void writeUnsignedVarInt(int value, DataOutput out)
+            throws IOException {
         while ((value & 0xFFFFFF80) != 0L) {
             out.writeByte((value & 0x7F) | 0x80);
             value >>>= 7;
@@ -80,7 +84,8 @@ public class VarInt {
             value |= (b & 0x7F) << i;
             i += 7;
             if (i > 63) {
-                throw new IllegalArgumentException("Variable length quantity is too long");
+                throw new IllegalArgumentException(
+                        "Variable length quantity is too long");
             }
         }
         return value | (b << i);
@@ -104,7 +109,8 @@ public class VarInt {
             value |= (b & 0x7F) << i;
             i += 7;
             if (i > 35) {
-                throw new IllegalArgumentException("Variable length quantity is too long");
+                throw new IllegalArgumentException(
+                        "Variable length quantity is too long");
             }
         }
         return value | (b << i);
@@ -132,7 +138,8 @@ public class VarInt {
             value |= (b & 0x7f) << i;
             i += 7;
             if (i > 35) {
-                throw new IllegalArgumentException("Variable length quantity is too long");
+                throw new IllegalArgumentException(
+                        "Variable length quantity is too long");
             }
         }
         return value | (rb << i);

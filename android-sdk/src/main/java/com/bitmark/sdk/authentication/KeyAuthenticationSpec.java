@@ -24,12 +24,12 @@ public class KeyAuthenticationSpec {
 
     public Builder newBuilder(Context context) {
         return new Builder(context).setKeyAlias(getKeyAlias())
-                                   .setAuthenticationRequired(isAuthenticationRequired())
-                                   .setAuthenticationValidityDuration(
-                                           getAuthenticationValidityDuration())
-                                   .setAuthenticationDescription(
-                                           getAuthenticationDescription())
-                                   .setAuthenticationTitle(getAuthenticationTitle());
+                .setAuthenticationRequired(isAuthenticationRequired())
+                .setAuthenticationValidityDuration(
+                        getAuthenticationValidityDuration())
+                .setAuthenticationDescription(getAuthenticationDescription())
+                .setAuthenticationTitle(getAuthenticationTitle())
+                .setUseAlternativeAuthentication(useAlternativeAuthentication());
     }
 
     public boolean isAuthenticationRequired() {
@@ -52,8 +52,16 @@ public class KeyAuthenticationSpec {
         return builder.keyAlias;
     }
 
+    public boolean useAlternativeAuthentication() {
+        return builder.useAlternativeAuthentication;
+    }
+
     public boolean willInvalidateInTimeFrame() {
         return getAuthenticationValidityDuration() != -1;
+    }
+
+    public boolean needAuthenticateImmediately() {
+        return isAuthenticationRequired() && !willInvalidateInTimeFrame();
     }
 
     public static final class Builder {
@@ -68,6 +76,8 @@ public class KeyAuthenticationSpec {
 
         private String authenticationDescription;
 
+        private boolean useAlternativeAuthentication;
+
         public Builder(Context context) {
             initDefault(context);
         }
@@ -75,6 +85,7 @@ public class KeyAuthenticationSpec {
         private void initDefault(Context context) {
             keyAlias = BuildConfig.APPLICATION_ID + "encryption_key";
             isAuthenticationRequired = false;
+            useAlternativeAuthentication = false;
             authenticationTitle = context.getString(R.string.authentication);
             authenticationDescription = context.getString(R.string.please_authenticate_to_unlock);
 
@@ -86,7 +97,8 @@ public class KeyAuthenticationSpec {
         }
 
         public Builder setAuthenticationValidityDuration(
-                int authenticationValidityDuration) {
+                int authenticationValidityDuration
+        ) {
             this.authenticationValidityDuration = authenticationValidityDuration;
             return this;
         }
@@ -103,6 +115,11 @@ public class KeyAuthenticationSpec {
 
         public Builder setKeyAlias(String keyAlias) {
             this.keyAlias = keyAlias;
+            return this;
+        }
+
+        public Builder setUseAlternativeAuthentication(boolean use) {
+            this.useAlternativeAuthentication = use;
             return this;
         }
 

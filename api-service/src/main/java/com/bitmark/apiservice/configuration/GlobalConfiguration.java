@@ -1,5 +1,6 @@
 package com.bitmark.apiservice.configuration;
 
+import com.bitmark.apiservice.middleware.HttpObserver;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import static com.bitmark.cryptography.utils.Validator.checkNonNull;
@@ -34,8 +35,10 @@ public class GlobalConfiguration {
                     INSTANCE = new GlobalConfiguration(builder);
                 }
             }
-        } else
-            throw new UnsupportedOperationException("GlobalConfiguration must be initialize once");
+        } else {
+            throw new UnsupportedOperationException(
+                    "GlobalConfiguration can only be initialized once");
+        }
     }
 
     public static boolean isInitialized() {
@@ -61,19 +64,21 @@ public class GlobalConfiguration {
         return INSTANCE.builder.connectionTimeout;
     }
 
-    public static HttpLoggingInterceptor.Logger logger() {
-        validate();
-        return INSTANCE.builder.logger != null ? INSTANCE.builder.logger : HttpLoggingInterceptor.Logger.DEFAULT;
-    }
-
     public static HttpLoggingInterceptor.Level logLevel() {
         validate();
-        return INSTANCE.builder.logLevel != null ? INSTANCE.builder.logLevel : HttpLoggingInterceptor.Level.BASIC;
+        return INSTANCE.builder.logLevel;
+    }
+
+    public static HttpObserver httpObserver() {
+        validate();
+        return INSTANCE.builder.httpObserver;
     }
 
     private static void validate() {
-        if (INSTANCE == null) throw new UnsupportedOperationException("You must init " +
-                "Configuration before");
+        if (INSTANCE == null) {
+            throw new UnsupportedOperationException(
+                    "you have to call createInstance at first");
+        }
     }
 
 
@@ -85,9 +90,9 @@ public class GlobalConfiguration {
 
         private int connectionTimeout = 30; // 30 seconds
 
-        private HttpLoggingInterceptor.Logger logger;
-
         private HttpLoggingInterceptor.Level logLevel;
+
+        private HttpObserver httpObserver;
 
         Builder() {
         }
@@ -112,13 +117,13 @@ public class GlobalConfiguration {
             return this;
         }
 
-        public Builder withLogger(HttpLoggingInterceptor.Logger logger) {
-            this.logger = logger;
+        public Builder withLogLevel(HttpLoggingInterceptor.Level logLevel) {
+            this.logLevel = logLevel;
             return this;
         }
 
-        public Builder withLogLevel(HttpLoggingInterceptor.Level logLevel) {
-            this.logLevel = logLevel;
+        public Builder withHttpObserver(HttpObserver httpObserver) {
+            this.httpObserver = httpObserver;
             return this;
         }
 
@@ -127,9 +132,9 @@ public class GlobalConfiguration {
         }
 
         private void validate() {
-            if (apiToken == null || apiToken.isEmpty())
+            if (apiToken == null || apiToken.isEmpty()) {
                 throw new IllegalArgumentException("Api token is required");
-
+            }
         }
 
     }

@@ -22,37 +22,70 @@ public interface BitmarkApi {
 
     void issueBitmark(IssuanceParams params, Callback1<List<String>> callback);
 
-    void registerAsset(RegistrationParams params, Callback1<RegistrationResponse> callback);
+    void registerAsset(
+            RegistrationParams params,
+            Callback1<RegistrationResponse> callback
+    );
 
     void transferBitmark(TransferParams params, Callback1<String> callback);
 
     void offerBitmark(TransferOfferParams params, Callback1<String> callback);
 
-    void respondBitmarkOffer(TransferResponseParams params, Callback1<String> callback);
+    void respondBitmarkOffer(
+            TransferResponseParams params,
+            Callback1<String> callback
+    );
 
-    void getBitmark(String bitmarkId, boolean includeAsset, Callback1<GetBitmarkResponse> callback);
+    void getBitmark(
+            String bitmarkId,
+            boolean includeAsset,
+            Callback1<GetBitmarkResponse> callback
+    );
 
-    void listBitmarks(QueryParams params, Callback1<GetBitmarksResponse> callback);
+    void listBitmarks(
+            QueryParams params,
+            Callback1<GetBitmarksResponse> callback
+    );
 
     void getAsset(String assetId, Callback1<AssetRecord> callback);
 
     void listAssets(QueryParams params, Callback1<List<AssetRecord>> callback);
 
-    void getTransaction(String txId, boolean includeAsset,
-                        Callback1<GetTransactionResponse> callback);
+    void getTransaction(
+            String txId, boolean includeAsset,
+            Callback1<GetTransactionResponse> callback
+    );
 
-    void listTransactions(QueryParams params, Callback1<GetTransactionsResponse> callback);
+    void listTransactions(
+            QueryParams params,
+            Callback1<GetTransactionsResponse> callback
+    );
 
-    void createShare(ShareParams params, Callback1<Pair<String, String>> callback);
+    void createShare(
+            ShareParams params,
+            Callback1<Pair<String, String>> callback
+    );
 
     void grantShare(ShareGrantingParams params, Callback1<String> callback);
 
-    void respondShareOffer(GrantResponseParams params, Callback1<String> callback);
+    void respondShareOffer(
+            GrantResponseParams params,
+            Callback1<String> callback
+    );
 
     void getShare(String shareId, Callback1<ShareRecord> callback);
 
     void listShares(String owner, Callback1<List<ShareRecord>> callback);
 
-    void listShareOffer(String from, String to, Callback1<List<ShareGrantRecord>> callback);
+    void listShareOffer(
+            String from,
+            String to,
+            Callback1<List<ShareGrantRecord>> callback
+    );
+
+    void registerWsToken(
+            RegisterWsTokenParams params,
+            Callback1<String> callback
+    );
 
 }

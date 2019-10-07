@@ -1,7 +1,6 @@
 package com.bitmark.cryptography.crypto.encoder;
 
 import com.bitmark.cryptography.error.UnexpectedException;
-import com.bitmark.cryptography.error.ValidateException;
 
 import java.io.UnsupportedEncodingException;
 
@@ -24,7 +23,7 @@ public class Raw implements Encoder {
     }
 
     @Override
-    public byte[] decode(final String data) throws ValidateException {
+    public byte[] decode(final String data) {
         checkValid(() -> data != null && !data.isEmpty());
         try {
             return data.getBytes(CHARSET);
@@ -34,7 +33,7 @@ public class Raw implements Encoder {
     }
 
     @Override
-    public String encode(byte[] data) throws ValidateException {
+    public String encode(byte[] data) {
         checkValid(() -> data != null && data.length > 0);
         try {
             return new String(data, CHARSET);

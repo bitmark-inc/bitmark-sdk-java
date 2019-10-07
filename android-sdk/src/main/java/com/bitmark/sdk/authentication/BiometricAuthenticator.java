@@ -6,14 +6,17 @@ import android.content.pm.PackageManager;
 import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.CancellationSignal;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import com.bitmark.sdk.R;
+import com.bitmark.sdk.authentication.error.AuthenticationRequiredException;
+import com.bitmark.sdk.authentication.error.HardwareNotSupportedException;
 import com.bitmark.sdk.utils.annotation.Experimental;
 
 import javax.crypto.Cipher;
 import java.util.Arrays;
+
+import static com.bitmark.sdk.authentication.Provider.BIOMETRIC;
 
 /**
  * @author Hieu Pham
@@ -30,43 +33,57 @@ class BiometricAuthenticator extends AbsAuthenticator {
 
     private static final String FEATURE_FACE = "android.hardware.face";
 
-    private String title;
-
-    private String description;
-
     private static final String[] SUPPORTED_FEATURES =
-            new String[]{PackageManager.FEATURE_FINGERPRINT, FEATURE_IRIS, FEATURE_FACE};
+            new String[]{
+                    PackageManager.FEATURE_FINGERPRINT,
+                    FEATURE_IRIS,
+                    FEATURE_FACE
+            };
 
-    BiometricAuthenticator(@NonNull Activity activity, String title, String description,
-                           @NonNull AuthenticationCallback callback) {
-        super(activity, callback);
-        this.title = title;
-        this.description = description;
-    }
-
-    static boolean isHardwareDeteced(Context context) {
-        final PackageManager packageManager = context.getPackageManager();
-        return Arrays.stream(SUPPORTED_FEATURES).anyMatch(packageManager::hasSystemFeature);
-    }
-
-    static boolean isFingerprintHardwareDetected(Context context) {
-        FingerprintManagerCompat fingerprintManager = FingerprintManagerCompat.from(context);
-        return fingerprintManager.isHardwareDetected();
-    }
-
-    static boolean isFingerprintEnrolled(Context context) {
-        FingerprintManagerCompat fingerprintManager = FingerprintManagerCompat.from(context);
-        return fingerprintManager.hasEnrolledFingerprints();
+    BiometricAuthenticator(Context context) {
+        super(context);
     }
 
     @Override
-    public void authenticate(@NonNull Cipher cipher) {
-        new BiometricAuthenticationHandler(activity, title, description, callback)
+    public void authenticate(
+            Activity activity, String title, String description, Cipher cipher,
+            AuthenticationCallback callback
+    ) {
+        new BiometricAuthenticationHandler(
+                activity,
+                title,
+                description,
+                callback
+        )
                 .authenticate(cipher);
     }
 
+    @Override
+    public boolean isHardwareDetected() {
+        return FingerprintManagerCompat.from(context)
+                .isHardwareDetected() || Arrays
+                .stream(SUPPORTED_FEATURES)
+                .anyMatch(context.getPackageManager()::hasSystemFeature);
+    }
+
+    @Override
+    public boolean isEnrolled() {
+        return FingerprintManagerCompat.from(context).hasEnrolledFingerprints();
+    }
+
+    @Override
+    public void checkAvailability() throws AuthenticationRequiredException,
+            HardwareNotSupportedException {
+        if (!isHardwareDetected()) {
+            throw new HardwareNotSupportedException(BIOMETRIC);
+        }
+        if (!isEnrolled()) {
+            throw new AuthenticationRequiredException(BIOMETRIC);
+        }
+    }
+
     private static class BiometricAuthenticationHandler extends
-                                                        BiometricPrompt.AuthenticationCallback {
+            BiometricPrompt.AuthenticationCallback {
 
         private Activity activity;
 
@@ -76,8 +93,10 @@ class BiometricAuthenticator extends AbsAuthenticator {
 
         private String description;
 
-        BiometricAuthenticationHandler(Activity activity, String title, String description,
-                                       AuthenticationCallback callback) {
+        BiometricAuthenticationHandler(
+                Activity activity, String title, String description,
+                AuthenticationCallback callback
+        ) {
             this.activity = activity;
             this.title = title;
             this.description = description;
@@ -88,8 +107,12 @@ class BiometricAuthenticator extends AbsAuthenticator {
             BiometricPrompt biometricPrompt = getBiometricPrompt();
             final CancellationSignal cancellationSignal = new CancellationSignal();
             biometricPrompt
-                    .authenticate(new BiometricPrompt.CryptoObject(cipher), cancellationSignal,
-                                  activity.getMainExecutor(), this);
+                    .authenticate(
+                            new BiometricPrompt.CryptoObject(cipher),
+                            cancellationSignal,
+                            activity.getMainExecutor(),
+                            this
+                    );
         }
 
         @Override
@@ -105,13 +128,25 @@ class BiometricAuthenticator extends AbsAuthenticator {
         }
 
         @Override
-        public void onAuthenticationError(int errorCode, CharSequence errString) {
+        public void onAuthenticationError(
+                int errorCode,
+                CharSequence errString
+        ) {
             super.onAuthenticationError(errorCode, errString);
             if (errorCode == BiometricPrompt.BIOMETRIC_ERROR_CANCELED ||
-                errorCode == BiometricPrompt.BIOMETRIC_ERROR_USER_CANCELED) {
+                    errorCode == BiometricPrompt.BIOMETRIC_ERROR_USER_CANCELED) {
                 callback.onCancelled();
-            } else
+            } else {
                 callback.onError(errString.toString());
+            }
+        }
+
+        @Override
+        public void onAuthenticationHelp(
+                int helpCode, CharSequence helpString
+        ) {
+            super.onAuthenticationHelp(helpCode, helpString);
+            callback.onError(helpString.toString());
         }
 
         private BiometricPrompt getBiometricPrompt() {
@@ -119,9 +154,11 @@ class BiometricAuthenticator extends AbsAuthenticator {
             return new BiometricPrompt.Builder(context)
                     .setTitle(title)
                     .setDescription(description)
-                    .setNegativeButton(context.getString(R.string.cancel),
-                                       context.getMainExecutor(),
-                                       (dialogInterface, i) -> callback.onCancelled())
+                    .setNegativeButton(
+                            context.getString(R.string.cancel),
+                            context.getMainExecutor(),
+                            (dialogInterface, i) -> callback.onCancelled()
+                    )
                     .build();
         }
 
