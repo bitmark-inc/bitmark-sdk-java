@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to API Service will be documented in this file.
 
-## 7-10-2019 [1.11.0]
+## 7-10-2019 [2.1.0]
 ### Added
 - New `HttpObserver` that can be configured from `GlobalConfiguration` that help to intercept to network request/response.
 - Support web socket for realtime event triggering.
@@ -19,5 +19,7 @@ All notable changes to API Service will be documented in this file.
 ### Bug Fixes & Improvement
 - Fix bug that causes crash the process if running a large number of API request.
 - Using a fixed `ThreadPoolExecutor` in API request for better resource usage.
-- Http Logging is now optional instead of default.
-- 
+- Http Logging is now optional instead of default. 
+
+### Reference
+- Cryptography: `com.bitmark.sdk:cryptography:1.5.0`

@@ -22,4 +22,3 @@ All notable changes to Android SDK will be documented in this file.
 
 ### Reference
 - API Service: `com.bitmark.sdk:api-service:2.1.0`
-- Cryptography: `com.bitmark.sdk:cryptography:1.5.0`
