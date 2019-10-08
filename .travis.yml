@@ -60,7 +60,7 @@ before_script:
   - NDK_HOME=$ANDROID_NDK_HOME && SDK_HOME=$ANDROID_HOME && BINTRAY_USER=$BINTRAY_USER && BINTRAY_API_KEY=$BINTRAY_API_KEY && BINTRAY_GPG_PASS=$BINTRAY_GPG_PASS && BINTRAY_REPO=$BINTRAY_REPO
   - echo -n >local.properties && echo "ndk.dir=$NDK_HOME"$'\n'"sdk.dir=$SDK_HOME"$'\n'"bintray.user=$BINTRAY_USER"$'\n'"bintray.apikey=$BINTRAY_API_KEY"$'\n'"bintray.gpg.password=$BINTRAY_GPG_PASS"$'\n'"bintray.repo=$BINTRAY_REPO" >local.properties
   - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
-  - emulator -avd test -no-audio -no-window &
+  - emulator -avd test -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 script:

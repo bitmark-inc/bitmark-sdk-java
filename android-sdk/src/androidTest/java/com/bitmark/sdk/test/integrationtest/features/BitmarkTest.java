@@ -402,7 +402,7 @@ public class BitmarkTest extends BaseTest {
                 callback
         ));
         assertNotNull(status);
-        assertEquals("ok", status);
+        assertTrue(status.isEmpty());
     }
 
     @Test
@@ -442,7 +442,7 @@ public class BitmarkTest extends BaseTest {
                 callback
         ));
         assertNotNull(status);
-        assertEquals("ok", status);
+        assertTrue(status.isEmpty());
     }
 
     @Test
