@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.cryptography.crypto;
 
 import com.bitmark.cryptography.crypto.key.Ed25519KeyPair;
@@ -8,13 +14,6 @@ import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static com.bitmark.cryptography.utils.JniUtils.call;
 import static com.bitmark.cryptography.utils.Validator.checkValidHex;
 import static com.bitmark.cryptography.utils.Validator.checkValidLength;
-
-/**
- * @author Hieu Pham
- * @since 8/23/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 public class Ed25519 {
 

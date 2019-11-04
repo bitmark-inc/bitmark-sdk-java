@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.sdk.features;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
@@ -20,13 +26,6 @@ import static com.bitmark.apiservice.utils.ArrayUtil.slice;
 import static com.bitmark.cryptography.crypto.encoder.Base58.BASE_58;
 import static com.bitmark.cryptography.utils.Validator.checkNonNull;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
-
-/**
- * @author Hieu Pham
- * @since 8/23/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 public class Account {
 

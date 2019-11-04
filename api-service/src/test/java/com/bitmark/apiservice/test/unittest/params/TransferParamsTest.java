@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.apiservice.test.unittest.params;
 
 import com.bitmark.apiservice.params.TransferParams;
@@ -16,13 +22,6 @@ import static com.bitmark.apiservice.test.unittest.DataProvider.ADDRESS1;
 import static com.bitmark.apiservice.test.unittest.DataProvider.KEY_PAIR_1;
 import static com.bitmark.apiservice.test.utils.FileUtils.loadRequest;
 import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * @author Hieu Pham
- * @since 9/11/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 public class TransferParamsTest extends BaseTest {
 

@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.cryptography.crypto.sodium;
 
 import android.annotation.SuppressLint;
@@ -8,13 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-
-/**
- * @author Hieu Pham
- * @since 10/13/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 public class LibraryLoader {
 

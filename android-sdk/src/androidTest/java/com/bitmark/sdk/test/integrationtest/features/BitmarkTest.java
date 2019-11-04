@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.sdk.test.integrationtest.features;
 
 import com.annimon.stream.Collectors;
@@ -35,13 +41,6 @@ import static com.bitmark.sdk.test.integrationtest.DataProvider.*;
 import static java.net.HttpURLConnection.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
-
-/**
- * @author Hieu Pham
- * @since 9/13/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 public class BitmarkTest extends BaseTest {
 

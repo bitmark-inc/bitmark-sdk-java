@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.sdk.test.unittest.features;
 
 import com.bitmark.apiservice.configuration.Network;
@@ -25,13 +31,6 @@ import static com.bitmark.apiservice.configuration.Network.LIVE_NET;
 import static com.bitmark.apiservice.configuration.Network.TEST_NET;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * @author Hieu Pham
- * @since 9/2/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 public class SeedTest extends BaseTest {
 

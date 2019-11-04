@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.cryptography.test.crypto;
 
 import com.bitmark.cryptography.crypto.Sha3512;
@@ -11,13 +17,6 @@ import java.util.Arrays;
 import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static com.bitmark.cryptography.crypto.encoder.Raw.RAW;
 import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * @author Hieu Pham
- * @since 9/6/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 public class Sha3512Test extends BaseCryptoTest {
 

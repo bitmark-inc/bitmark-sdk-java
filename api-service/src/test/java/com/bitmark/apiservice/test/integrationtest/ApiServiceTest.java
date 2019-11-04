@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.apiservice.test.integrationtest;
 
 import com.bitmark.apiservice.ApiService;
@@ -33,12 +39,6 @@ import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static java.net.HttpURLConnection.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author Hieu Pham
- * @since 3/21/19
- * Email: hieupham@bitmark.com
- * Copyright © 2019 Bitmark. All rights reserved.
- */
 @ExtendWith({TemporaryFolderExtension.class})
 public class ApiServiceTest extends BaseTest {
 

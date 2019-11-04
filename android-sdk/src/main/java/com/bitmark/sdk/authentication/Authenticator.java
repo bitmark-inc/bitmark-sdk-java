@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.sdk.authentication;
 
 import android.app.Activity;
@@ -6,12 +12,6 @@ import com.bitmark.sdk.authentication.error.HardwareNotSupportedException;
 
 import javax.crypto.Cipher;
 
-/**
- * @author Hieu Pham
- * @since 12/6/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 public interface Authenticator {
 
     void authenticate(

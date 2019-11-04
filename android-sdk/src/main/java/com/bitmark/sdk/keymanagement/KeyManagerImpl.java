@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.sdk.keymanagement;
 
 import android.annotation.SuppressLint;
@@ -39,12 +45,6 @@ import static com.bitmark.sdk.utils.DeviceUtils.isAboveP;
 import static com.bitmark.sdk.utils.FileUtils.read;
 import static com.bitmark.sdk.utils.FileUtils.write;
 
-/**
- * @author Hieu Pham
- * @since 12/6/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class KeyManagerImpl implements KeyManager {
 
