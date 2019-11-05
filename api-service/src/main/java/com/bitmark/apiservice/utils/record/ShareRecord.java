@@ -1,15 +1,15 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.apiservice.utils.record;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
-/**
- * @author Hieu Pham
- * @since 3/11/19
- * Email: hieupham@bitmark.com
- * Copyright © 2019 Bitmark. All rights reserved.
- */
 public class ShareRecord implements Record {
 
     @SerializedName("share_id")

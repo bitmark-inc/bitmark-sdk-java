@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.sdk.test.utils.extensions;
 
 import org.junit.jupiter.api.extension.*;
@@ -14,13 +20,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 import static com.bitmark.sdk.test.utils.CommonUtils.randomString;
 import static com.bitmark.sdk.test.utils.FileUtils.createTempFile;
-
-/**
- * @author Hieu Pham
- * @since 9/13/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 public class TemporaryFolderExtension implements AfterEachCallback, ParameterResolver {
 

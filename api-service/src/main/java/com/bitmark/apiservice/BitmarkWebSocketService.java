@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.apiservice;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
@@ -14,12 +20,6 @@ import java.util.Map;
 
 import static com.bitmark.apiservice.utils.HttpUtils.jsonToMap;
 
-/**
- * @author Hieu Pham
- * @since 7/6/19
- * Email: hieupham@bitmark.com
- * Copyright © 2019 Bitmark. All rights reserved.
- */
 public class BitmarkWebSocketService implements BitmarkWebSocket {
 
     private static final String WS_ENDPOINT_TEST_NET =

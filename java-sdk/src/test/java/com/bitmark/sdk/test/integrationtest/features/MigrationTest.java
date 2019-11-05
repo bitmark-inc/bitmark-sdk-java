@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.sdk.test.integrationtest.features;
 
 import com.bitmark.apiservice.params.IssuanceParams;
@@ -23,13 +29,6 @@ import java.util.concurrent.TimeUnit;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * @author Hieu Pham
- * @since 11/5/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 @ExtendWith({TemporaryFolderExtension.class})
 public class MigrationTest extends BaseTest {
