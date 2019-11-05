@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.sdk.test.integrationtest.features;
 
 import com.bitmark.apiservice.params.RegistrationParams;
@@ -25,13 +31,6 @@ import static com.bitmark.sdk.test.integrationtest.DataProvider.KEY1;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * @author Hieu Pham
- * @since 9/13/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 @ExtendWith({TemporaryFolderExtension.class})
 public class AssetTest extends BaseTest {

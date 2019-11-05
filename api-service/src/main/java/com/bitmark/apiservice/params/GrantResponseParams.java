@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.apiservice.params;
 
 import com.bitmark.apiservice.utils.Address;
@@ -17,12 +23,6 @@ import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 import static com.bitmark.cryptography.crypto.encoder.Raw.RAW;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
 
-/**
- * @author Hieu Pham
- * @since 1/15/19
- * Email: hieupham@bitmark.com
- * Copyright © 2019 Bitmark. All rights reserved.
- */
 public class GrantResponseParams extends AbsSingleParams {
 
     private ShareGrantRecord shareGrantRecord;

@@ -1,13 +1,12 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * Copyright © 2014-2019 Bitmark. All rights reserved.
+ * Use of this source code is governed by an ISC
+ * license that can be found in the LICENSE file.
+ */
 package com.bitmark.apiservice.utils;
 
 import java.util.Objects;
-
-/**
- * @author Hieu Pham
- * @since 10/19/18
- * Email: hieupham@bitmark.com
- * Copyright © 2018 Bitmark. All rights reserved.
- */
 
 public class Pair<T1, T2> {
 
