@@ -17,7 +17,7 @@ import static com.bitmark.apiservice.utils.Awaitility.await;
 public class BitmarkIssuanceSample {
     public static List<String> issueBitmarks(Account issuer, String assetId, int quantity) throws Throwable {
         IssuanceParams issuanceParams = new IssuanceParams(assetId, issuer.toAddress(), quantity);
-        issuanceParams.sign(issuer.getKeyPair());
+        issuanceParams.sign(issuer.getAuthKeyPair());
         List<String> bitmarkIds = await(callback -> Bitmark.issue(issuanceParams, callback));
 
         return bitmarkIds;
