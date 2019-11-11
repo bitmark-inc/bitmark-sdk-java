@@ -71,6 +71,7 @@ script:
   - ./gradlew clean build -x test -p java-sdk --info
   - ./gradlew test --tests com.bitmark.sdk.test.unittest.* -p java-sdk --info
   - ./gradlew clean build connectedCheck -p android-sdk --info
+  - ./gradlew clean build connectedCheck -p android-ktx --info
 
 branches:
   only:
