@@ -1,0 +1,74 @@
+apply plugin: 'com.android.library'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply from: '../configuration.gradle'
+
+def ext = project.ext
+def config = ext.configuration
+
+buildscript {
+    apply from: '../dependencies.gradle'
+    addRepos(repositories)
+    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
+    dependencies {
+        classpath deps.android_plugin
+        classpath deps.kt.plugin
+        classpath deps.android_maven_plugin
+        classpath deps.bintray_plugin
+    }
+}
+
+android {
+    compileSdkVersion 28
+
+    compileOptions {
+        sourceCompatibility config.SOURCE_COMPATIBILITY
+        targetCompatibility config.TARGET_COMPATIBILITY
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        minSdkVersion 21
+        targetSdkVersion 28
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/LICENSE-notice.md'
+        exclude 'META-INF/ASL2.0'
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation deps.rx.java
+    implementation deps.rx.android
+    implementation deps.bitmark_sdk.android_sdk
+    implementation deps.kt.lib
+
+    androidTestImplementation deps.junit
+    androidTestImplementation deps.android_test_runner
+}
