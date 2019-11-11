@@ -35,6 +35,13 @@ class WebSocketClient extends EventListener {
 
     void subscribe(String channel, SubscriptionEventListener listener) {
         if (isSubscribed(channel)) {
+            SubscribeErrorEvent errorEvent = new SubscribeErrorEvent();
+            errorEvent.setCode(105);
+            errorEvent.setMessage("already subscribed");
+            listener.onSubscribeError(
+                    client.getSubscription(channel),
+                    errorEvent
+            );
             return;
         }
 
