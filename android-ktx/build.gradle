@@ -64,9 +64,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    api project(':android-sdk')
+    api project(':api-service')
+    api project(':cryptography')
+
     implementation deps.rx.java
     implementation deps.rx.android
-    implementation deps.bitmark_sdk.android_sdk
     implementation deps.kt.lib
 
     androidTestImplementation deps.junit
