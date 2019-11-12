@@ -23,6 +23,10 @@ buildscript {
     }
 }
 
+tasks.withType(Javadoc).all {
+    enabled = false
+}
+
 android {
     compileSdkVersion 28
 
@@ -59,14 +63,20 @@ android {
             useJUnitPlatform()
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
 }
+
+apply from: '../publication_android.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api project(':android-sdk')
-    api project(':api-service')
-    api project(':cryptography')
+    implementation project(':android-sdk')
+    implementation project(':api-service')
+    implementation project(':cryptography')
 
     implementation deps.rx.java
     implementation deps.rx.android
@@ -75,3 +85,4 @@ dependencies {
     androidTestImplementation deps.junit
     androidTestImplementation deps.android_test_runner
 }
+

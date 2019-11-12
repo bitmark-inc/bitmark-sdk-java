@@ -67,7 +67,7 @@ def fat_aar = "com.kezong:fat-aar:$versions.fat_aar"
 
 def kt = [:]
 kt.plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kt"
-kt.lib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kt"
+kt.lib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kt"
 
 def mockito = [:]
 mockito.java = "org.mockito:mockito-core:$versions.mockito"

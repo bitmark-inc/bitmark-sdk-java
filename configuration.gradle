@@ -87,7 +87,7 @@ ext.publicationProperties = { name ->
         case 'android-sdk': return ext.publication.android_sdk
         case 'cryptography': return ext.publication.cryptography
         case 'api-service': return ext.publication.api_service
-        case 'android-ktx' : return ext.android_ktx
+        case 'android-ktx' : return ext.publication.android_ktx
         default: throw new GradleException(String.format("Invalid project name %s", name))
     }
 }

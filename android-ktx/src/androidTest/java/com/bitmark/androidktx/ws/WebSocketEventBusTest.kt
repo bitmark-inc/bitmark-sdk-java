@@ -13,6 +13,7 @@ import com.bitmark.apiservice.params.RegistrationParams
 import com.bitmark.apiservice.response.RegistrationResponse
 import com.bitmark.apiservice.utils.Awaitility.await
 import com.bitmark.apiservice.utils.Data
+import com.bitmark.ktx.ws.WebSocketEventBus
 import com.bitmark.sdk.features.Account
 import com.bitmark.sdk.features.Asset
 import com.bitmark.sdk.features.Bitmark

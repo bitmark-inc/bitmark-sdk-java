@@ -4,7 +4,7 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.androidktx.ws
+package com.bitmark.ktx.ws
 
 class SubscribeEventException(val code: Int,
                               message: String

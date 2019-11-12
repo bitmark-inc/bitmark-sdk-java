@@ -4,7 +4,7 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.androidktx.ws
+package com.bitmark.ktx.ws
 
 import android.os.Handler
 import android.os.Looper
@@ -70,7 +70,10 @@ class WebSocketEventBus : Bus(), WebSocket.ConnectionEvent {
 
             override fun onSubscribeError(event: SubscribeErrorEvent?) {
                 super.onSubscribeError(event)
-                emt.onError(SubscribeEventException(event!!.code, "new-block#${event.message}"))
+                emt.onError(SubscribeEventException(event!!.code,
+                                                                       "new-block#${event.message}"
+                )
+                )
             }
         })
     }
@@ -95,7 +98,7 @@ class WebSocketEventBus : Bus(), WebSocket.ConnectionEvent {
                 override fun onSubscribeError(event: SubscribeErrorEvent?) {
                     super.onSubscribeError(event)
                     emt.onError(SubscribeEventException(event!!.code,
-                                                        "new-transfer-offer#${event.message}"
+                                                                           "new-transfer-offer#${event.message}"
                     )
                     )
                 }
@@ -134,7 +137,7 @@ class WebSocketEventBus : Bus(), WebSocket.ConnectionEvent {
                 override fun onSubscribeError(event: SubscribeErrorEvent?) {
                     super.onSubscribeError(event)
                     emt.onError(SubscribeEventException(event!!.code,
-                                                        "bitmark-changed#${event.message}"
+                                                                           "bitmark-changed#${event.message}"
                     )
                     )
                 }
@@ -177,7 +180,7 @@ class WebSocketEventBus : Bus(), WebSocket.ConnectionEvent {
                 override fun onSubscribeError(event: SubscribeErrorEvent?) {
                     super.onSubscribeError(event)
                     emt.onError(SubscribeEventException(event!!.code,
-                                                        "new-pending-tx#${event.message}"
+                                                                           "new-pending-tx#${event.message}"
                     )
                     )
                 }
@@ -211,7 +214,7 @@ class WebSocketEventBus : Bus(), WebSocket.ConnectionEvent {
                 override fun onSubscribeError(event: SubscribeErrorEvent?) {
                     super.onSubscribeError(event)
                     emt.onError(SubscribeEventException(event!!.code,
-                                                        "new-pending-issuance#${event.message}"
+                                                                           "new-pending-issuance#${event.message}"
                     )
                     )
                 }

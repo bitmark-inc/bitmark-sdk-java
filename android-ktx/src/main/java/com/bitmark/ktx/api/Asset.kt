@@ -4,7 +4,7 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.androidktx.sdk
+package com.bitmark.ktx.api
 
 import com.bitmark.apiservice.params.RegistrationParams
 import com.bitmark.apiservice.params.query.AssetQueryBuilder
