@@ -9,14 +9,6 @@ def config = ext.configuration
 sourceCompatibility = config.SOURCE_COMPATIBILITY
 targetCompatibility = config.TARGET_COMPATIBILITY
 
-buildscript {
-    apply from: '../dependencies.gradle'
-    addRepos(repositories)
-    dependencies {
-        classpath deps.bintray_plugin
-    }
-}
-
 tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }

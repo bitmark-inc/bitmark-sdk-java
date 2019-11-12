@@ -3,14 +3,6 @@ apply from: '../publication_java.gradle'
 apply from: '../dependencies.gradle'
 apply from: '../configuration.gradle'
 
-buildscript {
-    apply from: '../dependencies.gradle'
-    addRepos(repositories)
-    dependencies {
-        classpath deps.bintray_plugin
-    }
-}
-
 tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }

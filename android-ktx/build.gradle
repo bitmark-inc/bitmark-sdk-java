@@ -11,18 +11,6 @@ apply from: '../configuration.gradle'
 def ext = project.ext
 def config = ext.configuration
 
-buildscript {
-    apply from: '../dependencies.gradle'
-    addRepos(repositories)
-    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
-    dependencies {
-        classpath deps.android_plugin
-        classpath deps.kt.plugin
-        classpath deps.android_maven_plugin
-        classpath deps.bintray_plugin
-    }
-}
-
 tasks.withType(Javadoc).all {
     enabled = false
 }
@@ -72,8 +60,6 @@ android {
 apply from: '../publication_android.gradle'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation project(':android-sdk')
     implementation project(':api-service')
     implementation project(':cryptography')
