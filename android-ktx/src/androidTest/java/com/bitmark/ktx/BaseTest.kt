@@ -4,7 +4,7 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.androidktx
+package com.bitmark.ktx
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration
 import com.bitmark.apiservice.configuration.Network

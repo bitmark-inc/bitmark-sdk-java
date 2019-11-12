@@ -4,10 +4,10 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.androidktx.util.ext
+package com.bitmark.ktx.util.ext
 
-import com.bitmark.androidktx.util.randomString
 import com.bitmark.cryptography.crypto.encoder.Raw.RAW
+import com.bitmark.ktx.util.randomString
 import org.junit.rules.TemporaryFolder
 import java.io.File
 import java.io.FileOutputStream

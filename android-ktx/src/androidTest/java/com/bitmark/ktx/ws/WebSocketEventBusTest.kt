@@ -4,16 +4,15 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.androidktx.ws
+package com.bitmark.ktx.ws
 
-import com.bitmark.androidktx.BaseTest
-import com.bitmark.androidktx.util.ext.TemporaryFolderRule
+import com.bitmark.ktx.BaseTest
+import com.bitmark.ktx.util.ext.TemporaryFolderRule
 import com.bitmark.apiservice.params.IssuanceParams
 import com.bitmark.apiservice.params.RegistrationParams
 import com.bitmark.apiservice.response.RegistrationResponse
 import com.bitmark.apiservice.utils.Awaitility.await
 import com.bitmark.apiservice.utils.Data
-import com.bitmark.ktx.ws.WebSocketEventBus
 import com.bitmark.sdk.features.Account
 import com.bitmark.sdk.features.Asset
 import com.bitmark.sdk.features.Bitmark
