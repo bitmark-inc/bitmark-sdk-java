@@ -28,9 +28,9 @@ test {
 dependencies {
     implementation deps.bitmark_sdk.cryptography
     implementation deps.okhttp.okhttp3
-    implementation deps.okhttp.logging
+    api deps.okhttp.logging
     implementation deps.gson
-    implementation deps.centrifuge
+    api deps.centrifuge
     
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
