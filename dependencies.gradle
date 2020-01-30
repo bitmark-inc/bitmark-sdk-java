@@ -88,7 +88,7 @@ ext.deps = dependencies
 static def addRepos(RepositoryHandler handler) {
     handler.jcenter()
     handler.google()
-    handler.maven { url = 'http://repo1.maven.org/maven2/' }
+    handler.maven { url = 'https://repo1.maven.org/maven2/' }
     handler.maven { url = 'https://oss.sonatype.org/content/repositories/releases/' }
     handler.maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
     handler.maven { url = 'https://plugins.gradle.org/m2/' }
