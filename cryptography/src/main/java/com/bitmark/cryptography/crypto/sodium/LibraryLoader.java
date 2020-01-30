@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 public class LibraryLoader {
 
@@ -75,6 +74,21 @@ public class LibraryLoader {
                 return ARM;
             } else {
                 return UNKNOWN;
+            }
+        }
+
+        String getAbi() {
+            switch (this) {
+                case ARM:
+                    return "armeabi-v7a";
+                case AARCH64:
+                    return "arm64-v8a";
+                case X86:
+                    return "x86";
+                case X86_64:
+                    return "x86_64";
+                default:
+                    return null;
             }
         }
     }
@@ -187,19 +201,32 @@ public class LibraryLoader {
     }
 
     private static InputStream getLibStream() {
-        String stubPath = getLibPath() + "/" + getLibName();
-        String[] paths = {stubPath, "/" + stubPath};
 
-        for (String path : paths) {
-            InputStream stream = getResourceAsStream(path);
+        // stream with expected ABI
+        String libName = getLibName();
+        String path = getLibPath() + "/" + libName;
+        InputStream stream = getResourceAsStream(path);
+        if (stream != null) {
+            return stream;
+        }
+
+        // stream with unexpected ABI
+        String[] abis = {
+                CPU.ARM.getAbi(),
+                CPU.AARCH64.getAbi(),
+                CPU.X86.getAbi(),
+                CPU.X86_64.getAbi()
+        };
+        for (String abi : abis) {
+            path = "lib/" + abi + "/" + libName;
+            stream = getResourceAsStream(path);
             if (stream != null) {
                 return stream;
             }
         }
 
         throw new LibraryLoaderException(
-                "Couldn't load native library with path " + Arrays.deepToString(
-                        paths));
+                "Couldn't load native library with path " + path);
     }
 
     private static InputStream getResourceAsStream(String name) {
@@ -226,19 +253,13 @@ public class LibraryLoader {
         if (os == OS.DARWIN || os == OS.LINUX) {
             return "lib";
         } else if (os == OS.ANDROID) {
-            switch (cpu) {
-                case ARM:
-                    return "lib/armeabi-v7a";
-                case AARCH64:
-                    return "lib/arm64-v8a";
-                case X86:
-                    return "lib/x86";
-                case X86_64:
-                    return "lib/x86_64";
-                default:
-                    throw new LibraryLoaderException(
-                            "Unknown or does not support CPU architecture");
+
+            String abi = cpu.getAbi();
+            if (abi == null) {
+                throw new LibraryLoaderException(
+                        "Unknown or does not support CPU architecture");
             }
+            return "lib/" + abi;
         } else {
             throw new LibraryLoaderException("Unknown or does not support OS");
         }
