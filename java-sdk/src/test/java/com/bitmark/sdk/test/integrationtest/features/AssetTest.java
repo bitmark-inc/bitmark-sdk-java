@@ -52,9 +52,8 @@ public class AssetTest extends BaseTest {
                 params,
                 callback
         ));
-        List<RegistrationResponse.Asset> assets = response.getAssets();
+        List<AssetRecord> assets = response.getAssets();
         assertNotNull(assets.get(0).getId());
-        assertFalse(assets.get(0).isDuplicate());
     }
 
     @Test

@@ -65,7 +65,7 @@ public class BitmarkTest extends BaseTest {
                         registrationParams,
                         callback
                 ));
-        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        List<AssetRecord> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
@@ -76,13 +76,13 @@ public class BitmarkTest extends BaseTest {
                 quantity
         );
         issuanceParams.sign(KEY1);
-        List<String> txIds =
+        List<BitmarkRecord> bitmarks =
                 await(callback -> Bitmark.issue(
                         issuanceParams,
                         callback
                 ));
-        assertEquals(txIds.size(), quantity);
-        assertFalse(txIds.get(0).isEmpty());
+        assertEquals(bitmarks.size(), quantity);
+        assertFalse(bitmarks.get(0).getId().isEmpty());
     }
 
     @Test
@@ -104,18 +104,18 @@ public class BitmarkTest extends BaseTest {
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
                 await(callback -> Asset.register(registrationParams, callback));
-        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        List<AssetRecord> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
         issuanceParams.sign(KEY1);
-        List<String> txIds = await(callback -> Bitmark.issue(
+        List<BitmarkRecord> bitmarks = await(callback -> Bitmark.issue(
                 issuanceParams,
                 callback
         ));
-        assertEquals(txIds.size(), 1);
-        assertFalse(txIds.get(0).isEmpty());
+        assertEquals(bitmarks.size(), 1);
+        assertFalse(bitmarks.get(0).getId().isEmpty());
     }
 
     @Test
@@ -133,18 +133,18 @@ public class BitmarkTest extends BaseTest {
         registrationParams.sign(KEY1);
         RegistrationResponse registrationResponse =
                 await(callback -> Asset.register(registrationParams, callback));
-        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        List<AssetRecord> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
         issuanceParams.sign(KEY1);
-        List<String> txIds = await(callback -> Bitmark.issue(
+        List<BitmarkRecord> bitmarks = await(callback -> Bitmark.issue(
                 issuanceParams,
                 callback
         ));
-        assertEquals(txIds.size(), 1);
-        assertFalse(txIds.get(0).isEmpty());
+        assertEquals(bitmarks.size(), 1);
+        assertFalse(bitmarks.get(0).getId().isEmpty());
     }
 
     @Test
@@ -156,7 +156,7 @@ public class BitmarkTest extends BaseTest {
         );
         issuanceParams.sign(KEY1);
         HttpException exception = assertThrows(HttpException.class, () ->
-                await((Callable1<List<String>>) callback -> Bitmark.issue(
+                await((Callable1<List<BitmarkRecord>>) callback -> Bitmark.issue(
                         issuanceParams,
                         callback
                 )));
@@ -173,12 +173,12 @@ public class BitmarkTest extends BaseTest {
         int quantity = 100;
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner, 100);
         issuanceParams.sign(KEY1);
-        List<String> txIds = await(callback -> Bitmark.issue(
+        List<BitmarkRecord> bitmarks = await(callback -> Bitmark.issue(
                 issuanceParams,
                 callback
         ));
-        assertEquals(txIds.size(), quantity);
-        assertFalse(txIds.get(0).isEmpty());
+        assertEquals(bitmarks.size(), quantity);
+        assertFalse(bitmarks.get(0).getId().isEmpty());
     }
 
     @Test
@@ -197,12 +197,12 @@ public class BitmarkTest extends BaseTest {
                     100
             );
             issuanceParams.sign(KEY1);
-            List<String> txIds = await(callback -> Bitmark.issue(
+            List<BitmarkRecord> bitmarks = await(callback -> Bitmark.issue(
                     issuanceParams,
                     callback
             ));
-            assertEquals(txIds.size(), quantity);
-            assertFalse(txIds.get(0).isEmpty());
+            assertEquals(bitmarks.size(), quantity);
+            assertFalse(bitmarks.get(0).getId().isEmpty());
         }
     }
 

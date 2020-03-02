@@ -12,6 +12,7 @@ import com.bitmark.apiservice.params.query.BitmarkQueryBuilder;
 import com.bitmark.apiservice.response.GetBitmarksResponse;
 import com.bitmark.apiservice.response.RegistrationResponse;
 import com.bitmark.apiservice.utils.Awaitility;
+import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.apiservice.utils.record.BitmarkRecord;
 import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.Account;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,7 +50,7 @@ public class MigrationTest extends BaseTest {
         registrationParams.sign(owner.getAuthKeyPair());
         RegistrationResponse registrationResponse =
                 await(callback -> Asset.register(registrationParams, callback));
-        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        List<AssetRecord> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
@@ -58,10 +60,13 @@ public class MigrationTest extends BaseTest {
                 10
         );
         issuanceParams.sign(owner.getAuthKeyPair());
-        List<String> txIds = await(callback -> Bitmark.issue(
+        List<BitmarkRecord> bitmarks = await(callback -> Bitmark.issue(
                 issuanceParams,
                 callback
         ));
+        List<String> txIds = bitmarks.stream()
+                .map(BitmarkRecord::getId)
+                .collect(Collectors.toList());
         assertEquals(txIds.size(), 10);
         assertFalse(txIds.get(0).isEmpty());
 
