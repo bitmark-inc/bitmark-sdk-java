@@ -13,6 +13,7 @@ import com.bitmark.apiservice.response.GetBitmarkResponse;
 import com.bitmark.apiservice.response.GetBitmarksResponse;
 import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callback1;
+import com.bitmark.apiservice.utils.record.BitmarkRecord;
 import com.bitmark.apiservice.utils.record.ShareGrantRecord;
 import com.bitmark.apiservice.utils.record.ShareRecord;
 
@@ -24,7 +25,7 @@ public class Bitmark {
 
     public static void issue(
             IssuanceParams params,
-            Callback1<List<String>> callback
+            Callback1<List<BitmarkRecord>> callback
     ) {
         ApiService.getInstance()
                 .issueBitmark(params, wrapCallbackOnMain(callback));
