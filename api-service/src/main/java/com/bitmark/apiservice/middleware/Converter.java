@@ -11,6 +11,7 @@ import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.apiservice.utils.error.UnexpectedException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
+import com.bitmark.apiservice.utils.record.BitmarkRecord;
 import com.bitmark.apiservice.utils.record.ShareGrantRecord;
 import com.bitmark.apiservice.utils.record.ShareRecord;
 import com.google.gson.Gson;
@@ -30,7 +31,7 @@ public class Converter {
 
     private static final Gson GSON = new GsonBuilder().create();
 
-    public static Callback1<Response> toIssueResponse(Callback1<List<String>> callback) {
+    public static Callback1<Response> toIssueResponse(Callback1<List<BitmarkRecord>> callback) {
         return new Callback1<Response>() {
             @Override
             public void onSuccess(Response res) {
@@ -39,13 +40,11 @@ public class Converter {
                     Map<String, Object> mapJson = jsonToMap(raw);
                     JsonArray jsonArray = GSON.toJsonTree(mapJson.get("bitmarks"))
                             .getAsJsonArray();
-                    List<String> txIds = new ArrayList<>(jsonArray.size());
+                    List<BitmarkRecord> records = new ArrayList<>(jsonArray.size());
                     for (JsonElement jsonElement : jsonArray) {
-                        txIds.add(jsonElement.getAsJsonObject()
-                                .get("id")
-                                .getAsString());
+                        records.add(GSON.fromJson(jsonElement.toString(), BitmarkRecord.class));
                     }
-                    callback.onSuccess(txIds);
+                    callback.onSuccess(records);
                 } catch (Throwable e) {
                     callback.onError(new UnexpectedException(e));
                 }

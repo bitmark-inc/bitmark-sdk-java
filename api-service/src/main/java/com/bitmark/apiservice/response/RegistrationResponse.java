@@ -7,21 +7,21 @@
 package com.bitmark.apiservice.response;
 
 import com.bitmark.apiservice.utils.annotation.VisibleForTesting;
-import com.google.gson.annotations.SerializedName;
+import com.bitmark.apiservice.utils.record.AssetRecord;
 
 import java.util.List;
 import java.util.Objects;
 
 public class RegistrationResponse implements Response {
 
-    private List<Asset> assets;
+    private List<AssetRecord> assets;
 
     @VisibleForTesting
-    public RegistrationResponse(List<Asset> assets) {
+    public RegistrationResponse(List<AssetRecord> assets) {
         this.assets = assets;
     }
 
-    public List<Asset> getAssets() {
+    public List<AssetRecord> getAssets() {
         return assets;
     }
 
@@ -40,45 +40,5 @@ public class RegistrationResponse implements Response {
     @Override
     public int hashCode() {
         return Objects.hash(assets);
-    }
-
-    public static final class Asset {
-
-        String id;
-
-        @SerializedName("duplicate")
-        boolean isDuplicate;
-
-        @VisibleForTesting
-        public Asset(String id, boolean isDuplicate) {
-            this.id = id;
-            this.isDuplicate = isDuplicate;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public boolean isDuplicate() {
-            return isDuplicate;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            Asset asset = (Asset) o;
-            return isDuplicate == asset.isDuplicate &&
-                    Objects.equals(id, asset.id);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, isDuplicate);
-        }
     }
 }

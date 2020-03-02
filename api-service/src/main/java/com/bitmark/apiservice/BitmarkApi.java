@@ -12,6 +12,7 @@ import com.bitmark.apiservice.response.*;
 import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.apiservice.utils.record.AssetRecord;
+import com.bitmark.apiservice.utils.record.BitmarkRecord;
 import com.bitmark.apiservice.utils.record.ShareGrantRecord;
 import com.bitmark.apiservice.utils.record.ShareRecord;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 public interface BitmarkApi {
 
-    void issueBitmark(IssuanceParams params, Callback1<List<String>> callback);
+    void issueBitmark(IssuanceParams params, Callback1<List<BitmarkRecord>> callback);
 
     void registerAsset(
             RegistrationParams params,

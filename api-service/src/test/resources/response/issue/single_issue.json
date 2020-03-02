@@ -1,7 +1,21 @@
 {
   "bitmarks": [
     {
-      "id": "e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f"
+      "id": "e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     }
   ]
 }

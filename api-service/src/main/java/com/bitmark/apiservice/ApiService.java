@@ -15,6 +15,7 @@ import com.bitmark.apiservice.response.*;
 import com.bitmark.apiservice.utils.Pair;
 import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.apiservice.utils.record.AssetRecord;
+import com.bitmark.apiservice.utils.record.BitmarkRecord;
 import com.bitmark.apiservice.utils.record.ShareGrantRecord;
 import com.bitmark.apiservice.utils.record.ShareRecord;
 import okhttp3.Headers;
@@ -61,7 +62,7 @@ public class ApiService implements BitmarkApi {
     @Override
     public void issueBitmark(
             IssuanceParams params,
-            Callback1<List<String>> callback
+            Callback1<List<BitmarkRecord>> callback
     ) {
         try {
 
