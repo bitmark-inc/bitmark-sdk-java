@@ -6,6 +6,9 @@ All notable changes to API Service will be documented in this file.
 - `ApiService#issueBitmark` returns a `BitmarkRecord` instead of Bitmark Id.
 - `RegistrationResponse#getAssets` returns a collection of `AssetRecord`
 
+### Reference
+- Cryptography: `com.bitmark.sdk:cryptography:1.6.0`
+
 ## 10-07-2019 [2.1.0]
 ### Added
 - New `HttpObserver` that can be configured from `GlobalConfiguration` that help to intercept to network request/response.
@@ -27,4 +30,4 @@ All notable changes to API Service will be documented in this file.
 - Http Logging is now optional instead of default. 
 
 ### Reference
-- Cryptography: `com.bitmark.sdk:cryptography:1.6.0`
+- Cryptography: `com.bitmark.sdk:cryptography:1.5.0`

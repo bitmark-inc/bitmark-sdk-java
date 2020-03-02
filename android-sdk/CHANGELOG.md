@@ -4,6 +4,9 @@ All notable changes to Android SDK will be documented in this file.
 ## 03-02-2019 [2.2.0]
 Upgrade module `api-service` to `2.2.0`
 
+### Reference
+- API Service: `com.bitmark.sdk:api-service:2.2.0`
+
 ## 10-07-2019 [2.1.0]
 
 ### Added
@@ -24,4 +27,4 @@ Upgrade module `api-service` to `2.2.0`
 - Speedup getting authentication/encryption key from `Account`
 
 ### Reference
-- API Service: `com.bitmark.sdk:api-service:2.2.0`
+- API Service: `com.bitmark.sdk:api-service:2.1.0`
