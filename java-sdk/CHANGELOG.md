@@ -1,7 +1,10 @@
 # Changelog
 All notable changes to Java SDK will be documented in this file.
 
-## 7-10-2019 [2.1.0]
+## 03-02-2019 [2.2.0]
+Upgrade module `api-service` to `2.2.0`
+
+## 10-07-2019 [2.1.0]
 ### Added
 - `Migration#rekey(Account, Account, Callback1<List<String>>)` function that help to transfer all own bitmarks from old account to another one.
 - `Account#verify(String, byte[], byte[])` and `Account#sign(byte[])` that help to sign/verify message from `Account`
@@ -17,4 +20,4 @@ All notable changes to Java SDK will be documented in this file.
 - Speedup getting authentication/encryption key from `Account`
 
 ### Reference
-- API Service: `com.bitmark.sdk:api-service:2.1.0`
+- API Service: `com.bitmark.sdk:api-service:2.2.0`
