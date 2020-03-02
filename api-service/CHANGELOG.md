@@ -1,7 +1,12 @@
 # Changelog
 All notable changes to API Service will be documented in this file.
 
-## 7-10-2019 [2.1.0]
+## 03-02-2020 [2.2.0]
+### Changed
+- `ApiService#issueBitmark` returns a `BitmarkRecord` instead of Bitmark Id.
+- `RegistrationResponse#getAssets` returns a collection of `AssetRecord`
+
+## 10-07-2019 [2.1.0]
 ### Added
 - New `HttpObserver` that can be configured from `GlobalConfiguration` that help to intercept to network request/response.
 - Support web socket for realtime event triggering.
@@ -22,4 +27,4 @@ All notable changes to API Service will be documented in this file.
 - Http Logging is now optional instead of default. 
 
 ### Reference
-- Cryptography: `com.bitmark.sdk:cryptography:1.5.0`
+- Cryptography: `com.bitmark.sdk:cryptography:1.6.0`
