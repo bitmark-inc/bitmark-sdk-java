@@ -25,7 +25,7 @@ public class BitmarkTransferSample {
         TransferParams params = new TransferParams(Address.fromAccountNumber(receiverAccountNumber));
         String link =  bitmarkResponse.getBitmark().getHeadId();
         params.setLink(link);
-        params.sign(sender.getKeyPair());
+        params.sign(sender.getAuthKeyPair());
         String txId = await(callback -> Bitmark.transfer(params, callback));
 
         return txId;
@@ -37,7 +37,7 @@ public class BitmarkTransferSample {
         TransferOfferParams params = new TransferOfferParams(Address.fromAccountNumber(receiverAccountNumber));
         String link = bitmarkResponse.getBitmark().getHeadId();
         params.setLink(link);
-        params.sign(sender.getKeyPair());
+        params.sign(sender.getAuthKeyPair());
         String offerId = await(callback -> Bitmark.offer(params, callback));
 
         return offerId;
@@ -48,7 +48,7 @@ public class BitmarkTransferSample {
         OfferRecord offerRecord = bitmarkResponse.getBitmark().getOffer();
 
         TransferResponseParams responseParams = TransferResponseParams.accept(offerRecord);
-        responseParams.sign(receiver.getKeyPair());
+        responseParams.sign(receiver.getAuthKeyPair());
         String txId = await(callback -> Bitmark.respond(responseParams, callback));
 
         return txId;
@@ -59,7 +59,7 @@ public class BitmarkTransferSample {
         OfferRecord offerRecord = bitmarkResponse.getBitmark().getOffer();
 
         TransferResponseParams responseParams = TransferResponseParams.reject(offerRecord);
-        responseParams.setSigningKey(receiver.getKeyPair());
+        responseParams.setSigningKey(receiver.getAuthKeyPair());
         String txId = await(callback -> Bitmark.respond(responseParams, callback));
 
         return txId;
@@ -70,7 +70,7 @@ public class BitmarkTransferSample {
         OfferRecord offerRecord = bitmarkResponse.getBitmark().getOffer();
 
         TransferResponseParams responseParams = TransferResponseParams.cancel(offerRecord, bitmarkResponse.getBitmark().getOwner());
-        responseParams.setSigningKey(sender.getKeyPair());
+        responseParams.setSigningKey(sender.getAuthKeyPair());
         String txId = await(callback -> Bitmark.respond(responseParams, callback));
 
         return txId;

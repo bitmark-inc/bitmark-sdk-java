@@ -21,7 +21,7 @@ public class AssetRegistrationSample {
     public static List<RegistrationResponse.Asset> registerAsset(Account registrant, String assetName, String assetFilePath, HashMap<String, String> metadata) throws Throwable {
         RegistrationParams params = new RegistrationParams(assetName, metadata);
         params.setFingerprintFromFile(new File(assetFilePath));
-        params.sign(registrant.getKeyPair());
+        params.sign(registrant.getAuthKeyPair());
         RegistrationResponse response = await(callback -> Asset.register(params, callback));
         List<RegistrationResponse.Asset> assets = response.getAssets();
         return assets;

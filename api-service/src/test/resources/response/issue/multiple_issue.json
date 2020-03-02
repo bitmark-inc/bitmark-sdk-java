@@ -1,34 +1,174 @@
 {
   "bitmarks": [
     {
-      "id": "e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f"
+      "id": "e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     },
     {
-      "id": "995f2d5f3bcb6cab43d4a758efe39016d5012f07098eaf63179a60dedba85a25"
+      "id": "995f2d5f3bcb6cab43d4a758efe39016d5012f07098eaf63179a60dedba85a25",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     },
     {
-      "id": "d25e784a72d2c12a7813368167a6d3a2b47a38e836ab88bb10e6b2b71dfb8cb7"
+      "id": "d25e784a72d2c12a7813368167a6d3a2b47a38e836ab88bb10e6b2b71dfb8cb7",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     },
     {
-      "id": "682e1d3762a6b2c103d2b98233db04aadfd66e39d6a5d4f32cd5762f7352d492"
+      "id": "682e1d3762a6b2c103d2b98233db04aadfd66e39d6a5d4f32cd5762f7352d492",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     },
     {
-      "id": "e489a1dc930f55ce74f3f39e2e4b52cb1e0a57e720cea2ba7c2dc0b471354e27"
+      "id": "e489a1dc930f55ce74f3f39e2e4b52cb1e0a57e720cea2ba7c2dc0b471354e27",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     },
     {
-      "id": "1246e2a223a9c4e7a63b12ad0b854a92d26a79cf53bd780783779e08f88131bd"
+      "id": "1246e2a223a9c4e7a63b12ad0b854a92d26a79cf53bd780783779e08f88131bd",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     },
     {
-      "id": "8ca6cfb7e689e11bf32d6a44528678155f77278349b8d8c938050951a9c8b664"
+      "id": "8ca6cfb7e689e11bf32d6a44528678155f77278349b8d8c938050951a9c8b664",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     },
     {
-      "id": "a845c1666f45ac7ac7a6413a1b36f846ef638201cceb85fcef7333df8aa20e53"
+      "id": "a845c1666f45ac7ac7a6413a1b36f846ef638201cceb85fcef7333df8aa20e53",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     },
     {
-      "id": "eb799ecdc2e0911d1744899c830c75600469f316ad033312d64cb0c1739bf0a6"
+      "id": "eb799ecdc2e0911d1744899c830c75600469f316ad033312d64cb0c1739bf0a6",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     },
     {
-      "id": "0107f4dbc256591c540722fd2f558e43dd7f197faa88ace608ab82438aa650c0"
+      "id": "0107f4dbc256591c540722fd2f558e43dd7f197faa88ace608ab82438aa650c0",
+      "head_id": "",
+      "owner": "",
+      "asset_id": "",
+      "issuer": "",
+      "head": "",
+      "status": "",
+      "provenance": null,
+      "asset": {
+        "id": "",
+        "name": "",
+        "metadata": null,
+        "registrant": "",
+        "status": ""
+      }
     }
   ]
 }

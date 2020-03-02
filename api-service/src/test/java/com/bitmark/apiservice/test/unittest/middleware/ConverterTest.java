@@ -39,15 +39,15 @@ public class ConverterTest extends BaseTest {
             "application/json; charset=utf-8");
 
     @ParameterizedTest
-    @MethodSource("createSuccessResponseListTxId")
+    @MethodSource("createSuccessResponseListBmRecord")
     public void testConvertIssueResponse_ValidResponse_CorrectIssueResponseIsReturn(
             Response response,
-            List<String> expectedTxIds
+            List<BitmarkRecord> expectedBm
     ) {
-        Callback1<Response> callback = Converter.toIssueResponse(new Callback1<List<String>>() {
+        Callback1<Response> callback = Converter.toIssueResponse(new Callback1<List<BitmarkRecord>>() {
             @Override
-            public void onSuccess(List<String> txIds) {
-                assertEquals(expectedTxIds, txIds);
+            public void onSuccess(List<BitmarkRecord> bitmarks) {
+                assertEquals(expectedBm, bitmarks);
             }
 
             @Override
@@ -399,23 +399,145 @@ public class ConverterTest extends BaseTest {
         callback.onSuccess(response);
     }
 
-    private static Stream<Arguments> createSuccessResponseListTxId()
-            throws IOException {
-        final List<String> txIds1 = new ArrayList<String>() {{
-            add("e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f");
-            add("995f2d5f3bcb6cab43d4a758efe39016d5012f07098eaf63179a60dedba85a25");
-            add("d25e784a72d2c12a7813368167a6d3a2b47a38e836ab88bb10e6b2b71dfb8cb7");
-            add("682e1d3762a6b2c103d2b98233db04aadfd66e39d6a5d4f32cd5762f7352d492");
-            add("e489a1dc930f55ce74f3f39e2e4b52cb1e0a57e720cea2ba7c2dc0b471354e27");
-            add("1246e2a223a9c4e7a63b12ad0b854a92d26a79cf53bd780783779e08f88131bd");
-            add("8ca6cfb7e689e11bf32d6a44528678155f77278349b8d8c938050951a9c8b664");
-            add("a845c1666f45ac7ac7a6413a1b36f846ef638201cceb85fcef7333df8aa20e53");
-            add("eb799ecdc2e0911d1744899c830c75600469f316ad033312d64cb0c1739bf0a6");
-            add("0107f4dbc256591c540722fd2f558e43dd7f197faa88ace608ab82438aa650c0");
+    private static Stream<Arguments> createSuccessResponseListBmRecord()
+            throws IOException, NoSuchFieldException, IllegalAccessException {
+
+        final BitmarkRecord bitmark1 = new BitmarkRecord();
+        reflectionSet(
+                bitmark1,
+                new Pair<>(
+                        "id",
+                        "e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+        final BitmarkRecord bitmark2 = new BitmarkRecord();
+        reflectionSet(
+                bitmark2,
+                new Pair<>(
+                        "id",
+                        "995f2d5f3bcb6cab43d4a758efe39016d5012f07098eaf63179a60dedba85a25"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+        final BitmarkRecord bitmark3 = new BitmarkRecord();
+        reflectionSet(
+                bitmark3,
+                new Pair<>(
+                        "id",
+                        "d25e784a72d2c12a7813368167a6d3a2b47a38e836ab88bb10e6b2b71dfb8cb7"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+        final BitmarkRecord bitmark4 = new BitmarkRecord();
+        reflectionSet(
+                bitmark4,
+                new Pair<>(
+                        "id",
+                        "682e1d3762a6b2c103d2b98233db04aadfd66e39d6a5d4f32cd5762f7352d492"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+        final BitmarkRecord bitmark5 = new BitmarkRecord();
+        reflectionSet(
+                bitmark5,
+                new Pair<>(
+                        "id",
+                        "e489a1dc930f55ce74f3f39e2e4b52cb1e0a57e720cea2ba7c2dc0b471354e27"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+        final BitmarkRecord bitmark6 = new BitmarkRecord();
+        reflectionSet(
+                bitmark6,
+                new Pair<>(
+                        "id",
+                        "1246e2a223a9c4e7a63b12ad0b854a92d26a79cf53bd780783779e08f88131bd"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+        final BitmarkRecord bitmark7 = new BitmarkRecord();
+        reflectionSet(
+                bitmark7,
+                new Pair<>(
+                        "id",
+                        "8ca6cfb7e689e11bf32d6a44528678155f77278349b8d8c938050951a9c8b664"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+        final BitmarkRecord bitmark8 = new BitmarkRecord();
+        reflectionSet(
+                bitmark8,
+                new Pair<>(
+                        "id",
+                        "a845c1666f45ac7ac7a6413a1b36f846ef638201cceb85fcef7333df8aa20e53"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+        final BitmarkRecord bitmark9 = new BitmarkRecord();
+        reflectionSet(
+                bitmark9,
+                new Pair<>(
+                        "id",
+                        "eb799ecdc2e0911d1744899c830c75600469f316ad033312d64cb0c1739bf0a6"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+        final BitmarkRecord bitmark10 = new BitmarkRecord();
+        reflectionSet(
+                bitmark10,
+                new Pair<>(
+                        "id",
+                        "0107f4dbc256591c540722fd2f558e43dd7f197faa88ace608ab82438aa650c0"
+                ),
+                new Pair<>("headId", ""),
+                new Pair<>("owner", ""),
+                new Pair<>("issuer", ""),
+                new Pair<>("assetId", "")
+        );
+
+        final List<BitmarkRecord> bitmarkRecords1 = new ArrayList<BitmarkRecord>() {{
+            add(bitmark1);
+            add(bitmark2);
+            add(bitmark3);
+            add(bitmark4);
+            add(bitmark5);
+            add(bitmark6);
+            add(bitmark7);
+            add(bitmark8);
+            add(bitmark9);
+            add(bitmark10);
         }};
 
-        final List<String> txIds2 = new ArrayList<String>() {{
-            add("e8f8867231590f19a4c353a3487b4931a462ae7b9e0cd5471618aa3e955f236f");
+        final List<BitmarkRecord> bitmarkRecords2 = new ArrayList<BitmarkRecord>() {{
+            add(bitmark1);
         }};
         final Response response1 = new Response.Builder().request(new Request.Builder()
                 .url("http://dummy.com")
@@ -438,29 +560,33 @@ public class ConverterTest extends BaseTest {
                 ))
                 .message("dummy").build();
         return Stream.of(
-                Arguments.of(response1, txIds1),
-                Arguments.of(response2, txIds2)
+                Arguments.of(response1, bitmarkRecords1),
+                Arguments.of(response2, bitmarkRecords2)
         );
     }
 
     private static Stream<Arguments> createSuccessResponseRegistrationResponse()
-            throws IOException {
-        final RegistrationResponse registrationResponse1 =
-                new RegistrationResponse(new ArrayList<RegistrationResponse.Asset>() {{
-                    add(new RegistrationResponse.Asset(
-                            "d20f8bc16350a4f53fb5b685d4e7cedf6e07ab9be9533effb2008ea8434a7685646e042fbdf8a9df46085c19648fb9ce99095c5fa16df25d56721d233646d38b",
-                            false
-                    ));
+            throws IOException, NoSuchFieldException, IllegalAccessException {
+        final AssetRecord asset = new AssetRecord();
+        reflectionSet(
+                asset,
+                new Pair<>(
+                        "id",
+                        "d20f8bc16350a4f53fb5b685d4e7cedf6e07ab9be9533effb2008ea8434a7685646e042fbdf8a9df46085c19648fb9ce99095c5fa16df25d56721d233646d38b"
+                ),
+                new Pair<>("name", ""),
+                new Pair<>(
+                        "registrant",
+                        ""
+                )
+        );
+        final RegistrationResponse registrationResponse =
+                new RegistrationResponse(new ArrayList<AssetRecord>() {{
+                    add(asset);
                 }});
 
-        final RegistrationResponse registrationResponse2 =
-                new RegistrationResponse(new ArrayList<RegistrationResponse.Asset>() {{
-                    add(new RegistrationResponse.Asset(
-                            "d20f8bc16350a4f53fb5b685d4e7cedf6e07ab9be9533effb2008ea8434a7685646e042fbdf8a9df46085c19648fb9ce99095c5fa16df25d56721d233646d38b",
-                            true
-                    ));
-                }});
-        final Response response1 = new Response.Builder().request(new Request.Builder()
+
+        final Response response = new Response.Builder().request(new Request.Builder()
                 .url("http://dummy.com")
                 .build())
                 .protocol(Protocol.HTTP_1_1).code(200)
@@ -470,22 +596,9 @@ public class ConverterTest extends BaseTest {
                                 "/registration/registration1.json")
                 ))
                 .message("dummy").build();
-        final Response response2 = new Response.Builder().request(new Request.Builder()
-                .url("http://dummy.com")
-                .build())
-                .protocol(Protocol.HTTP_1_1).code(200)
-                .body(ResponseBody.create(
-                        JSON,
-                        loadResponse(
-                                "/registration/registration2.json")
-                ))
-                .message("dummy").build();
+
         return Stream.of(
-                Arguments.of(response1, registrationResponse1),
-                Arguments.of(
-                        response2,
-                        registrationResponse2
-                )
+                Arguments.of(response, registrationResponse)
         );
     }
 

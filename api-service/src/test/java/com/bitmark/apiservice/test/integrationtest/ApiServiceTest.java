@@ -62,9 +62,8 @@ public class ApiServiceTest extends BaseTest {
         RegistrationResponse response =
                 await(callback -> ApiService.getInstance()
                         .registerAsset(params, callback));
-        List<RegistrationResponse.Asset> assets = response.getAssets();
+        List<AssetRecord> assets = response.getAssets();
         assertNotNull(assets.get(0).getId());
-        assertFalse(assets.get(0).isDuplicate());
     }
 
     @Test
@@ -196,7 +195,7 @@ public class ApiServiceTest extends BaseTest {
                         registrationParams,
                         callback
                 ));
-        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        List<AssetRecord> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
@@ -207,13 +206,13 @@ public class ApiServiceTest extends BaseTest {
                 quantity
         );
         issuanceParams.sign(KEY1);
-        List<String> txIds =
+        List<BitmarkRecord> bitmarks =
                 await(callback -> ApiService.getInstance().issueBitmark(
                         issuanceParams,
                         callback
                 ));
-        assertEquals(txIds.size(), quantity);
-        assertFalse(txIds.get(0).isEmpty());
+        assertEquals(bitmarks.size(), quantity);
+        assertFalse(bitmarks.get(0).getId().isEmpty());
     }
 
     @Test
@@ -238,17 +237,17 @@ public class ApiServiceTest extends BaseTest {
         RegistrationResponse registrationResponse =
                 await(callback -> ApiService.getInstance()
                         .registerAsset(registrationParams, callback));
-        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        List<AssetRecord> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
         IssuanceParams issuanceParams = new IssuanceParams(assetId, ADDRESS1);
         issuanceParams.sign(KEY1);
-        List<String> txIds =
+        List<BitmarkRecord> bitmarks =
                 await(callback -> ApiService.getInstance()
                         .issueBitmark(issuanceParams, callback));
-        assertEquals(txIds.size(), 1);
-        assertFalse(txIds.get(0).isEmpty());
+        assertEquals(bitmarks.size(), 1);
+        assertFalse(bitmarks.get(0).getId().isEmpty());
     }
 
     @Test
@@ -265,17 +264,17 @@ public class ApiServiceTest extends BaseTest {
         RegistrationResponse registrationResponse =
                 await(callback -> ApiService.getInstance()
                         .registerAsset(registrationParams, callback));
-        List<RegistrationResponse.Asset> assets = registrationResponse.getAssets();
+        List<AssetRecord> assets = registrationResponse.getAssets();
         String assetId = assets.get(0).getId();
 
         // Issue bitmarks
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner);
         issuanceParams.sign(KEY1);
-        List<String> txIds =
+        List<BitmarkRecord> bitmarks =
                 await(callback -> ApiService.getInstance()
                         .issueBitmark(issuanceParams, callback));
-        assertEquals(txIds.size(), 1);
-        assertFalse(txIds.get(0).isEmpty());
+        assertEquals(bitmarks.size(), 1);
+        assertFalse(bitmarks.get(0).getId().isEmpty());
     }
 
     @Test
@@ -287,7 +286,7 @@ public class ApiServiceTest extends BaseTest {
         );
         issuanceParams.sign(KEY1);
         HttpException exception = assertThrows(HttpException.class, () ->
-                await((Callable1<List<String>>) callback -> ApiService.getInstance()
+                await((Callable1<List<BitmarkRecord>>) callback -> ApiService.getInstance()
                         .issueBitmark(
                                 issuanceParams,
                                 callback
@@ -305,11 +304,11 @@ public class ApiServiceTest extends BaseTest {
         int quantity = 100;
         IssuanceParams issuanceParams = new IssuanceParams(assetId, owner, 100);
         issuanceParams.sign(KEY1);
-        List<String> txIds =
+        List<BitmarkRecord> bitmarks =
                 await(callback -> ApiService.getInstance()
                         .issueBitmark(issuanceParams, callback));
-        assertEquals(txIds.size(), quantity);
-        assertFalse(txIds.get(0).isEmpty());
+        assertEquals(bitmarks.size(), quantity);
+        assertFalse(bitmarks.get(0).getId().isEmpty());
     }
 
     @Test
@@ -328,13 +327,13 @@ public class ApiServiceTest extends BaseTest {
                     100
             );
             issuanceParams.sign(KEY1);
-            List<String> txIds = await(callback -> ApiService.getInstance()
+            List<BitmarkRecord> bitmarks = await(callback -> ApiService.getInstance()
                     .issueBitmark(
                             issuanceParams,
                             callback
                     ));
-            assertEquals(txIds.size(), quantity);
-            assertFalse(txIds.get(0).isEmpty());
+            assertEquals(bitmarks.size(), quantity);
+            assertFalse(bitmarks.get(0).getId().isEmpty());
         }
     }
 
