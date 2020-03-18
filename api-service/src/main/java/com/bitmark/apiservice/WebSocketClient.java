@@ -35,6 +35,13 @@ class WebSocketClient extends EventListener {
 
     void subscribe(String channel, SubscriptionEventListener listener) {
         if (isSubscribed(channel)) {
+            SubscribeErrorEvent errorEvent = new SubscribeErrorEvent();
+            errorEvent.setCode(105);
+            errorEvent.setMessage("already subscribed");
+            listener.onSubscribeError(
+                    client.getSubscription(channel),
+                    errorEvent
+            );
             return;
         }
 
@@ -68,6 +75,16 @@ class WebSocketClient extends EventListener {
         isConnected = false;
         if (null != eventListener) {
             eventListener.onDisconnect(client, event);
+        }
+    }
+
+    @Override
+    public void onError(
+            Client client, ErrorEvent event
+    ) {
+        super.onError(client, event);
+        if (null != eventListener) {
+            eventListener.onError(client, event);
         }
     }
 

@@ -4,6 +4,19 @@ allprojects {
     addRepos(repositories)
 }
 
+buildscript {
+    apply from: 'dependencies.gradle'
+    addRepos(repositories)
+    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
+    dependencies {
+        classpath deps.android_plugin
+        classpath deps.kt.plugin
+        classpath deps.android_maven_plugin
+        classpath deps.bintray_plugin
+        classpath deps.fat_aar
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

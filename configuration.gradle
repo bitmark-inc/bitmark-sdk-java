@@ -68,12 +68,26 @@ api_service.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java/tree
 api_service.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
 ext.publication.api_service = api_service
 
+ext.publication.android_ktx = [:]
+def android_ktx = [:]
+android_ktx.GROUP_ID = "com.bitmark.sdk"
+android_ktx.ARTIFACT_ID = "android-ktx"
+android_ktx.VERSION = "1.0.0-SNAPSHOT"
+android_ktx.LIB_NAME = "Bitmark Android Kotlin Extension"
+android_ktx.LIB_DES = "Bitmark Android Kotlin Extension"
+android_ktx.LIB_VENDOR = "Bitmark Inc"
+android_ktx.JAR_NAME = "android-ktx"
+android_ktx.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java/tree/master/android-ktx"
+android_ktx.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
+ext.publication.android_ktx = android_ktx
+
 ext.publicationProperties = { name ->
     switch (name) {
         case 'java-sdk': return ext.publication.java_sdk
         case 'android-sdk': return ext.publication.android_sdk
         case 'cryptography': return ext.publication.cryptography
         case 'api-service': return ext.publication.api_service
+        case 'android-ktx' : return ext.publication.android_ktx
         default: throw new GradleException(String.format("Invalid project name %s", name))
     }
 }
@@ -84,6 +98,7 @@ ext.publicationPackageName = { name ->
         case 'android-sdk': return 'android-sdk'
         case 'cryptography': return 'cryptography'
         case 'api-service': return 'api-service'
+        case 'android-ktx': return 'android-ktx'
         default: throw new GradleException(String.format("Invalid project name %s", name))
     }
 }

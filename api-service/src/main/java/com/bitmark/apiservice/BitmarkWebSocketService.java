@@ -30,10 +30,17 @@ public class BitmarkWebSocketService implements BitmarkWebSocket {
 
     private WebSocketClient client;
 
-    private final ConnectionEvent connEvent;
+    private ConnectionEvent connEvent;
+
+    public BitmarkWebSocketService() {
+    }
 
     public BitmarkWebSocketService(ConnectionEvent event) {
         this.connEvent = event;
+    }
+
+    public void setConnectionEvent(ConnectionEvent connEvent) {
+        this.connEvent = connEvent;
     }
 
     @Override

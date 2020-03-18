@@ -10,18 +10,6 @@ def project_publication = ext.publicationProperties(project.name)
 
 def fatAar = false
 
-buildscript {
-    apply from: '../dependencies.gradle'
-    addRepos(repositories)
-    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
-    dependencies {
-        classpath deps.android_plugin
-        classpath deps.android_maven_plugin
-        classpath deps.bintray_plugin
-        classpath deps.fat_aar
-    }
-}
-
 tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }

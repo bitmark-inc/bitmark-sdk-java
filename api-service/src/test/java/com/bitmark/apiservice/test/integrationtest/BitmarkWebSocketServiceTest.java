@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.bitmark.apiservice.test.integrationtest.DataProvider.ADDRESS1;
 import static com.bitmark.apiservice.test.integrationtest.DataProvider.KEY1;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BitmarkWebSocketServiceTest extends BaseTest {
 
@@ -629,5 +629,89 @@ public class BitmarkWebSocketServiceTest extends BaseTest {
 
         assertEquals(expectedUnsubscribed, actualUnsubscribed.get());
 
+    }
+
+    @Test
+    public void testAlreadySubscribed() throws Throwable {
+        final AtomicBoolean done = new AtomicBoolean();
+        final AtomicReference<Throwable> error = new AtomicReference<>();
+        ws = new BitmarkWebSocketService(new WebSocket.ConnectionEvent() {
+            @Override
+            public void onConnected() {
+                done.set(true);
+            }
+
+            @Override
+            public void onDisconnected() {
+                error.set(new RuntimeException("failed to connect"));
+                done.set(true);
+            }
+
+            @Override
+            public void onConnectionError(Throwable e) {
+                error.set(new RuntimeException("failed to connect"));
+                done.set(true);
+            }
+        });
+        ws.connect(KEY1);
+
+        while (!done.get()) {
+            Thread.sleep(200);
+        }
+
+        if (null != error.get()) {
+            throw error.get();
+        }
+
+        done.set(false);
+        error.set(null);
+
+        ws.subscribeNewBlock(new BitmarkWebSocket.NewBlockEvent() {
+            @Override
+            public void onNewBlock(long blockNumber) {
+
+            }
+
+            @Override
+            public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                super.onSubscribeSuccess(event);
+                ws.subscribeNewBlock(new BitmarkWebSocket.NewBlockEvent() {
+                    @Override
+                    public void onNewBlock(long blockNumber) {
+
+                    }
+
+                    @Override
+                    public void onSubscribeSuccess(SubscribeSuccessEvent event) {
+                        super.onSubscribeSuccess(event);
+                        error.set(new Throwable(
+                                "expect subscribe event failed because of duplication but it's still success"));
+                        done.set(true);
+                    }
+
+                    @Override
+                    public void onSubscribeError(SubscribeErrorEvent event) {
+                        super.onSubscribeError(event);
+                        error.set(new Throwable(event.getMessage()));
+                        done.set(true);
+                    }
+                });
+            }
+
+            @Override
+            public void onSubscribeError(SubscribeErrorEvent event) {
+                super.onSubscribeError(event);
+                error.set(new Throwable(event.getMessage()));
+                done.set(true);
+            }
+
+        });
+
+        while (!done.get()) {
+            Thread.sleep(200);
+        }
+
+        assertNotNull(error.get());
+        assertEquals("already subscribed", error.get().getMessage());
     }
 }
