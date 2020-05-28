@@ -68,12 +68,26 @@ api_service.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java/tree
 api_service.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
 ext.publication.api_service = api_service
 
+ext.publication.bc_bip39 = [:]
+def bc_bip39 = [:]
+bc_bip39.GROUP_ID = "com.bitmark.sdk"
+bc_bip39.ARTIFACT_ID = "bc-bip39-wrapper"
+bc_bip39.VERSION = "1.0.0-SNAPSHOT"
+bc_bip39.LIB_NAME = "Bitmark BC-BIP39 Wrapper library"
+bc_bip39.LIB_DES = "Wrapper library for working with Blockchain common BIP39 standard"
+bc_bip39.LIB_VENDOR = "Bitmark Inc"
+bc_bip39.JAR_NAME = "bc-bip39-wrapper"
+bc_bip39.LIB_SITE_URL = "https://github.com/bitmark-inc/bitmark-sdk-java/tree/master/bc-bip39-wrapper"
+bc_bip39.LIB_GIT_URL = "https://github.com/bitmark-inc/bitmark-sdk-java.git"
+ext.publication.bc_bip39 = bc_bip39
+
 ext.publicationProperties = { name ->
     switch (name) {
         case 'java-sdk': return ext.publication.java_sdk
         case 'android-sdk': return ext.publication.android_sdk
         case 'cryptography': return ext.publication.cryptography
         case 'api-service': return ext.publication.api_service
+        case 'bc-bip39-wrapper': return ext.publication.bc_bip39
         default: throw new GradleException(String.format("Invalid project name %s", name))
     }
 }
@@ -84,6 +98,7 @@ ext.publicationPackageName = { name ->
         case 'android-sdk': return 'android-sdk'
         case 'cryptography': return 'cryptography'
         case 'api-service': return 'api-service'
+        case 'bc-bip39-wrapper': return 'bc-bip39-wrapper'
         default: throw new GradleException(String.format("Invalid project name %s", name))
     }
 }

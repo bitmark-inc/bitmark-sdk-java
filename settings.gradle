@@ -4,4 +4,5 @@ include 'api-service'
 include 'java-sdk'
 include 'android-sdk'
 include 'sample:java-sdk-sample'
+include 'bc-bip39-wrapper'
 
