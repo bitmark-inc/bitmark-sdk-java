@@ -54,10 +54,10 @@ test -e "apache-maven-${MAVEN_VERSION}-bin.tar.gz" || wget --quiet https://repo.
 test -e "apache-maven-${MAVEN_VERSION}" || tar -xf apache-maven-${MAVEN_VERSION}-bin.tar.gz
 popd
 
-pushd jni
+pushd ../jni
 ./installswig.sh
 popd
 
 ./download-gradle.sh 
 
-update-android.sh
+./update-android.sh
