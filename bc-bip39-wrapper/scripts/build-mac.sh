@@ -2,7 +2,7 @@
 
 ./setenv.sh
 
-#./submodule-update.sh
+./submodule-update.sh
 
 #needed for mac osx
 C_INCLUDE_PATH="${JAVA_HOME}/include:${JAVA_HOME}/include/linux:/System/Library/Frameworks/JavaVM.framework/Headers"
