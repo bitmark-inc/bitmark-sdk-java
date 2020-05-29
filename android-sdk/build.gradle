@@ -68,6 +68,7 @@ dependencies {
 
     if (fatAar) {
         embed deps.bitmark_sdk.api_service
+        embed deps.bitmark_sdk.bc_bip39_wrapper
         embed deps.android_support.annotation
         embed deps.android_support.compat
         embed deps.android_support.appcompat
@@ -84,6 +85,7 @@ dependencies {
         }
     } else {
         implementation deps.bitmark_sdk.api_service
+        implementation deps.bitmark_sdk.bc_bip39_wrapper
         implementation deps.android_support.annotation
         implementation deps.android_support.compat
         implementation deps.android_support.appcompat

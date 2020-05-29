@@ -11,6 +11,7 @@ versions.gson = "2.8.5"
 versions.bintray_plugin = "1.7.3"
 versions.cryptography = "1.7.0-SNAPSHOT"
 versions.api_service = "2.3.0-SNAPSHOT"
+versions.bc_bip39_wrapper = "1.0.0-SNAPSHOT"
 versions.android_plugin = "3.2.1"
 versions.android_maven_plugin = "2.1"
 versions.android_test_runner = "1.0.2"
@@ -42,6 +43,7 @@ junit_vintage.engine = "org.junit.vintage:junit-vintage-engine:$versions.junit_v
 def bitmark_sdk = [:]
 bitmark_sdk.cryptography = "com.bitmark.sdk:cryptography:$versions.cryptography"
 bitmark_sdk.api_service = "com.bitmark.sdk:api-service:$versions.api_service"
+bitmark_sdk.bc_bip39_wrapper = "com.bitmark.sdk:bc-bip39-wrapper:$versions.bc_bip39_wrapper"
 
 def rx = [:]
 rx.java = "io.reactivex.rxjava2:rxjava:$versions.rxjava"

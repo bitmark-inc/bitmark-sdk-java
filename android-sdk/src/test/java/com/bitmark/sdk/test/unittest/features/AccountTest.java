@@ -11,6 +11,7 @@ import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Random;
 import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.Account;
+import com.bitmark.sdk.features.internal.BCRecoveryPhrase;
 import com.bitmark.sdk.features.internal.Seed;
 import com.bitmark.sdk.features.internal.SeedTwelve;
 import com.bitmark.sdk.features.internal.SeedTwentyFour;
@@ -331,6 +332,34 @@ public class AccountTest extends BaseTest {
         ));
         assertFalse(verified);
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideEncodedSeedWords")
+    public void testGetBCRecoveryPhrase(String encodedSeed, String[] words) {
+        Account account = Account.fromSeed(encodedSeed);
+        BCRecoveryPhrase phrase = account.getBCRecoveryPhrase();
+        assertTrue(Arrays.deepEquals(words, phrase.getMnemonicWords()));
+    }
+
+    private static Stream<Arguments> provideEncodedSeedWords() {
+        return Stream.of(
+                Arguments.of(
+                        "9J876mP7wDJ6g5P41eNMN8N3jo9fycDs2",
+                        "depend crime cricket castle fun purse announce nephew profit cloth trim deliver august"
+                                .split(" ")
+                ),
+                Arguments.of(
+                        "9J878SbnM2GFqAELkkiZbqHJDkAj57fYK",
+                        "file earn crack fever crack differ wreck crazy salon imitate swamp sample autumn"
+                                .split(" ")
+                ),
+                Arguments.of(
+                        "9J877LVjhr3Xxd2nGzRVRVNUZpSKJF4TH",
+                        "during kingdom crew atom practice brisk weird document eager artwork ride then area"
+                                .split(" ")
+                )
+        );
     }
 
 }

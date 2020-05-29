@@ -20,10 +20,7 @@ import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
 import com.bitmark.cryptography.crypto.key.PublicKey;
 import com.bitmark.sdk.authentication.KeyAuthenticationSpec;
-import com.bitmark.sdk.features.internal.RecoveryPhrase;
-import com.bitmark.sdk.features.internal.Seed;
-import com.bitmark.sdk.features.internal.SeedTwelve;
-import com.bitmark.sdk.features.internal.SeedTwentyFour;
+import com.bitmark.sdk.features.internal.*;
 import com.bitmark.sdk.keymanagement.KeyManager;
 import com.bitmark.sdk.keymanagement.KeyManagerImpl;
 
@@ -98,10 +95,13 @@ public class Account {
     }
 
     public static Account fromRecoveryPhrase(String... recoveryPhrase) {
-        final RecoveryPhrase phrase = RecoveryPhrase.fromMnemonicWords(
-                recoveryPhrase);
-        final Seed seed = phrase.recoverSeed();
-        return fromSeed(seed);
+        Seed seed;
+        if (recoveryPhrase.length == BCRecoveryPhrase.MNEMONIC_LENGTH) {
+            seed = BCRecoveryPhrase.recoverSeed(recoveryPhrase);
+        } else {
+            seed = RecoveryPhrase.recoverSeed(recoveryPhrase);
+        }
+        return fromSeed(seed.getEncodedSeed());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -212,6 +212,10 @@ public class Account {
 
     public RecoveryPhrase getRecoveryPhrase(Locale locale) {
         return seed.getRecoveryPhrase(locale);
+    }
+
+    public BCRecoveryPhrase getBCRecoveryPhrase() {
+        return BCRecoveryPhrase.fromSeed(seed);
     }
 
     public Seed getSeed() {
