@@ -102,7 +102,7 @@ task libraryJar(type: Zip, dependsOn: ['unzipAAR', 'buildNativeJar']) {
     destinationDir file("$buildDir/libs/lib-jar")
     baseName project_publication.ARTIFACT_ID
     extension 'jar'
-    from zipTree(file("${buildDir}/outputs/aar/unzip/classes.jar")), "${buildDir}/native-lib/lib"
+    from zipTree(file("${buildDir}/outputs/aar/unzip/classes.jar")), "${buildDir}/libs/native-lib"
 }
 
 task('generateSWIGsource') {
