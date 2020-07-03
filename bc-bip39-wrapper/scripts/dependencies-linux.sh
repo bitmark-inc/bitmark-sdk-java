@@ -30,8 +30,8 @@ sudo apt-fast -y -qq install wget git autoconf autoconf automake build-essential
 sudo apt-fast -y -qq install gcc-multilib lib32z1
 sudo add-apt-repository --enable-source ppa:webupd8team/java -y 
 sudo apt-fast -qq update 
-echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-sudo apt-fast -y -qq install oracle-java8-installer maven 
+echo default-java shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+sudo apt-fast -y -qq install default-java maven
 
 #http://apt.llvm.org/
 wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
