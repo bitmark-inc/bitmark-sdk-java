@@ -24,7 +24,7 @@ sudo apt-get -y -qq install apt-fast
 
 sudo apt-fast -qq update
 
-sudo apt-fast -y -qq install swig libpcre3 libpcre3-dev wget git autoconf autoconf automake build-essential autogen libtool gettext-base gettext vim bzip2 libpcre3-dev libpcre++-dev pkg-config unzip htop ntp
+sudo apt-fast -y -qq install wget git autoconf autoconf automake build-essential autogen libtool gettext-base gettext vim bzip2 libpcre3-dev libpcre++-dev pkg-config unzip htop ntp
 #gradle building issues
 sudo apt-fast -y -qq install gcc-multilib lib32z1
 sudo add-apt-repository --enable-source ppa:webupd8team/java -y 
