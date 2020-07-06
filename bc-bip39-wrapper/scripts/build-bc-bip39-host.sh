@@ -4,14 +4,14 @@
 
 pushd ../bc-crypto-base
 ./configure
-make clean
-make check
-make install
+sudo make clean
+sudo make check
+sudo make install
 popd
 
 pushd ../bc-bip39
 ./configure
-make clean
-make check
-make install
+sudo make clean
+sudo make check
+sudo make install
 popd
