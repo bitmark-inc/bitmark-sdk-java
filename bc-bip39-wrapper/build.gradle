@@ -76,7 +76,7 @@ task unzipAAR(type: Copy) {
 }
 
 task copyNativeLib(type: Copy) {
-    from "${projectDir}/jni/libbip39jni.dylib", "${buildDir}/intermediates/cmake/release/obj"
+    from "${projectDir}/jni/libbip39jni.dylib", "${projectDir}/jni/libbip39jni.so", "${buildDir}/intermediates/cmake/release/obj"
     into "${buildDir}/libs/native-lib/lib"
 }
 
