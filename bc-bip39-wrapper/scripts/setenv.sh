@@ -13,12 +13,12 @@ if uname -a | grep -q -i darwin; then
     export ANDROID_HOME=/usr/local/share/android-sdk
 else
     export MAVEN_VERSION=3.5.4
-    export GRADLE_VERSION=4.6
+    export GRADLE_VERSION=6.4.1
     export NDK_TOOLCHAIN_PLATFORM=16
     export NDK_TOOLCHAIN_ARCHITECTURE=arm
     export NDK_ROOT=`pwd`/installs/android-ndk-${NDK_VERSION}
     export PATH=${NDK_ROOT}:$PATH
-    export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+    export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
     export ANDROID_NDK_HOME=${NDK_ROOT}
     export ANDROID_HOME=`pwd`/installs/android-sdk
     export PATH=`pwd`/installs/apache-maven-${MAVEN_VERSION}:`pwd`/installs/gradle-${GRADLE_VERSION}/bin:`pwd`/installs/android-toolchain/bin:$PATH
