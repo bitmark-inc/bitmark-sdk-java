@@ -9,7 +9,6 @@ package com.bitmark.apiservice.test.unittest.params;
 import com.bitmark.apiservice.params.RegistrationParams;
 import com.bitmark.apiservice.test.BaseTest;
 import com.bitmark.cryptography.error.ValidateException;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -241,15 +240,6 @@ public class RegistrationParamsTest extends BaseTest {
         String fingerprint = params.setFingerprintFromData(data);
         assertTrue(expectedFingerprint.equalsIgnoreCase(fingerprint));
         assertTrue(fingerprint.startsWith("01"));
-    }
-
-    @Test
-    public void testSetFingerprintFromData_InvalidData_ErrorIsThrow() {
-        assertThrows(
-                ValidateException.class,
-                () -> new RegistrationParams(ASSET_NAME, METADATA)
-                        .setFingerprintFromData(null)
-        );
     }
 
     @ParameterizedTest

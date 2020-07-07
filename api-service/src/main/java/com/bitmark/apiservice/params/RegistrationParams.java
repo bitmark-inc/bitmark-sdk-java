@@ -60,6 +60,7 @@ public class RegistrationParams extends AbsSingleParams {
     }
 
     public static String computeFingerprint(byte[] data) {
+        checkValid(() -> data != null, "invalid data");
         final byte[] hashedBytes = Sha3512.hash(data);
         return "01" + HEX.encode(hashedBytes);
     }
@@ -167,7 +168,6 @@ public class RegistrationParams extends AbsSingleParams {
     }
 
     public String setFingerprintFromData(byte[] data) {
-        checkValid(() -> data != null, "invalid data");
         return fingerprint = computeFingerprint(data);
     }
 
