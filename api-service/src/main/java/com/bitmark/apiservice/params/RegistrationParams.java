@@ -171,6 +171,10 @@ public class RegistrationParams extends AbsSingleParams {
         return fingerprint = computeFingerprint(data);
     }
 
+    public void setFingerprint(String fingerprint) {
+        this.fingerprint = fingerprint;
+    }
+
     public Address getRegistrant() {
         return registrant;
     }
