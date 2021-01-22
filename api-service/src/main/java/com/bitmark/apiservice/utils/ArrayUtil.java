@@ -7,10 +7,14 @@
 package com.bitmark.apiservice.utils;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
+
+import static com.bitmark.cryptography.crypto.encoder.Hex.HEX;
 
 public class ArrayUtil {
 
@@ -282,6 +286,27 @@ public class ArrayUtil {
         List<T> copyFirst = new ArrayList<>(first);
         copyFirst.addAll(new ArrayList<>(second));
         return copyFirst;
+    }
+
+    public static int lexicographicallyCompare(byte[] a, byte[] b) {
+        int lengthA = a.length;
+        int lengthB = b.length;
+        int iterateCount = lengthA < lengthB ? lengthA : lengthB;
+
+        int result = 0;
+        for (int i = 0; i < iterateCount; i++) {
+            result = Byte.toUnsignedInt(a[i]) - Byte.toUnsignedInt(b[i]);
+            if (result != 0) {
+                result = result < 0 ? -1 : 1;
+                break;
+            }
+        }
+
+        if (result == 0 && lengthA != lengthB) {
+            return lengthA > lengthB ? 1 : -1;
+        }
+
+        return result;
     }
 
 }

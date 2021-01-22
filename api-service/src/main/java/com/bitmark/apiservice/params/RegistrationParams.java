@@ -8,6 +8,7 @@ package com.bitmark.apiservice.params;
 
 import com.bitmark.apiservice.configuration.GlobalConfiguration;
 import com.bitmark.apiservice.utils.Address;
+import com.bitmark.apiservice.utils.ArrayUtil;
 import com.bitmark.apiservice.utils.BinaryPacking;
 import com.bitmark.apiservice.utils.FileUtils;
 import com.bitmark.cryptography.crypto.MerkleTree;
@@ -19,6 +20,7 @@ import com.bitmark.cryptography.utils.ArrayUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Map;
 
@@ -76,6 +78,9 @@ public class RegistrationParams extends AbsSingleParams {
         for (int i = 0; i < length; i++) {
             hashes[i] = Sha3512.hash(data[i]);
         }
+
+        // sort hash array in ascending order
+        Arrays.sort(hashes, ArrayUtil::lexicographicallyCompare);
 
         byte[][] merkleTree = MerkleTree.buildTree(
                 hashes,
@@ -185,6 +190,10 @@ public class RegistrationParams extends AbsSingleParams {
 
     public Map<String, String> getMetadata() {
         return metadata;
+    }
+
+    public String getFingerprint() {
+        return fingerprint;
     }
 
     @Override

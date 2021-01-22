@@ -9,6 +9,7 @@ package com.bitmark.apiservice.test.unittest.params;
 import com.bitmark.apiservice.params.RegistrationParams;
 import com.bitmark.apiservice.test.BaseTest;
 import com.bitmark.cryptography.error.ValidateException;
+import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -265,5 +266,16 @@ public class RegistrationParamsTest extends BaseTest {
     @MethodSource("createNotSignedRegistrationParams")
     public void testToJson_ParamsIsNotSigned_ErrorIsThrow(RegistrationParams params) {
         assertThrows(UnsupportedOperationException.class, params::toJson);
+    }
+
+    @Test
+    public void testSetFingerprintFromDataArray_ValidData_CorrectFingerprintReturn() {
+        RegistrationParams params = new RegistrationParams("", new HashMap<>());
+        params.setFingerprintFromData(new byte[][]{
+                "hello world".getBytes(),
+                "this is a test case".getBytes(),
+                "bitmark sdk".getBytes()
+        });
+        assertEquals("02DrQYWKFmh9APficsuetD/TlVwa5z4x3OoFVjk3f12RaRy8Wx3OhRTTVMLZPGImmgxZawOf++Xegq8t2p6pHe9w==", params.getFingerprint());
     }
 }
