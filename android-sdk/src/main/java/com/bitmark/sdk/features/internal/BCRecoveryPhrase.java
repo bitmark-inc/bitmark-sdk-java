@@ -6,11 +6,9 @@
  */
 package com.bitmark.sdk.features.internal;
 
-import com.bitmark.sdk.bcbip39wrapper.bip39.Bip39;
+import com.bc.bip39.Bip39;
+import com.bitmark.sdk.utils.StringUtils;
 
-import java.nio.charset.StandardCharsets;
-
-import static com.bitmark.apiservice.utils.ArrayUtil.slice;
 import static com.bitmark.cryptography.utils.Validator.checkValid;
 
 /**
@@ -38,19 +36,7 @@ public class BCRecoveryPhrase {
                 () -> secret != null && secret.length == Version.TWELVE.getEntropyLength(),
                 "invalid secret"
         );
-        final int maxLength = 1024;
-        byte[] mnemonics = new byte[maxLength];
-        int length = Bip39.bip39_mnemonics_from_secret(
-                secret,
-                secret.length,
-                mnemonics,
-                maxLength
-        );
-        mnemonics = slice(mnemonics, 0, length);
-        return getMnemonicAsArray(new String(
-                mnemonics,
-                StandardCharsets.US_ASCII
-        ));
+        return Bip39.encode(secret).split(" ");
     }
 
     public static BCRecoveryPhrase fromSeed(Seed seed) {
@@ -61,30 +47,7 @@ public class BCRecoveryPhrase {
 
     public static Seed recoverSeed(String[] mnemonicWord) {
         validate(mnemonicWord);
-        final int secretLength = Version.TWELVE.getEntropyLength();
-        byte[] secret = new byte[secretLength];
-        int length = Bip39.bip39_secret_from_mnemonics(getMnemonicAsString(
-                mnemonicWord), secret, secretLength);
-        if (length != secretLength) {
-            throw new IllegalStateException("cannot recover seed");
-        }
-        return new SeedTwelve(secret);
-    }
-
-    private static String getMnemonicAsString(String[] words) {
-        StringBuilder builder = new StringBuilder();
-        int length = words.length;
-        for (int i = 0; i < length; i++) {
-            builder.append(words[i]);
-            if (i < length - 1) {
-                builder.append(" ");
-            }
-        }
-        return builder.toString();
-    }
-
-    private static String[] getMnemonicAsArray(String word) {
-        return word.split(" ");
+        return new SeedTwelve(Bip39.decode(StringUtils.join(" ", mnemonicWord)));
     }
 
     private static void validate(String... mnemonicWords) {

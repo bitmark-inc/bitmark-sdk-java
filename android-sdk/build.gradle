@@ -67,8 +67,8 @@ apply from: '../publication_android.gradle'
 dependencies {
 
     if (fatAar) {
+        embed fileTree(dir: "$projectDir/src/main/libs", include: ['*.aar'])
         embed deps.bitmark_sdk.api_service
-        embed deps.bitmark_sdk.bc_bip39_wrapper
         embed deps.android_support.annotation
         embed deps.android_support.compat
         embed deps.android_support.appcompat
@@ -84,8 +84,8 @@ dependencies {
             exclude group: 'com.android.support', module: 'support-v4'
         }
     } else {
+        implementation fileTree(dir: "$projectDir/src/main/libs", include: ['*.aar'])
         implementation deps.bitmark_sdk.api_service
-        implementation deps.bitmark_sdk.bc_bip39_wrapper
         implementation deps.android_support.annotation
         implementation deps.android_support.compat
         implementation deps.android_support.appcompat
