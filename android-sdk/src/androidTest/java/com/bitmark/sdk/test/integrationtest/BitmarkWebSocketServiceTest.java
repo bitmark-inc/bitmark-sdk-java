@@ -4,12 +4,12 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.sdk.test.integrationtest.features;
+package com.bitmark.sdk.test.integrationtest;
 
 import com.bitmark.apiservice.BitmarkWebSocket;
 import com.bitmark.apiservice.BitmarkWebSocketService;
 import com.bitmark.apiservice.WebSocket;
-import com.bitmark.sdk.test.integrationtest.BaseTest;
+import com.bitmark.sdk.test.BaseTest;
 import io.github.centrifugal.centrifuge.SubscribeErrorEvent;
 import io.github.centrifugal.centrifuge.SubscribeSuccessEvent;
 import io.github.centrifugal.centrifuge.UnsubscribeEvent;

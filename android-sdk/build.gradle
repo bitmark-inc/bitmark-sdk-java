@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 28
     }
 

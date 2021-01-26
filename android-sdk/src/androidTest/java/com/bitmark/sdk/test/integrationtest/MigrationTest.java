@@ -4,7 +4,7 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.sdk.test.integrationtest.features;
+package com.bitmark.sdk.test.integrationtest;
 
 import com.bitmark.apiservice.params.IssuanceParams;
 import com.bitmark.apiservice.params.RegistrationParams;
@@ -19,8 +19,8 @@ import com.bitmark.sdk.features.Account;
 import com.bitmark.sdk.features.Asset;
 import com.bitmark.sdk.features.Bitmark;
 import com.bitmark.sdk.features.Migration;
-import com.bitmark.sdk.test.integrationtest.BaseTest;
-import com.bitmark.sdk.test.integrationtest.utils.extensions.TemporaryFolderRule;
+import com.bitmark.sdk.test.BaseTest;
+import com.bitmark.sdk.test.utils.extensions.TemporaryFolderRule;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -30,9 +30,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.bitmark.apiservice.utils.Awaitility.await;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class MigrationTest extends BaseTest {
 

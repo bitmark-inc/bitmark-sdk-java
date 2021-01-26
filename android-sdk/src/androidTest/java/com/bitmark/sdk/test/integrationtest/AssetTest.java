@@ -4,7 +4,7 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.sdk.test.integrationtest.features;
+package com.bitmark.sdk.test.integrationtest;
 
 import com.annimon.stream.Stream;
 import com.bitmark.apiservice.params.RegistrationParams;
@@ -14,8 +14,8 @@ import com.bitmark.apiservice.utils.callback.Callable1;
 import com.bitmark.apiservice.utils.error.HttpException;
 import com.bitmark.apiservice.utils.record.AssetRecord;
 import com.bitmark.sdk.features.Asset;
-import com.bitmark.sdk.test.integrationtest.BaseTest;
-import com.bitmark.sdk.test.integrationtest.utils.extensions.TemporaryFolderRule;
+import com.bitmark.sdk.test.BaseTest;
+import com.bitmark.sdk.test.utils.extensions.TemporaryFolderRule;
 import org.junit.Rule;
 import org.junit.Test;
 

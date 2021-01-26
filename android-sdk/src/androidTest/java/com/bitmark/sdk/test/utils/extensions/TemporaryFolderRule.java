@@ -4,7 +4,7 @@
  * Use of this source code is governed by an ISC
  * license that can be found in the LICENSE file.
  */
-package com.bitmark.sdk.test.integrationtest.utils.extensions;
+package com.bitmark.sdk.test.utils.extensions;
 
 import org.junit.rules.TemporaryFolder;
 
@@ -13,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static com.bitmark.cryptography.crypto.encoder.Raw.RAW;
-import static com.bitmark.sdk.test.integrationtest.utils.CommonUtils.randomString;
+import static com.bitmark.sdk.test.utils.CommonUtils.randomString;
 
 public class TemporaryFolderRule extends TemporaryFolder {
 
