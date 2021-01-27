@@ -26,11 +26,15 @@ test {
 }
 
 dependencies {
+    implementation fileTree(dir: "$projectDir/src/main/libs", include: ['*.jar'])
     implementation deps.bitmark_sdk.api_service
-    implementation deps.bitmark_sdk.bc_bip39_wrapper
     testImplementation deps.junit_jupiter.api
     testImplementation deps.junit_jupiter.params
     testImplementation deps.junit_platform.suite_api
     testImplementation deps.junit_platform.runner
     testRuntime deps.junit_jupiter.engine
+}
+
+tasks.withType(Test) {
+    systemProperty "java.library.path", "$projectDir/src/main/jniLibs"
 }

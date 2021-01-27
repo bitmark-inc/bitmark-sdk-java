@@ -7,13 +7,16 @@ language: android
 name: "Build Bitmark Android SDK"
 jdk: openjdk8
 sudo: required
+compiler: clang
 
 android:
   components:
   - platform-tools
   - tools
   - build-tools-24.0.2
+  - build-tools-30.0.2
   - android-24
+  - android-30
   - extra-google-google_play_services
   - extra-google-m2repository
   - extra-android-m2repository
@@ -34,23 +37,24 @@ cache:
 
 env:
   global:
-  - ANDROID_API=24
-  - EMULATOR_API=24
-  - ANDROID_BUILD_TOOLS=24.0.2
   - ADB_INSTALL_TIMEOUT=5 # minutes
+  - CC=clang
 
 git:
   submodules: false
 
 before_install:
 - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+- git submodule update --init
+- sed -i 's/git@github.com:/https:\/\/github.com\//' android-sdk/deps/bc-libs-java/.gitmodules
+- sed -i 's/git@github.com:/https:\/\/github.com\//' java-sdk/deps/bc-libs-java/.gitmodules
 - git submodule update --init --recursive
 - chmod +x gradlew
-- echo y | sdkmanager "ndk-bundle"
-- echo y | sdkmanager 'ndk;20.0.5594570'
+- echo y | sdkmanager 'ndk;21.0.6113669'
 - echo y | sdkmanager 'cmake;3.10.2.4988404'
-- export ANDROID_NDK_HOME=$ANDROID_HOME/ndk-bundle
-- export PATH=$PATH:$ANDROID_NDK_HOME
+- export ANDROID_NDK=$ANDROID_HOME/ndk/21.0.6113669
+- export ANDROID_SDK_ROOT=$ANDROID_HOME
+- export PATH=$PATH:$ANDROID_NDK
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
@@ -58,8 +62,7 @@ install:
 
 before_script:
 - rm -fr $HOME/.gradle/caches/modules-2/files-2.1/com.bitmark.sdk
-- NDK_HOME=$ANDROID_NDK_HOME && SDK_HOME=$ANDROID_HOME && BINTRAY_USER=$BINTRAY_USER && BINTRAY_API_KEY=$BINTRAY_API_KEY && BINTRAY_GPG_PASS=$BINTRAY_GPG_PASS && BINTRAY_REPO=$BINTRAY_REPO
-- echo -n >local.properties && echo "ndk.dir=$NDK_HOME"$'\n'"sdk.dir=$SDK_HOME"$'\n'"cmake.dir=$SDK_HOME/cmake/3.10.2.4988404"$'\n'"bintray.user=$BINTRAY_USER"$'\n'"bintray.apikey=$BINTRAY_API_KEY"$'\n'"bintray.gpg.password=$BINTRAY_GPG_PASS"$'\n'"bintray.repo=$BINTRAY_REPO" >local.properties
+- echo -n >local.properties && echo "ndk.dir=$ANDROID_NDK"$'\n'"sdk.dir=$ANDROID_HOME"$'\n'"cmake.dir=$ANDROID_HOME/cmake/3.10.2.4988404"$'\n'"bintray.user=$BINTRAY_USER"$'\n'"bintray.apikey=$BINTRAY_API_KEY"$'\n'"bintray.gpg.password=$BINTRAY_GPG_PASS"$'\n'"bintray.repo=$BINTRAY_REPO" >local.properties
 - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
 - emulator -avd test -no-window &
 - android-wait-for-emulator
@@ -69,10 +72,11 @@ script:
 - ./gradlew clean build -x compileSodiumjniSharedLibrarySodiumjniC -x compileSodiumjniStaticLibrarySodiumjniC -x linkSodiumjniSharedLibrary -p cryptography --info
 - ./gradlew clean build -x test -p api-service --info
 - ./gradlew test --tests com.bitmark.apiservice.test.unittest.* -p api-service --info
+- pushd java-sdk && sudo -E ./scripts/build.sh && popd
 - ./gradlew clean build -x test -p java-sdk --info
 - ./gradlew test --tests com.bitmark.sdk.test.unittest.* -p java-sdk --info
-- ./gradlew clean build connectedCheck -p android-sdk --info
-- ./gradlew -p bc-bip39-wrapper generateSWIGsource test connectedCheck
+- pushd android-sdk && sudo -E ./scripts/build.sh && popd
+- ./gradlew clean build connectedDebugAndroidTest -p android-sdk --info
 
 branches:
   only:
