@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to Android SDK will be documented in this file.
 
+## 09-03-2022 [2.2.1]
+Allow Account to create from PrivateKey
+
 ## 03-02-2019 [2.2.0]
 Upgrade module `api-service` to `2.2.0`
 
