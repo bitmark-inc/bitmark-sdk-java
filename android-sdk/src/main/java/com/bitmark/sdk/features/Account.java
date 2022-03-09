@@ -58,7 +58,6 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-
     public Account(PrivateKey privateKey) {
         keyPair = Ed25519.getKeyPair(privateKey.toBytes());
         accountNumber = generateAccountNumber(keyPair.publicKey());
@@ -185,7 +184,7 @@ public class Account {
         return generateAccountNumber(key, GlobalConfiguration.network());
     }
 
-    public static String generateAccountNumber(
+    private static String generateAccountNumber(
             PublicKey key,
             Network network
     ) {
