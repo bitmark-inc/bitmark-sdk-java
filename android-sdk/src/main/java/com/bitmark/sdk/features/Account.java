@@ -18,6 +18,7 @@ import com.bitmark.apiservice.utils.callback.Callback1;
 import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Sha3256;
 import com.bitmark.cryptography.crypto.key.KeyPair;
+import com.bitmark.cryptography.crypto.key.PrivateKey;
 import com.bitmark.cryptography.crypto.key.PublicKey;
 import com.bitmark.sdk.authentication.KeyAuthenticationSpec;
 import com.bitmark.sdk.features.internal.RecoveryPhrase;
@@ -42,15 +43,24 @@ public class Account {
 
     private Seed seed;
 
+    private KeyPair keyPair;
+
     public Account() {
         seed = new SeedTwelve();
+        keyPair = seed.getAuthKeyPair();
         accountNumber = generateAccountNumber(seed.getAuthKeyPair()
                 .publicKey());
     }
 
     private Account(Seed seed, String accountNumber) {
         this.seed = seed;
+        this.keyPair = seed.getAuthKeyPair();
         this.accountNumber = accountNumber;
+    }
+
+    public Account(PrivateKey privateKey) {
+        keyPair = Ed25519.getKeyPair(privateKey.toBytes());
+        accountNumber = generateAccountNumber(keyPair.publicKey());
     }
 
     /**
@@ -195,11 +205,15 @@ public class Account {
     }
 
     public KeyPair getAuthKeyPair() {
-        return seed.getAuthKeyPair();
+        return keyPair;
     }
 
     public KeyPair getEncKeyPair() {
-        return seed.getEncKeyPair();
+        if (seed != null) {
+            return seed.getEncKeyPair();
+        } else {
+            return null;
+        }
     }
 
     public String getAccountNumber() {

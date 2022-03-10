@@ -9,6 +9,7 @@ package com.bitmark.sdk.test.unittest.features;
 import com.bitmark.apiservice.configuration.Network;
 import com.bitmark.cryptography.crypto.Ed25519;
 import com.bitmark.cryptography.crypto.Random;
+import com.bitmark.cryptography.crypto.key.PrivateKey;
 import com.bitmark.cryptography.error.ValidateException;
 import com.bitmark.sdk.features.Account;
 import com.bitmark.sdk.features.internal.Seed;
@@ -70,6 +71,22 @@ public class AccountTest extends BaseTest {
             String publicKey
     ) {
         final Account account = Account.fromSeed(seed);
+        assertEquals(account.getAccountNumber(), accountNumber);
+        assertEquals(
+                HEX.encode(account.getAuthKeyPair().publicKey().toBytes()),
+                publicKey
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("createPrivateKeyAccountNumberPubKeyString")
+    public void testNewAccountFromPrivateKey_ValidSeed_ValidAccountIsCreated(
+            String privateKeyHex,
+            String accountNumber,
+            String publicKey
+    ) {
+        PrivateKey privateKey = PrivateKey.from(privateKeyHex);
+        final Account account = new Account(privateKey);
         assertEquals(account.getAccountNumber(), accountNumber);
         assertEquals(
                 HEX.encode(account.getAuthKeyPair().publicKey().toBytes()),
@@ -305,6 +322,27 @@ public class AccountTest extends BaseTest {
                         "9J87CAsHdFdoEu6N1unZk3sqhVBkVL8Z8",
                         "eMCcmw1SKoohNUf3LeioTFKaYNYfp2bzFYpjm3EddwxBSWYVCb",
                         "369f6ceb1c23dbccc61b75e7990d0b2db8e1ee8da1c44db32280e63ca5804f38"
+                )
+        );
+    }
+
+    private static Stream<Arguments> createPrivateKeyAccountNumberPubKeyString() {
+
+        return Stream.of(
+                Arguments.of(
+                        "599b8bd18f92738c69683119172cc132b840653ebc6fc29476f56a791e93b03941e6258f3c7e12bd77d22d100315e33746a6383ee7e8dc9af1a6f78fbae3d507",
+                        "eSAeuiZUd1AFatviHmhEukMeuTWWaN1mTn6HukPNiKzXK5msB4",
+                        "41e6258f3c7e12bd77d22d100315e33746a6383ee7e8dc9af1a6f78fbae3d507"
+                ),
+                Arguments.of(
+                        "6e54fd8d8552f5333f00d7f483cbaf21043862eea53d310eb30266a218946f3d29d076de06ab7e95a654c912ad131f13b5893d6dc2dbb0dc42af9d86ea4afac5",
+                        "eFZSf42hsm7UgabpRLS2pQcwcSYC7rXqLo7LGqWpXiKL3vTub3",
+                        "29d076de06ab7e95a654c912ad131f13b5893d6dc2dbb0dc42af9d86ea4afac5"
+                ),
+                Arguments.of(
+                        "fb7f881d78d5c6a54a7a76e21cfe038eb4fc2f542beb5ef95a75053b2ccfc86b07b62bbb4a03fa6d78359c9dfdc4465f47306ee7ace50d0322a859017569e151",
+                        "dzYLPyYveacCMDKMBE23inpTPuMXebmcQ98ajc3rXwwYSuKGpS",
+                        "07b62bbb4a03fa6d78359c9dfdc4465f47306ee7ace50d0322a859017569e151"
                 )
         );
     }
